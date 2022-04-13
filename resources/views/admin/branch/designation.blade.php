@@ -1,5 +1,7 @@
 @extends('admin.layouts.app')
 @push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
     <style>
         .input-switch {
             display: none;
@@ -73,8 +75,8 @@
                 <div class="row">
                     <div class="col">
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Departments</li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Designation</a></li>
+                            <li class="breadcrumb-item active">Designation</li>
                         </ul>
                     </div>
                 </div>
@@ -84,16 +86,28 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title mb-0">Department</h4>
+                            <h4 class="card-title mb-0">Designation</h4>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('admin.departments') }}" method="POST">
+                            <form action="{{ route('admin.designation') }}" method="POST">
                                 @csrf
                                 <div class="form-group row">
                                     <div class="form-group">
-                                        <label for="Designationinput">Department</label>
-                                        <input type="text" name="department" class="form-control" id="Designationinput"
+                                        <label for="Designationinput">Designation</label>
+                                        <input type="text" name="designation" class="form-control" id="Designationinput"
                                             placeholder="Enter Designation">
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <div class="form-group form-focus select-focus">
+                                            <select class="select floating" name="department_id">
+                                                <option>Select Department</option>
+                                                @foreach ($department as $item)
+                                                    <option value="{{ $item->id }}">{{ $item->department_name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <label class="focus-label">Department</label>
+                                        </div>
                                     </div>
                                     <label for="statusinput">Status</label>
                                     <div class="col-md-12">
@@ -115,4 +129,7 @@
     </div>
 @endsection
 @push('plugin-js')
+    <script src="{{ asset('assets/js/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/js/moment.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
 @endpush

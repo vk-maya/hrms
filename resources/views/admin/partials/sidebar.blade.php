@@ -42,6 +42,7 @@
 									class="menu-arrow"></span></a>
 							<ul style="display: none;">
 								<li><a href="{{route('admin.departments')}}">Add Departments</a></li>
+								<li><a href="{{route('admin.designation')}}">Add Designation</a></li>
 								{{-- <li><a href="holidays.html">Holidays</a></li>
 								<li><a href="leaves.html">Leaves (Admin) <span
 											class="badge rounded-pill bg-primary float-end">1</span></a></li>
