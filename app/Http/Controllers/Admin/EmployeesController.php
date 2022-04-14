@@ -17,22 +17,26 @@ class EmployeesController extends Controller
 {
     public function emailv(Request $request)
     {
-        $rr= User::where('email', 'like',"%$request->x%")->count();
-        return json_encode(['count'=>$rr]);
+        $rrr = User::where('email', 'like',"%$request->x%")->count();
+        return json_encode(['count'=>$rrr]);
     }
     public function epid(Request $request)
     {
-        $rr= User::where('employee_id', 'like',"%$request->x%")->count();
-        return json_encode(['count'=>$rr]);
+        $idd= User::where('employee_id', 'like',"%$request->y%")->count();
+        return json_encode(['count'=>$idd]);
+    }
+    public function designationfatch(Request $request){
+        $designation = Designation::where('department_id',$request->dep)->get();
+        return json_encode(['count'=>$designation]);
     }
     public function employeecreate(){
-          
-        return view('admin.employees.employees');
+        $department = Designation::with('department')->get();
+        $employees= User::all();          
+        return view('admin.employees.employees',compact('employees','department'));
     }
     public function addemployeescreate(){
-        $designation = Designation::all();
-        $department = Department::all(); 
-        return view('admin.employees.employees-add', compact('designation','department'));
+        $department = Department::get();
+        return view('admin.employees.employees-add', compact('department'));
     }
     public function addemployeesstore(Request $request){       
         $data= new User();
@@ -55,11 +59,11 @@ class EmployeesController extends Controller
         if ($request->hasFile('image') == 1) {
             $file = $request->file('image');
             $ext = $file->getClientOriginalExtension();
-            $filename =$request->name.rand(0,10000).".".$ext;
+            $filename ="sdc".str_replace(' ', '',$request->name).rand(0,10000).".".$ext;
             $file = $request->file('image')->storeAs('public/uploads',$filename);
             $data->image =$filename;
         }
         $data->save();
-        return redirect('/admin/dashboard');
+        return redirect('/admin/employees');
     }
 }

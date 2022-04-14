@@ -105,15 +105,17 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Employee ID <span
                                                 class="text-danger">*</span></label>
-                                        <input type="text" name="employee_id" class="form-control" id="epid" onkeypress="epid()">
+                                        <input type="text" name="employee_id" class="form-control" id="emp"
+                                            onkeypress="empl()">
                                     </div>
-                                    <div id="epiderror">
+                                    <div id="empt">
                                     </div>
                                 </div>
                                 <div class="col-sm-6" id="">
                                     <div class="form-group">
                                         <label class="col-form-label">Email <span class="text-danger">*</span></label>
-                                        <input class="form-control" name="email" type="email" id="email"onkeypress="email()">
+                                        <input class="form-control" name="email" type="email" id="email"
+                                            onkeypress="email()">
                                     </div>
                                     <div id="emailerror">
                                     </div>
@@ -158,10 +160,12 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Department <span
                                                 class="text-danger">*</span></label>
-                                        <select class="select" name="department_id" class="form-control">
+                                        <select class="select" name="department_id" class="form-control"
+                                            id="inputDepartment" onkeypress="indepartment()">
                                             <option>Select Department</option>
                                             @foreach ($department as $item)
-                                                <option value="{{ $item->id }}">{{ $item->department_name }}
+                                                <option value="{{ $item->id }}">
+                                                    {{ $item->department_name }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -171,12 +175,8 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Designation <span
                                                 class="text-danger">*</span></label>
-                                        <select name="designation_id" class="select">
-                                            <option>Select Designation</option>
-                                            @foreach ($designation as $item)
-                                                <option value="{{ $item->id }}">{{ $item->designation_name }}
-                                                </option>
-                                            @endforeach
+                                        <select name="designation_id" class="select" name="designation_id" id="inputDesignation">
+                                            <option value="">Select Designation</option>
                                         </select>
                                     </div>
                                 </div>
@@ -255,6 +255,7 @@
         document.getElementById("email").onchange = function() {
             email()
         };
+
         function email() {
             var x = document.getElementById("email");
             let email = $('#email').val();
@@ -269,40 +270,70 @@
                 },
                 success: function(email) {
                     x = JSON.parse(email);
-                    if(x.count > 0){
+                    if (x.count > 0) {
                         $("#emailerror").html('<span class="text-danger">Email Already Exist</span>');
-                    }else{
+                    } else {
                         $("#emailerror").html('');
                     }
                 }
             })
         }
-    </script>
-        <script>
-            document.getElementById("epid").onchange = function() {
-                epid()
-            };
-            function epid() {
-                var x = document.getElementById("epid");
-                let epid = $('#epid').val();
-                var url = "{{ route('admin.epid') }}";
-                $.ajax({
-                    url: url,
-                    type: "post",
-                    cache: false,
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        x: epid
-                    },
-                    success: function(epid) {
-                        x = JSON.parse(epid);
-                        if(x.count > 0){
-                            $("#epiderror").html('<span class="text-danger">Employee Id Already Exist</span>');
-                        }else{
-                            $("#epiderror").html('');
-                        }
+
+
+        document.getElementById("emp").onchange = function() {
+            empl()
+        };
+
+        function empl() {
+            var y = document.getElementById("emp");
+            let eamployees = $('#emp').val();
+            // consol.log(email)
+            var url = "{{ route('admin.epid') }}";
+            $.ajax({
+                url: url,
+                type: "post",
+                cache: false,
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    y: eamployees
+                },
+                success: function(empl) {
+                    xy = JSON.parse(empl);
+                    if (xy.count > 0) {
+                        $("#empt").html('<span class="text-danger">Employees Id Already Exist</span>');
+                    } else {
+                        $("#empt").html('');
                     }
-                })
-            }
-        </script>
+                }
+            })
+        }
+        document.getElementById("inputDepartment").onchange = function() {
+            indepartment()
+        };
+
+        function indepartment() {
+            var dep = document.getElementById("inputDepartment");
+            var de = $('#inputDepartment').val();
+            var url = "{{ route('admin.designation.name') }}";
+            $.ajax({
+                url: url,
+                type: "post",
+                cache: false,
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    dep: de,
+                },
+                success: function(designation) {
+                    desig = JSON.parse(designation);
+                    // console.log(desig);
+                    let data = '';
+                    $.each(desig.count, function(index, val) {
+                        data += '<option value="' + val.id + '">' + val.designation_name + '</option>';
+                    });
+                    $("#inputDesignation").html(data);
+                }
+
+            })
+        }
+    </script>
 @endpush
