@@ -275,7 +275,12 @@
             <div class="dropdown-menu">
                 <a class="dropdown-item" href="profile.html">My Profile</a>
                 <a class="dropdown-item" href="settings.html">Settings</a>
-                <a class="dropdown-item" href="index.html">Logout</a>
+                <form method="POST" action="{{ route('admin.logout') }}">
+                    @csrf            
+                    <button class="btn" type="submit">                                     
+                    <i class="icon-logout"></i> Log Out 
+                    </button>
+                </form>   
             </div>
         </li>
     </ul>

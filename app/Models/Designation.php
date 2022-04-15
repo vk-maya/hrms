@@ -9,7 +9,13 @@ class Designation extends Model
 {
     use HasFactory;
     protected $fillable =[
-        'name',
+        'designation_name',
+        'department_id',
         'status'
     ];
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
 }
+  

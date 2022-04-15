@@ -1,5 +1,7 @@
 @extends('admin.layouts.app')
 @push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
     <style>
         .input-switch {
             display: none;
@@ -71,47 +73,47 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Department</h3>
+                        <h3 class="page-title">Designations</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Department</li>
+                            <li class="breadcrumb-item active">Designations</li>
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
-                        <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_department"><i
-                                class="fa fa-plus"></i> Add Department</a>
+                        <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_designation"><i
+                                class="fa fa-plus"></i> Add Designation</a>
                     </div>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-12">
-                    <div>                
+                    <div class="table-responsive">
                         <table class="table table-striped custom-table mb-0 datatable">
                             <thead>
                                 <tr>
                                     <th style="width: 30px;">#</th>
-                                    <th>Department Name</th>
+                                    <th>Designation </th>
+                                    <th>Department </th>
                                     <th class="text-end">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($department as $key => $item)
+                                @foreach ($designation as $key => $item)
                                     <tr>
-                                        <td>{{ $key + 1 }}</td>
-                                        <td>{{ $item->department_name }}</td>
+                                        <td>{{$key+1}}</td>
+                                        <td>{{$item->designation_name}}</td>
+                                        <td>{{$item->department->department_name}}</td>
                                         <td class="text-end">
                                             <div class="dropdown dropdown-action">
                                                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
                                                     aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item"
-                                                        href="{{ route('admin.departments.edit', $item->id) }}"><i
+                                                    <a class="dropdown-item" href="{{route('admin.designation.edit',$item->id)}}"><i
                                                             class="fa fa-pencil m-r-5"></i>
                                                         Edit</a>
-                                                    <a class="dropdown-item"
-                                                        href="{{ route('admin.departments.delete', $item->id) }}"><i
-                                                            class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                                    <a class="dropdown-item" href="{{route('admin.designation.delete',$item->id)}}"></i>
+                                                        Delete</a>
                                                 </div>
                                             </div>
                                         </td>
@@ -123,25 +125,35 @@
                 </div>
             </div>
         </div>
-
-
-        <div id="add_department" class="modal custom-modal fade" role="dialog">
+        <div id="add_designation" class="modal custom-modal fade" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Add Department</h5>
+                        <h5 class="modal-title">Add Designation</h5>
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('admin.departments') }}" method="POST">
+                        <form action="{{ route('admin.designation') }}" method="POST">
                             @csrf
                             <div class="form-group row">
                                 <div class="form-group">
-                                    <label for="Designationinput">Department</label>
-                                    <input type="text" name="department" class="form-control" id="Designationinput"
-                                        placeholder="Enter Department">
+                                    <label for="Designationinput">Designation</label>
+                                    <input type="text" name="designation" class="form-control" id="Designationinput"
+                                        placeholder="Enter Designation">
+                                </div>
+                                <div class="col-sm-6 col-md-12">
+                                    <div class="form-group form-focus select-focus">
+                                        <select class="select floating" name="department_id">
+                                            <option>Select Department</option>
+                                            @foreach ($department as $item)
+                                                <option value="{{ $item->id }}">{{ $item->department_name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <label class="focus-label">Department</label>
+                                    </div>
                                 </div>
                                 <label for="statusinput">Status</label>
                                 <div class="col-md-12">
@@ -161,11 +173,11 @@
         </div>
 
 
-        <div id="edit_department" class="modal custom-modal fade" role="dialog">
+        <div id="edit_designation" class="modal custom-modal fade" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit Department</h5>
+                        <h5 class="modal-title">Edit Designation</h5>
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -173,8 +185,17 @@
                     <div class="modal-body">
                         <form>
                             <div class="form-group">
-                                <label>Department Name <span class="text-danger">*</span></label>
-                                <input class="form-control" value="IT Management" type="text">
+                                <label>Designation Name <span class="text-danger">*</span></label>
+                                <input class="form-control" value="Web Developer" type="text">
+                            </div>
+                            <div class="form-group">
+                                <label>Department <span class="text-danger">*</span></label>
+                                <select class="select">
+                                    <option>Select Department</option>
+                                    <option>Web Development</option>
+                                    <option>IT Management</option>
+                                    <option>Marketing</option>
+                                </select>
                             </div>
                             <div class="submit-section">
                                 <button class="btn btn-primary submit-btn">Save</button>
@@ -186,12 +207,12 @@
         </div>
 
 
-        <div class="modal custom-modal fade" id="delete_department" role="dialog">
+        <div class="modal custom-modal fade" id="delete_designation" role="dialog">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="form-header">
-                            <h3>Delete Department</h3>
+                            <h3>Delete Designation</h3>
                             <p>Are you sure want to delete?</p>
                         </div>
                         <div class="modal-btn delete-action">
@@ -213,4 +234,7 @@
     </div>
 @endsection
 @push('plugin-js')
+    <script src="{{ asset('assets/js/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/js/moment.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
 @endpush

@@ -38,10 +38,11 @@
 							<span>Branch</span>
 						</li>
 						<li class="submenu">
-							<a href="#" class="noti-dot"><i class="la la-user"></i> <span>Departments</span> <span
+							<a href="#" class="noti-dot"><i class="fa fa-sitemap" aria-hidden="true"></i> <span>Departments</span> <span
 									class="menu-arrow"></span></a>
 							<ul style="display: none;">
-								<li><a href="{{route('admin.departments')}}">Add Departments</a></li>
+								<li><a href="{{route('admin.departments')}}">All Departments</a></li>
+								<li><a href="{{route('admin.designation')}}">All Designation</a></li>
 								{{-- <li><a href="holidays.html">Holidays</a></li>
 								<li><a href="leaves.html">Leaves (Admin) <span
 											class="badge rounded-pill bg-primary float-end">1</span></a></li>

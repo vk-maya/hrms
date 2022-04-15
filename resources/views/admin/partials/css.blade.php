@@ -11,33 +11,21 @@
         content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern, accounts, invoice, html5, responsive, CRM, Projects">
     <meta name="author" content="Dreamguys - Bootstrap Admin Template">
     <meta name="robots" content="noindex, nofollow">
-    <title>Dashboard - HRMS admin template</title>
+    <title>Scrum Digital Employees Management</title>
 
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="{{asset('assets/img/favicon.png')}}">
 
-    <link rel="stylesheet" href="{{asset('assets/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
 
-    <link rel="stylesheet" href="{{asset('assets/css/font-awesome.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/css/font-awesome.min.css') }}">
 
-    <link rel="stylesheet" href="{{asset('assets/css/line-awesome.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/css/line-awesome.min.css') }}">
 
-    <link rel="stylesheet" href="{{asset('assets/plugins/morris/morris.css')}}">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/morris/morris.css') }}">
 
     @stack('css')
-    <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
-
-    <!--[if lt IE 9]>
-   <script src="assets/js/html5shiv.min.js"></script>
-   <script src="assets/js/respond.min.js"></script>
-  <![endif]-->
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 </head>
 
 <body>
     <div class="main-wrapper">
-
-
-    
-    
-    
-       
-    

@@ -15,7 +15,8 @@ class CreateDesignationsTable extends Migration
     {
         Schema::create('designations', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('designation_name');
+            $table->string('department_id');
             $table->string('status');
             $table->timestamps();
         });

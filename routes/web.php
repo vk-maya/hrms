@@ -3,7 +3,7 @@
 use App\Http\Controllers\Admin\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminDerpartmentController;
-
+use App\Http\Controllers\Admin\EmployeesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,10 +32,23 @@ Route::get('/admin/dashboard', function () {
 })->middleware(['admin'])->name('admin.dashboard');
 
 Route::prefix('admin/')->name('admin.')->group(function() {
-    // ------------------------------Departments Rots-------------------
+    // ------------------------------AdminDepartmentsController Routs-------------------
+            // ---------------departments--------------------
     Route::get('departments',[AdminDerpartmentController::class,'departmentscreate'])->name('departments');
     Route::post('departments',[AdminDerpartmentController::class,'departmentsstore'])->name('departments');
-    Route::get('designation',[HomeController::class,'create'])->name('designation');
-    Route::post('designation',[HomeController::class,'store'])->name('designation');
-    Route::get('employees',[HomeController::class,'employeecreate'])->name('employees');
+    Route::get('departments/edit/{id}',[AdminDerpartmentController::class,'departmentscreate'])->name('departments.edit');
+    Route::get('departments/delete/{id}',[AdminDerpartmentController::class,'departmentdelete'])->name('departments.delete');
+   
+    Route::get('designation',[AdminDerpartmentController::class,'designationcreate'])->name('designation');
+    Route::post('designation',[AdminDerpartmentController::class,'designationstore'])->name('designation');
+    Route::get('designation/edit/{id}',[AdminDerpartmentController::class,'designationcreate'])->name('designation.edit');
+    Route::get('designation/delete/{id}',[AdminDerpartmentController::class,'designationdelete'])->name('designation.delete');
+    
+    // ---------------------EmployeesController Route-------------------------------------
+        Route::get('employees',[EmployeesController::class,'employeecreate'])->name('employees');
+        Route::get('add-employees',[EmployeesController::class,'addemployeescreate'])->name('addemployees');
+        Route::post('emailv',[EmployeesController::class,'emailv'])->name('emailv');
+        Route::post('epid',[EmployeesController::class,'epid'])->name('epid');
+        Route::post('designationd',[EmployeesController::class,'designationfatch'])->name('designation.name');
+        Route::post('save-employees',[EmployeesController::class,'addemployeesstore'])->name('storeemployees');
 });
