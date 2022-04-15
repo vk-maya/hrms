@@ -51,4 +51,6 @@ Route::prefix('admin/')->name('admin.')->group(function() {
         Route::post('epid',[EmployeesController::class,'epid'])->name('epid');
         Route::post('designationd',[EmployeesController::class,'designationfatch'])->name('designation.name');
         Route::post('save-employees',[EmployeesController::class,'addemployeesstore'])->name('storeemployees');
+        Route::get('employees/edid/{id}',[EmployeesController::class,'addemployeescreate'])->name('employees.edit');
+        Route::get('employees/delete/{id}',[EmployeesController::class,'employeesdestroy'])->name('employees.delete');
 });

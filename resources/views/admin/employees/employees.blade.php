@@ -71,10 +71,8 @@
                                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
                                     aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#edit_employee"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                    <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#delete_employee"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                    <a class="dropdown-item" href="{{route('admin.employees.edit',$item->id)}}"><i class="fa fa-pencil m-r-5"></i> Edit</a>
+                                    <a class="dropdown-item" href="{{route('admin.employees.delete',$item->id)}}" ><i class="fa fa-trash-o m-r-5"></i> Delete</a>
                                 </div>
                             </div>
                             <h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="">{{$item->name}}</a></h4>

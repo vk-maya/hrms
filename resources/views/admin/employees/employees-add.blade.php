@@ -71,6 +71,9 @@
 @section('content')
     <div class="page-wrapper">
         <div class="content container-fluid">
+            @if (isset($employees))
+                {{ $employees }}
+            @endif
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
@@ -87,18 +90,21 @@
                     <div class="card-body">
                         <form action="{{ route('admin.storeemployees') }}" enctype="multipart/form-data" method="POST">
                             @csrf
+                            <input type="text" hidden value="@if(isset($employees)){{$employees->id}}@endif" name="id">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">First Name <span
                                                 class="text-danger">*</span></label>
-                                        <input class="form-control" name="name" type="text">
+                                        <input class="form-control" name="name" type="text"
+                                            value="@if (isset($employees)) {{ $employees->name }} @endif">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Last Name</label>
-                                        <input class="form-control" name="last_name" type="text">
+                                        <input class="form-control" name="last_name" type="text"
+                                            value="@if (isset($employees)) {{ $employees->last_name }} @endif">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -106,6 +112,7 @@
                                         <label class="col-form-label">Employee ID <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" name="employee_id" class="form-control" id="emp"
+                                            value="@if (isset($employees)) {{ $employees->employee_id }} @endif"
                                             onkeypress="empl()">
                                     </div>
                                     <div id="empt">
@@ -115,6 +122,7 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Email <span class="text-danger">*</span></label>
                                         <input class="form-control" name="email" type="email" id="email"
+                                            value="@if (isset($employees)) {{ $employees->email }} @endif"
                                             onkeypress="email()">
                                     </div>
                                     <div id="emailerror">
@@ -135,25 +143,31 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Phone </label>
-                                        <input class="form-control" name="phone" type="text">
+                                        <input class="form-control" name="phone" type="text"
+                                            value="@if (isset($employees)) {{ $employees->phone }} @endif">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Address</label>
-                                        <input class="form-control" name="address" type="text">
+                                        <input class="form-control"
+                                            value="@if (isset($employees)) {{ $employees->address }} @endif"
+                                            name="address" type="text">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">City</label>
-                                        <input class="form-control" name="city" type="text">
+                                        <input class="form-control" name="city"
+                                            value="@if (isset($employees)) {{ $employees->city }} @endif"
+                                            type="text">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">State</label>
-                                        <input class="form-control" name="state" type="text">
+                                        <input class="form-control" name="state" type="text"
+                                            value="@if (isset($employees)) {{ $employees->state }} @endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -162,10 +176,10 @@
                                                 class="text-danger">*</span></label>
                                         <select class="select" name="department_id" class="form-control"
                                             id="inputDepartment" onkeypress="indepartment()">
-                                            <option>Select Department</option>
+                                            <option> Select Department </option>
                                             @foreach ($department as $item)
-                                                <option value="{{ $item->id }}">
-                                                    {{ $item->department_name }}
+                                                <option @if (isset($employees) && $employees->department_id == $item->id) selected @endif
+                                                    value="{{ $item->id }}">{{ $item->department_name }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -175,7 +189,8 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Designation <span
                                                 class="text-danger">*</span></label>
-                                        <select name="designation_id" class="select" name="designation_id" id="inputDesignation">
+                                        <select name="designation_id" class="select" name="designation_id"
+                                            id="inputDesignation">
                                             <option value="">Select Designation</option>
                                         </select>
                                     </div>
@@ -185,15 +200,20 @@
                                         <label class="col-form-label">Joining Date <span
                                                 class="text-danger">*</span></label>
                                         <div class="cal-icon"><input name="joining_date"
-                                                class="form-control datetimepicker" type=""></div>
+                                                class="form-control datetimepicker"
+                                                value="@if (isset($employees)) {{ date('d/m/Y', strtotime($employees->joining_date)) }} @endif"
+                                                type="">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <label for="statusinput" class="mb-4">Status</label>
                                     <div class="col-md-12">
                                         <div class="form-check form-switch">
-                                            <input class='input-switch' type="checkbox" value="1" name="status" checked
-                                                id="demo" />
+                                            <input class='input-switch' type="checkbox" value="1"
+                                                @if (isset($employees)) @if ($employees->status == 0) @else checked @endif
+                                                @endif
+                                            name="status" id="demo" />
                                             <label class="label-switch" for="demo"></label>
                                             <span class="info-text"></span>
                                         </div>
@@ -205,19 +225,25 @@
                                         <div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" title="Work From Office"
-                                                    name="workplace" id="wfo" value="wfo">
+                                                    @if (isset($employees)) @if ($employees->workplace == 'wfo')checked  @endif
+                                                    @endif
+                                                name="workplace" id="wfo" value=" wfo">
                                                 <label class="form-check-label" title="Work From Office"
                                                     for="wfo">WFO</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" title="Work From House" type="radio"
-                                                    name="workplace" id="wfh" value="wfh">
+                                                    name="workplace" id="wfh"
+                                                    @if (isset($employees)) @if ($employees->workplace == 'wfh') checked @endif  @endif
+                                                    value="wfh">
                                                 <label class="form-check-label" title="Work From House"
                                                     for="wfh">WFH</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" title="Work From House" type="radio"
-                                                    name="workplace" id="both" value="both">
+                                                    name="workplace" id="both"
+                                                    @if (isset($employees)) @if ($employees->workplace == 'both') checked  @endif  @endif
+                                                    value=" both">
                                                 <label class="form-check-label" title="Both" for="both">both</label>
                                             </div>
 
@@ -227,12 +253,15 @@
                                 <div class="form-group row">
                                     <label class="col-form-label col-md-2"></label>
                                     <div class="col-md-6">
-
                                     </div>
+                                </div>
+                                <div class="profile-img">
+                                    <a href="" class="">
+                                        <img src="{{ asset('storage/uploads/'.$employees->image) }}" alt=""></a>                                            
                                 </div>
                                 <div class="form-group">
                                     <label>Upload Photo</label>
-                                    <input name="image" class="form-control" type="file">
+                                    <input name="image" class="form-control" value="" type="file">
                                 </div>
                                 <div class="submit-section">
                                     <button class="btn btn-primary submit-btn" type="submit">Submit</button>
@@ -310,6 +339,7 @@
         document.getElementById("inputDepartment").onchange = function() {
             indepartment()
         };
+        indepartment()
 
         function indepartment() {
             var dep = document.getElementById("inputDepartment");
