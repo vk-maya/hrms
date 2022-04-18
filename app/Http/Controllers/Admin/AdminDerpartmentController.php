@@ -10,32 +10,48 @@ use App\Models\User;
 
 class AdminDerpartmentController extends Controller
 {
-    public function departmentscreate($id=''){
-        if($id>0){
-            $edit = Department::find($id);        
-        }else{
-            $edit ="";
-        }      
-            $department = Department::all();    
-        return view('admin.branch.departments',compact('department','edit'));
+    public function departmentscreate(Request $request){
+        if($request->id >0){
+            // dd($request->id);
+            $edit = Department::find($request->id);
+            return response()->json(['edit' => $edit]);
         
-    }
+        }else{
+            $department = Department::all();
+            return view('admin.branch.departments',compact('department'));
+        }              
+    }  
     public function departmentsstore(Request $request){
-        $data = new Department();
+        if($request->has('id')){
+            $data = Department::find($request->id);
+            
+        }else{         
+            $data = new Department();
+        }
         $data->department_name = $request->department;
         $data->status = $request->status;
         $data->save();
         return redirect()->route('admin.departments');
     }
 
-    public function designationcreate(){
-        $department = Department::all();
-        $designation = Designation::all();
-        return view('admin.branch.designation',compact('department','designation'));
+    public function designationcreate($id =' '){
+        if($id>0){
+            $edit = Designation::find($id);
+            $department = Department::all();
+            $designation = Designation::all();
+            return view('admin.branch.designation',compact('department','designation','edit'));
+        }else{
+            $department = Department::all();
+            $designation = Designation::all();
+            return view('admin.branch.designation',compact('department','designation'));
+        }
     }
-
     public function designationstore(Request $request){
-        $data= new Designation();
+        if($request->has('id')){
+            $data= Designation::find($request->id);
+        }else{
+            $data= new Designation();
+        }
         $data->designation_name=$request->designation;
         $data->department_id=$request->department_id;
         $data->status=$request->status;
