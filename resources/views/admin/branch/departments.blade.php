@@ -166,7 +166,7 @@
                         <div class="form-group row">
                             <div class="form-group">
                                 <label for="Designationinput">Department</label>
-                                <input type="text" name="department" class="form-control" id="Designationinput"
+                                <input type="text" name="department" class="form-control"
                                     placeholder="Enter Department" id="inputdepartment" value="">
                             </div>
                             <label for="statusinput">Status</label>
@@ -213,10 +213,11 @@
                     url: "departments/edit/" + id,
                     type: "get",
                     cache: false,
-                    success: function(edit) {
+                    success: function(res) {
+                        console.log();
                         $('#submit').text("Update");
-                        $('#inputid').val(edit.id);
-                        $('#inputdepartment').val(edit.department_name);
+                        $('#inputid').val(res.edit.id);
+                        $('#inputdepartment').val(res.edit.department_name);
                         $("#add_department").modal('show');
                     }
 
