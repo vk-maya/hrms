@@ -70,6 +70,9 @@
     <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
+
+    <!-- Sweetalert 2 CSS -->
+    <link rel="stylesheet" href="assets/plugins/sweetalert2/sweetalert2.min.css">
 @endpush
 @section('content')
     <div class="page-wrapper">
@@ -89,6 +92,20 @@
                     </div>
                 </div>
             </div>
+            @if (Session::has('success'))
+                <div class="alert alert-success alert-block" role="alert">
+                    <button class="close" data-dismiss="alert"></button>
+                    {{ Session::get('success') }}
+                </div>
+            @endif
+
+            {{-- //Bonus: you can also use this subview for your error, warning, or info messages --}}
+            @if (Session::has('error'))
+                <div class="alert alert-danger alert-block" role="alert">
+                    <button class="close" data-dismiss="alert"></button>
+                    {{ Session::get('error') }}
+                </div>
+            @endif
             <div class="col-md-12">
                 <div class="table-responsive">
                     <table class="table table-striped custom-table mb-0" id="department">
@@ -107,11 +124,14 @@
                                     <td>{{ $item->department_name }}</td>
                                     <td class="text-center">
                                         <div class="action-label">
-                                            <a class="btn btn-white btn-sm btn-rounded" href="javascript:void(0);">
+                                            <a class="btn btn-white btn-sm btn-rounded status" data-id="{{ $item->id }}"
+                                                href="javascript:void(0);">
                                                 @if ($item->status == 1)
-                                                    <i class="fa fa-dot-circle-o text-success"></i> Approved
+                                                    <i class="fa fa-dot-circle-o text-success"></i> <span
+                                                        class="yeh-data">Approved</span>
                                                 @else
-                                                    <i class="fa fa-dot-circle-o text-danger"></i> Declined
+                                                    <i class="fa fa-dot-circle-o text-danger"></i> <span
+                                                        class="yeh-data">Declined</span>
                                                 @endif
                                             </a>
                                         </div>
@@ -121,15 +141,11 @@
                                             <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
                                                 aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                {{-- <a class="dropdown-item" href="#" data-bs-toggle="modal" id="edit" 
-                                                    data-bs-target="#add_department"><i class="fa fa-pencil m-r-5"></i>
-                                                    Edit</a> --}}
-                                                <button class="dropdown-item edit" id="edit" value="{{ $item->id }}"><i
+                                                <button class="dropdown-item edit" data-id="{{ $item->id }}"><i
                                                         class="fa fa-pencil m-r-5"></i>
                                                     Edit</button>
-                                                <a class="dropdown-item"
-                                                    href="{{ route('admin.departments.delete', $item->id) }}"><i
-                                                        class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                                <button class="dropdown-item delete" data-id="{{ $item->id }}"><i
+                                                        class="fa fa-trash-o m-r-5"></i> Delete</button>
                                             </div>
                                         </div>
                                     </td>
@@ -146,28 +162,23 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        @isset($edit)
-                            Edit
-                        @else
-                            Add
-                        @endisset Department
+                        Add Department
                     </h5>
-
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close edit" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <form action="{{ route('admin.departments') }}" method="POST">
                         @csrf
-                        @isset($edit)
-                            <input type="hidden" name="edit-id" value="" id="inputid">
-                        @endisset
+                        <div id="editid">
+
+                        </div>
                         <div class="form-group row">
                             <div class="form-group">
                                 <label for="Designationinput">Department</label>
-                                <input type="text" name="department" class="form-control"
-                                    placeholder="Enter Department" id="inputdepartment" value="">
+                                <input type="text" name="department" class="form-control" placeholder="Enter Department"
+                                    id="inputdepartment" value="">
                             </div>
                             <label for="statusinput">Status</label>
                             <div class="col-md-12">
@@ -178,7 +189,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" id="submit" class="btn btn-primary">                                Submit                            
+                        <button type="submit" id="submit" class="btn btn-primary"> Submit
                         </button>
                     </form>
                 </div>
@@ -192,23 +203,28 @@
     <script src="{{ asset('assets/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
     <script>
         $('#department').DataTable({
             paging: true,
             searching: true
         });
-    </script>
-    @isset($esit)
-        <script>
-            $(document).ready(function() {
-                $("#add_department").modal('show');
-            });
-        </script>
-    @endisset
-    <script>
+
         $(document).ready(function() {
+            $(document).on("click", '.edit', (function() {
+                $("#add_department").modal('show');
+            }));
+        });
+
+        $(document).ready(function() {
+            $('#add_department').on('hidden.bs.modal', function(e) {
+                $("#editid").html('');
+                $("#inputdepartment").val('');
+            })
             $(document).on("click", ".edit", function() {
-                var id = $(this).val();
+                var id = $(this).data('id');
                 $.ajax({
                     url: "departments/edit/" + id,
                     type: "get",
@@ -218,11 +234,103 @@
                         $('#submit').text("Update");
                         $('#inputid').val(res.edit.id);
                         $('#inputdepartment').val(res.edit.department_name);
+                        if (res.edit.status == 1) {
+                            $("#demo").prop('checked', true);
+                        } else {
+                            $("#demo").prop('checked', false);
+                        }
                         $("#add_department").modal('show');
                     }
 
                 });
 
+            });
+        });
+
+        $(document).ready(function() {
+            $(document).on("click", ".status", function() {
+                var yeh = $(this);
+                var id = $(this).data('id');
+                let dataobj = {
+                    "_token": "{{ csrf_token() }}",
+                    id: id,
+                };
+                $.ajax({
+                    url: "{{ route('admin.departments.status') }}",
+                    type: "POST",
+                    data: dataobj,
+                    cache: false,
+                    success: function(res) {
+                        let className = $(yeh).children()[0];
+                        let text = $(yeh).children()[1];
+                        console.log($(className).html());
+                        if ($(text).html() == 'Approved') {
+                            $(text).html('Declined');
+                            $(className).removeClass('text-success');
+                            $(className).addClass('text-danger');
+                        } else {
+                            $(text).html('Approved');
+                            $(className).removeClass('text-danger');
+                            $(className).addClass('text-success');
+                        }
+                    }
+                });
+            })
+        })
+
+
+
+
+
+
+        $(document).ready(function() {
+            $(document).on("click", '.edit', (function() {
+                $("#editid").html("<input type='hidden' name='id' value='" + $(this).data('id') + "'>");
+            }));
+        })
+    </script>
+    <script>
+        $(document).ready(function() {
+            $(document).on("click", '.delete', function() {
+                var yeh = $(this);
+                swal({
+                        title: "Are you sure?",
+                        text: "Once deleted, you will not be able to recover this!",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            var id = $(this).data('id');
+                            let url = "{{ route('admin.departments.delete', ':id') }}";
+                            url = url.replace(':id', id);
+                            $.ajax({
+                                url: url,
+                                type: "GET",
+                                cache: false,
+                                success: function(res) {
+                                    console.log(res.msg)
+                                    if (res.msg == 'no') {
+                                        swal("unsuccessful! Your Department has been Add Any Designation! ", {
+                                            icon: "error",
+                                        })
+
+                                    } else {
+                                        swal("Success! Your Department has been deleted!", {
+                                            icon: "success",
+                                        })
+                                        $(yeh).parent().parent().parent().parent().hide(
+                                            0500);
+
+                                    }
+
+
+                                }
+                            });
+
+                        }
+                    });
             });
         });
     </script>

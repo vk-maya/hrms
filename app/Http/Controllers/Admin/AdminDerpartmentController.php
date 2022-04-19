@@ -22,18 +22,29 @@ class AdminDerpartmentController extends Controller
         }              
     }  
     public function departmentsstore(Request $request){
+        // dd($request->toArray());
         if($request->has('id')){
             $data = Department::find($request->id);
             
-        }else{         
+        }else{
             $data = new Department();
         }
         $data->department_name = $request->department;
-        $data->status = $request->status;
+        $data->status = ($request->status == '1')? 1 : 0;
         $data->save();
         return redirect()->route('admin.departments');
     }
 
+    public function departmentsstatus(Request $request){
+        $data = Department::find($request->id);
+        if($data->status == 1){
+            $data->status= 0;
+        }else{
+            $data->status= 1;
+        }
+        $data->save();
+        return response()->json(['success'=>"Successfully Changed"]);
+    }
     public function designationcreate($id =' '){
         if($id>0){
             $edit = Designation::find($id);
@@ -54,19 +65,22 @@ class AdminDerpartmentController extends Controller
         }
         $data->designation_name=$request->designation;
         $data->department_id=$request->department_id;
-        $data->status=$request->status;
+        $data->status= ($request->status == '1')? 1 : 0;
         $data->save();
         return redirect()->route('admin.designation');
     }
     public function departmentdelete($id){
-        $data = Designation::where('department_id',$id)->count();
-        
+        $data = Designation::where('department_id',$id)->count();        
         if($data>0){           
-            return redirect()->route('admin.departments');
-        }else{
-            $data = Department::find($id)->delete();
-            return redirect()->route('admin.departments');
-        }
+            return response()->json([
+                'msg' => 'no'
+            ]); 
+            }else{
+                    $data = Department::find($id)->delete();
+                    return response()->json([
+                        'msg' => 'yes'
+                    ]); 
+               }
     }
     public function designationdelete($id){
         $data = User::where('designation_id',$id)->count();

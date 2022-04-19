@@ -36,6 +36,7 @@ Route::prefix('admin/')->name('admin.')->group(function() {
             // ---------------departments--------------------
     Route::get('departments',[AdminDerpartmentController::class,'departmentscreate'])->name('departments');
     Route::post('departments',[AdminDerpartmentController::class,'departmentsstore'])->name('departments');
+    Route::post('departments/status',[AdminDerpartmentController::class,'departmentsstatus'])->name('departments.status');
     Route::get('departments/edit/{id}',[AdminDerpartmentController::class,'departmentscreate'])->name('departments.edit');
     Route::get('departments/delete/{id}',[AdminDerpartmentController::class,'departmentdelete'])->name('departments.delete');
    
