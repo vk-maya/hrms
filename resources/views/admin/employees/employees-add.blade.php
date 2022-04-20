@@ -71,9 +71,6 @@
 @section('content')
     <div class="page-wrapper">
         <div class="content container-fluid">
-            @if (isset($employees))
-                {{ $employees }}
-            @endif
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
@@ -90,7 +87,8 @@
                     <div class="card-body">
                         <form action="{{ route('admin.storeemployees') }}" enctype="multipart/form-data" method="POST">
                             @csrf
-                            <input type="text" hidden value="@if(isset($employees)){{$employees->id}}@endif" name="id">
+                            <input type="text" hidden
+                                value="@if (isset($employees)) {{ $employees->id }} @endif" name="id">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -118,12 +116,12 @@
                                     <div id="empt">
                                     </div>
                                 </div>
-                                <div class="col-sm-6" id="">
+                                <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Email <span class="text-danger">*</span></label>
                                         <input class="form-control" name="email" type="email" id="email"
-                                            value="@if (isset($employees)) {{ $employees->email }} @endif"
-                                            onkeypress="email()">
+                                            value="@if(isset($employees)) {{ $employees->email }} @endif"
+                                            onkeypress="emaill()">
                                     </div>
                                     <div id="emailerror">
                                     </div>
@@ -225,7 +223,7 @@
                                         <div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" title="Work From Office"
-                                                    @if (isset($employees)) @if ($employees->workplace == 'wfo')checked  @endif
+                                                    @if (isset($employees)) @if ($employees->workplace == 'wfo')checked @endif
                                                     @endif
                                                 name="workplace" id="wfo" value=" wfo">
                                                 <label class="form-check-label" title="Work From Office"
@@ -234,16 +232,18 @@
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" title="Work From House" type="radio"
                                                     name="workplace" id="wfh"
-                                                    @if (isset($employees)) @if ($employees->workplace == 'wfh') checked @endif  @endif
-                                                    value="wfh">
+                                                    @if (isset($employees)) @if ($employees->workplace == 'wfh') checked @endif
+                                                    @endif
+                                                value="wfh">
                                                 <label class="form-check-label" title="Work From House"
                                                     for="wfh">WFH</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" title="Work From House" type="radio"
                                                     name="workplace" id="both"
-                                                    @if (isset($employees)) @if ($employees->workplace == 'both') checked  @endif  @endif
-                                                    value=" both">
+                                                    @if (isset($employees)) @if ($employees->workplace == 'both') checked @endif
+                                                    @endif
+                                                value=" both">
                                                 <label class="form-check-label" title="Both" for="both">both</label>
                                             </div>
 
@@ -255,10 +255,12 @@
                                     <div class="col-md-6">
                                     </div>
                                 </div>
+                                @isset($employees)
                                 <div class="profile-img">
                                     <a href="" class="">
-                                        <img src="{{ asset('storage/uploads/'.$employees->image) }}" alt=""></a>                                            
+                                        <img src="{{ asset('storage/uploads/' . $employees->image) }}" alt=""></a>
                                 </div>
+                                @endisset
                                 <div class="form-group">
                                     <label>Upload Photo</label>
                                     <input name="image" class="form-control" value="" type="file">
@@ -281,11 +283,16 @@
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script>
+
+
+        // document.getElementById("email").onchange = function() {
+        //     email()
+        // };
         document.getElementById("email").onchange = function() {
-            email()
+            emaill()
         };
 
-        function email() {
+        function emaill() {
             var x = document.getElementById("email");
             let email = $('#email').val();
             var url = "{{ route('admin.emailv') }}";
@@ -307,8 +314,6 @@
                 }
             })
         }
-
-
         document.getElementById("emp").onchange = function() {
             empl()
         };
@@ -340,7 +345,6 @@
             indepartment()
         };
         indepartment()
-
         function indepartment() {
             var dep = document.getElementById("inputDepartment");
             var de = $('#inputDepartment').val();
@@ -364,6 +368,6 @@
                 }
 
             })
-        }
+        }     
     </script>
 @endpush

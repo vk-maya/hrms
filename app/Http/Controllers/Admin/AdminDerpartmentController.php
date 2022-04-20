@@ -22,10 +22,8 @@ class AdminDerpartmentController extends Controller
         }              
     }  
     public function departmentsstore(Request $request){
-        // dd($request->toArray());
         if($request->has('id')){
-            $data = Department::find($request->id);
-            
+            $data = Department::find($request->id);            
         }else{
             $data = new Department();
         }
@@ -45,12 +43,23 @@ class AdminDerpartmentController extends Controller
         $data->save();
         return response()->json(['success'=>"Successfully Changed"]);
     }
-    public function designationcreate($id =' '){
+    public function designationstatus(Request $request){
+        // dd($request->toArray());
+        $data = Designation::find($request->id);
+        if($data->status == 1){
+            $data->status =0;
+        }else{
+            $data->status = 1;
+            }
+            $data->save();
+            return response()->json(['msg'=>"yes"]);
+    }
+    public function designationcreate($id =''){
         if($id>0){
+            // dd($id);
             $edit = Designation::find($id);
-            $department = Department::all();
-            $designation = Designation::all();
-            return view('admin.branch.designation',compact('department','designation','edit'));
+         
+            return response()->json(['msg'=>$edit]);
         }else{
             $department = Department::all();
             $designation = Designation::all();
@@ -83,13 +92,12 @@ class AdminDerpartmentController extends Controller
                }
     }
     public function designationdelete($id){
-        $data = User::where('designation_id',$id)->count();
-        
+        $data = User::where('designation_id',$id)->count();        
         if($data>0){           
-            return redirect()->route('admin.designation');
+            return response()->json(['msg'=>'no']);
         }else{
-            $data = User::find($id)->delete();
-            return redirect()->route('admin.designation');
+            $data = Designation::find($id)->delete();
+            return response()->json(['msg'=>'yes']);
         }
       }
 }

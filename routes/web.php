@@ -42,6 +42,7 @@ Route::prefix('admin/')->name('admin.')->group(function() {
    
     Route::get('designation',[AdminDerpartmentController::class,'designationcreate'])->name('designation');
     Route::post('designation',[AdminDerpartmentController::class,'designationstore'])->name('designation');
+    Route::post('designation/status',[AdminDerpartmentController::class,'designationstatus'])->name('designation.status');
     Route::get('designation/edit/{id}',[AdminDerpartmentController::class,'designationcreate'])->name('designation.edit');
     Route::get('designation/delete/{id}',[AdminDerpartmentController::class,'designationdelete'])->name('designation.delete');
     

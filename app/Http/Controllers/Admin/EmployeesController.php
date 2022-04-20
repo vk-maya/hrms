@@ -40,77 +40,57 @@ class EmployeesController extends Controller
     }
     public function addemployeescreate(Request $request)
     {
-        if ($request->id !='') {
+        if ($request->id != '') {
             $employees = User::find($request->id);
             $department = Department::get();
-            return view('admin.employees.employees-add', compact('department','employees'));
+            return view('admin.employees.employees-add', compact('department', 'employees'));
         } else {
             $department = Department::get();
             return view('admin.employees.employees-add', compact('department'));
         }
     }
     public function addemployeesstore(Request $request)
-    {
+    {       
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],            
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+    
         if ($request->id == !null) {
-           $employees = User::find($request->id);
-           $img=$employees->image;
-           $employees->name = $request->name;
-            $employees->last_name = $request->last_name;
-            $employees->email = $request->email;
-            $employees->password = Hash::make($request->password);
-            $employees->employee_id = $request->employee_id;
-            $employees->joining_date = date('Y-m-d', strtotime($request->joining_date));
-            $employees->phone = $request->phone;
-            $employees->department_id = $request->department_id;
-            $employees->designation_id = $request->designation_id;
-            $employees->address = $request->address;
-            $employees->state = $request->state;
-            $employees->city = $request->city;
-            $employees->status = ($request->status == 1) ? 1 : 0;
-            $employees->workplace = $request->workplace;
-           
-                unlink('storage/uploads/'.$img);
-           
-            $employees->image='';
-            if ($request->hasFile('image') == 1) {
-                $file = $request->file('image');
-                $ext = $file->getClientOriginalExtension();
-                $filename = "sdc" . str_replace(' ', '', $request->name) . rand(0, 10000) . "." . $ext;
-                $file = $request->file('image')->storeAs('public/uploads', $filename);
-                $employees->image = $filename;
+            $employees = User::find($request->id);
+            $img = $employees->image;
+            if (Storage::disk('public')->exists('uploads/' . $img)) {
+                unlink('storage/uploads/' . $img);
             }
-            
-            $employees->update();
-
         } else {
-          
-            $data = new User();
-            $data->name = $request->name;
-            $data->last_name = $request->last_name;
-            $data->email = $request->email;
-            $data->password = Hash::make($request->password);
-            $data->employee_id = $request->employee_id;
-            $data->joining_date = date('Y-m-d', strtotime($request->joining_date));
-            $data->phone = $request->phone;
-            $data->department_id = $request->department_id;
-            $data->designation_id = $request->designation_id;
-            $data->address = $request->address;
-            $data->state = $request->state;
-            $data->city = $request->city;
-            $data->status = ($request->status == 1) ? 1 : 0;
-            $data->workplace = $request->workplace;
-            $data->image = "";
-            if ($request->hasFile('image') == 1) {
-                $file = $request->file('image');
-                $ext = $file->getClientOriginalExtension();
-                $filename = "sdc" . str_replace(' ', '', $request->name) . rand(0, 10000) . "." . $ext;
-                $file = $request->file('image')->storeAs('public/uploads', $filename);
-                $data->image = $filename;
-            }
-            $data->save();
+            $employees = new User();
+        }       
+        $employees->name = $request->name;
+        $employees->last_name = $request->last_name;
+        $employees->email = $request->email;
+        $employees->password = Hash::make($request->password);
+        $employees->employee_id = $request->employee_id;
+        $employees->joining_date = date('Y-m-d', strtotime($request->joining_date));
+        $employees->phone = $request->phone;
+        $employees->department_id = $request->department_id;
+        $employees->designation_id = $request->designation_id;
+        $employees->address = $request->address;
+        $employees->state = $request->state;
+        $employees->city = $request->city;
+        $employees->status = ($request->status == 1) ? 1 : 0;
+        $employees->workplace = $request->workplace;
+      
+        $employees->image = '';
+        if ($request->hasFile('image') == 1) {
+            $file = $request->file('image');
+            $ext = $file->getClientOriginalExtension();
+            $filename = "sdc" . str_replace(' ', '', $request->name) . rand(0, 10000) . "." . $ext;
+            $file = $request->file('image')->storeAs('public/uploads', $filename);
+            $employees->image = $filename;
         }
-            return redirect()->route('admin.employees');
-        
+        $employees->save();
+        return redirect()->route('admin.employees');
     }
     public function employeesdestroy($id)
     {
@@ -119,6 +99,6 @@ class EmployeesController extends Controller
             storage::delete('public/uploads/' . $delete->image);
         }
         $delete->delete();
-        return redirect()->route('admin.employees');
+        return response()->json(['msg'=>'yes']);
     }
 }

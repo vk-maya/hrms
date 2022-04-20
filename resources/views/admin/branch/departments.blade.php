@@ -91,21 +91,7 @@
                                 class="fa fa-plus"></i> Add Department</a>
                     </div>
                 </div>
-            </div>
-            @if (Session::has('success'))
-                <div class="alert alert-success alert-block" role="alert">
-                    <button class="close" data-dismiss="alert"></button>
-                    {{ Session::get('success') }}
-                </div>
-            @endif
-
-            {{-- //Bonus: you can also use this subview for your error, warning, or info messages --}}
-            @if (Session::has('error'))
-                <div class="alert alert-danger alert-block" role="alert">
-                    <button class="close" data-dismiss="alert"></button>
-                    {{ Session::get('error') }}
-                </div>
-            @endif
+            </div>           
             <div class="col-md-12">
                 <div class="table-responsive">
                     <table class="table table-striped custom-table mb-0" id="department">
@@ -172,7 +158,6 @@
                     <form action="{{ route('admin.departments') }}" method="POST">
                         @csrf
                         <div id="editid">
-
                         </div>
                         <div class="form-group row">
                             <div class="form-group">
@@ -203,21 +188,29 @@
     <script src="{{ asset('assets/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
+    {{-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> --}}
 
 
     <script>
+        // ------------shoe data table---------------
         $('#department').DataTable({
             paging: true,
             searching: true
         });
-
+// ---------------------open edit modal-------------------
+        // $(document).ready(function() {
+        //     $(document).on("click", '.edit', (function() {
+        //         $("#add_department").modal('show');
+        //     }));
+        // });
+        // -------------------show hidden column-------------
         $(document).ready(function() {
             $(document).on("click", '.edit', (function() {
-                $("#add_department").modal('show');
+                $("#editid").html("<input type='hidden' name='id' value='" + $(this).data('id') + "'>");
             }));
-        });
-
+        })
+// ------------------------edit---------------------
         $(document).ready(function() {
             $('#add_department').on('hidden.bs.modal', function(e) {
                 $("#editid").html('');
@@ -230,7 +223,6 @@
                     type: "get",
                     cache: false,
                     success: function(res) {
-                        console.log();
                         $('#submit').text("Update");
                         $('#inputid').val(res.edit.id);
                         $('#inputdepartment').val(res.edit.department_name);
@@ -246,7 +238,7 @@
 
             });
         });
-
+// ---------------------status ----------------------------
         $(document).ready(function() {
             $(document).on("click", ".status", function() {
                 var yeh = $(this);
@@ -264,7 +256,7 @@
                         let className = $(yeh).children()[0];
                         let text = $(yeh).children()[1];
                         console.log($(className).html());
-                        if ($(text).html() == 'Approved') {
+                        if ($(text).html() == 'Approved') { 
                             $(text).html('Declined');
                             $(className).removeClass('text-success');
                             $(className).addClass('text-danger');
@@ -277,19 +269,9 @@
                 });
             })
         })
-
-
-
-
-
-
-        $(document).ready(function() {
-            $(document).on("click", '.edit', (function() {
-                $("#editid").html("<input type='hidden' name='id' value='" + $(this).data('id') + "'>");
-            }));
-        })
     </script>
     <script>
+        // -----------------------delete----------------------
         $(document).ready(function() {
             $(document).on("click", '.delete', function() {
                 var yeh = $(this);
@@ -315,7 +297,6 @@
                                         swal("unsuccessful! Your Department has been Add Any Designation! ", {
                                             icon: "error",
                                         })
-
                                     } else {
                                         swal("Success! Your Department has been deleted!", {
                                             icon: "success",

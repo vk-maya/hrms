@@ -56,54 +56,30 @@
                     </div>
                 </div>
             </div>
-
             <div class="row staff-grid-row">
                 @foreach ($employees as $item)
-                {{-- {{$item->image}} --}}
                     <div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
                         <div class="profile-widget">
                             <div class="profile-img">
                                 <a href="profile.html" class="avatar">
-                                    <img src="{{ asset('storage/uploads/'.$item->image) }}" alt=""></a>
-                                        
+                                    <img src="{{ asset('storage/uploads/' . $item->image) }}" alt=""></a>
                             </div>
                             <div class="dropdown profile-action">
                                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
                                     aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="{{route('admin.employees.edit',$item->id)}}"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                    <a class="dropdown-item" href="{{route('admin.employees.delete',$item->id)}}" ><i class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                    <a class="dropdown-item" href="{{ route('admin.employees.edit', $item->id) }}"><i
+                                            class="fa fa-pencil m-r-5"></i> Edit</a>
+                                    <button class="dropdown-item delete" data-id="{{ $item->id }}"><i
+                                            class="fa fa-trash-o m-r-5"></i> Delete</button>
                                 </div>
                             </div>
-                            <h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="">{{$item->name}}</a></h4>
-                            <div class="small text-muted">department Name</div>
+                            <h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="">{{ $item->name }}</a></h4>
+                            <div class="small text-muted">{{$item->designation->designation_name}}</div>
                         </div>
                     </div>
-                    @endforeach
-            </div>
-        </div>
-        <div class="modal custom-modal fade" id="delete_employee" role="dialog">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="form-header">
-                            <h3>Delete Employee</h3>
-                            <p>Are you sure want to delete?</p>
-                        </div>
-                        <div class="modal-btn delete-action">
-                            <div class="row">
-                                <div class="col-6">
-                                    <a href="javascript:void(0);" class="btn btn-primary continue-btn">Delete</a>
-                                </div>
-                                <div class="col-6">
-                                    <a href="javascript:void(0);" data-bs-dismiss="modal"
-                                        class="btn btn-primary cancel-btn">Cancel</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                @endforeach
+            </div>          
         </div>
 
     </div>
@@ -112,4 +88,46 @@
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            $(document).on("click", ".delete", function() {
+                var yes = $(this);
+                swal({
+                        title: "Are you sure?",
+                        text: "Once deleted, you will not be able to recover this!",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            var id = $(this).data("id");
+                            var url = "{{ route('admin.employees.delete', ':id') }}";
+                            url = url.replace(':id', id);
+                            $.ajax({
+                                type: "get",
+                                url: url,
+                                cache: false,
+                                success: function(res) {
+                                    if (res.msg == 'no') {
+                                        swal("unsuccessful! Your Department has been Add Any Employees! ", {
+                                            icon: "error",
+                                        })
+                                    } else {
+                                        swal("Success! Your Department has been deleted!", {
+                                            icon: "success",
+                                        })
+                                        $(yes).parent().parent().parent().parent().hide(
+                                            0500);
+
+                                    }
+                                }
+                            });
+                        }
+                    });
+            })
+        });
+    </script>
 @endpush
