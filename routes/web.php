@@ -48,6 +48,9 @@ Route::prefix('admin/')->name('admin.')->group(function() {
     
     // ---------------------EmployeesController Route-------------------------------------
         Route::get('employees',[EmployeesController::class,'employeecreate'])->name('employees');
+        Route::any('employees/list',[EmployeesController::class,'emplist'])->name('employees.list');
+        Route::post('country',[EmployeesController::class,'country'])->name('country.name');
+        Route::post('state',[EmployeesController::class,'state'])->name('country.state.name');
         Route::get('add-employees',[EmployeesController::class,'addemployeescreate'])->name('addemployees');
         Route::post('emailv',[EmployeesController::class,'emailv'])->name('emailv');
         Route::post('epid',[EmployeesController::class,'epid'])->name('epid');

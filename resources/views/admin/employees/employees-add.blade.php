@@ -95,14 +95,14 @@
                                         <label class="col-form-label">First Name <span
                                                 class="text-danger">*</span></label>
                                         <input class="form-control" name="name" type="text"
-                                            value="@if (isset($employees)) {{ $employees->name }} @endif">
+                                            value="@if (isset($employees)) {{ $employees->name }} @endif {{ old('name') }}">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Last Name</label>
                                         <input class="form-control" name="last_name" type="text"
-                                            value="@if (isset($employees)) {{ $employees->last_name }} @endif">
+                                            value="@if (isset($employees)) {{ $employees->last_name }} @endif {{ old('last_name') }}">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -110,7 +110,7 @@
                                         <label class="col-form-label">Employee ID <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" name="employee_id" class="form-control" id="emp"
-                                            value="@if (isset($employees)) {{ $employees->employee_id }} @endif"
+                                            value="SDC-EMP-{{$empid+1}}@if (isset($employees)){{ $employees->employee_id }} @endif{{ old('employee_id')}}"
                                             onkeypress="empl()">
                                     </div>
                                     <div id="empt">
@@ -120,8 +120,8 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Email <span class="text-danger">*</span></label>
                                         <input class="form-control" name="email" type="email" id="email"
-                                            value="@if(isset($employees)) {{ $employees->email }} @endif"
-                                            onkeypress="emaill()">
+                                            value="@if (isset($employees)) {{ $employees->email }} @endif"
+                                            {{ old('email') }} onkeypress="emaill()">
                                     </div>
                                     <div id="emailerror">
                                     </div>
@@ -142,32 +142,48 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Phone </label>
                                         <input class="form-control" name="phone" type="text"
-                                            value="@if (isset($employees)) {{ $employees->phone }} @endif">
+                                            value="@if (isset($employees)) {{ $employees->phone }} @endif {{ old('phone') }}">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Address</label>
                                         <input class="form-control"
-                                            value="@if (isset($employees)) {{ $employees->address }} @endif"
+                                            value="@if (isset($employees)) {{ $employees->address }} @endif {{ old('address') }}"
                                             name="address" type="text">
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="col-form-label">City</label>
-                                        <input class="form-control" name="city"
-                                            value="@if (isset($employees)) {{ $employees->city }} @endif"
-                                            type="text">
+                                        <label class="col-form-label">Country <span class="text-danger">*</span></label>
+                                        <select class="select" name="country_id" class="form-control"
+                                            id="inputcountry" onkeypress="country()">
+                                            <option value="">Select Country</option>
+                                            @foreach ($count as $item)
+                                                <option value="{{ $item->id }} {{ old('country') }}">
+                                                    {{ $item->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="col-form-label">State</label>
-                                        <input class="form-control" name="state" type="text"
-                                            value="@if (isset($employees)) {{ $employees->state }} @endif">
+                                        <label class="col-form-label">State <span class="text-danger">*</span></label>
+                                        <select class="select" name="state_id" id="inputstate" onkeypress="city()">
+                                            <option value="">Select State</option>
+                                        </select>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label">City <span class="text-danger">*</span></label>
+                                        <select class="select" name="city_id" id="inputcity">
+                                            <option value="">Select City</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Department <span
@@ -177,7 +193,8 @@
                                             <option> Select Department </option>
                                             @foreach ($department as $item)
                                                 <option @if (isset($employees) && $employees->department_id == $item->id) selected @endif
-                                                    value="{{ $item->id }}">{{ $item->department_name }}
+                                                    value="{{ $item->id }} {{ old('department_id') }}">
+                                                    {{ $item->department_name }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -187,9 +204,8 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Designation <span
                                                 class="text-danger">*</span></label>
-                                        <select name="designation_id" class="select" name="designation_id"
-                                            id="inputDesignation">
-                                            <option value="">Select Designation</option>
+                                        <select class="select" name="designation_id" id="inputDesignation">
+                                            <option value="{{ old('designation_id') }}">Select Designation</option>
                                         </select>
                                     </div>
                                 </div>
@@ -199,7 +215,7 @@
                                                 class="text-danger">*</span></label>
                                         <div class="cal-icon"><input name="joining_date"
                                                 class="form-control datetimepicker"
-                                                value="@if (isset($employees)) {{ date('d/m/Y', strtotime($employees->joining_date)) }} @endif"
+                                                value="@if (isset($employees)) {{ date('d/m/Y', strtotime($employees->joining_date)) }} @endif {{ old('joining_date') }}"
                                                 type="">
                                         </div>
                                     </div>
@@ -208,9 +224,10 @@
                                     <label for="statusinput" class="mb-4">Status</label>
                                     <div class="col-md-12">
                                         <div class="form-check form-switch">
-                                            <input class='input-switch' type="checkbox" value="1"
+                                            <input class='input-switch' type="checkbox"
+                                                value="@if (isset($employees)) {{ $employees->status }} @endif 1"
                                                 @if (isset($employees)) @if ($employees->status == 0) @else checked @endif
-                                                @endif
+                                                @endif checked
                                             name="status" id="demo" />
                                             <label class="label-switch" for="demo"></label>
                                             <span class="info-text"></span>
@@ -225,7 +242,7 @@
                                                 <input class="form-check-input" type="radio" title="Work From Office"
                                                     @if (isset($employees)) @if ($employees->workplace == 'wfo')checked @endif
                                                     @endif
-                                                name="workplace" id="wfo" value=" wfo">
+                                                name="workplace" id="wfo" value="wfo{{ old('workplace') }}">
                                                 <label class="form-check-label" title="Work From Office"
                                                     for="wfo">WFO</label>
                                             </div>
@@ -234,7 +251,7 @@
                                                     name="workplace" id="wfh"
                                                     @if (isset($employees)) @if ($employees->workplace == 'wfh') checked @endif
                                                     @endif
-                                                value="wfh">
+                                                value="wfh{{ old('workplace') }}">
                                                 <label class="form-check-label" title="Work From House"
                                                     for="wfh">WFH</label>
                                             </div>
@@ -243,7 +260,7 @@
                                                     name="workplace" id="both"
                                                     @if (isset($employees)) @if ($employees->workplace == 'both') checked @endif
                                                     @endif
-                                                value=" both">
+                                                value=" both{{ old('workplace') }}">
                                                 <label class="form-check-label" title="Both" for="both">both</label>
                                             </div>
 
@@ -256,10 +273,10 @@
                                     </div>
                                 </div>
                                 @isset($employees)
-                                <div class="profile-img">
-                                    <a href="" class="">
-                                        <img src="{{ asset('storage/uploads/' . $employees->image) }}" alt=""></a>
-                                </div>
+                                    <div class="profile-img">
+                                        <a href="" class="">
+                                            <img src="{{ asset('storage/uploads/' . $employees->image) }}" alt=""></a>
+                                    </div>
                                 @endisset
                                 <div class="form-group">
                                     <label>Upload Photo</label>
@@ -275,16 +292,13 @@
             </div>
         </div>
     </div>
-
-    </div>
+    {{-- {{$state}} --}}
 @endsection
 @push('plugin-js')
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script>
-
-
         // document.getElementById("email").onchange = function() {
         //     email()
         // };
@@ -341,10 +355,37 @@
                 }
             })
         }
-        document.getElementById("inputDepartment").onchange = function() {
-            indepartment()
+
+        function country() {
+            var contid = document.getElementById("inputcountry");
+            var id = $('#inputcountry').val();
+            var url = "{{ route('admin.country.name') }}";
+            $.ajax({
+                url: url,
+                type: "post",
+                cache: false,
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    contid: id,
+                },
+                success: function(res) {
+                    // console.log(state);
+                    let data = '';
+                    $.each(res.state, function(key, val) {
+                        // console.log(val);
+                        data += '<option value="' + val.id + '">' + val.name + '</option>';
+                    });
+                    $("#inputstate").html(data);
+                }
+            })
+        }
+
+        document.getElementById("inputcountry").onchange = function() {
+            country()
         };
-        indepartment()
+
+
+
         function indepartment() {
             var dep = document.getElementById("inputDepartment");
             var de = $('#inputDepartment').val();
@@ -368,6 +409,37 @@
                 }
 
             })
-        }     
+        }
+        document.getElementById("inputDepartment").onchange = function() {
+            indepartment()
+        };
+        indepartment()
+
+        function city() {
+            var city = document.getElementById("inputstate");
+            var id = $("#inputstate").val();
+            var url = "{{ route('admin.country.state.name') }}"
+            $.ajax({
+                type: "post",
+                url: url,
+                cache: false,
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    id: id,
+                },
+                success: function(res) {
+                    var data = '';
+                    $.each(res.city, function(key, val) {
+                        // console.log(val);
+                        data += '<option value="' + val.id + '">' + val.name + '</option>';
+                    });
+                    $("#inputcity").html(data);
+
+                }
+            });
+        }
+        document.getElementById("inputstate").onchange = () => {
+            city()
+        };
     </script>
 @endpush

@@ -26,8 +26,8 @@ class CreateUsersTable extends Migration
             $table->integer('department_id');
             $table->integer('designation_id');
             $table->string('address');
-            $table->string('city');
-            $table->string('state');
+            $table->string('city_id');
+            $table->string('state_id');
             $table->enum('status', [0,1]);
             $table->string('workplace');
             $table->string('image');
