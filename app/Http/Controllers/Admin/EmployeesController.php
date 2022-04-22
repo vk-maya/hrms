@@ -24,7 +24,7 @@ class EmployeesController extends Controller
 
     public function emailv(Request $request)
     {
-        $rrr = User::where('email', 'like', "%$request->x%")->count();
+        $rrr = User::withTrashed()->where('email', 'like', "%$request->x%")->count();
         return json_encode(['count' => $rrr]);
     }
 
@@ -110,29 +110,52 @@ class EmployeesController extends Controller
 
 
     public function addemployeesstore(Request $request)
-    {
+    {   
+        $rules = [
+            'name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'employee_id' => ['required', 'string', 'numeric'],
+            'designation' => ['required', 'string', 'numeric','max:255'],          
+            'joining_date' => ['string','required'],          
+            'phone' => ['required', 'string', 'max:12'],          
+            'country' => ['required','string',],          
+            'state' => ['required', 'string',],
+            'city' => ['required', 'string'],
+            'department' => ['required', 'string',],
+            'designation' => ['required', 'string','numeric'],
+            'image' => [ 'required','mimes:png,jpg,jpeg,csv','max:2048'],
+            'address' => ['required', 'string', 'max:255'],
+            'password' => ['required', 'confirmed', Password::min(8),Rules\Password::defaults()],
+        ];
         if ($request->id == !null) {
             $employees = User::find($request->id);
-            $img = $employees->image;
-            if (Storage::disk('public')->exists('uploads/' . $img)) {
-                unlink('storage/uploads/' . $img);
+            storage::delete('public/uploads/' . $employees->image);
+            // $img = $employees->image;
+            // if (Storage::disk('public')->exists('uploads/' . $img)) {
+            //     unlink('storage/uploads/' . $img);
+            // }
+            $rules['email'] = ['required', 'string', 'email', 'max:255'];
+            if(User::where('email',$request->email)->where('id','!',$request->id)->count() > 0){
+                return response()->back()->withErrors(['email'=>"Email Already Exist"])->withInput();
             }
         } else {
+            $rules['email'] = ['required', 'string', 'email', 'max:255', 'unique:users'];
             $employees = new User();
         }
+        $request->validate($rules);
         $employees->name = $request->name;
         $employees->last_name = $request->last_name;
         $employees->email = $request->email;
-        $employees->password = Hash::make($request->password);
+        $employees->password =$request->password;
         $employees->employee_id = $request->employee_id;
         $employees->joining_date = date('Y-m-d', strtotime($request->joining_date));
         $employees->phone = $request->phone;
-        $employees->department_id = $request->department_id;
-        $employees->designation_id = $request->designation_id;
+        $employees->department_id = $request->department;
+        $employees->designation_id = $request->designation;
         $employees->address = $request->address;
-        $employees->country_id = $request->country_id;
-        $employees->state_id = $request->state_id;
-        $employees->city_id = $request->city_id;
+        $employees->country_id = $request->country;
+        $employees->state_id = $request->state;
+        $employees->city_id = $request->city;
         $employees->status = ($request->status == 1) ? 1 : 0;
         $employees->workplace = $request->workplace;
 

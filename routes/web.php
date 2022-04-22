@@ -3,7 +3,9 @@
 use App\Http\Controllers\Admin\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminDerpartmentController;
+use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\EmployeesController;
+use App\Http\Controllers\Admin\ProjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,4 +60,15 @@ Route::prefix('admin/')->name('admin.')->group(function() {
         Route::post('save-employees',[EmployeesController::class,'addemployeesstore'])->name('storeemployees');
         Route::get('employees/edid/{id}',[EmployeesController::class,'addemployeescreate'])->name('employees.edit');
         Route::get('employees/delete/{id}',[EmployeesController::class,'employeesdestroy'])->name('employees.delete');
+
+        // ---------------------client route-----------------------
+        Route::get('client',[ClientController::class,'index'])->name('client');
+        Route::get('client/create',[ClientController::class,'create'])->name('client.create');
+        Route::any('client/list',[ClientController::class,'clist'])->name('client.list');
+
+        Route::Post('client/store',[ClientController::class,'store'])->name('client.store');
+
+        // -----------------project route----------------------
+        Route::get('project',[ProjectController::class,'index'])->name('project');
+        Route::get('project/create',[ProjectController::class,'create'])->name('project.create');
 });

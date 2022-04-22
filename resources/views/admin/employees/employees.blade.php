@@ -18,10 +18,10 @@
                         <a href="{{ route('admin.addemployees') }}" class="btn add-btn"><i class="fa fa-plus"></i>
                             Add Employee</a>
                         <div class="view-icons">
-                            <a href="{{route('admin.employees')}}" class="grid-view btn btn-link active"><i
+                            <a href="{{ route('admin.employees') }}" class="grid-view btn btn-link active"><i
                                     class="fa fa-th"></i></a>
-                            <a href="{{route('admin.employees.list')}}" class="list-view btn btn-link emplist" id="employeeslist"><i
-                                    class="fa fa-bars"></i></a>
+                            <a href="{{ route('admin.employees.list') }}" class="list-view btn btn-link emplist"
+                                id="employeeslist"><i class="fa fa-bars"></i></a>
                         </div>
                     </div>
                 </div>
@@ -58,85 +58,87 @@
                 </div>
             </div>
             @isset($lemployees)
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="table-responsive">
-                        <table class="table table-striped custom-table datatable">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Employee ID</th>
-                                    <th>Email</th>
-                                    <th>Mobile</th>
-                                    <th class="text-nowrap">Join Date</th>
-                                    <th>Role</th>
-                                    <th class="text-end no-sort">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($lemployees as $item)
-                                <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a href="profile.html" class="avatar"> <img src="{{ asset('storage/uploads/' . $item->image) }}" alt=""></a>
-                                            <a href="profile.html"><b>{{$item->name}}</b> <span>{{ $item->designation->designation_name }}</span></a>
-                                        </h2>
-                                    </td>
-                                    <td>SDC-EMP-{{$item->employee_id}}</td>
-                                    <td>{{$item->email}}</td>
-                                    <td>{{$item->phone}}</td>                                    
-                                    <td> {{\Carbon\Carbon::parse($item->joining_date)->format('d/m/Y')}}</td>                                   
-                                    <td>{{ $item->designation->designation_name }}</td>                                 
-                                    <td class="text-end">
-                                        <div class="dropdown dropdown-action">
-                                            <a href="#" class="action-icon dropdown-toggle"
-                                                data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                    class="material-icons">more_vert</i></a>
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item" href="{{ route('admin.employees.edit', $item->id) }}"><i
-                                                    class="fa fa-pencil m-r-5"></i> Edit</a>
-                                                    <button class="dropdown-item delete" data-id="{{ $item->id }}"><i
-                                                        class="fa fa-trash-o m-r-5"></i> Delete</button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
-                               
-  
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            @endisset
-            @isset($employees)
-                   <div class="row staff-grid-row">
-                @foreach ($employees as $item)
-                    <div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
-                        <div class="profile-widget">
-                            <div class="profile-img">
-                                <a href="java" class="avatar">
-                                    <img src="{{ asset('storage/uploads/' . $item->image) }}" alt=""></a>
-                            </div>
-                            <div class="dropdown profile-action">
-                                <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
-                                    aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="{{ route('admin.employees.edit', $item->id) }}"><i
-                                            class="fa fa-pencil m-r-5"></i> Edit</a>
-                                    <button class="dropdown-item delete" data-id="{{ $item->id }}"><i
-                                            class="fa fa-trash-o m-r-5"></i> Delete</button>
-                                </div>
-                            </div>
-                            <h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="">{{ $item->name }}</a></h4>
-                            <div class="small text-muted">{{ $item->designation->designation_name }}</div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-striped custom-table datatable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Employee ID</th>
+                                        <th>Email</th>
+                                        <th>Mobile</th>
+                                        <th class="text-nowrap">Join Date</th>
+                                        <th>Role</th>
+                                        <th class="text-end no-sort">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($lemployees as $item)
+                                        <tr>
+                                            <td>
+                                                <h2 class="table-avatar">
+                                                    <a href="profile.html" class="avatar"> <img
+                                                            src="{{ asset('storage/uploads/' . $item->image) }}" alt=""></a>
+                                                    <a href="profile.html"><b>{{ $item->name }}</b>
+                                                        <span>{{ $item->designation->designation_name }}</span></a>
+                                                </h2>
+                                            </td>
+                                            <td>SDC-EMP-{{ $item->employee_id }}</td>
+                                            <td>{{ $item->email }}</td>
+                                            <td>{{ $item->phone }}</td>
+                                            <td> {{ \Carbon\Carbon::parse($item->joining_date)->format('d/m/Y') }}</td>
+                                            <td>{{ $item->designation->designation_name }}</td>
+                                            <td class="text-end">
+                                                <div class="dropdown dropdown-action">
+                                                    <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
+                                                        aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('admin.employees.edit', $item->id) }}"><i
+                                                                class="fa fa-pencil m-r-5"></i> Edit</a>
+                                                        <button class="dropdown-item delete" data-id="{{ $item->id }}"><i
+                                                                class="fa fa-trash-o m-r-5"></i> Delete</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+
+
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                @endforeach
-            </div>
+                </div>
             @endisset
-         
+            @isset($employees)
+                <div class="row staff-grid-row">
+                    @foreach ($employees as $item)
+                        <div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
+                            <div class="profile-widget">
+                                <div class="profile-img">
+                                    <a href="java" class="avatar">
+                                        <img src="{{ asset('storage/uploads/' . $item->image) }}" alt=""></a>
+                                </div>
+                                <div class="dropdown profile-action">
+                                    <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
+                                        aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item" href="{{ route('admin.employees.edit', $item->id) }}"><i
+                                                class="fa fa-pencil m-r-5"></i> Edit</a>
+                                        <button class="dropdown-item delete" data-id="{{ $item->id }}"><i
+                                                class="fa fa-trash-o m-r-5"></i> Delete</button>
+                                    </div>
+                                </div>
+                                <h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="">{{ $item->name }}</a></h4>
+                                <div class="small text-muted">{{ $item->designation->designation_name }}</div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endisset
+
         </div>
 
     </div>
@@ -148,21 +150,6 @@
     <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
 
     <script>
-        // $(document).ready(function() {
-        //     $(document).on("click", ".meplist", function() {
-        //         var list = $(this);
-        //         var url = "{{ route('admin.employees') }}";
-        //         $.ajax({
-        //             type: "get",
-        //             url: url,
-        //            cache:false,
-        //             success: function (res) {
-        //                 console.log(res);                        
-        //             }
-        //         });
-        //     });
-        // })
-
         $(document).ready(function() {
             $(document).on("click", ".delete", function() {
                 var yes = $(this);

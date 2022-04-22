@@ -74,10 +74,10 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Add Employee</h3>
+                        <h3 class="page-title">Add Client</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Add Employee</li>
+                            <li class="breadcrumb-item active">Add Client</li>
                         </ul>
                     </div>
                 </div>
@@ -85,17 +85,14 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{ route('admin.storeemployees') }}" enctype="multipart/form-data" method="POST">
-                            @csrf
-                            <input type="text" hidden
-                                value="@if (isset($employees)) {{ $employees->id }} @endif" name="id">
+                        <form action="{{ route('admin.client.store') }}" enctype="multipart/form-data" method="POST">
                             <div class="row">
-                                <div class="col-sm-6">
+                                @csrf
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">First Name <span
                                                 class="text-danger">*</span></label>
-                                        <input class="form-control" name="name" type="text"
-                                            value="@if (isset($employees)) {{ $employees->name }} @endif {{ old('name') }}">
+                                        <input class="form-control" value="{{old('name')}}" name="name" type="text">
                                         <span class="text-danger">
                                             @error('name')
                                                 {{ $message }}
@@ -103,86 +100,79 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Last Name</label>
-                                        <input class="form-control" name="last_name" type="text"
-                                            value="@if (isset($employees)) {{ $employees->last_name }} @endif {{ old('last_name') }}">
+                                        <input class="form-control" name="last_name" value="{{old('last_name')}}"type="text">
                                         <span class="text-danger">
-                                            @error('last_name')
+                                            @error('name')
                                                 {{ $message }}
                                             @enderror
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <label class="col-form-label" for="emp">Employee ID</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text" id="inputGroupPrepend">SDC-EMP-</span>
-                                        <input type="text" class="form-control" name="employee_id" id="emp"
-                                            value="@if(isset($employees)){{$employees->employee_id}}@else{{$empid}}@endif"
-                                            onkeypress="empl()" aria-describedby="inputGroupPrepend">
-                                    </div>
-                                    <span class="text-danger">
-                                        @error('employee_id')
-                                            {{ $message }}
-                                        @enderror
-                                    </span>
-                                    <div id="empt">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Email <span class="text-danger">*</span></label>
-                                        <input class="form-control" name="email" type="email" id="email"
-                                            value="@if (isset($employees)) {{ $employees->email }} @endif"
-                                            {{ old('email') }} onkeypress="emaill()">
+                                        <input class="form-control floating" name="email" value="{{old('last_name')}}" type="email">
                                         <span class="text-danger">
-                                            @error('email')
-                                                {{ $message }}
-                                            @enderror
-                                        </span>
-                                    </div>
-                                    <div id="emailerror">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="col-form-label">Password</label>
-                                        <input class="form-control" name="password" type="password">
-                                        <span class="text-danger">
-                                            @error('password')
+                                            @error('name')
                                                 {{ $message }}
                                             @enderror
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="col-form-label">Confirm Password</label>
-                                        <input class="form-control" name="password_confirmation" type="password">                                     
+                                        <label class="col-form-label">Client ID <span
+                                                class="text-danger">*</span></label>
+                                        <input class="form-control floating" name="client_id"value="{{old('last_name')}}" type="text">
+                                        <span class="text-danger">
+                                            @error('name')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Phone </label>
-                                        <input class="form-control" name="phone" type="text"
-                                            value="@if (isset($employees)) {{ $employees->phone }} @endif {{ old('phone') }}">
+                                        <input class="form-control" name="phone" type="text" value="{{old('last_name')}}">
+                                        <span class="text-danger">
+                                            @error('name')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
                                     </div>
-                                    <span class="text-danger">
-                                        @error('phone')
-                                            {{ $message }}
-                                        @enderror
-                                    </span>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label">Company Name</label>
+                                        <input class="form-control" name="company" type="text" value="{{old('last_name')}}">
+                                        <span class="text-danger">
+                                            @error('name')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label">Web Site</label>
+                                        <input class="form-control" name="website" type="text" value="{{old('last_name')}}">
+                                        <span class="text-danger">
+                                            @error('name')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Address</label>
-                                        <input class="form-control"
-                                            value="@if (isset($employees)) {{ $employees->address }} @endif {{ old('address') }}"
-                                            name="address" type="text">
+                                        <input class="form-control" name="address" type="text" value="{{old('last_name')}}">
                                         <span class="text-danger">
-                                            @error('address')
+                                            @error('name')
                                                 {{ $message }}
                                             @enderror
                                         </span>
@@ -191,8 +181,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Country <span class="text-danger">*</span></label>
-                                        <select class="select" name="country" class="form-control"
-                                            id="inputcountry" onkeypress="country()">
+                                        <select class="select" name="country" class="form-control" id="inputcountry"
+                                            onkeypress="country()">
                                             <option value="">Select Country</option>
                                             @foreach ($count as $item)
                                                 <option value="{{ $item->id }} {{ old('country') }}">
@@ -233,59 +223,7 @@
                                         </span>
                                     </div>
                                 </div>
-
                                 <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="col-form-label">Department <span
-                                                class="text-danger">*</span></label>
-                                        <select class="select" name="department" class="form-control"
-                                            id="inputDepartment" onkeypress="indepartment()">
-                                            <option> Select Department </option>
-                                            @foreach ($department as $item)
-                                                <option @if (isset($employees) && $employees->department_id == $item->id) selected @endif
-                                                    value="{{ $item->id }} {{ old('department_id') }}">
-                                                    {{ $item->department_name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        <span class="text-danger">
-                                            @error('department')
-                                                {{ $message }}
-                                            @enderror
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="col-form-label">Designation <span
-                                                class="text-danger">*</span></label>
-                                        <select class="select" name="designation" id="inputDesignation">
-                                            <option value="">Select Designation</option>
-                                        </select>
-                                        <span class="text-danger">
-                                            @error('designation')
-                                                {{ $message }}
-                                            @enderror
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="col-form-label">Joining Date <span
-                                                class="text-danger">*</span></label>
-                                        <div class="cal-icon"><input name="joining_date"
-                                                class="form-control datetimepicker"
-                                                value="@if (isset($employees)) {{ date('d/m/Y', strtotime($employees->joining_date)) }} @endif {{ old('joining_date') }}"
-                                                type="">
-                                            <span class="text-danger">
-                                                @error('joining_date')
-                                                    {{ $message }}
-                                                @enderror
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
                                     <label for="statusinput" class="mb-4">Status</label>
                                     <div class="col-md-12">
                                         <div class="form-check form-switch">
@@ -296,40 +234,6 @@
                                             name="status" id="demo" />
                                             <label class="label-switch" for="demo"></label>
                                             <span class="info-text"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group ml-2">
-                                        <label class="col-form-label">Work Place</label>
-                                        <div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" title="Work From Office"
-                                                    checked
-                                                    @if (isset($employees)) @if ($employees->workplace == 'wfo')checked @endif
-                                                    @endif
-                                                name="workplace" id="wfo" value="wfo{{ old('workplace') }}">
-                                                <label class="form-check-label" title="Work From Office"
-                                                    for="wfo">WFO</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" title="Work From House" type="radio"
-                                                    name="workplace" id="wfh"
-                                                    @if (isset($employees)) @if ($employees->workplace == 'wfh') checked @endif
-                                                    @endif
-                                                value="wfh{{ old('workplace') }}">
-                                                <label class="form-check-label" title="Work From House"
-                                                    for="wfh">WFH</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" title="Work From House" type="radio"
-                                                    name="workplace" id="both"
-                                                    @if (isset($employees)) @if ($employees->workplace == 'both') checked @endif
-                                                    @endif
-                                                value=" both{{ old('workplace') }}">
-                                                <label class="form-check-label" title="Both" for="both">both</label>
-                                            </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -348,9 +252,11 @@
                                         @enderror
                                     </span>
                                 </div>
-                                <div class="submit-section">
-                                    <button class="btn btn-primary submit-btn" type="submit">Submit</button>
-                                </div>
+                            </div>
+
+                            
+                            <div class="submit-section">
+                                <button class="btn btn-primary submit-btn">Submit</button>
                             </div>
                         </form>
                     </div>
@@ -358,7 +264,6 @@
             </div>
         </div>
     </div>
-    {{-- {{$state}} --}}
 @endsection
 @push('plugin-js')
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>

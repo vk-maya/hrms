@@ -77,18 +77,18 @@
 							</ul>
 						</li>
 						<li>
-							<a href="clients.html"><i class="la la-users"></i> <span>Clients</span></a>
+							<a href="{{route('admin.client')}}"><i class="la la-users"></i> <span>Clients</span></a>
 						</li>
 						<li class="submenu">
 							<a href="#"><i class="la la-rocket"></i> <span> Projects</span> <span
 									class="menu-arrow"></span></a>
 							<ul style="display: none;">
-								<li><a href="projects.html">Projects</a></li>
+								<li><a href="{{route('admin.project')}}">Projects</a></li>
 								<li><a href="tasks.html">Tasks</a></li>
 								<li><a href="task-board.html">Task Board</a></li>
 							</ul>
 						</li>
-						<li>
+						{{-- <li>
 							<a href="leads.html"><i class="la la-user-secret"></i> <span>Leads</span></a>
 						</li>
 						<li>
@@ -327,7 +327,7 @@
 									<a href="javascript:void(0);"> <span>Level 1</span></a>
 								</li>
 							</ul>
-						</li>
+						</li> --}}
 					</ul>
 				</div>
 			</div>
