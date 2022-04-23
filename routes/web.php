@@ -65,10 +65,15 @@ Route::prefix('admin/')->name('admin.')->group(function() {
         Route::get('client',[ClientController::class,'index'])->name('client');
         Route::get('client/create',[ClientController::class,'create'])->name('client.create');
         Route::any('client/list',[ClientController::class,'clist'])->name('client.list');
-
+        Route::post('client/cid',[ClientController::class,'cid'])->name('client.id');
+        Route::get('client/edit/{id}',[ClientController::class,'create'])->name('client.edit');
+        Route::get('client/delete/{id}',[ClientController::class,'delete'])->name('client.delete');
         Route::Post('client/store',[ClientController::class,'store'])->name('client.store');
+        Route::post('client/status',[ClientController::class,'clientstatus'])->name('client.status');
+
 
         // -----------------project route----------------------
         Route::get('project',[ProjectController::class,'index'])->name('project');
         Route::get('project/create',[ProjectController::class,'create'])->name('project.create');
+        Route::post('project/create',[ProjectController::class,'store'])->name('project.store');
 });

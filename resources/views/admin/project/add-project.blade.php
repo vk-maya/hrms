@@ -85,21 +85,35 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <form>
+                        <form action="{{ route('admin.project.store') }}" method="POST" enctype="multipart/form-data">
                             <div class="row">
+                                @csrf
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="inputname">Project Name</label>
-                                        <input id="inputname" class="form-control" type="text">
+                                        <input id="inputname" name="name" value="{{ old('name') }}" class="form-control"
+                                            type="text">
+                                            <span class="text-danger">
+                                                @error('name')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>Client</label>
-                                        <select class="select">
-                                            <option>Global Technologies</option>
-                                            <option>Delta Infotech</option>
+                                        <select class="select" name="clientname">
+                                            <option>Select Client</option>
+                                            @foreach ($client as $item)
+                                                <option value="{{ $item->id }}">{{ $item->company }}</option>
+                                            @endforeach
                                         </select>
+                                        <span class="text-danger">
+                                            @error('clientname')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -108,7 +122,12 @@
                                     <div class="form-group">
                                         <label>Start Date</label>
                                         <div class="cal-icon">
-                                            <input class="form-control datetimepicker" type="text">
+                                            <input class="form-control datetimepicker" name="start_date" type="text">
+                                            <span class="text-danger">
+                                                @error('start_date')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -116,7 +135,12 @@
                                     <div class="form-group">
                                         <label>End Date</label>
                                         <div class="cal-icon">
-                                            <input class="form-control datetimepicker" type="text">
+                                            <input class="form-control datetimepicker" name="end_date" type="text">
+                                            <span class="text-danger">
+                                                @error('end_date')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -125,26 +149,44 @@
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label>Rate</label>
-                                        <input placeholder="$50" class="form-control" type="text">
+                                        <input placeholder="$50" name="rate" value="{{ old('rate') }}"
+                                            class="form-control" type="text">
+                                            <span class="text-danger">
+                                                @error('rate')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label>&nbsp;</label>
-                                        <select class="select">
-                                            <option>Hourly</option>
-                                            <option>Fixed</option>
+                                        <select class="select" name="duration">
+                                            <option >Select Duration</option>
+                                            <option value="hour">Hourly</option>
+                                            <option value="fixed">Fixed</option>
                                         </select>
+                                        <span class="text-danger">
+                                            @error('duration')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>Priority</label>
-                                        <select class="select">
-                                            <option>High</option>
-                                            <option>Medium</option>
-                                            <option>Low</option>
+                                        <select class="select" name="priority">
+                                            <option >Select Priority </option>
+                                            <option value="high">High</option>
+                                            <option value="medium">Medium</option>
+                                            <option value="low">Low</option>
                                         </select>
+                                        <span class="text-danger">
+                                            @error('priority')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -152,10 +194,20 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>Add Project Leader</label>
-                                        <input class="form-control" type="text">
+                                        <select class="select" multiple name="teamlead[]">
+                                            <option>Select Client</option>
+                                            @foreach ($employeesc as $item)
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <span class="text-danger">
+                                            @error('teamlead[]')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                {{-- <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>Team Leader</label>
                                         <div class="project-members">
@@ -165,16 +217,26 @@
                                             </a>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>Add Team</label>
-                                        <input class="form-control" type="text">
+                                        <select class="select" multiple name="team[]">
+                                            <option>Select Client</option>
+                                            @foreach ($employeesc as $item)
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <span class="text-danger">
+                                            @error('team[]')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                {{-- <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>Team Members</label>
                                         <div class="project-members">
@@ -197,18 +259,44 @@
                                             <span class="all-team">+2</span>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="form-group">
                                 <label>Description</label>
                                 <div id="editor"></div>
+                                <span class="text-danger">
+                                    @error('name')
+                                        {{ $message }}
+                                    @enderror
+                                </span>
                             </div>
                             <div class="form-group">
                                 <label>Upload Files</label>
-                                <input class="form-control" type="file">
+                                <input class="form-control" name="image" type="file">
+                            </div>
+                            <span class="text-danger">
+                                @error('image')
+                                    {{ $message }}
+                                @enderror
+                            </span>
+                            <div class="col-md-6">
+                                <label for="statusinput" class="mb-4">Status</label>
+                                <div class="col-md-12">
+                                    <div class="form-check form-switch">
+                                        <input class='input-switch' type="checkbox" value="1" checked name="status"
+                                            id="demo" />
+                                        <label class="label-switch" for="demo"></label>
+                                        <span class="info-text"></span>
+                                        <span class="text-danger">
+                                            @error('status')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="submit-section">
-                                <button class="btn btn-primary submit-btn">Submit</button>
+                                <button type="submit" class="btn btn-primary submit-btn">Submit</button>
                             </div>
                         </form>
                     </div>

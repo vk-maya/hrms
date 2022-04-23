@@ -148,7 +148,6 @@
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
-
     <script>
         $(document).ready(function() {
             $(document).on("click", ".delete", function() {

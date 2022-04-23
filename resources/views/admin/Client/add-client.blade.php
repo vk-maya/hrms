@@ -2,7 +2,6 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
-
     <style>
         .input-switch {
             display: none;
@@ -81,6 +80,9 @@
                         </ul>
                     </div>
                 </div>
+                @isset($client)
+                {{$client}}
+                @endisset
             </div>
             <div class="col-lg-12">
                 <div class="card">
@@ -88,11 +90,14 @@
                         <form action="{{ route('admin.client.store') }}" enctype="multipart/form-data" method="POST">
                             <div class="row">
                                 @csrf
+                                @isset($client)
+                                <input type="hidden" name="id" value="{{$client->id}}">
+                                @endisset
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">First Name <span
                                                 class="text-danger">*</span></label>
-                                        <input class="form-control" value="{{old('name')}}" name="name" type="text">
+                                        <input class="form-control" value="@if(isset($client)){{$client->name}}@else {{old('name')}}@endisset" name="name" type="text">
                                         <span class="text-danger">
                                             @error('name')
                                                 {{ $message }}
@@ -103,7 +108,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Last Name</label>
-                                        <input class="form-control" name="last_name" value="{{old('last_name')}}"type="text">
+                                        <input class="form-control" name="last_name" value="@if(isset($client)){{$client->last_name}}@else {{old('last_name')}}@endisset"type="text">
                                         <span class="text-danger">
                                             @error('name')
                                                 {{ $message }}
@@ -114,7 +119,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Email <span class="text-danger">*</span></label>
-                                        <input class="form-control floating" name="email" value="{{old('last_name')}}" type="email">
+                                        <input class="form-control floating" name="email"value="@if(isset($client)){{$client->email}}@else {{old('email')}}@endisset" type="email">
                                         <span class="text-danger">
                                             @error('name')
                                                 {{ $message }}
@@ -126,18 +131,21 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Client ID <span
                                                 class="text-danger">*</span></label>
-                                        <input class="form-control floating" name="client_id"value="{{old('last_name')}}" type="text">
+                                        <input class="form-control floating" id="cid" onchange="cid()" name="client_id"value="@if(isset($client)){{$client->client_id}}@else {{old('client_id')}}@endisset"type="text">
                                         <span class="text-danger">
                                             @error('name')
                                                 {{ $message }}
                                             @enderror
                                         </span>
+                                        <div id="inputcid">
+
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Phone </label>
-                                        <input class="form-control" name="phone" type="text" value="{{old('last_name')}}">
+                                        <input class="form-control" name="phone" type="text" value="@if(isset($client)){{$client->phone}}@else {{old('phone')}}@endisset">
                                         <span class="text-danger">
                                             @error('name')
                                                 {{ $message }}
@@ -148,7 +156,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Company Name</label>
-                                        <input class="form-control" name="company" type="text" value="{{old('last_name')}}">
+                                        <input class="form-control" name="company" type="text" value="@if(isset($client)){{$client->company}}@else {{old('company')}}@endisset">
                                         <span class="text-danger">
                                             @error('name')
                                                 {{ $message }}
@@ -159,7 +167,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Web Site</label>
-                                        <input class="form-control" name="website" type="text" value="{{old('last_name')}}">
+                                        <input class="form-control" name="website" type="text" value="@if(isset($client)){{$client->website}}@else {{old('website')}}@endisset">
                                         <span class="text-danger">
                                             @error('name')
                                                 {{ $message }}
@@ -170,7 +178,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Address</label>
-                                        <input class="form-control" name="address" type="text" value="{{old('last_name')}}">
+                                        <input class="form-control" name="address" type="text" value="@if(isset($client)){{$client->address}}@else {{old('address')}}@endisset">
                                         <span class="text-danger">
                                             @error('name')
                                                 {{ $message }}
@@ -181,11 +189,10 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Country <span class="text-danger">*</span></label>
-                                        <select class="select" name="country" class="form-control" id="inputcountry"
-                                            onkeypress="country()">
+                                        <select class="select" name="country" class="form-control" id="inputcountry" >
                                             <option value="">Select Country</option>
                                             @foreach ($count as $item)
-                                                <option value="{{ $item->id }} {{ old('country') }}">
+                                                <option @if (isset($client) && $client->country_id == $item->id) selected @endif value="{{ $item->id }}">
                                                     {{ $item->name }}
                                                 </option>
                                             @endforeach
@@ -200,7 +207,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">State <span class="text-danger">*</span></label>
-                                        <select class="select" name="state" id="inputstate" onkeypress="city()">
+                                        <select class="select" name="state" id="inputstate" >
                                             <option value="">Select State</option>
                                         </select>
                                         <span class="text-danger">
@@ -208,6 +215,9 @@
                                                 {{ $message }}
                                             @enderror
                                         </span>
+                                        @isset($client)
+                                            <input type="hidden" value="{{$client->state_id}}" id="EditState">
+                                        @endisset
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -221,6 +231,9 @@
                                                 {{ $message }}
                                             @enderror
                                         </span>
+                                        @isset($client)
+                                        <input type="hidden" value="{{$client->city_id}}" id="Editcity">                                            
+                                        @endisset
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -229,7 +242,7 @@
                                         <div class="form-check form-switch">
                                             <input class='input-switch' type="checkbox"
                                                 value="@if (isset($employees)) {{ $employees->status }} @endif 1"
-                                                @if (isset($employees)) @if ($employees->status == 0) @else checked @endif
+                                                @if (isset($client)) @if ($client->status == 0) @else checked @endif
                                                 @endif checked
                                             name="status" id="demo" />
                                             <label class="label-switch" for="demo"></label>
@@ -237,24 +250,22 @@
                                         </div>
                                     </div>
                                 </div>
-                                @isset($employees)
+                                @isset($client)
                                     <div class="profile-img">
                                         <a href="" class="">
-                                            <img src="{{ asset('storage/uploads/' . $employees->image) }}" alt=""></a>
+                                            <img src="{{ asset('storage/client/' . $client->image) }}" alt=""></a>
                                     </div>
                                 @endisset
                                 <div class="form-group">
                                     <label>Upload Photo</label>
-                                    <input name="image" class="form-control" value="{{ old('image') }}" type="file">
+                                    <input name="image" class="form-control" type="file">
                                     <span class="text-danger">
                                         @error('image')
                                             {{ $message }}
                                         @enderror
                                     </span>
                                 </div>
-                            </div>
-
-                            
+                            </div>                            
                             <div class="submit-section">
                                 <button class="btn btn-primary submit-btn">Submit</button>
                             </div>
@@ -270,64 +281,31 @@
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script>
-        // document.getElementById("email").onchange = function() {
-        //     email()
-        // };
-        document.getElementById("email").onchange = function() {
-            emaill()
-        };
-
-        function emaill() {
-            var x = document.getElementById("email");
-            let email = $('#email').val();
-            var url = "{{ route('admin.emailv') }}";
-            $.ajax({
-                url: url,
-                type: "post",
-                cache: false,
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    x: email
-                },
-                success: function(email) {
-                    x = JSON.parse(email);
-                    if (x.count > 0) {
-                        $("#emailerror").html('<span class="text-danger">Email Already Exist</span>');
-                    } else {
-                        $("#emailerror").html('');
-                    }
-                }
-            })
-        }
-        document.getElementById("emp").onchange = function() {
-            empl()
-        };
-
-        function empl() {
-            var y = document.getElementById("emp");
-            let eamployees = $('#emp').val();
+    
+        function cid() {
+            var id = document.getElementById("cid");
+            let clientid = $('#cid').val();
             // consol.log(email)
-            var url = "{{ route('admin.epid') }}";
+            var url = "{{ route('admin.client.id') }}";
             $.ajax({
                 url: url,
-                type: "post",
-                cache: false,
+                type: "POST",
                 data: {
                     _token: '{{ csrf_token() }}',
-                    y: eamployees
+                    id: clientid
                 },
-                success: function(empl) {
-                    xy = JSON.parse(empl);
-                    if (xy.count > 0) {
-                        $("#empt").html('<span class="text-danger">Employees Id Already Exist</span>');
+                success: function(res) {
+                   console.log(res.cid);
+                    if (res.cid > 0) {
+                        $("#inputcid").html('<span class="text-danger">Client ID Already Exist</span>');
                     } else {
-                        $("#empt").html('');
+                        $("#inputcid").html('<span class="text-success">Client ID Active</span>');
                     }
                 }
             })
         }
 
-        function country() {
+        function states() {
             var contid = document.getElementById("inputcountry");
             var id = $('#inputcountry').val();
             var url = "{{ route('admin.country.name') }}";
@@ -342,52 +320,21 @@
                 success: function(res) {
                     // console.log(state);
                     let data = '';
+                    let selected = ''
                     $.each(res.state, function(key, val) {
-                        // console.log(val);
-                        data += '<option value="' + val.id + '">' + val.name + '</option>';
+                        if($(document).find("#EditState").length > 0 && $("#EditState").val()==val.id){
+                            selected = 'selected';
+                        }else{
+                            selected = '';
+                        }
+                        data += '<option '+selected+' value="' + val.id + '">' + val.name + '</option>';
                     });
                     $("#inputstate").html(data);
+                    cities();
                 }
             })
         }
-
-        document.getElementById("inputcountry").onchange = function() {
-            country()
-        };
-
-
-
-        function indepartment() {
-            var dep = document.getElementById("inputDepartment");
-            var de = $('#inputDepartment').val();
-            var url = "{{ route('admin.designation.name') }}";
-            $.ajax({
-                url: url,
-                type: "post",
-                cache: false,
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    dep: de,
-                },
-                success: function(designation) {
-                    desig = JSON.parse(designation);
-                    // console.log(desig);
-                    let data = '';
-                    $.each(desig.count, function(index, val) {
-                        data += '<option value="' + val.id + '">' + val.designation_name + '</option>';
-                    });
-                    $("#inputDesignation").html(data);
-                }
-
-            })
-        }
-        document.getElementById("inputDepartment").onchange = function() {
-            indepartment()
-        };
-        indepartment()
-
-        function city() {
-            var city = document.getElementById("inputstate");
+        function cities() {
             var id = $("#inputstate").val();
             var url = "{{ route('admin.country.state.name') }}"
             $.ajax({
@@ -400,17 +347,29 @@
                 },
                 success: function(res) {
                     var data = '';
+                    var selected = ''
                     $.each(res.city, function(key, val) {
-                        // console.log(val);
-                        data += '<option value="' + val.id + '">' + val.name + '</option>';
+                        if($(document).find("#Editcity").length > 0 && $("#Editcity").val()==val.id){
+                            selected ='selected';
+                        }else{
+                            selected= '';
+                        }
+                        data += '<option '+selected+' value="' +val.id+ '">' + val.name + '</option>';
                     });
                     $("#inputcity").html(data);
-
                 }
             });
         }
-        document.getElementById("inputstate").onchange = () => {
-            city()
+        states(); 
+        document.getElementById("inputcountry").onchange = function() {
+            states();
         };
+        document.getElementById("inputstate").onchange = () => {
+            cities();
+        };
+        document.getElementById("cid").onchange = function() {
+            cid()
+        };
+     
     </script>
 @endpush

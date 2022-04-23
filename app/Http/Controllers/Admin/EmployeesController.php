@@ -51,9 +51,7 @@ class EmployeesController extends Controller
     }
 
 
-    public function state(Request $request)
-    {
-
+    public function state(Request $request){
         $data = City::where('state_id', $request->id)->get();
         return response()->json(['city' => $data]);
     }

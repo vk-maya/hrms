@@ -7,11 +7,29 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\ClientModel;
 use Illuminate\Auth\Events\Validated;
+use Illuminate\Support\Facades\Storage;
+
 
 
 
 class ClientController extends Controller
 {
+    // -------------ajax route reposce ------------------
+    public function cid(Request $request)
+    {
+        $rrr = ClientModel::withTrashed()->where('client_id', 'like', "%$request->id%")->count();
+        return response()->json(['cid' => $rrr]);
+    }   
+    public function clientstatus(Request $request){
+        $data = ClientModel::find($request->id);
+        if($data->status == 1){
+            $data->status= 0;
+        }else{
+            $data->status= 1;
+        }
+        $data->save();
+        return response()->json(['success'=>"Successfully Changed"]);
+    }
     public function index()
     {
         $client = ClientModel::all();
@@ -24,13 +42,22 @@ class ClientController extends Controller
 
         return view('admin.Client.client', compact('clist'));
     }
-    public function create()
+    public function create($id = "")
     {
+
+        if ($id > 0) {
+            $client = ClientModel::find($id);
+            $count = Countrie::all();
+            return view('admin.Client.add-client', compact('count', 'client'));
+        } else {
+        }
+
         $count = Countrie::all();
         return view('admin.Client.add-client', compact('count'),);
     }
     public function store(Request $request)
     {
+        // dd($request->toArray());
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
@@ -41,13 +68,20 @@ class ClientController extends Controller
             'website' => ['required', 'string',],
             'address' => ['required', 'string',],
             'country' => ['required', 'string'],
-            // 'state' => ['required', 'string'],
-            // 'city' => ['required', 'string'],
+            'state' => ['required', 'string'],
+            'city' => ['required', 'string'],
             'status' => ['required'],
-            'image' => ['required', 'mimes:png,jpg,jpeg,csv', 'max:2048'],
+
         ];
+
+        if ($request->id == !null) {
+
+            $client = ClientModel::find($request->id);
+        } else {
+            $client = new ClientModel();
+            $rules['image'] = ['required', 'mimes:png,jpg,jpeg,csv', 'max:2048'];
+        }
         $request->validate($rules);
-        $client = new ClientModel();
         $client->name = $request->name;
         $client->last_name = $request->last_name;
         $client->email = $request->email;
@@ -60,7 +94,6 @@ class ClientController extends Controller
         $client->state_id = $request->state;
         $client->city_id = $request->city;
         $client->status = ($request->status == 1) ? 1 : 0;
-        $client->image = '';
         if ($request->hasFile('image') == 1) {
             $file = $request->file('image');
             $ext = $file->getClientOriginalExtension();
@@ -68,8 +101,17 @@ class ClientController extends Controller
             $file = $request->file('image')->storeAs('public/client', $filename);
             $client->image = $filename;
         }
-        // dd($client->toArray());
         $client->save();
         return redirect()->route('admin.client');
+    }
+    public function delete($id)
+    {
+
+        $delete = ClientModel::find($id);
+        if ($delete->image != '') {
+            storage::delete('public/uploads/' . $delete->image);
+        }
+        $delete->delete();
+        return response()->json(['msg' => 'yes']);
     }
 }
