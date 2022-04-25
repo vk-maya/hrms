@@ -9,4 +9,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ProjectTeamModel extends Model
 {
     use HasFactory ,  SoftDeletes;
+    public function user(){
+
+        return $this->belongsTo(User::class,"team_id");
+        // return $this->belongsTo(Department::class);
+
+    }
 }

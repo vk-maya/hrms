@@ -2,6 +2,8 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/ckeditor.css') }}">
+
 
     <style>
         .input-switch {
@@ -82,6 +84,9 @@
                     </div>
                 </div>
             </div>
+            @isset($project)
+                {{ $project }}
+            @endisset
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
@@ -91,13 +96,14 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="inputname">Project Name</label>
-                                        <input id="inputname" name="name" value="{{ old('name') }}" class="form-control"
-                                            type="text">
-                                            <span class="text-danger">
-                                                @error('name')
-                                                    {{ $message }}
-                                                @enderror
-                                            </span>
+                                        <input id="inputname" name="name"
+                                            value="@if (isset($project)) {{ $project->name }}@else{{ old('name') }} @endif"
+                                            class="form-control" type="text">
+                                        <span class="text-danger">
+                                            @error('name')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -106,7 +112,8 @@
                                         <select class="select" name="clientname">
                                             <option>Select Client</option>
                                             @foreach ($client as $item)
-                                                <option value="{{ $item->id }}">{{ $item->company }}</option>
+                                                <option @if (isset($project) && $project->client_id == $item->id) ) selected @endif
+                                                    value="{{ $item->id }}">{{ $item->company }}</option>
                                             @endforeach
                                         </select>
                                         <span class="text-danger">
@@ -122,7 +129,9 @@
                                     <div class="form-group">
                                         <label>Start Date</label>
                                         <div class="cal-icon">
-                                            <input class="form-control datetimepicker" name="start_date" type="text">
+                                            <input class="form-control datetimepicker"
+                                                value="@if (isset($project)) {{ date('d/m/Y', strtotime($project->start_date)) }} @endif {{ old('start_date') }}"
+                                                name="start_date" type="text">
                                             <span class="text-danger">
                                                 @error('start_date')
                                                     {{ $message }}
@@ -135,7 +144,9 @@
                                     <div class="form-group">
                                         <label>End Date</label>
                                         <div class="cal-icon">
-                                            <input class="form-control datetimepicker" name="end_date" type="text">
+                                            <input class="form-control datetimepicker" name="end_date"
+                                                value="@if (isset($project)) {{ date('d/m/Y', strtotime($project->end_date)) }} @endif{{ old('end_date') }}"
+                                                type="text">
                                             <span class="text-danger">
                                                 @error('end_date')
                                                     {{ $message }}
@@ -149,22 +160,26 @@
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label>Rate</label>
-                                        <input placeholder="$50" name="rate" value="{{ old('rate') }}"
-                                            class="form-control" type="text">
-                                            <span class="text-danger">
-                                                @error('rate')
-                                                    {{ $message }}
-                                                @enderror
-                                            </span>
+                                        <input placeholder="$50" name="rate"
+                                            value="@if (isset($project)) {{ $project->rate }}@else{{ old('rate') }} @endif""
+                                                                                        class="           form-control"
+                                            type="text">
+                                        <span class="text-danger">
+                                            @error('rate')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label>&nbsp;</label>
                                         <select class="select" name="duration">
-                                            <option >Select Duration</option>
-                                            <option value="hour">Hourly</option>
-                                            <option value="fixed">Fixed</option>
+                                            <option>Select Duration</option>
+                                            <option @if (isset($project) && $project->duration == 'hour') selected @endif value="hour">Hourly
+                                            </option>
+                                            <option @if (isset($project) && $project->duration == 'fixed') selected @endif value="fixed">Fixed
+                                            </option>
                                         </select>
                                         <span class="text-danger">
                                             @error('duration')
@@ -177,10 +192,13 @@
                                     <div class="form-group">
                                         <label>Priority</label>
                                         <select class="select" name="priority">
-                                            <option >Select Priority </option>
-                                            <option value="high">High</option>
-                                            <option value="medium">Medium</option>
-                                            <option value="low">Low</option>
+                                            <option>Select Priority </option>
+                                            <option @if (isset($project) && $project->priority == 'high') selected @endif value="high">High
+                                            </option>
+                                            <option @if (isset($project) && $project->priority == 'medium') selected @endif value="medium">Medium
+                                            </option>
+                                            <option @if (isset($project) && $project->priority == 'low') selected @endif value="low">Low
+                                            </option>
                                         </select>
                                         <span class="text-danger">
                                             @error('priority')
@@ -189,15 +207,22 @@
                                         </span>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
+                                {{-- <option @if (isset($client) && $client->country_id == $item->id) selected @endif value="{{ $item->id }}"> --}}
+                                {{-- {{ $projectleader }} --}}
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>Add Project Leader</label>
                                         <select class="select" multiple name="teamlead[]">
                                             <option>Select Client</option>
                                             @foreach ($employeesc as $item)
-                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                @isset($projectleader)
+                                                    @foreach ($projectleader as $leader)
+                                                    @endisset
+                                                    <option @if (isset($projectleader) && $leader->leader_id == $item->id) selected @endif
+                                                        value="{{ $item->id }}">{{ $item->name }}</option>
+                                                    @isset($projectleader)
+                                                    @endforeach
+                                                @endisset
                                             @endforeach
                                         </select>
                                         <span class="text-danger">
@@ -207,26 +232,16 @@
                                         </span>
                                     </div>
                                 </div>
-                                {{-- <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label>Team Leader</label>
-                                        <div class="project-members">
-                                            <a href="#" data-bs-toggle="tooltip" title="Jeffery Lalor"
-                                                class="avatar">
-                                                <img src="assets/img/profiles/avatar-16.jpg" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div> --}}
-                            </div>
-                            <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>Add Team</label>
                                         <select class="select" multiple name="team[]">
                                             <option>Select Client</option>
                                             @foreach ($employeesc as $item)
-                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                @foreach ($projectteam as $team)
+                                                    <option @if (isset($projectteam) && $team->team_id == $item->id) selected @endif
+                                                        value="{{ $item->id }}">{{ $item->name }}</option>
+                                                @endforeach
                                             @endforeach
                                         </select>
                                         <span class="text-danger">
@@ -263,16 +278,20 @@
                             </div>
                             <div class="form-group">
                                 <label>Description</label>
-                                <div id="editor"></div>
+                                <textarea id="editor" name="description" id="" cols="3" rows="2">
+                                                                @isset($project)
+{!! $project->description !!}
+@endisset
+                                                                </textarea>
                                 <span class="text-danger">
-                                    @error('name')
+                                    @error('description')
                                         {{ $message }}
                                     @enderror
                                 </span>
                             </div>
                             <div class="form-group">
                                 <label>Upload Files</label>
-                                <input class="form-control" name="image" type="file">
+                                <input class="form-control" name="image[]" multiple type="file">
                             </div>
                             <span class="text-danger">
                                 @error('image')
@@ -295,6 +314,30 @@
                                     </div>
                                 </div>
                             </div>
+                            {{ $project->id }}
+
+                            @isset($projectimage)
+                                {{-- {{ $projectimage }} --}}
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title m-b-20">Uploaded image files</h5>
+                                        <div class="row">
+                                            @foreach ($projectimage as $img)
+                                                <div class="col-md-3 col-sm-4 col-lg-4 col-xl-2">
+                                                    <div class="uploaded-box">
+                                                        <div class="uploaded-img">
+                                                            <img alt="" src="{{ asset('storage/project/' . $img->image) }}">
+                                                        </div>
+                                                        <div class="uploaded-img-name">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            @endisset
                             <div class="submit-section">
                                 <button type="submit" class="btn btn-primary submit-btn">Submit</button>
                             </div>
@@ -310,6 +353,8 @@
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset('assets/js/ckeditor.js') }}"></script>
+
     <script>
         // document.getElementById("email").onchange = function() {
         //     email()

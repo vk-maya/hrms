@@ -74,6 +74,9 @@ Route::prefix('admin/')->name('admin.')->group(function() {
 
         // -----------------project route----------------------
         Route::get('project',[ProjectController::class,'index'])->name('project');
+        Route::get('project/list',[ProjectController::class,'list'])->name('project.list');
         Route::get('project/create',[ProjectController::class,'create'])->name('project.create');
         Route::post('project/create',[ProjectController::class,'store'])->name('project.store');
+        Route::get('project/edit/{id}',[ProjectController::class,'create'])->name('project.edit');
+        Route::get('project/delete/{id}',[ProjectController::class,'delete'])->name('project.delete');
 });

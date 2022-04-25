@@ -23,7 +23,7 @@ class CreateProjectModelsTable extends Migration
             $table->string('rate');
             $table->string('duration');
             $table->string('priority');
-            $table->integer('teamlead');
+            $table->integer('description');
             $table->integer('team');
             $table->string('status');
             $table->string('image');

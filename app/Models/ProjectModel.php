@@ -9,4 +9,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ProjectModel extends Model
 {
     use HasFactory , SoftDeletes;
+
+    public function client()
+    {
+        return $this->belongsTo(ClientModel::class);
+    }
+ 
 }

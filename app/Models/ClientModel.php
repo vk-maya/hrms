@@ -9,4 +9,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ClientModel extends Model
 {
     use HasFactory, SoftDeletes;
+
+    
+    public function projectclient(){
+        return $this->hasMany(ProjectModel::class);
+    }
 }
