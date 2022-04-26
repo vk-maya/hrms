@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Designation;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -19,6 +22,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'country_id',
         'last_name',
         'email',
         'password',
@@ -33,8 +37,24 @@ class User extends Authenticatable
         'status',
         'workplace',
         'image',
+        'image',
     ];
-   
+    public function designation()
+    {
+        return $this->belongsTo(Designation::class);
+    }
+
+    public function leaders()
+    {
+        // return $this->belongsTo(projectLeader::class);
+        return $this->hasMany(projectLeader::class,"leader_id");
+    }
+    public function team()
+    {
+        // return $this->belongsTo(projectLeader::class);
+        return $this->hasMany(ProjectTeamModel::class,"team_id");
+    }
+
 
     /**
      * The attributes that should be hidden for serialization.

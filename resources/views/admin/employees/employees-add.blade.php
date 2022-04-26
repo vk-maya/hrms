@@ -87,35 +87,61 @@
                     <div class="card-body">
                         <form action="{{ route('admin.storeemployees') }}" enctype="multipart/form-data" method="POST">
                             @csrf
+                            <input type="text" hidden
+                                value="@if (isset($employees)) {{ $employees->id }} @endif" name="id">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">First Name <span
                                                 class="text-danger">*</span></label>
-                                        <input class="form-control" name="name" type="text">
+                                        <input class="form-control" name="name" type="text"
+                                            value="@if (isset($employees)) {{ $employees->name }} @endif {{ old('name') }}">
+                                        <span class="text-danger">
+                                            @error('name')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Last Name</label>
-                                        <input class="form-control" name="last_name" type="text">
+                                        <input class="form-control" name="last_name" type="text"
+                                            value="@if (isset($employees)) {{ $employees->last_name }} @endif {{ old('last_name') }}">
+                                        <span class="text-danger">
+                                            @error('last_name')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-form-label" for="emp">Employee ID</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="inputGroupPrepend">SDC-EMP-</span>
+                                        <input type="text" class="form-control" name="employee_id" id="emp"
+                                            value="@if(isset($employees)){{$employees->employee_id}}@else{{$empid}}@endif"
+                                            onkeypress="empl()" aria-describedby="inputGroupPrepend">
+                                    </div>
+                                    <span class="text-danger">
+                                        @error('employee_id')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
+                                    <div id="empt">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label class="col-form-label">Employee ID <span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" name="employee_id" class="form-control" id="emp"
-                                            onkeypress="empl()">
-                                    </div>
-                                    <div id="empt">
-                                    </div>
-                                </div>
-                                <div class="col-sm-6" id="">
-                                    <div class="form-group">
                                         <label class="col-form-label">Email <span class="text-danger">*</span></label>
                                         <input class="form-control" name="email" type="email" id="email"
-                                            onkeypress="email()">
+                                            value="@if (isset($employees)) {{ $employees->email }} @endif"
+                                            {{ old('email') }} onkeypress="emaill()">
+                                        <span class="text-danger">
+                                            @error('email')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
                                     </div>
                                     <div id="emailerror">
                                     </div>
@@ -124,60 +150,132 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Password</label>
                                         <input class="form-control" name="password" type="password">
+                                        <span class="text-danger">
+                                            @error('password')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Confirm Password</label>
-                                        <input class="form-control" name="password_repeat" type="password">
+                                        <input class="form-control" name="password_confirmation" type="password">                                     
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Phone </label>
-                                        <input class="form-control" name="phone" type="text">
+                                        <input class="form-control" name="phone" type="text"
+                                            value="@if (isset($employees)) {{ $employees->phone }} @endif {{ old('phone') }}">
                                     </div>
+                                    <span class="text-danger">
+                                        @error('phone')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Address</label>
-                                        <input class="form-control" name="address" type="text">
+                                        <input class="form-control"
+                                            value="@if (isset($employees)) {{ $employees->address }} @endif {{ old('address') }}"
+                                            name="address" type="text">
+                                        <span class="text-danger">
+                                            @error('address')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="col-form-label">City</label>
-                                        <input class="form-control" name="city" type="text">
+                                        <label class="col-form-label">Country <span class="text-danger">*</span></label>
+                                        <select class="select" name="country" class="form-control"
+                                            id="inputcountry" onkeypress="country()">
+                                            <option value="">Select Country</option>
+                                            @foreach ($count as $item)
+                                                <option @if (isset($employees) && $employees->country_id == $item->id) selected @endif value="{{ $item->id }} {{ old('country') }}">
+                                                    {{ $item->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <span class="text-danger">
+                                            @error('country')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                  
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="col-form-label">State</label>
-                                        <input class="form-control" name="state" type="text">
+                                        <label class="col-form-label">State <span class="text-danger">*</span></label>
+                                        <select class="select" name="state" id="inputstate" >
+                                            <option value="">Select State</option>
+                                        </select>
+                                        <span class="text-danger">
+                                            @error('state')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                        @isset($employees)
+                                            <input type="hidden" value="{{$employees->state_id}}" id="EditState">
+                                        @endisset
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label">City <span class="text-danger">*</span></label>
+                                        <select class="select" name="city" id="inputcity">
+                                            <option value="">Select City</option>
+                                        </select>
+                                        <span class="text-danger">
+                                            @error('city')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                        @isset($employees)
+                                        <input type="hidden" value="{{$employees->city_id}}" id="Editcity">                                            
+                                        @endisset
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Department <span
                                                 class="text-danger">*</span></label>
-                                        <select class="select" name="department_id" class="form-control"
+                                        <select class="select" name="department" class="form-control"
                                             id="inputDepartment" onkeypress="indepartment()">
-                                            <option>Select Department</option>
+                                            <option> Select Department </option>
                                             @foreach ($department as $item)
-                                                <option value="{{ $item->id }}">
+                                                <option @if (isset($employees) && $employees->department_id == $item->id) selected @endif
+                                                    value="{{ $item->id }} {{ old('department_id') }}">
                                                     {{ $item->department_name }}
                                                 </option>
                                             @endforeach
                                         </select>
+                                        <span class="text-danger">
+                                            @error('department')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
+                                        @isset($employees)
+                                        <input type="hidden" value="{{$employees->designation_id}}" id="editdesignation" >
+                                        @endisset
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Designation <span
                                                 class="text-danger">*</span></label>
-                                        <select name="designation_id" class="select" name="designation_id" id="inputDesignation">
+                                        <select class="select" name="designation" id="inputDesignation">
                                             <option value="">Select Designation</option>
                                         </select>
+                                        <span class="text-danger">
+                                            @error('designation')
+                                                {{ $message }}
+                                            @enderror
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -185,15 +283,26 @@
                                         <label class="col-form-label">Joining Date <span
                                                 class="text-danger">*</span></label>
                                         <div class="cal-icon"><input name="joining_date"
-                                                class="form-control datetimepicker" type=""></div>
+                                                class="form-control datetimepicker"
+                                                value="@if (isset($employees)) {{ date('d/m/Y', strtotime($employees->joining_date)) }} @endif {{ old('joining_date') }}"
+                                                type="">
+                                            <span class="text-danger">
+                                                @error('joining_date')
+                                                    {{ $message }}
+                                                @enderror
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <label for="statusinput" class="mb-4">Status</label>
                                     <div class="col-md-12">
                                         <div class="form-check form-switch">
-                                            <input class='input-switch' type="checkbox" value="1" name="status" checked
-                                                id="demo" />
+                                            <input class='input-switch' type="checkbox"
+                                                value="@if (isset($employees)) {{ $employees->status }} @endif 1"
+                                                @if (isset($employees)) @if ($employees->status == 0) @else checked @endif
+                                                @endif checked
+                                            name="status" id="demo" />
                                             <label class="label-switch" for="demo"></label>
                                             <span class="info-text"></span>
                                         </div>
@@ -205,34 +314,48 @@
                                         <div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" title="Work From Office"
-                                                    name="workplace" id="wfo" value="wfo">
+                                                    checked
+                                                    @if (isset($employees)) @if ($employees->workplace == 'wfo')checked @endif
+                                                    @endif
+                                                name="workplace" id="wfo" value="wfo{{ old('workplace') }}">
                                                 <label class="form-check-label" title="Work From Office"
                                                     for="wfo">WFO</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" title="Work From House" type="radio"
-                                                    name="workplace" id="wfh" value="wfh">
+                                                    name="workplace" id="wfh"
+                                                    @if (isset($employees)) @if ($employees->workplace == 'wfh') checked @endif
+                                                    @endif
+                                                value="wfh{{ old('workplace') }}">
                                                 <label class="form-check-label" title="Work From House"
                                                     for="wfh">WFH</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" title="Work From House" type="radio"
-                                                    name="workplace" id="both" value="both">
+                                                    name="workplace" id="both"
+                                                    @if (isset($employees)) @if ($employees->workplace == 'both') checked @endif
+                                                    @endif
+                                                value=" both{{ old('workplace') }}">
                                                 <label class="form-check-label" title="Both" for="both">both</label>
                                             </div>
 
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-form-label col-md-2"></label>
-                                    <div class="col-md-6">
-
+                                @isset($employees)
+                                    <div class="profile-img">
+                                        <a href="" class="">
+                                            <img src="{{ asset('storage/uploads/' . $employees->image) }}" alt=""></a>
                                     </div>
-                                </div>
+                                @endisset
                                 <div class="form-group">
                                     <label>Upload Photo</label>
-                                    <input name="image" class="form-control" type="file">
+                                    <input name="image" class="form-control" value="{{ old('image') }}" type="file">
+                                    <span class="text-danger">
+                                        @error('image')
+                                            {{ $message }}
+                                        @enderror
+                                    </span>
                                 </div>
                                 <div class="submit-section">
                                     <button class="btn btn-primary submit-btn" type="submit">Submit</button>
@@ -244,19 +367,19 @@
             </div>
         </div>
     </div>
-
-    </div>
+    {{-- {{$state}} --}}
 @endsection
 @push('plugin-js')
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script>
+
         document.getElementById("email").onchange = function() {
-            email()
+            emaill()
         };
 
-        function email() {
+        function emaill() {
             var x = document.getElementById("email");
             let email = $('#email').val();
             var url = "{{ route('admin.emailv') }}";
@@ -278,8 +401,6 @@
                 }
             })
         }
-
-
         document.getElementById("emp").onchange = function() {
             empl()
         };
@@ -307,11 +428,65 @@
                 }
             })
         }
-        document.getElementById("inputDepartment").onchange = function() {
-            indepartment()
-        };
 
-        function indepartment() {
+        function states() {
+            var contid = document.getElementById("inputcountry");
+            var id = $('#inputcountry').val();
+            var url = "{{ route('admin.country.name') }}";
+            $.ajax({
+                url: url,
+                type: "post",
+                cache: false,
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    contid: id,
+                },
+                success: function(res) {
+                    // console.log(state);
+                    let data = '';
+                    let selected = ''
+                    $.each(res.state, function(key, val) {
+                        if($(document).find("#EditState").length > 0 && $("#EditState").val()==val.id){
+                            selected = 'selected';
+                        }else{
+                            selected = '';
+                        }
+                        data += '<option '+selected+' value="' + val.id + '">' + val.name + '</option>';
+                    });
+                    $("#inputstate").html(data);
+                    cities();
+                }
+            })
+        }  
+
+        function cities() {
+            var id = $("#inputstate").val();
+            var url = "{{ route('admin.country.state.name') }}"
+            $.ajax({
+                type: "post",
+                url: url,
+                cache: false,
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    id: id,
+                },
+                success: function(res) {
+                    var data = '';
+                    var selected = ''
+                    $.each(res.city, function(key, val) {
+                        if($(document).find("#Editcity").length > 0 && $("#Editcity").val()==val.id){
+                            selected ='selected';
+                        }else{
+                            selected= '';
+                        }
+                        data += '<option '+selected+' value="' +val.id+ '">' + val.name + '</option>';
+                    });
+                    $("#inputcity").html(data);
+                }
+            });
+        }
+        
+         function indepartment() {
             var dep = document.getElementById("inputDepartment");
             var de = $('#inputDepartment').val();
             var url = "{{ route('admin.designation.name') }}";
@@ -327,13 +502,31 @@
                     desig = JSON.parse(designation);
                     // console.log(desig);
                     let data = '';
+                    let selected = ''
                     $.each(desig.count, function(index, val) {
-                        data += '<option value="' + val.id + '">' + val.designation_name + '</option>';
+                        if($(document).find("#editdesignation").length > 0 && $("#editdesignation").val()==val.id){
+                            selected = 'selected';
+                        }else{
+                            selected = '';
+                        }
+                        data += '<option '+selected+' value="' + val.id + '">' + val.designation_name + '</option>';
                     });
                     $("#inputDesignation").html(data);
                 }
 
             })
         }
+        document.getElementById("inputDepartment").onchange = function() {
+            indepartment()
+        };
+        indepartment() 
+
+             states(); 
+        document.getElementById("inputcountry").onchange = function() {
+            states();
+        };
+        document.getElementById("inputstate").onchange = () => {
+            cities();
+        };
     </script>
 @endpush

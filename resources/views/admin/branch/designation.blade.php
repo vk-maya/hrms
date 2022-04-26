@@ -66,6 +66,9 @@
         }
 
     </style>
+    <link rel="stylesheet" href="{{ asset('assets/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
 @endpush
 @section('content')
     <div class="page-wrapper">
@@ -85,35 +88,51 @@
                     </div>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-responsive">
-                        <table class="table table-striped custom-table mb-0 datatable">
+                        <table class="table table-striped custom-table mb-0 " id="designation">
                             <thead>
                                 <tr>
-                                    <th style="width: 30px;">#</th>
+                                    <th style="width: 30px;">SR</th>
                                     <th>Designation </th>
                                     <th>Department </th>
+                                    <th class="text-center">Status</th>
                                     <th class="text-end">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($designation as $key => $item)
                                     <tr>
-                                        <td>{{$key+1}}</td>
-                                        <td>{{$item->designation_name}}</td>
-                                        <td>{{$item->department->department_name}}</td>
+                                        <td>{{ $key + 1 }}</td>
+                                        <td>{{ $item->designation_name }}</td>
+                                        <td>{{ $item->department->department_name }}</td>
+                                        <td class="text-center">
+                                            <div class="action-label">
+                                                <a class="btn btn-white btn-sm btn-rounded status"
+                                                    data-id="{{ $item->id }}" href="javascript:void(0);">
+                                                    @if ($item->status == 1)
+                                                        <i class="fa fa-dot-circle-o text-success"></i><span
+                                                            class="yes-data">Approved</span>
+                                                    @else
+                                                        <i class="fa fa-dot-circle-o text-danger"></i> <span
+                                                            class="yes-data">Declined</span>
+                                                    @endif
+                                                </a>
+                                            </div>
+                                        </td>
+
                                         <td class="text-end">
                                             <div class="dropdown dropdown-action">
                                                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
                                                     aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item" href="{{route('admin.designation.edit',$item->id)}}"><i
+                                                    <button class="dropdown-item edit" data-id="{{ $item->id }}"><i
                                                             class="fa fa-pencil m-r-5"></i>
-                                                        Edit</a>
-                                                    <a class="dropdown-item" href="{{route('admin.designation.delete',$item->id)}}"></i>
-                                                        Delete</a>
+                                                        Edit</button>
+                                                    <button class="dropdown-item delete" data-id="{{ $item->id }}"><i
+                                                            class="fa fa-trash m-r-5"></i>
+                                                        Delete</button>
                                                 </div>
                                             </div>
                                         </td>
@@ -130,22 +149,24 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Add Designation</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close edit" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
-                        </button>
+                        </button></a>
                     </div>
                     <div class="modal-body">
                         <form action="{{ route('admin.designation') }}" method="POST">
                             @csrf
+                            <div id="editid">
+                            </div>
                             <div class="form-group row">
                                 <div class="form-group">
                                     <label for="Designationinput">Designation</label>
-                                    <input type="text" name="designation" class="form-control" id="Designationinput"
-                                        placeholder="Enter Designation">
+                                    <input type="text" name="designation" class="form-control" id="inputdesignation"
+                                        placeholder="Enter Designation" value="">
                                 </div>
                                 <div class="col-sm-6 col-md-12">
                                     <div class="form-group form-focus select-focus">
-                                        <select class="select floating" name="department_id">
+                                        <select class="select floating" name="department_id" id="inputdepartment">
                                             <option>Select Department</option>
                                             @foreach ($department as $item)
                                                 <option value="{{ $item->id }}">{{ $item->department_name }}
@@ -165,76 +186,138 @@
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary" id="submit">
+                                Submit
+
+                            </button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-
-
-        <div id="edit_designation" class="modal custom-modal fade" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit Designation</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="form-group">
-                                <label>Designation Name <span class="text-danger">*</span></label>
-                                <input class="form-control" value="Web Developer" type="text">
-                            </div>
-                            <div class="form-group">
-                                <label>Department <span class="text-danger">*</span></label>
-                                <select class="select">
-                                    <option>Select Department</option>
-                                    <option>Web Development</option>
-                                    <option>IT Management</option>
-                                    <option>Marketing</option>
-                                </select>
-                            </div>
-                            <div class="submit-section">
-                                <button class="btn btn-primary submit-btn">Save</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="modal custom-modal fade" id="delete_designation" role="dialog">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="form-header">
-                            <h3>Delete Designation</h3>
-                            <p>Are you sure want to delete?</p>
-                        </div>
-                        <div class="modal-btn delete-action">
-                            <div class="row">
-                                <div class="col-6">
-                                    <a href="javascript:void(0);" class="btn btn-primary continue-btn">Delete</a>
-                                </div>
-                                <div class="col-6">
-                                    <a href="javascript:void(0);" data-bs-dismiss="modal"
-                                        class="btn btn-primary cancel-btn">Cancel</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 @endsection
 @push('plugin-js')
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset('assets/js/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
+
+    <script>
+        $('#designation').DataTable({
+            paging: true,
+            searching: true
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $(document).on("click", ".status", function() {
+                var yes = $(this);
+                var id = $(this).data('id');
+                var url = "{{ route('admin.designation.status') }}";
+                let dataobj = {
+                    "_token": "{{ csrf_token() }}",
+                    id: id,
+                };
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: dataobj,
+                    cache: false,
+                    success: function(response) {
+                        let classname = $(yes).children()[0];
+                        let text = $(yes).children()[1];
+                        if ($(text).html() == 'Approved') {
+                            $(text).html('Declined');
+                            $(classname).removeClass('text-success');
+                            $(classname).addClass(' text-danger');
+                        } else {
+                            $(text).html('Approved');
+                            $(classname).removeClass(' text-danger');
+                            $(classname).addClass('text-success');
+                        }
+
+                    }
+                });
+            })
+        })
+        $(document).ready(function() {
+            $(document).on("click", '.edit', (function() {
+                $("#editid").html("<input type='hidden' name='id' value='" + $(this).data('id') + "'>");
+            }));
+        })
+        $(document).ready(function() {
+            $('#add_designation').on('hidden.bs.modal', function(e) {
+                $("#editid").html('');
+                $("#inputdesignation").val('');
+            })
+            $(document).on("click", ".edit", function() {
+                var id = $(this).data('id');
+                var url = "{{ route('admin.designation.edit', ':id') }}";
+                url = url.replace(':id', id)
+                $.ajax({
+                    url: url,
+                    type: "get",
+                    cache: false,
+                    success: function(res) {
+                        $("#submit").text("Update");
+                        $("#inputid").val(res.msg.id);
+                        $("#inputdesignation").val(res.msg.designation_name);
+                        $("#inputdepartment").find('option[value="' + res.msg.department_id +
+                            '"]').prop('selected', true);
+                        if (res.msg.status == 1) {
+                            $("#demo").prop("checked", true)
+                        } else {
+                            $("#demo").prop("checked", false)
+                        }
+                        $("#add_designation").modal('show');
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function() {
+            $(document).on("click", '.delete', function() {
+                var yeh = $(this);
+                swal({
+                        title: "Are you sure?",
+                        text: "Once deleted, you will not be able to recover this!",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            var id = $(this).data('id');
+                            let url = "{{ route('admin.designation.delete', ':id') }}";
+                            url = url.replace(':id', id);
+                            $.ajax({
+                                url: url,
+                                type: "GET",
+                                cache: false,
+                                success: function(res) {
+                                    console.log(res.msg)
+                                    if (res.msg == 'no') {
+                                        swal("unsuccessful! Your Department has been Add Any Employees! ", {
+                                            icon: "error",
+                                        })
+                                    } else {
+                                        swal("Success! Your Department has been deleted!", {
+                                            icon: "success",
+                                        })
+                                        $(yeh).parent().parent().parent().parent().hide(
+                                            0500);
+
+                                    }
+                                }
+                            });
+                        }
+                    });
+            });
+        });
+    </script>
 @endpush

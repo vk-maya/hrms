@@ -6,14 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Department extends Model
+class projectLeader extends Model
 {
     use HasFactory , SoftDeletes;
-    protected $fillable =[
-        'department_name',
-        'status'
-    ];
-    public function designations(){
-        return $this->hasMany(Designation::class);
+
+    public function user(){
+
+        return $this->belongsTo(User::class,"leader_id");
+
     }
 }

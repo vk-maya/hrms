@@ -64,6 +64,15 @@
         }
 
     </style>
+
+    <link rel="stylesheet" href="{{ asset('assets/css/dataTables.bootstrap4.min.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
+
+    <!-- Sweetalert 2 CSS -->
+    <link rel="stylesheet" href="assets/plugins/sweetalert2/sweetalert2.min.css">
 @endpush
 @section('content')
     <div class="page-wrapper">
@@ -78,139 +87,232 @@
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
-                        <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_department"><i
+                        <a href="#" class="btn add-btn show" data-bs-toggle="modal" data-bs-target="#add_department"><i
                                 class="fa fa-plus"></i> Add Department</a>
                     </div>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <div>                
-                        <table class="table table-striped custom-table mb-0 datatable">
-                            <thead>
+            </div>           
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped custom-table mb-0" id="department">
+                        <thead>
+                            <tr>
+                                <th style="width: 30px;">SR</th>
+                                <th>Department Name</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($department as $key => $item)
                                 <tr>
-                                    <th style="width: 30px;">#</th>
-                                    <th>Department Name</th>
-                                    <th class="text-end">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($department as $key => $item)
-                                    <tr>
-                                        <td>{{ $key + 1 }}</td>
-                                        <td>{{ $item->department_name }}</td>
-                                        <td class="text-end">
-                                            <div class="dropdown dropdown-action">
-                                                <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
-                                                    aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                                <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item"
-                                                        href="{{ route('admin.departments.edit', $item->id) }}"><i
-                                                            class="fa fa-pencil m-r-5"></i>
-                                                        Edit</a>
-                                                    <a class="dropdown-item"
-                                                        href="{{ route('admin.departments.delete', $item->id) }}"><i
-                                                            class="fa fa-trash-o m-r-5"></i> Delete</a>
-                                                </div>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>{{ $item->department_name }}</td>
+                                    <td class="text-center">
+                                        <div class="action-label">
+                                            <a class="btn btn-white btn-sm btn-rounded status" data-id="{{ $item->id }}"
+                                                href="javascript:void(0);">
+                                                @if ($item->status == 1)
+                                                    <i class="fa fa-dot-circle-o text-success"></i> <span
+                                                        class="yeh-data">Approved</span>
+                                                @else
+                                                    <i class="fa fa-dot-circle-o text-danger"></i> <span
+                                                        class="yeh-data">Declined</span>
+                                                @endif
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="dropdown dropdown-action">
+                                            <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
+                                                aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                                            <div class="dropdown-menu dropdown-menu-right">
+                                                <button class="dropdown-item edit" data-id="{{ $item->id }}"><i
+                                                        class="fa fa-pencil m-r-5"></i>
+                                                    Edit</button>
+                                                <button class="dropdown-item delete" data-id="{{ $item->id }}"><i
+                                                        class="fa fa-trash-o m-r-5"></i> Delete</button>
                                             </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-
-
-        <div id="add_department" class="modal custom-modal fade" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add Department</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="{{ route('admin.departments') }}" method="POST">
-                            @csrf
-                            <div class="form-group row">
-                                <div class="form-group">
-                                    <label for="Designationinput">Department</label>
-                                    <input type="text" name="department" class="form-control" id="Designationinput"
-                                        placeholder="Enter Department">
-                                </div>
-                                <label for="statusinput">Status</label>
-                                <div class="col-md-12">
-                                    <div class="form-check form-switch">
-                                        <input class='input-switch' type="checkbox" value="1" name="status" checked
-                                            id="demo" />
-                                        <label class="label-switch" for="demo"></label>
-                                        <span class="info-text"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </form>
-                    </div>
+    </div>
+    <div id="add_department" class="modal custom-modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Add Department
+                    </h5>
+                    <button type="button" class="close edit" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            </div>
-        </div>
-
-
-        <div id="edit_department" class="modal custom-modal fade" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Edit Department</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
+                <div class="modal-body">
+                    <form action="{{ route('admin.departments') }}" method="POST">
+                        @csrf
+                        <div id="editid">
+                        </div>
+                        <div class="form-group row">
                             <div class="form-group">
-                                <label>Department Name <span class="text-danger">*</span></label>
-                                <input class="form-control" value="IT Management" type="text">
+                                <label for="Designationinput">Department</label>
+                                <input type="text" name="department" class="form-control" placeholder="Enter Department"
+                                    id="inputdepartment" value="">
                             </div>
-                            <div class="submit-section">
-                                <button class="btn btn-primary submit-btn">Save</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="modal custom-modal fade" id="delete_department" role="dialog">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="form-header">
-                            <h3>Delete Department</h3>
-                            <p>Are you sure want to delete?</p>
-                        </div>
-                        <div class="modal-btn delete-action">
-                            <div class="row">
-                                <div class="col-6">
-                                    <a href="javascript:void(0);" class="btn btn-primary continue-btn">Delete</a>
-                                </div>
-                                <div class="col-6">
-                                    <a href="javascript:void(0);" data-bs-dismiss="modal"
-                                        class="btn btn-primary cancel-btn">Cancel</a>
+                            <label for="statusinput">Status</label>
+                            <div class="col-md-12">
+                                <div class="form-check form-switch">
+                                    <input class='input-switch' type="checkbox" value="1" name="status" checked id="demo" />
+                                    <label class="label-switch" for="demo"></label>
+                                    <span class="info-text"></span>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <button type="submit" id="submit" class="btn btn-primary"> Submit
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
-
     </div>
 @endsection
-@push('plugin-js')
+@push('js')
+    <script src="{{ asset('assets/js/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('assets/js/moment.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
+    {{-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> --}}
+
+
+    <script>
+        // ------------shoe data table---------------
+        $('#department').DataTable({
+            paging: true,
+            searching: true
+        });
+// ---------------------open edit modal-------------------
+        // $(document).ready(function() {
+        //     $(document).on("click", '.edit', (function() {
+        //         $("#add_department").modal('show');
+        //     }));
+        // });
+        // -------------------show hidden column-------------
+        $(document).ready(function() {
+            $(document).on("click", '.edit', (function() {
+                $("#editid").html("<input type='hidden' name='id' value='" + $(this).data('id') + "'>");
+            }));
+        })
+// ------------------------edit---------------------
+        $(document).ready(function() {
+            $('#add_department').on('hidden.bs.modal', function(e) {
+                $("#editid").html('');
+                $("#inputdepartment").val('');
+            })
+            $(document).on("click", ".edit", function() {
+                var id = $(this).data('id');
+                $.ajax({
+                    url: "departments/edit/" + id,
+                    type: "get",
+                    cache: false,
+                    success: function(res) {
+                        $('#submit').text("Update");
+                        $('#inputid').val(res.edit.id);
+                        $('#inputdepartment').val(res.edit.department_name);
+                        if (res.edit.status == 1) {
+                            $("#demo").prop('checked', true);
+                        } else {
+                            $("#demo").prop('checked', false);
+                        }
+                        $("#add_department").modal('show');
+                    }
+
+                });
+
+            });
+        });
+// ---------------------status ----------------------------
+        $(document).ready(function() {
+            $(document).on("click", ".status", function() {
+                var yeh = $(this);
+                var id = $(this).data('id');
+                let dataobj = {
+                    "_token": "{{ csrf_token() }}",
+                    id: id,
+                };
+                $.ajax({
+                    url: "{{ route('admin.departments.status') }}",
+                    type: "POST",
+                    data: dataobj,
+                    cache: false,
+                    success: function(res) {
+                        let className = $(yeh).children()[0];
+                        let text = $(yeh).children()[1];
+                        console.log($(className).html());
+                        if ($(text).html() == 'Approved') { 
+                            $(text).html('Declined');
+                            $(className).removeClass('text-success');
+                            $(className).addClass('text-danger');
+                        } else {
+                            $(text).html('Approved');
+                            $(className).removeClass('text-danger');
+                            $(className).addClass('text-success');
+                        }
+                    }
+                });
+            })
+        })
+    </script>
+    <script>
+        // -----------------------delete----------------------
+        $(document).ready(function() {
+            $(document).on("click", '.delete', function() {
+                var yeh = $(this);
+                swal({
+                        title: "Are you sure?",
+                        text: "Once deleted, you will not be able to recover this!",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            var id = $(this).data('id');
+                            let url = "{{ route('admin.departments.delete', ':id') }}";
+                            url = url.replace(':id', id);
+                            $.ajax({
+                                url: url,
+                                type: "GET",
+                                cache: false,
+                                success: function(res) {
+                                    console.log(res.msg)
+                                    if (res.msg == 'no') {
+                                        swal("unsuccessful! Your Department has been Add Any Designation! ", {
+                                            icon: "error",
+                                        })
+                                    } else {
+                                        swal("Success! Your Department has been deleted!", {
+                                            icon: "success",
+                                        })
+                                        $(yeh).parent().parent().parent().parent().hide(
+                                            0500);
+
+                                    }
+
+
+                                }
+                            });
+
+                        }
+                    });
+            });
+        });
+    </script>
 @endpush
