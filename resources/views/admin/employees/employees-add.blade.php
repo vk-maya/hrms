@@ -195,7 +195,7 @@
                                             id="inputcountry" onkeypress="country()">
                                             <option value="">Select Country</option>
                                             @foreach ($count as $item)
-                                                <option value="{{ $item->id }} {{ old('country') }}">
+                                                <option @if (isset($employees) && $employees->country_id == $item->id) selected @endif value="{{ $item->id }} {{ old('country') }}">
                                                     {{ $item->name }}
                                                 </option>
                                             @endforeach
@@ -205,12 +205,13 @@
                                                 {{ $message }}
                                             @enderror
                                         </span>
+                                  
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">State <span class="text-danger">*</span></label>
-                                        <select class="select" name="state" id="inputstate" onkeypress="city()">
+                                        <select class="select" name="state" id="inputstate" >
                                             <option value="">Select State</option>
                                         </select>
                                         <span class="text-danger">
@@ -218,6 +219,9 @@
                                                 {{ $message }}
                                             @enderror
                                         </span>
+                                        @isset($employees)
+                                            <input type="hidden" value="{{$employees->state_id}}" id="EditState">
+                                        @endisset
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -231,9 +235,11 @@
                                                 {{ $message }}
                                             @enderror
                                         </span>
+                                        @isset($employees)
+                                        <input type="hidden" value="{{$employees->city_id}}" id="Editcity">                                            
+                                        @endisset
                                     </div>
                                 </div>
-
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Department <span
@@ -253,6 +259,9 @@
                                                 {{ $message }}
                                             @enderror
                                         </span>
+                                        @isset($employees)
+                                        <input type="hidden" value="{{$employees->designation_id}}" id="editdesignation" >
+                                        @endisset
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -365,9 +374,7 @@
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script>
-        // document.getElementById("email").onchange = function() {
-        //     email()
-        // };
+
         document.getElementById("email").onchange = function() {
             emaill()
         };
@@ -422,7 +429,7 @@
             })
         }
 
-        function country() {
+        function states() {
             var contid = document.getElementById("inputcountry");
             var id = $('#inputcountry').val();
             var url = "{{ route('admin.country.name') }}";
@@ -437,22 +444,49 @@
                 success: function(res) {
                     // console.log(state);
                     let data = '';
+                    let selected = ''
                     $.each(res.state, function(key, val) {
-                        // console.log(val);
-                        data += '<option value="' + val.id + '">' + val.name + '</option>';
+                        if($(document).find("#EditState").length > 0 && $("#EditState").val()==val.id){
+                            selected = 'selected';
+                        }else{
+                            selected = '';
+                        }
+                        data += '<option '+selected+' value="' + val.id + '">' + val.name + '</option>';
                     });
                     $("#inputstate").html(data);
+                    cities();
                 }
             })
+        }  
+
+        function cities() {
+            var id = $("#inputstate").val();
+            var url = "{{ route('admin.country.state.name') }}"
+            $.ajax({
+                type: "post",
+                url: url,
+                cache: false,
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    id: id,
+                },
+                success: function(res) {
+                    var data = '';
+                    var selected = ''
+                    $.each(res.city, function(key, val) {
+                        if($(document).find("#Editcity").length > 0 && $("#Editcity").val()==val.id){
+                            selected ='selected';
+                        }else{
+                            selected= '';
+                        }
+                        data += '<option '+selected+' value="' +val.id+ '">' + val.name + '</option>';
+                    });
+                    $("#inputcity").html(data);
+                }
+            });
         }
-
-        document.getElementById("inputcountry").onchange = function() {
-            country()
-        };
-
-
-
-        function indepartment() {
+        
+         function indepartment() {
             var dep = document.getElementById("inputDepartment");
             var de = $('#inputDepartment').val();
             var url = "{{ route('admin.designation.name') }}";
@@ -468,8 +502,14 @@
                     desig = JSON.parse(designation);
                     // console.log(desig);
                     let data = '';
+                    let selected = ''
                     $.each(desig.count, function(index, val) {
-                        data += '<option value="' + val.id + '">' + val.designation_name + '</option>';
+                        if($(document).find("#editdesignation").length > 0 && $("#editdesignation").val()==val.id){
+                            selected = 'selected';
+                        }else{
+                            selected = '';
+                        }
+                        data += '<option '+selected+' value="' + val.id + '">' + val.designation_name + '</option>';
                     });
                     $("#inputDesignation").html(data);
                 }
@@ -479,33 +519,14 @@
         document.getElementById("inputDepartment").onchange = function() {
             indepartment()
         };
-        indepartment()
+        indepartment() 
 
-        function city() {
-            var city = document.getElementById("inputstate");
-            var id = $("#inputstate").val();
-            var url = "{{ route('admin.country.state.name') }}"
-            $.ajax({
-                type: "post",
-                url: url,
-                cache: false,
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    id: id,
-                },
-                success: function(res) {
-                    var data = '';
-                    $.each(res.city, function(key, val) {
-                        // console.log(val);
-                        data += '<option value="' + val.id + '">' + val.name + '</option>';
-                    });
-                    $("#inputcity").html(data);
-
-                }
-            });
-        }
+             states(); 
+        document.getElementById("inputcountry").onchange = function() {
+            states();
+        };
         document.getElementById("inputstate").onchange = () => {
-            city()
+            cities();
         };
     </script>
 @endpush

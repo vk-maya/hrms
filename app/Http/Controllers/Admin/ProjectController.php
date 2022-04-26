@@ -17,10 +17,11 @@ class ProjectController extends Controller
 {
     public function index()
     {
-        $leader = projectLeader::with('user')->get();
-        $team = ProjectTeamModel::with('user')->get();
-        $project = ProjectModel::all();
-        return view('admin.project.project', compact('project', 'leader', 'team'));
+        // $leader = projectLeader::with('user')->get();
+        // $team = ProjectTeamModel::with('user')->get();
+        $project = ProjectModel::with('team', 'leaders')->get();
+        // dd($project->toarray());       
+        return view('admin.project.project', compact('project'));
     }
     public function list()
     {
@@ -30,19 +31,14 @@ class ProjectController extends Controller
         return view('admin.project.project', compact('projectlist', 'leader', 'team'));
     }
 
-    public function create($id="")
+    public function create($id = "")
     {
-        if($id>0){
-            // dd($id);
+        if ($id > 0) {
             $employeesc = User::all();
             $client = ClientModel::all();
-            $project = ProjectModel::find($id);
-            $projectimage = ProjectImage::where('prject_id',$id)->get();
-            $projectleader = projectLeader::where('prject_id', $id)->get();
-            $projectteam = ProjectTeamModel::where('prject_id', $id)->get();
-            return view('admin.project.add-project',compact('project', 'projectimage', 'projectleader', 'projectteam','client', 'employeesc'));
-
-        }else{
+            $project = ProjectModel::with('team', 'leaders', 'image')->find($id);
+            return view('admin.project.add-project', compact('project', 'client', 'employeesc'));
+        } else {
 
             $employeesc = User::all();
             $client = ClientModel::all();
@@ -51,7 +47,6 @@ class ProjectController extends Controller
     }
     public function edit(Request $request)
     {
-       
     }
     public function store(Request $request)
     {
@@ -112,12 +107,46 @@ class ProjectController extends Controller
         }
         return redirect()->route('admin.project');
     }
+    public function update(Request $request)
+    {
+        $project = ProjectModel::find($request->id);
+        $project->name = $request->name;
+        $project->client_id = $request->clientname;
+        $project->start_date = date('Y-m-d', strtotime($request->start_date));
+        $project->end_date = date('Y-m-d', strtotime($request->end_date));
+        $project->rate = $request->rate;
+        $project->duration = $request->duration;
+        $project->priority = $request->priority;
+        $project->description = $request->description;
+        $project->status = ($request->status == 1) ? 1 : 0;
+        $project->update();
+        $project_id = ProjectModel::latest()->first();
+        if($request->image >0){
+            if ($request->hasFile('image')) {
+                $files = $request->file('image');
+                foreach ($files as $file) {
+                    $fname = $file->getClientOriginalExtension();
+                    $newfilename = "client" . str_replace(' ', '', $request->name) . rand(0, 10000) . "." . $fname;
+                    $file->storeAs('public/project', $newfilename);
+                    $fileimg = new ProjectImage;
+                    $fileimg->prject_id = $project_id->id;
+                    $fileimg->image = $newfilename;
+                    $fileimg->save();
+                }
+            }
+        }
+     
+        return redirect()->route('admin.project');
+    }
+    public function filedelete($id)
+    {
+        ProjectImage::find($id)->delete();
+        return response()->json(['msg' => 'yes']);
+    }
     public function delete($id)
     {
-        // dd($id);
         ProjectModel::find($id)->delete();
         $delete = ProjectImage::where('prject_id', $id);
-        // dd($delete->toarray());
         foreach ($delete as $key => $value) {
             storage::delete('public/project/' . $value->image);
         }

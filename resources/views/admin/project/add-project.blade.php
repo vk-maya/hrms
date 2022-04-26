@@ -84,20 +84,20 @@
                     </div>
                 </div>
             </div>
-            @isset($project)
-                {{ $project }}
-            @endisset
+
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{ route('admin.project.store') }}" method="POST" enctype="multipart/form-data">
+                        <form
+                            action="@isset($project) {{ route('admin.project.update') }}@else{{ route('admin.project.store') }} @endisset"
+                            method="POST" enctype="multipart/form-data">
                             <div class="row">
                                 @csrf
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="inputname">Project Name</label>
                                         <input id="inputname" name="name"
-                                            value="@if (isset($project)) {{ $project->name }}@else{{ old('name') }} @endif"
+                                            value="@if (isset($project)) {{ $project->name }} @endif{{ old('name') }} "
                                             class="form-control" type="text">
                                         <span class="text-danger">
                                             @error('name')
@@ -160,10 +160,9 @@
                                 <div class="col-sm-3">
                                     <div class="form-group">
                                         <label>Rate</label>
-                                        <input placeholder="$50" name="rate"
-                                            value="@if (isset($project)) {{ $project->rate }}@else{{ old('rate') }} @endif""
-                                                                                        class="           form-control"
-                                            type="text">
+                                        <input placeholder="$50" readonly name="rate"
+                                            value=""
+                                            class="form-control" type="text">
                                         <span class="text-danger">
                                             @error('rate')
                                                 {{ $message }}
@@ -207,22 +206,13 @@
                                         </span>
                                     </div>
                                 </div>
-                                {{-- <option @if (isset($client) && $client->country_id == $item->id) selected @endif value="{{ $item->id }}"> --}}
-                                {{-- {{ $projectleader }} --}}
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>Add Project Leader</label>
                                         <select class="select" multiple name="teamlead[]">
                                             <option>Select Client</option>
                                             @foreach ($employeesc as $item)
-                                                @isset($projectleader)
-                                                    @foreach ($projectleader as $leader)
-                                                    @endisset
-                                                    <option @if (isset($projectleader) && $leader->leader_id == $item->id) selected @endif
-                                                        value="{{ $item->id }}">{{ $item->name }}</option>
-                                                    @isset($projectleader)
-                                                    @endforeach
-                                                @endisset
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
                                             @endforeach
                                         </select>
                                         <span class="text-danger">
@@ -238,10 +228,12 @@
                                         <select class="select" multiple name="team[]">
                                             <option>Select Client</option>
                                             @foreach ($employeesc as $item)
-                                                @foreach ($projectteam as $team)
-                                                    <option @if (isset($projectteam) && $team->team_id == $item->id) selected @endif
-                                                        value="{{ $item->id }}">{{ $item->name }}</option>
-                                                @endforeach
+                                                <option @if (isset($project) &&
+                                                in_array(
+                                                    $item->id,
+                                                    $project->team()->get()->pluck('id')->unique()->toArray(),
+                                                )) selected @endif
+                                                    value="{{ $item->id }}">{{ $item->name }}</option>
                                             @endforeach
                                         </select>
                                         <span class="text-danger">
@@ -251,38 +243,48 @@
                                         </span>
                                     </div>
                                 </div>
-                                {{-- <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label>Team Members</label>
-                                        <div class="project-members">
-                                            <a href="#" data-bs-toggle="tooltip" title="John Doe"
-                                                class="avatar">
-                                                <img src="assets/img/profiles/avatar-16.jpg" alt="">
-                                            </a>
-                                            <a href="#" data-bs-toggle="tooltip" title="Richard Miles"
-                                                class="avatar">
-                                                <img src="assets/img/profiles/avatar-09.jpg" alt="">
-                                            </a>
-                                            <a href="#" data-bs-toggle="tooltip" title="John Smith"
-                                                class="avatar">
-                                                <img src="assets/img/profiles/avatar-10.jpg" alt="">
-                                            </a>
-                                            <a href="#" data-bs-toggle="tooltip" title="Mike Litorus"
-                                                class="avatar">
-                                                <img src="assets/img/profiles/avatar-05.jpg" alt="">
-                                            </a>
-                                            <span class="all-team">+2</span>
+                                @isset($project)
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label>Project Leader Members</label>
+                                            <div class="project-members">
+                                                @foreach ($project->leaders()->get() as $item)
+                                                    <a href="#" data-id="$item->id" data-bs-toggle="tooltip" title="{{ $item->name }}"
+                                                        class="avatar">
+                                                        <img src="{{ asset('storage/uploads/' . $item->image) }}" alt="">
+                                                        <span class="task-action-btn task-btn-right">				 <span class="action-circle large delete-btn"
+                                                            title="Remove Leader">
+                                                            <i class="material-icons">delete</i>
+                                                        </span>
+                                                    </span>
+                                                    </a>
+                                                 
+                                                @endforeach
+                                               
+                                            </div>
                                         </div>
                                     </div>
-                                </div> --}}
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>Team Members</label>
+                                            <div class="project-members">
+                                                @foreach ($project->team()->get() as $item)
+                                                    <a href="#" data-bs-toggle="tooltip" title="{{ $item->name }}"
+                                                        class="avatar">
+                                                        <img src="{{ asset('storage/uploads/' . $item->image) }}" alt="">
+                                                    </a>
+                                                @endforeach
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endisset
                             </div>
                             <div class="form-group">
                                 <label>Description</label>
-                                <textarea id="editor" name="description" id="" cols="3" rows="2">
-                                                                @isset($project)
+                                <textarea id="editor" name="description" id="" cols="3" rows="2"> @isset($project)
 {!! $project->description !!}
-@endisset
-                                                                </textarea>
+@endisset  </textarea>
                                 <span class="text-danger">
                                     @error('description')
                                         {{ $message }}
@@ -314,22 +316,21 @@
                                     </div>
                                 </div>
                             </div>
-                            {{ $project->id }}
-
-                            @isset($projectimage)
-                                {{-- {{ $projectimage }} --}}
+                            @isset($project)
                                 <div class="card">
                                     <div class="card-body">
-                                        <h5 class="card-title m-b-20">Uploaded image files</h5>
+                                        <h5 class="card-title m-b-20">Project files</h5>
                                         <div class="row">
-                                            @foreach ($projectimage as $img)
+                                            @foreach ($project->image()->get() as $item)
                                                 <div class="col-md-3 col-sm-4 col-lg-4 col-xl-2">
                                                     <div class="uploaded-box">
-                                                        <div class="uploaded-img">
-                                                            <img alt="" src="{{ asset('storage/project/' . $img->image) }}">
-                                                        </div>
-                                                        <div class="uploaded-img-name">
-
+                                                        <div class="uploaded-img">                                                  
+                                                            <img alt="" src="{{ asset('storage/project/' . $item->image) }}">
+                                                                </div>
+                                                        <div class="uploaded-img-name bg-warning">
+                                                            <button class="dropdown-item deletefile"  data-id="{{ $item->id }}"
+                                                                ><i class="fa fa-trash-o m-r-5"></i>
+                                                                Delete</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -337,6 +338,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                <input type="hidden" name="id" value="{{ $project->id }}">
                             @endisset
                             <div class="submit-section">
                                 <button type="submit" class="btn btn-primary submit-btn">Submit</button>
@@ -354,149 +356,48 @@
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script src="{{ asset('assets/js/ckeditor.js') }}"></script>
+    <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
+
 
     <script>
-        // document.getElementById("email").onchange = function() {
-        //     email()
-        // };
-        document.getElementById("email").onchange = function() {
-            emaill()
-        };
+     
+        $(document).ready(function() {
+            $(document).on("click", ".deletefile", function(e) {
+                e.preventDefault();
+                var yes = $(this);
+                swal({
+                        title: "Are you sure?",
+                        text: "Once deleted, you will not be able to recover this!",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            var id = $(this).data("id");
+                            var url = "{{ route('admin.project.delete.file', ':id') }}";
+                            url = url.replace(':id', id);
+                            $.ajax({
+                                type: "get",
+                                url: url,
+                                cache: false,
+                                success: function(res) {
+                                    if (res.msg == 'no') {
+                                        swal("unsuccessful! ", {
+                                            icon: "error",
+                                        })
+                                    } else {
+                                        swal("Success! Your Project File has been deleted!", {
+                                            icon: "success",
+                                        })
+                                        $(yes).parent().parent().hide(0500);
 
-        function emaill() {
-            var x = document.getElementById("email");
-            let email = $('#email').val();
-            var url = "{{ route('admin.emailv') }}";
-            $.ajax({
-                url: url,
-                type: "post",
-                cache: false,
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    x: email
-                },
-                success: function(email) {
-                    x = JSON.parse(email);
-                    if (x.count > 0) {
-                        $("#emailerror").html('<span class="text-danger">Email Already Exist</span>');
-                    } else {
-                        $("#emailerror").html('');
-                    }
-                }
-            })
-        }
-        document.getElementById("emp").onchange = function() {
-            empl()
-        };
-
-        function empl() {
-            var y = document.getElementById("emp");
-            let eamployees = $('#emp').val();
-            // consol.log(email)
-            var url = "{{ route('admin.epid') }}";
-            $.ajax({
-                url: url,
-                type: "post",
-                cache: false,
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    y: eamployees
-                },
-                success: function(empl) {
-                    xy = JSON.parse(empl);
-                    if (xy.count > 0) {
-                        $("#empt").html('<span class="text-danger">Employees Id Already Exist</span>');
-                    } else {
-                        $("#empt").html('');
-                    }
-                }
-            })
-        }
-
-        function country() {
-            var contid = document.getElementById("inputcountry");
-            var id = $('#inputcountry').val();
-            var url = "{{ route('admin.country.name') }}";
-            $.ajax({
-                url: url,
-                type: "post",
-                cache: false,
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    contid: id,
-                },
-                success: function(res) {
-                    // console.log(state);
-                    let data = '';
-                    $.each(res.state, function(key, val) {
-                        // console.log(val);
-                        data += '<option value="' + val.id + '">' + val.name + '</option>';
+                                    }
+                                }
+                            });
+                        }
                     });
-                    $("#inputstate").html(data);
-                }
             })
-        }
-
-        document.getElementById("inputcountry").onchange = function() {
-            country()
-        };
-
-
-
-        function indepartment() {
-            var dep = document.getElementById("inputDepartment");
-            var de = $('#inputDepartment').val();
-            var url = "{{ route('admin.designation.name') }}";
-            $.ajax({
-                url: url,
-                type: "post",
-                cache: false,
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    dep: de,
-                },
-                success: function(designation) {
-                    desig = JSON.parse(designation);
-                    // console.log(desig);
-                    let data = '';
-                    $.each(desig.count, function(index, val) {
-                        data += '<option value="' + val.id + '">' + val.designation_name + '</option>';
-                    });
-                    $("#inputDesignation").html(data);
-                }
-
-            })
-        }
-        document.getElementById("inputDepartment").onchange = function() {
-            indepartment()
-        };
-        indepartment()
-
-        function city() {
-            var city = document.getElementById("inputstate");
-            var id = $("#inputstate").val();
-            var url = "{{ route('admin.country.state.name') }}"
-            $.ajax({
-                type: "post",
-                url: url,
-                cache: false,
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    id: id,
-                },
-                success: function(res) {
-                    var data = '';
-                    $.each(res.city, function(key, val) {
-                        // console.log(val);
-                        data += '<option value="' + val.id + '">' + val.name + '</option>';
-                    });
-                    $("#inputcity").html(data);
-
-                }
-            });
-        }
-        document.getElementById("inputstate").onchange = () => {
-            city()
-        };
+        });
     </script>
 @endpush

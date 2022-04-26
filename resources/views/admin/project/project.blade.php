@@ -66,9 +66,11 @@
                                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
                                             aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="{{route('admin.project.edit',$item->id)}}"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                            <button class="dropdown-item delete" href="" data-id="{{$item->id}}" data-bs-toggle="modal"
-                                                data-bs-target="#delete_project"><i class="fa fa-trash-o m-r-5"></i>
+                                            <a class="dropdown-item" href="{{ route('admin.project.edit', $item->id) }}"><i
+                                                    class="fa fa-pencil m-r-5"></i> Edit</a>
+                                            <button class="dropdown-item delete" href="" data-id="{{ $item->id }}"
+                                                data-bs-toggle="modal" data-bs-target="#delete_project"><i
+                                                    class="fa fa-trash-o m-r-5"></i>
                                                 Delete</button>
                                         </div>
                                     </div>
@@ -78,7 +80,7 @@
                                         <span class="text-xs">9</span> <span class="text-muted">tasks
                                             completed</span>
                                     </small>
-                                   {!!$item->description!!}
+                                    {!! $item->description !!}
                                     <div class="pro-deadline m-b-15">
                                         <div class="sub-title">
                                             Deadline:
@@ -96,30 +98,24 @@
                                     <div class="project-members m-b-15">
                                         <div>Project Leader :</div>
                                         <ul class="team-members">
-                                            {{-- {{$leader}} --}}
-                                            @foreach ($leader as $lead)
-                                                @if ($item->id == $lead->prject_id)
-                                                    <li>
-                                                        <a href="#" data-bs-toggle="tooltip"
-                                                            title="{{ $lead->user->name }}"><img alt=""
-                                                                src="{{ asset('storage/uploads/' . $lead->user->image) }}"></a>
-                                                    </li>
-                                                @endif
+                                            @foreach ($item->leaders()->get() as $it)
+                                                <li>
+                                                    <a href="#" data-bs-toggle="tooltip" title="{{ $it->name }}"><img
+                                                            alt="" src="{{ asset('storage/uploads/' . $it->image) }}"></a>
+                                                </li>
                                             @endforeach
                                         </ul>
                                     </div>
                                     <div class="project-members m-b-15">
                                         <div>Team :</div>
                                         <ul class="team-members">
-                                            @foreach ($team as $teams)
-                                                @if ($item->id == $teams->prject_id)
-                                                    <li>
-                                                        <a href="#" data-bs-toggle="tooltip"
-                                                            title=" {{ $teams->user->name }}"><img alt=""
-                                                                src="{{ asset('storage/uploads/' . $teams->user->image) }}"></a>
-                                                    </li>
-                                                @endif
+                                            @foreach ($item->team()->get() as $it)
+                                                <li>
+                                                    <a href="#" data-bs-toggle="tooltip" title="{{ $it->name }}"><img
+                                                            alt="" src="{{ asset('storage/uploads/' . $it->image) }}"></a>
+                                                </li>
                                             @endforeach
+
                                         </ul>
                                     </div>
                                     <p class="m-b-5">Progress <span class="text-success float-end">40%</span></p>
@@ -179,9 +175,7 @@
                                                     @foreach ($team as $teams)
                                                         @if ($item->id == $teams->prject_id)
                                                             <li>
-                                                                <a href="#" data-bs-toggle="tooltip"
-                                                                    title=" {{ $teams->user->name }}"><img alt=""
-                                                                        src="{{ asset('storage/uploads/' . $teams->user->image) }}"></a>
+                                                                <a href="#" data-bs-toggle="tooltip" title=" {{ $teams->user->name }}"><img alt=""src="{{ asset('storage/uploads/' . $teams->user->image) }}"></a>
                                                             </li>
                                                         @endif
                                                     @endforeach
@@ -190,25 +184,22 @@
                                             <td> {{ \Carbon\Carbon::parse($item->end_date)->format('d/m/Y') }}</td>
                                             <td>
                                                 <div class="dropdown action-label">
-                                                    @if ($item->priority=='high')
-                                                        
-                                                    <a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle"
-                                                        data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                            class="fa fa-dot-circle-o text-danger"></i> High </a>
+                                                    @if ($item->priority == 'high')
+                                                        <a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle"
+                                                            data-bs-toggle="dropdown" aria-expanded="false"><i
+                                                                class="fa fa-dot-circle-o text-danger"></i> High </a>
                                                     @endif
-                                                    @if ($item->priority=='medium')
-                                                        
-                                                    <a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle"
-                                                        data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                            class="fa fa-dot-circle-o text-warning"></i> Medium </a>
-                                                    @endif                                                      
-                                                    @if ($item->priority=='low')
-                                                        
-                                                    <a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle"
-                                                        data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                            class="fa fa-dot-circle-o text-success"></i> Low </a>
-                                                    @endif                                                     
-                                         
+                                                    @if ($item->priority == 'medium')
+                                                        <a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle"
+                                                            data-bs-toggle="dropdown" aria-expanded="false"><i
+                                                                class="fa fa-dot-circle-o text-warning"></i> Medium </a>
+                                                    @endif
+                                                    @if ($item->priority == 'low')
+                                                        <a href="#" class="btn btn-white btn-sm btn-rounded dropdown-toggle"
+                                                            data-bs-toggle="dropdown" aria-expanded="false"><i
+                                                                class="fa fa-dot-circle-o text-success"></i> Low </a>
+                                                    @endif
+
                                                 </div>
                                             </td>
                                             <td>
@@ -285,8 +276,7 @@
                                         swal("Success! Your Department has been deleted!", {
                                             icon: "success",
                                         })
-                                        $(yes).parent().parent().parent().parent().hide(
-                                            0500);
+                                        $(yes).parent().parent().parent().parent().parent().hide(0500);
 
                                     }
                                 }

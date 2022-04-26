@@ -44,7 +44,7 @@ class User extends Authenticatable
         return $this->belongsTo(Designation::class);
     }
 
-    public function leader()
+    public function leaders()
     {
         // return $this->belongsTo(projectLeader::class);
         return $this->hasMany(projectLeader::class,"leader_id");
@@ -54,6 +54,7 @@ class User extends Authenticatable
         // return $this->belongsTo(projectLeader::class);
         return $this->hasMany(ProjectTeamModel::class,"team_id");
     }
+
 
     /**
      * The attributes that should be hidden for serialization.
