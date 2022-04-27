@@ -131,7 +131,7 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Client ID <span
                                                 class="text-danger">*</span></label>
-                                        <input class="form-control floating" id="cid" onchange="cid()" name="client_id"value="@if(isset($client)){{$client->client_id}}@else {{old('client_id')}}@endisset"type="text">
+                                        <input class="form-control floating" id="cid" onchange="cid()" name="client_id"value="@if(isset($client)){{$client->client_id}}@else {{old('client_id')}}@endisset{{$client_id}}"type="text">
                                         <span class="text-danger">
                                             @error('name')
                                                 {{ $message }}

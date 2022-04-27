@@ -50,10 +50,17 @@ class ClientController extends Controller
             $count = Countrie::all();
             return view('admin.Client.add-client', compact('count', 'client'));
         } else {
+            $count = Countrie::all();
+            $id = ClientModel::latest()->first();
+            if($id ==!null){
+
+                $client_id = $id->client_id;
+            }else{
+                $client_id= 1000;
+            }
+            return view('admin.Client.add-client', compact('count','client_id'),);
         }
 
-        $count = Countrie::all();
-        return view('admin.Client.add-client', compact('count'),);
     }
     public function store(Request $request)
     {

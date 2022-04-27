@@ -22,7 +22,7 @@ class CreateClientModelsTable extends Migration
             $table->string('phone');
             $table->string('company');
             $table->string('website');
-            $table->integer('address');
+            $table->text('address');
             $table->integer('country_id');
             $table->string('state_id');
             $table->string('city_id');

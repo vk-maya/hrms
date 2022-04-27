@@ -101,7 +101,14 @@ class EmployeesController extends Controller
             $department = Department::get();
             $count = Countrie::all();
             $id = User::latest()->first();
-            $empid=$id->employee_id+1;
+            if($id==!null){
+                $empid=1+$id->employee_id;
+            }else{
+
+                $empid=1000;
+            }
+
+          
             return view('admin.employees.employees-add', compact('department', 'count','empid'));
         }
     }
