@@ -54,6 +54,7 @@ class User extends Authenticatable
         // return $this->belongsTo(projectLeader::class);
         return $this->hasMany(ProjectTeamModel::class,"team_id");
     }
+  
 
 
     /**

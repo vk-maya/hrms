@@ -28,4 +28,8 @@ class ProjectModel extends Model
     public function image(){
         return $this->hasMany(ProjectImage::class,'prject_id');
     }
+
+    public  function auth(){
+        return $this->belongsToMany(Admin::class,'project_models','id','auth_id');
+    }
 }

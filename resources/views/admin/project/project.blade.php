@@ -74,7 +74,7 @@
                                                 Delete</button>
                                         </div>
                                     </div>
-                                    <h4 class="project-title"><a href="project-view.html">{{ $item->name }}</a></h4>
+                                    <h4 class="project-title"><a href="{{route('admin.project.view',$item->id)}}">{{ $item->name }}</a></h4>
                                     <small class="block text-ellipsis m-b-15">
                                         <span class="text-xs">1</span> <span class="text-muted">open tasks, </span>
                                         <span class="text-xs">9</span> <span class="text-muted">tasks

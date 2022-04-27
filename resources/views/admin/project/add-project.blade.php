@@ -93,6 +93,7 @@
                             method="POST" enctype="multipart/form-data">
                             <div class="row">
                                 @csrf
+                                <input type="hidden" name="project_create" value="{{Auth::guard('admin')->user()->id}}">
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="inputname">Project Name</label>
@@ -161,7 +162,7 @@
                                     <div class="form-group">
                                         <label>Rate</label>
                                         <input placeholder="$50" readonly name="rate"
-                                            value=""
+                                            value="0000$"
                                             class="form-control" type="text">
                                         <span class="text-danger">
                                             @error('rate')
@@ -212,7 +213,11 @@
                                         <select class="select" multiple name="teamlead[]">
                                             <option>Select Client</option>
                                             @foreach ($employeesc as $item)
-                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                <option @if (isset($project) &&
+                                                in_array(
+                                                    $item->id,
+                                                    $project->leaders()->get()->pluck('id')->unique()->toArray(),
+                                                )) selected @endif value="{{ $item->id }}">{{ $item->name }}</option>
                                             @endforeach
                                         </select>
                                         <span class="text-danger">
@@ -252,13 +257,7 @@
                                                     <a href="#" data-id="$item->id" data-bs-toggle="tooltip" title="{{ $item->name }}"
                                                         class="avatar">
                                                         <img src="{{ asset('storage/uploads/' . $item->image) }}" alt="">
-                                                        <span class="task-action-btn task-btn-right">				 <span class="action-circle large delete-btn"
-                                                            title="Remove Leader">
-                                                            <i class="material-icons">delete</i>
-                                                        </span>
-                                                    </span>
-                                                    </a>
-                                                 
+                                                    </a>                                                 
                                                 @endforeach
                                                
                                             </div>
@@ -282,9 +281,9 @@
                             </div>
                             <div class="form-group">
                                 <label>Description</label>
-                                <textarea id="editor" name="description" id="" cols="3" rows="2"> @isset($project)
-{!! $project->description !!}
-@endisset  </textarea>
+                                                            <textarea id="editor" name="description" id="" cols="3" rows="2"> @isset($project)
+                            {!! $project->description !!}
+                            @endisset  </textarea>
                                 <span class="text-danger">
                                     @error('description')
                                         {{ $message }}

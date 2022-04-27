@@ -18,4 +18,8 @@ class Admin extends Authenticatable
         'email',
         'password',
     ];
+    public function autht(){
+        return $this->hasMany(ProjectModel::class,'auth_id');
+    
+}
 }

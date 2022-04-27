@@ -77,6 +77,7 @@ Route::prefix('admin/')->name('admin.')->group(function () {
     Route::get('project', [ProjectController::class, 'index'])->name('project');
     Route::get('project/list', [ProjectController::class, 'list'])->name('project.list');
     Route::get('project/create', [ProjectController::class, 'create'])->name('project.create');
+    Route::get('project/view/{id}', [ProjectController::class, 'view'])->name('project.view');
     Route::post('project/create', [ProjectController::class, 'store'])->name('project.store');
     Route::get('project/edit/{id}', [ProjectController::class, 'create'])->name('project.edit');
     Route::post('project/update', [ProjectController::class, 'update'])->name('project.update');

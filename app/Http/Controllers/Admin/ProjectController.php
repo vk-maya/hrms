@@ -23,6 +23,14 @@ class ProjectController extends Controller
         // dd($project->toarray());       
         return view('admin.project.project', compact('project'));
     }
+    public function view($id)
+    {
+
+        $project = ProjectModel::with('team', 'leaders', 'image','auth')->find($id);
+// dd($project->toArray());
+
+        return view('admin.project.project-view', compact('project'));
+    }
     public function list()
     {
         $leader = projectLeader::with('user')->get();
@@ -50,6 +58,7 @@ class ProjectController extends Controller
     }
     public function store(Request $request)
     {
+        // dd($request->toArray());
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'clientname' => ['required', 'string', 'max:255'],
@@ -71,6 +80,7 @@ class ProjectController extends Controller
         }
         $request->validate($rules);
         $project->name = $request->name;
+        $project->auth_id = $request->project_create;
         $project->client_id = $request->clientname;
         $project->start_date = date('Y-m-d', strtotime($request->start_date));
         $project->end_date = date('Y-m-d', strtotime($request->end_date));
@@ -109,8 +119,10 @@ class ProjectController extends Controller
     }
     public function update(Request $request)
     {
+        // dd($request->toArray());
         $project = ProjectModel::find($request->id);
         $project->name = $request->name;
+        $project->auth_id = $request->project_create;
         $project->client_id = $request->clientname;
         $project->start_date = date('Y-m-d', strtotime($request->start_date));
         $project->end_date = date('Y-m-d', strtotime($request->end_date));
@@ -120,8 +132,37 @@ class ProjectController extends Controller
         $project->description = $request->description;
         $project->status = ($request->status == 1) ? 1 : 0;
         $project->update();
-        $project_id = ProjectModel::latest()->first();
-        if($request->image >0){
+        $project_id = $request->id;
+       
+        if ($request->teamlead == !null) {
+            foreach ($request->teamlead as $item) {
+                $check = projectLeader::where('prject_id',$project_id)->where('leader_id',$item)->first();
+                if($check == null)
+                {
+                         $team = new projectLeader();
+                         $team->prject_id = $project_id;
+                         $team->leader_id = $item;
+                         $team->save();
+                     }
+
+        }
+      
+    }
+        if ($request->team == !null) {
+            foreach ($request->team as $item) {
+                $check = ProjectTeamModel::where('prject_id',$project_id)->where('team_id',$item)->first();
+                if($check == null)
+                {
+                         $team = new ProjectTeamModel();
+                         $team->prject_id = $project_id;
+                         $team->team_id = $item;
+                         $team->save();
+                     }
+
+        }
+      
+    }
+        if ($request->image == !null) {
             if ($request->hasFile('image')) {
                 $files = $request->file('image');
                 foreach ($files as $file) {
@@ -129,13 +170,14 @@ class ProjectController extends Controller
                     $newfilename = "client" . str_replace(' ', '', $request->name) . rand(0, 10000) . "." . $fname;
                     $file->storeAs('public/project', $newfilename);
                     $fileimg = new ProjectImage;
-                    $fileimg->prject_id = $project_id->id;
+                    $fileimg->prject_id = $project_id;
                     $fileimg->image = $newfilename;
                     $fileimg->save();
                 }
             }
         }
-     
+        
+
         return redirect()->route('admin.project');
     }
     public function filedelete($id)
