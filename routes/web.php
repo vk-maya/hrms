@@ -83,4 +83,10 @@ Route::prefix('admin/')->name('admin.')->group(function () {
     Route::post('project/update', [ProjectController::class, 'update'])->name('project.update');
     Route::get('project/delete/{id}', [ProjectController::class, 'delete'])->name('project.delete');
     Route::get('project/file/delete/{id}', [ProjectController::class, 'filedelete'])->name('project.delete.file');
+    Route::Post('project/team/delete/', [ProjectController::class, 'team_member_delete'])->name('project.delete.team.member');
+    Route::get('project/task/board/{id}', [ProjectController::class, 'task'])->name('project.task.board');
+    Route::post('project/task/board', [ProjectController::class, 'task_board_create'])->name('project.task.board.store');
+    Route::any('project/task/add/{id}/{pid}/', [ProjectController::class, 'task_create'])->name('project.task.add');
+    Route::post('project/task/save', [ProjectController::class, 'task_store'])->name('project.task.store');
+
 });

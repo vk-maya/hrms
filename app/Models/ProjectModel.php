@@ -28,8 +28,15 @@ class ProjectModel extends Model
     public function image(){
         return $this->hasMany(ProjectImage::class,'prject_id');
     }
-
-    public  function auth(){
-        return $this->belongsToMany(Admin::class,'project_models','id','auth_id');
+    public function employees(){
+        return $this->belongsTo(User::class);        
     }
+
+    public function taskbaord(){
+        return $this->hasMany(taskBoard::class,'project_id');
+    }
+
+    // public  function project_create(){
+    //     return $this->belongsTo(Admin::class);
+    // }
 }

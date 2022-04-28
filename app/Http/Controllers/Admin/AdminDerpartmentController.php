@@ -10,8 +10,7 @@ use App\Models\User;
 
 class AdminDerpartmentController extends Controller
 {
-    public function departmentscreate(Request $request)
-    {
+    public function departmentscreate(Request $request){
         if ($request->id > 0) {
             // dd($request->id);
             $edit = Department::find($request->id);
@@ -21,8 +20,7 @@ class AdminDerpartmentController extends Controller
             return view('admin.branch.departments', compact('department'));
         }
     }
-    public function departmentsstore(Request $request)
-    {
+    public function departmentsstore(Request $request){
 
         $rules = [
             'department' => ['required', 'string', 'max:255'],
@@ -39,9 +37,7 @@ class AdminDerpartmentController extends Controller
         $data->save();
         return redirect()->route('admin.departments');
     }
-
-    public function departmentsstatus(Request $request)
-    {
+    public function departmentsstatus(Request $request){
         $data = Department::find($request->id);
         if ($data->status == 1) {
             $data->status = 0;
@@ -51,8 +47,7 @@ class AdminDerpartmentController extends Controller
         $data->save();
         return response()->json(['success' => "Successfully Changed"]);
     }
-    public function designationstatus(Request $request)
-    {
+    public function designationstatus(Request $request) {
         // dd($request->toArray());
         $data = Designation::find($request->id);
         if ($data->status == 1) {
@@ -63,8 +58,7 @@ class AdminDerpartmentController extends Controller
         $data->save();
         return response()->json(['msg' => "yes"]);
     }
-    public function designationcreate($id = '')
-    {
+    public function designationcreate($id = ''){
 
         if ($id > 0) {
             // dd($id);
@@ -77,8 +71,7 @@ class AdminDerpartmentController extends Controller
             return view('admin.branch.designation', compact('department', 'designation'));
         }
     }
-    public function designationstore(Request $request)
-    {
+    public function designationstore(Request $request){
         $rules = [
             'designation' => ['required', 'string', 'max:255'],
             'department_id' => ['required', 'string', 'max:255'],
@@ -96,8 +89,7 @@ class AdminDerpartmentController extends Controller
         $data->save();
         return redirect()->route('admin.designation');
     }
-    public function departmentdelete($id)
-    {
+    public function departmentdelete($id) {
         $data = Designation::where('department_id', $id)->count();
         if ($data > 0) {
             return response()->json([
@@ -110,8 +102,7 @@ class AdminDerpartmentController extends Controller
             ]);
         }
     }
-    public function designationdelete($id)
-    {
+    public function designationdelete($id){
         $data = User::where('designation_id', $id)->count();
         if ($data > 0) {
             return response()->json(['msg' => 'no']);
