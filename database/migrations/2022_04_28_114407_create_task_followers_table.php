@@ -16,6 +16,7 @@ class CreateTaskFollowersTable extends Migration
         Schema::create('task_followers', function (Blueprint $table) {
             $table->id();
             $table->string('task_id');
+            $table->string('project_id');
             $table->string('team_id');
             $table->string('status');
             $table->timestamps();

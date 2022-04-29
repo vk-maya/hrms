@@ -193,7 +193,7 @@ class ProjectController extends Controller
     // ---------------------task--------------------------------
     public function task($id){
         $employees = User::all();
-        $project = ProjectModel::with('team', 'leaders', 'image','taskbaord')->find($id);
+        $project = ProjectModel::with('team', 'leaders', 'image','Tasks','TaskBoard')->find($id);
         return view('admin.project.task-board', compact('project','employees'));
     }
     public function task_board_create(Request $request){
@@ -210,12 +210,9 @@ class ProjectController extends Controller
         $data->save();
         return redirect()->back();
     }
-    public function task_create($id ,$pid){
-        // dd($pid);
-        $project = ProjectModel::with('team', 'leaders', 'image','taskbaord')->find($pid);
-        // dd($request->toArray());
-        $tb_id = $id;
-
+    public function task_create($id ,$tbid){
+        $project = ProjectModel::with('team', 'leaders', 'image','Tasks')->find($id);
+        $tb_id = $tbid;
         return view('admin.project.add-task',compact('project','tb_id'));
     }
     public function task_store(Request $request){
@@ -242,6 +239,7 @@ class ProjectController extends Controller
         foreach ($request->team as $key => $value) {
             $data = new TaskFollowers();
             $data->task_id =$task_id;
+            $data->project_id = $request->project_id;
             $data->team_id = $value;
             $data->status= 1;      
             $data->save();      
@@ -250,4 +248,24 @@ class ProjectController extends Controller
         return redirect()->route('admin.project.task.board', compact('id'));
 
     }
+    public function taskboardelete($id){
+        $data = Task::where('tb_id',$id)->count();
+        if($data>0){
+            return response()->json(['msg' => 'no']);
+        }else{
+            taskBoard::find($id)->delete();
+            return response()->json(['msg' => 'yes']);
+        }
+
+    }
+    public function taskdelete($id){
+        // dd($id);
+        Task::find($id)->delete();
+        $data =TaskFollowers::where('task_id',$id)->get();
+        foreach ($data as $key => $value) {
+            TaskFollowers::find($value->id)->delete();
+        }
+        return response()->json(['msg' => 'yes']);
+
+        }
 }

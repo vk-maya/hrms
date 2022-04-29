@@ -73,7 +73,7 @@
             <div class="page-header">
                 <div class="row">
                     <div class="col-sm-12">
-                        <h3 class="page-title">Hospital Admin</h3>
+                        <h3 class="page-title">{{ $project->name }}</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
                             <li class="breadcrumb-item active">Task Board</li>
@@ -81,7 +81,6 @@
                     </div>
                 </div>
             </div>
-            {{-- {{$project}} --}}
             <div class="row board-view-header">
                 <div class="col-4">
                     <div class="pro-teams">
@@ -95,7 +94,6 @@
                                             src="{{ asset('storage/uploads/' . $item->image) }}">
                                     </div>
                                 @endforeach
-
                             </div>
                         </div>
                         <div class="pro-team-members">
@@ -130,74 +128,87 @@
                     </div>
                 </div>
             </div>
-            {{-- {{$item}} --}}
             <div class="kanban-board card mb-0">
                 <div class="card-body">
                     <div class="kanban-cont">
-                        @foreach ($project->taskbaord()->get() as $item)
-                            <div class="kanban-list kanban-{{$item->tbcolor}}">
+                        @foreach ($project->TaskBoard as $tb)
+                            <div class="kanban-list kanban-{{ $tb->tbcolor }}">
                                 <div class="kanban-header">
-                                    <span class="status-title">{{ $item->name }}</span>
+                                    <span class="status-title">{{ $tb->name }}</span>
                                     <div class="dropdown kanban-action">
                                         <a href="#" data-bs-toggle="dropdown">
                                             <i class="fa fa-ellipsis-v"></i>
                                         </a>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                data-bs-target="#edit_task_board">Edit</a>
-                                            <a class="dropdown-item" href="#">Delete</a>
+                                            <a class="dropdown-item edit" data-id="{{ $tb->id }}">Edit</a>
+                                            <button class="dropdown-item deletetb" data-id="{{ $tb->id }}">Delete</button>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="kanban-wrap">
-                                    <div class="card panel">
-                                        <div class="kanban-box">
-                                            <div class="task-board-header">
-                                                <span class="status-title"><a href="">Website
-                                                        redesign</a></span>
-                                                <div class="dropdown kanban-task-action">
-                                                    <a href="#" data-bs-toggle="dropdown">
-                                                        <i class="fa fa-angle-down"></i>
-                                                    </a>
-                                                    <div class="dropdown-menu dropdown-menu-right">
-                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                            data-bs-target="#edit_task_modal">Edit</a>
-                                                        <a class="dropdown-item" href="#">Delete</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="task-board-body">
-                                                <div class="kanban-info">
-                                                    <div class="progress progress-xs">
-                                                        <div class="progress-bar" role="progressbar" style="width: 20%"
-                                                            aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                    @foreach ($project->Tasks as $tboard)
+                                        <div class="card panel">
+                                            @if ($tb->id == $tboard->tb_id)
+                                                <div class="kanban-box">
+                                                    <div class="task-board-header">
+                                                        <span class="status-title"><a href="">{{ $tboard->name }}
+                                                            </a></span>
+                                                        <div class="dropdown kanban-task-action">
+                                                            <a href="#" data-bs-toggle="dropdown">
+                                                                <i class="fa fa-angle-down"></i>
+                                                            </a>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                                                    data-bs-target="#edit_task_modal">Edit</a>
+                                                                <button class="dropdown-item deletetask" data-id="{{$tboard->id}}" >Delete</button>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <span>70%</span>
+                                                    <div class="task-board-body">
+                                                        <div class="kanban-info">
+                                                            <div class="progress progress-xs">
+                                                                <div class="progress-bar" role="progressbar"
+                                                                    style="width: 20%" aria-valuenow="20" aria-valuemin="0"
+                                                                    aria-valuemax="100">
+                                                                </div>
+                                                            </div>
+                                                            <span>70%</span>
+                                                        </div>
+                                                        <div class="kanban-footer">
+                                                            <span class="task-info-cont">
+                                                                <span class="task-date"><i
+                                                                        class="fa fa-clock-o"></i>{{ $tboard->end_date }}</span>
+
+                                                                @if ($tboard->priority == 'high')
+                                                                    <span
+                                                                        class="task-priority badge bg-inverse-danger">High</span>
+                                                                @elseif($tboard->priority == 'normal')
+                                                                    <span
+                                                                        class="task-priority badge bg-inverse-warning">Normal</span>
+                                                                @else
+                                                                    <span
+                                                                        class="task-priority badge bg-inverse-warning">Normal</span>
+                                                                @endif
+
+                                                            </span>
+                                                            <span class="task-users">
+                                                                @foreach ($tboard->task_followers as $item)
+                                                                    <img src="{{ asset('storage/uploads/' . $item->image) }}"
+                                                                        class="task-avatar" width="24" height="24"
+                                                                        alt="">
+                                                                @endforeach
+                                                            </span>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="kanban-footer">
-                                                    <span class="task-info-cont">
-                                                        <span class="task-date"><i class="fa fa-clock-o"></i> Sep
-                                                            26</span>
-                                                        <span class="task-priority badge bg-inverse-danger">High</span>
-                                                    </span>
-                                                    <span class="task-users">
-                                                        <img src="assets/img/profiles/avatar-12.jpg" class="task-avatar"
-                                                            width="24" height="24" alt="">
-                                                    </span>
-                                                </div>
-                                            </div>
+                                            @endif
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="add-new-task">
-                                    {{-- <form action="{{route('')}}" method="POST">
-                                        @csrf --}}
-                                        {{-- <input type="hidden" name="project_id" value="{{$project->id}}">
-                                        <input type="hidden" name="tb_id" value="{{$item->id}}"> --}}
-                                        <a href="{{route('admin.project.task.add',[$project->id,$item->id])}}" class="btn btn-success">Add
+                                    @endforeach
+                                    <div class="add-new-task">
+                                        <a href="{{ route('admin.project.task.add', [$project->id, $tb->id]) }}"
+                                            class="btn btn-success">Add
                                             New Task</a>
-                                    </form>
+                                    </div>
                                 </div>
                             </div>
                         @endforeach
@@ -205,67 +216,66 @@
                 </div>
             </div>
         </div>
-        <div id="add_task_board" class="modal custom-modal fade" role="dialog">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Add Task Board</h4>
-                        <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="{{ route('admin.project.task.board.store') }}" method="POST">
-                            @csrf
-                            <div class="form-group">
-                                <label>Task Board Name</label>
-                                <input type="text" name="name" class="form-control">
+    </div>
+    <div id="add_task_board" class="modal custom-modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Task Board</h4>
+                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('admin.project.task.board.store') }}" method="POST">
+                        @csrf
+                        <div class="form-group">
+                            <label>Task Board Name</label>
+                            <input type="text" name="name" class="form-control">
+                        </div>
+                        <div class="form-group task-board-color">
+                            <label>Task Board Color</label>
+                            <div class="board-color-list">
+                                <label class="board-control board-primary">
+                                    <input type="radio" name="tbcolor" class="board-control-input" value="primary"
+                                        checked="">
+                                    <span class="board-indicator"></span>
+                                </label>
+                                <label class="board-control board-success">
+                                    <input type="radio" name="tbcolor" class="board-control-input" value="success">
+                                    <span class="board-indicator"></span>
+                                </label>
+                                <label class="board-control board-info">
+                                    <input type="radio" name="tbcolor" class="board-control-input" value="info">
+                                    <span class="board-indicator"></span>
+                                </label>
+                                <label class="board-control board-purple">
+                                    <input type="radio" name="tbcolor" class="board-control-input" value="purple">
+                                    <span class="board-indicator"></span>
+                                </label>
+                                <label class="board-control board-warning">
+                                    <input type="radio" name="tbcolor" class="board-control-input" value="warning">
+                                    <span class="board-indicator"></span>
+                                </label>
+                                <label class="board-control board-danger">
+                                    <input type="radio" name="tbcolor" class="board-control-input" value="danger">
+                                    <span class="board-indicator"></span>
+                                </label>
                             </div>
-                            <div class="form-group task-board-color">
-                                <label>Task Board Color</label>
-                                <div class="board-color-list">
-                                    <label class="board-control board-primary">
-                                        <input type="radio" name="tbcolor" class="board-control-input" value="primary"
-                                            checked="">
-                                        <span class="board-indicator"></span>
-                                    </label>
-                                    <label class="board-control board-success">
-                                        <input type="radio" name="tbcolor" class="board-control-input" value="success">
-                                        <span class="board-indicator"></span>
-                                    </label>
-                                    <label class="board-control board-info">
-                                        <input type="radio" name="tbcolor" class="board-control-input" value="info">
-                                        <span class="board-indicator"></span>
-                                    </label>
-                                    <label class="board-control board-purple">
-                                        <input type="radio" name="tbcolor" class="board-control-input" value="purple">
-                                        <span class="board-indicator"></span>
-                                    </label>
-                                    <label class="board-control board-warning">
-                                        <input type="radio" name="tbcolor" class="board-control-input" value="warning">
-                                        <span class="board-indicator"></span>
-                                    </label>
-                                    <label class="board-control board-danger">
-                                        <input type="radio" name="tbcolor" class="board-control-input" value="danger">
-                                        <span class="board-indicator"></span>
-                                    </label>
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="statusinput" class="mb-4">Status</label>
+                            <div class="col-md-12">
+                                <div class="form-check form-switch">
+                                    <input class='input-switch' type="checkbox" value="1" checked name="status" id="demo" />
+                                    <label class="label-switch" for="demo"></label>
+                                    <span class="info-text"></span>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                                <label for="statusinput" class="mb-4">Status</label>
-                                <div class="col-md-12">
-                                    <div class="form-check form-switch">
-                                        <input class='input-switch' type="checkbox" value="1" checked name="status"
-                                            id="demo" />
-                                        <label class="label-switch" for="demo"></label>
-                                        <span class="info-text"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <input type="hidden" name="project_id" value="{{ $project->id }}">
-                            <div class="m-t-20 text-center">
-                                <button class="btn btn-primary btn-lg">Submit</button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                        <input type="hidden" name="project_id" value="{{ $project->id }}">
+                        <div class="m-t-20 text-center">
+                            <button class="btn btn-primary btn-lg">Submit</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -279,7 +289,7 @@
 
     <script>
         $(document).ready(function() {
-            $(document).on("click", ".deleteteam", function(e) {
+            $(document).on("click", ".deletetb", function(e) {
                 e.preventDefault();
                 var yes = $(this);
                 swal({
@@ -292,28 +302,60 @@
                     .then((willDelete) => {
                         if (willDelete) {
                             var id = $(this).data("id");
-                            var pid = $(this).data("pid");
-                            var url = "{{ route('admin.project.delete.team.member') }}";
-                            var id = {
-                                "_token": "{{ csrf_token() }}",
-                                id: id,
-                                pid: pid,
-                            }
+                            var url = "{{ route('admin.project.delete.task.board', ':id') }}";
+                            url = url.replace(':id', id);
                             $.ajax({
-                                type: "POST",
+                                type: "GET",
                                 url: url,
-                                data: id,
                                 cache: false,
                                 success: function(res) {
                                     if (res.msg == 'no') {
-                                        swal("unsuccessful! ", {
+                                        swal("unsuccessful! Add This Other Task  ", {
                                             icon: "error",
                                         })
                                     } else {
                                         swal("Success! Your Project File has been deleted!", {
                                             icon: "success",
                                         })
-                                        $(yes).parent().hide(0500);
+                                        $(yes).parent().parent().parent().parent().hide(0500);
+
+                                    }
+                                }
+                            });
+                        }
+                    });
+            })
+        });
+        $(document).ready(function() {
+            $(document).on("click", ".deletetask", function(e) {
+                e.preventDefault();
+                var yes = $(this);
+                swal({
+                        title: "Are you sure?",
+                        text: "Once deleted, you will not be able to recover this!",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            var id = $(this).data("id");
+                            var url = "{{ route('admin.project.delete.task', ':id') }}";
+                            url = url.replace(':id', id);
+                            $.ajax({
+                                type: "GET",
+                                url: url,
+                                cache: false,
+                                success: function(res) {
+                                    if (res.msg == 'no') {
+                                        swal("unsuccessful! Add This Other Task  ", {
+                                            icon: "error",
+                                        })
+                                    } else {
+                                        swal("Success! Your Project File has been deleted!", {
+                                            icon: "success",
+                                        })
+                                        $(yes).parent().parent().parent().parent().hide(0500);
 
                                     }
                                 }

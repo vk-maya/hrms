@@ -90,7 +90,7 @@
                             <input type="hidden" name="tb_id" value="{{$tb_id}}">
                             <div class="form-group">
                                 <label>Task Name</label>
-                                <input type="text" name="name" class="form-control">
+                                <input type="text" name="name" class="form-control" value="{{old('name')}}">
                                 <span class="text-danger">
                                     @error('name')
                                         {{ $message }}
@@ -100,7 +100,7 @@
                             <div class="form-group">
                                 <label>Task Priority</label>
                                 <select class="form-control select" name="priority">
-                                    <option value="0">Select</option>
+                                    <option value="">Select</option>
                                     <option value="high">High</option>
                                     <option value="normal">Normal</option>
                                     <option value="low">Low</option>
@@ -113,7 +113,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Start Date</label>
-                                <div class="cal-icon"><input class="form-control datetimepicker" type="text"
+                                <div class="cal-icon"><input class="form-control datetimepicker" value="{{old('start_date')}}" type="text"
                                         name="start_date"></div>
                                         <span class="text-danger">
                                             @error('start_date')
@@ -123,7 +123,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Due Date</label>
-                                <div class="cal-icon"><input class="form-control datetimepicker" type="text"
+                                <div class="cal-icon"><input class="form-control datetimepicker"  value="{{old('due_date')}}" type="text"
                                         name="due_date"></div>
                                         <span class="text-danger">
                                             @error('due_date')
@@ -134,17 +134,17 @@
                             <div class="form-group">
                                 <label>Task Followers</label>
                                 <select class="select" multiple name="team[]">
-                                    <option>Select Client</option>
+                                    <option value="">Select Client</option>
                                     @foreach ($project->team()->get() as $item)
                                         <option value="{{ $item->id }}">{{ $item->name }}</option>
                                     @endforeach
                                 </select>
                                 <span class="text-danger">
-                                    @error('team[]')
+                                    @error('team')
                                         {{ $message }}
                                     @enderror
                                 </span>
-                                <div class="task-follower-list">
+                                {{-- <div class="task-follower-list">
                                     @foreach ($project->team()->get() as $item)
                                         <span data-bs-toggle="tooltip" title="{{ $item->name }}">
                                             <img src="{{ asset('storage/uploads/' . $item->image) }}" class="avatar"
@@ -154,7 +154,7 @@
                                         </span>
                                     @endforeach
                                  
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="col-sm-6">
                                 <label for="statusinput" class="mb-4">Status</label>

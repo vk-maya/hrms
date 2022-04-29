@@ -32,11 +32,14 @@ class ProjectModel extends Model
         return $this->belongsTo(User::class);        
     }
 
-    public function taskbaord(){
+    public function TaskBoard(){
         return $this->hasMany(taskBoard::class,'project_id');
     }
+    public function Tasks(){
+        return $this->hasMany(Task::class,'project_id');
+    }
 
-    // public  function project_create(){
-    //     return $this->belongsTo(Admin::class);
+    // public  function task_followers(){
+    //     return $this->belongsTo(User::class,'project_id');
     // }
 }

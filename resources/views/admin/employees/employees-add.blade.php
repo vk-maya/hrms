@@ -408,7 +408,6 @@
         function empl() {
             var y = document.getElementById("emp");
             let eamployees = $('#emp').val();
-            // consol.log(email)
             var url = "{{ route('admin.epid') }}";
             $.ajax({
                 url: url,
