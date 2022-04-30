@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminDerpartmentController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\EmployeesController;
 use App\Http\Controllers\Admin\ProjectController;
+use App\Http\Controllers\Employees\Task;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,15 +27,19 @@ Route::get('/', function () {
 Route::redirect('/admin', 'admin/login');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('employees.dashboard');
 })->middleware(['auth'])->name('dashboard');
+Route::prefix('employees/')->name('employees.')->middleware(['web'])->group(function(){
+    // ----------------task route employees---------------------------
+    route::get('task',[Task::class,'task'])->name('task');
+});
 
 
 Route::get('/admin/dashboard', function () {
     return view('admin.dashboard');
 })->middleware(['admin'])->name('admin.dashboard');
 
-Route::prefix('admin/')->name('admin.')->group(function () {
+Route::prefix('admin/')->name('admin.')->middleware(['admin'])->group(function () {
     // ------------------------------AdminDepartmentsController Routs-------------------
     // ---------------departments--------------------
     Route::get('departments', [AdminDerpartmentController::class, 'departmentscreate'])->name('departments');

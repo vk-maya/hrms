@@ -114,7 +114,8 @@ class EmployeesController extends Controller
             'designation' => ['required', 'string','numeric'],
             'image' => [ 'required','mimes:png,jpg,jpeg,csv','max:2048'],
             'address' => ['required', 'string', 'max:255'],
-            'password' => ['required', 'confirmed', Password::min(8),Rules\Password::defaults()],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            
         ];
         if ($request->id == !null) {
             $employees = User::find($request->id);
@@ -131,11 +132,12 @@ class EmployeesController extends Controller
             $rules['email'] = ['required', 'string', 'email', 'max:255', 'unique:users'];
             $employees = new User();
         }
+        
         $request->validate($rules);
         $employees->name = $request->name;
         $employees->last_name = $request->last_name;
         $employees->email = $request->email;
-        $employees->password =$request->password;
+        $employees->password =Hash::make($request->password);
         $employees->employee_id = $request->employee_id;
         $employees->joining_date = date('Y-m-d', strtotime($request->joining_date));
         $employees->phone = $request->phone;
@@ -156,6 +158,8 @@ class EmployeesController extends Controller
             $file = $request->file('image')->storeAs('public/uploads', $filename);
             $employees->image = $filename;
         }
+        // dd($employees->toArray());
+
         $employees->save();
         return redirect()->route('admin.employees');
     }

@@ -1,47 +1,44 @@
-@extends('layouts.loginapp')
+@extends('admin.layouts.loginapp')
 @section('content')
-    <div class="main">
-        <!-- Sing in  Form -->
-        <section class="sign-in">
+    <div class="main-wrapper">
+        <div class="account-content">
             <div class="container">
-                <div class="signin-content">
-                    <div class="signin-image">
-                        <figure><img src="../assets/img/pages/signin.jpg" alt="sing up image"></figure>
-                        <a href="sign_up.html" class="signup-image-link">Create an account</a>
-                    </div>
-                    <div class="signin-form">
-                        <h2 class="form-title">Login</h2>
+
+                <div class="account-logo">
+                    <img src="{{ asset('assets/img/logo2.png') }}"
+                            alt="Dreamguy's Technologies">
+                </div>
+                <div class="account-box">
+                    <div class="account-wrapper">
+                        <h3 class="account-title"> Uer Login</h3>
+                        <p class="account-subtitle">Access to Employees</p>
+
                         <form action="{{route('login')}}" method="POST"  class="register-form" id="login-form">
                             @csrf
                             <div class="form-group">
-                                <div class="">
-                                    <input name="email" type="text" placeholder="User Name"
-                                        class="form-control input-height" />
-                                </div>
+                                <label>Email Address</label>
+                                <input class="form-control" name="email" type="text" value="">
                             </div>
                             <div class="form-group">
-                                <div class="">
-                                    <input name="password" type="password" placeholder="Password"
-                                        class="form-control input-height" />
+                                <div class="row">
+                                    <div class="col">
+                                        <label>Password</label>
+                                    </div>
+                                </div>
+                                <div class="position-relative">
+                                    <input class="form-control" type="password" name="password" value="" id="password">
+                                    <span class="fa fa-eye-slash" id="toggle-password"></span>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <input type="checkbox" name="remember-me" id="remember-me" class="agree-term" />
-                                <label for="remember-me" class="label-agree-term"><span><span></span></span>Remember
-                                    me</label>
+                            <div class="form-group text-center">
+                                <button class="btn btn-primary account-btn" type="submit">Login</button>
                             </div>
-                            <div class="form-group form-button">
-                                <button class="btn btn-round btn-primary" name="signin" id="signin">Login</button>
-                            </div>
-                        </form>                      
+
+                        </form>
+
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     </div>
 @endsection
-@push('js')
-    <script src="assets/plugins/jquery/jquery.min.js"></script>
-    <!-- bootstrap -->
-    <script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-@endpush

@@ -5,13 +5,13 @@
             <div class="container">
 
                 <div class="account-logo">
-                    <a href="admin-dashboard.html"><img src="{{ asset('assets/img/logo2.png') }}"
-                            alt="Dreamguy's Technologies"></a>
+                    <img src="{{ asset('assets/img/logo2.png') }}"
+                            alt="Dreamguy's Technologies">
                 </div>
                 <div class="account-box">
                     <div class="account-wrapper">
-                        <h3 class="account-title">Login</h3>
-                        <p class="account-subtitle">Access to Admin dashboard</p>
+                        <h3 class="account-title">Admin Login</h3>
+                        <p class="account-subtitle">Access to Admin</p>
 
                         <form action="{{route('admin.login')}}" method="POST">
                             @csrf
@@ -24,11 +24,6 @@
                                     <div class="col">
                                         <label>Password</label>
                                     </div>
-                                    {{-- <div class="col-auto">
-                                        <a class="text-muted" href="forgot-password.html">
-                                            Forgot password?
-                                        </a>
-                                    </div> --}}
                                 </div>
                                 <div class="position-relative">
                                     <input class="form-control" type="password" name="password" value="" id="password">
@@ -38,9 +33,7 @@
                             <div class="form-group text-center">
                                 <button class="btn btn-primary account-btn" type="submit">Login</button>
                             </div>
-                            <div class="account-footer">
-                                <p>Don't have an account yet? <a href="register.html">Register</a></p>
-                            </div>
+
                         </form>
 
                     </div>
