@@ -5,12 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProjectTeamModel extends Model
+class Task extends Model
 {
     use HasFactory;
-    public function user(){       
 
-        return $this->belongsTo(User::class,"team_id");
-
+    public function task_followers(){
+        return $this->belongsToMany(User::class,'task_followers','task_id','team_id');
     }
 }

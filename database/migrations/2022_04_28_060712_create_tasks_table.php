@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProjectTeamModelsTable extends Migration
+class CreateTasksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,14 @@ class CreateProjectTeamModelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('project_team_models', function (Blueprint $table) {
+        Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->string('prject_id');
-            $table->string('team_id');
+            $table->string('name');
+            $table->string('project_id');
+            $table->string('priority');
+            $table->string('start_date');
+            $table->string('end_date');
+            $table->string('tb_id');
             $table->string('status');
             $table->timestamps();
         });
@@ -29,6 +33,6 @@ class CreateProjectTeamModelsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('project_team_models');
+        Schema::dropIfExists('tasks');
     }
 }

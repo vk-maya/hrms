@@ -15,8 +15,7 @@ use Illuminate\Support\Facades\Storage;
 class ClientController extends Controller
 {
     // -------------ajax route reposce ------------------
-    public function cid(Request $request)
-    {
+    public function cid(Request $request) {
         $rrr = ClientModel::withTrashed()->where('client_id', 'like', "%$request->id%")->count();
         return response()->json(['cid' => $rrr]);
     }   
@@ -30,21 +29,17 @@ class ClientController extends Controller
         $data->save();
         return response()->json(['success'=>"Successfully Changed"]);
     }
-    public function index()
-    {
+    public function index() {
         $client = ClientModel::all();
 
         return view('admin.Client.client', compact('client'));
     }
-    public function clist()
-    {
+    public function clist(){
         $clist = ClientModel::all();
 
         return view('admin.Client.client', compact('clist'));
     }
-    public function create($id = "")
-    {
-
+    public function create($id = ""){
         if ($id > 0) {
             $client = ClientModel::find($id);
             $count = Countrie::all();
@@ -62,8 +57,7 @@ class ClientController extends Controller
         }
 
     }
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         // dd($request->toArray());
         $rules = [
             'name' => ['required', 'string', 'max:255'],
@@ -111,9 +105,7 @@ class ClientController extends Controller
         $client->save();
         return redirect()->route('admin.client');
     }
-    public function delete($id)
-    {
-
+    public function delete($id){
         $delete = ClientModel::find($id);
         if ($delete->image != '') {
             storage::delete('public/uploads/' . $delete->image);

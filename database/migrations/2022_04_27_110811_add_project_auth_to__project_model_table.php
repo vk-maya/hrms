@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProjectTeamModelsTable extends Migration
+class AddProjectAuthToProjectModelTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,8 @@ class CreateProjectTeamModelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('project_team_models', function (Blueprint $table) {
-            $table->id();
-            $table->string('prject_id');
-            $table->string('team_id');
-            $table->string('status');
-            $table->timestamps();
+        Schema::table('project_models', function (Blueprint $table) {
+            $table->string('auth_id');
         });
     }
 
@@ -29,6 +25,8 @@ class CreateProjectTeamModelsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('project_team_models');
+        Schema::table('project_models', function (Blueprint $table) {
+            //
+        });
     }
 }
