@@ -216,6 +216,7 @@ class ProjectController extends Controller
         return view('admin.project.add-task',compact('project','tb_id'));
     }
     public function task_store(Request $request){
+        // dd($request->toArray());
         $id = $request->project_id;
         $rule = [
                 'name' =>['required'],
@@ -227,6 +228,7 @@ class ProjectController extends Controller
         $request->validate($rule);
         $data = new Task();
         $data->name = $request->name;
+        $data->assigned_id = $request->assigned_id;
         $data->project_id = $request->project_id;
         $data->tb_id = $request->tb_id;
         $data->priority = $request->priority;

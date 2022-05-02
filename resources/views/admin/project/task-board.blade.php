@@ -187,7 +187,7 @@
                                                                         class="task-priority badge bg-inverse-warning">Normal</span>
                                                                 @else
                                                                     <span
-                                                                        class="task-priority badge bg-inverse-warning">Normal</span>
+                                                                        class="task-priority badge bg-inverse-warning">Low</span>
                                                                 @endif
 
                                                             </span>

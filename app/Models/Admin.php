@@ -22,4 +22,7 @@ class Admin extends Authenticatable
         return $this->hasMany(ProjectModel::class,'auth_id');
     
 }
+// function assigned(){
+//     return $this->hasOne(ProjectModel::class,'assigned_id');
+// }
 }

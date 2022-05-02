@@ -86,6 +86,7 @@
                     <div class="card-body">
                         <form action="{{route('admin.project.task.store')}}" method="POST">
                             @csrf
+                            <input type="hidden" name="assigned_id" value="{{Auth::guard('admin')->user()->id}}">
                             <input type="hidden" name="project_id" value="{{$project->id}}">
                             <input type="hidden" name="tb_id" value="{{$tb_id}}">
                             <div class="form-group">

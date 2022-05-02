@@ -15,4 +15,21 @@ class TaskFollowers extends Model
     public function projectDetail(){
         return $this->belongsTo(ProjectModel::class,'project_id');
     }
+
+    public function taskDetails(){
+        return $this->hasOne(Task::class, 'id','task_id');
+    }
+
+    public function projectDetails(){
+        return $this->hasOne(ProjectModel::class,'id','project_id');
+    }
+    public function taskreport(){
+        return $this->hasMany(taskstatus::class,'task_id','task_id');
+    }
+    public function assigned(){
+
+        return $this->belongsToMany(Admin::class,'tasks','id','assigned_id');
+
+    }
+    
 }

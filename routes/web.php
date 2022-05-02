@@ -32,6 +32,8 @@ Route::get('/dashboard', function () {
 Route::prefix('employees/')->name('employees.')->middleware(['web'])->group(function(){
     // ----------------task route employees---------------------------
     route::get('task',[Task::class,'task'])->name('task');
+    route::post('task/status',[Task::class,'taskstatus'])->name('task.status');
+    route::get('task/status/complete/{id}',[Task::class,'taskcomplete'])->name('task-status-complete');
 });
 
 
