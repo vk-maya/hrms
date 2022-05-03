@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Http\Controllers\Employees;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\DailyTask as AdminDailyTask;
+
+class DailyTask extends Controller
+{
+ public function dailytask (){
+
+    return view('employees.dailytask');
+ }
+ public function showtaskk(){
+    $dailytask = AdminDailyTask::where('team_id', Auth::guard('web')->user()->id)->get();
+    return json_encode(array('data' => $dailytask));
+}
+public function dailystore(Request $request){
+    // dd($request->toArray());
+    $request->validate([
+        'name'=> 'required',           
+    ]);
+    $data = new AdminDailyTask();
+    $data->team_id = $request->id;
+    $data->name = $request->name;
+    $data->status =1;
+    $data->save();
+}
+}

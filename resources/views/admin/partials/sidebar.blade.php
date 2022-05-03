@@ -84,8 +84,9 @@
 									class="menu-arrow"></span></a>
 							<ul style="display: none;">
 								<li><a href="{{route('admin.project')}}">Projects</a></li>
-								<li><a href="tasks.html">Tasks</a></li>
+								<li><a href="{{route('admin.employees.daily.task')}}">Daily Task</a></li>
 								<li><a href="task-board.html">Task Board</a></li>
+								<li><a href="{{route('admin.all.task.list')}}">Task List</a></li>
 							</ul>
 						</li>
 						{{-- <li>

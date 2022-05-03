@@ -26,6 +26,7 @@
                             class="menu-arrow"></span></a>
                     <ul style="display: none;">
                         <li><a href="{{route('employees.task')}}">Tasks</a></li>
+                        <li><a href="{{route('employees.daily.task')}}">Daily Task</a></li>
                     </ul>
                 </li>
             </ul>

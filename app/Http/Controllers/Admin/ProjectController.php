@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\DailyTask;
 use App\Models\ClientModel;
 use App\Models\ProjectImage;
 use App\Models\projectLeader;
@@ -270,4 +271,34 @@ class ProjectController extends Controller
         return response()->json(['msg' => 'yes']);
 
         }
-}
+    
+    public function dailytask(){
+        return view('admin.project.dailytask');
+    }
+    public function dailystore(Request $request){
+        // dd($request->toArray());
+        $request->validate([
+            'name'=> 'required',           
+        ]);
+        $data = new DailyTask();
+        $data->team_id = $request->id;
+        $data->name = $request->name;
+        $data->status =0;
+        $data->save();
+    }
+    public function showtask(){
+        $dailytask = DailyTask::all();
+        return json_encode(array('data' => $dailytask));
+    }
+    public function alltask(){
+        
+        $employees  = User::all();
+        return view('admin.task.task-list',compact('employees'));
+
+    }
+    public function empltask($id){
+
+        $data = DailyTask::where('team_id',$id)->get();
+        return view('admin.task.emplo-task',compact('data'));
+    }
+    }

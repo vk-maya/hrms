@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminDerpartmentController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\EmployeesController;
 use App\Http\Controllers\Admin\ProjectController;
+use App\Http\Controllers\Employees\DailyTask;
 use App\Http\Controllers\Employees\Task;
 
 /*
@@ -34,6 +35,10 @@ Route::prefix('employees/')->name('employees.')->middleware(['web'])->group(func
     route::get('task',[Task::class,'task'])->name('task');
     route::post('task/status',[Task::class,'taskstatus'])->name('task.status');
     route::get('task/status/complete/{id}',[Task::class,'taskcomplete'])->name('task-status-complete');
+    // -----------------------daily task ------------------------------
+    Route::get('emp/daliy/task',[DailyTask::class,'dailytask'])->name('daily.task');
+    Route::get('emp/show/task',[DailyTask::class,'showtaskk'])->name('show-taskk');
+    Route::post('emp/daliy/task',[DailyTask::class,'dailystore'])->name('daily.task.store');
 });
 
 
@@ -97,5 +102,11 @@ Route::prefix('admin/')->name('admin.')->middleware(['admin'])->group(function (
     Route::post('project/task/save', [ProjectController::class, 'task_store'])->name('project.task.store');
     Route::get('project/task/board/delete/{id}', [ProjectController::class, 'taskboardelete'])->name('project.delete.task.board');
     Route::get('project/task/task/delete/{id}', [ProjectController::class, 'taskdelete'])->name('project.delete.task');
+    // -------------------------daily task route--------------------------------------
+    Route::get('daliy/task',[ProjectController::class,'dailytask'])->name('employees.daily.task');
+    Route::get('show/task',[ProjectController::class,'showtask'])->name('show-task');
+    Route::post('daliy/task',[ProjectController::class,'dailystore'])->name('daily.task.store');
+    Route::get('all/task/list',[ProjectController::class,'alltask'])->name('all.task.list');
+    Route::get('employ/task/view/{id}',[ProjectController::class,'empltask'])->name('employ.task.list');
 
 });

@@ -116,62 +116,68 @@
                                 <div class="chat-wrap-inner">
                                     <div class="chat-box">
                                         @foreach ($task as $item)
-                                        {{$item->assigned}}
-                                            <div class="chats">
-                                                <h5>Project Name: <b> {{ $item->projectDetails->name }}</b></h5>
-                                                <div class="task-header">
-                                                    <div class="assignee-info">
-                                                        <div class="avatar"> <img alt=""
-                                                                src="assets/img/profiles/avatar-02.jpg">
+                                            {{-- {{$item->taskDetails->assigned->name}} --}}
+                                            @if ($item->taskDetails->status == 1)
+                                                <div class="chats">
+                                                    <h5>Project Name: <b> {{ $item->projectDetails->name }}</b></h5>
+                                                    <div class="task-header">
+                                                        <div class="assignee-info">
+                                                            <div class="avatar">
+                                                                <img alt="" src="{{asset('assets/uploads',$item->taskDetails->assigned->image)}}" alt="Assigned Pic">
+
+                                                            </div>
+                                                            <div class="assigned-info">
+                                                                <div class="task-head-title">Assigned To</div>
+                                                                <div class="task-assignee">
+                                                                    {{ $item->taskDetails->assigned->name }}</div>
+                                                            </div>
                                                         </div>
-                                                        <div class="assigned-info">
-                                                            <div class="task-head-title"></div>
-                                                            <div class="task-assignee"></div>
+                                                        <div class="task-due-date">
+                                                            <div class="due-info">
+                                                                <div class="task-head-title">Due Date</div>
+                                                                <div class="due-date">
+                                                                    {{ $item->taskDetails->end_date }}</div>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div class="task-due-date">
-                                                        <div class="due-info">
-                                                            <div class="task-head-title">Due Date</div>
-                                                            <div class="due-date">
-                                                                {{$item->taskDetails->end_date}}</div>
+                                                    <hr class="task-line">
+                                                    <div class="task-information">
+                                                        <h5>Task Name: <b>{{ $item->taskDetails->name }}</b></h5>
+                                                        <span class="task-info-line"><span class="task-info-subject">Created
+                                                                Task: </span></span>
+                                                        <div class="task-time">{{ $item->taskDetails->start_date }}
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <hr class="task-line">
-                                                <div class="task-information">
-                                                    <h5>Task Name: <b>{{ $item->taskDetails->name }}</b></h5>
-                                                    <span class="task-info-line"><span class="task-info-subject">Created
-                                                            Task: </span></span>
-                                                    <div class="task-time">{{ $item->taskDetails->start_date }}
+                                                    <div class="task-information">
+                                                        <span class="task-info-line">
+                                                            <span class="task-info-cont">
+                                                                <h5>Task Priority:
+                                                                    @if ($item->taskDetails->priority == 'high')
+                                                                        <span
+                                                                            class="task-priority badge bg-inverse-danger">High</span>
+                                                                    @elseif($item->taskDetails->priority == 'normal')
+                                                                        <span
+                                                                            class="task-priority badge bg-inverse-warning">Normal</span>
+                                                                    @else
+                                                                        <span
+                                                                            class="task-priority badge bg-inverse-info">Low</span>
+                                                                    @endif
+                                                                </h5>
+                                                            </span>
+                                                            <span class="task-info-cont">
+                                                                <h5>Daily Task Report</h5>
+                                                                @if ($item->taskDetails->status == 1)
+                                                                    @foreach ($item->taskreport as $re)
+                                                                        <ul>
+                                                                            <li>{{ $re->report }} Report Date:
+                                                                                {{ $re->created_at }}</li>
+                                                                        </ul>
+                                                                    @endforeach
+                                                                @endif
+                                                            </span>
                                                     </div>
                                                 </div>
-                                                <div class="task-information">
-                                                    <span class="task-info-line">
-                                                        <span class="task-info-cont">
-                                                            <h5>Task Priority: 
-                                                            @if ($item->taskDetails->priority == 'high')
-                                                                <span
-                                                                    class="task-priority badge bg-inverse-danger">High</span>
-                                                            @elseif($item->taskDetails->priority == 'normal')
-                                                                <span
-                                                                    class="task-priority badge bg-inverse-warning">Normal</span>
-                                                            @else
-                                                                <span
-                                                                    class="task-priority badge bg-inverse-info">Low</span>
-                                                            @endif
-                                                        </h5>
-                                                        </span>
-                                                        <span class="task-info-cont">
-                                                            <h5>Daily Task Report</h5>
-                                                            @foreach ($item->taskreport as $re)
-                                                            <ul>
-                                                                <li>{{ $re->report }} Report Date: {{$re->created_at}}</li>
-                                                            </ul>
-                                                        @endforeach
-                                                        </span>
-                                                     
-                                                </div>
-                                            </div>
+                                            @endif
                                         @endforeach
                                     </div>
                                 </div>

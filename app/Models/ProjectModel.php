@@ -38,8 +38,4 @@ class ProjectModel extends Model
     public function Tasks(){
         return $this->hasMany(Task::class,'project_id');
     }
-
-    // public  function task_followers(){
-    //     return $this->belongsTo(User::class,'project_id');
-    // }
 }

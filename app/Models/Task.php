@@ -13,6 +13,11 @@ class Task extends Model
         return $this->belongsToMany(User::class,'task_followers','task_id','team_id');
     }
 
+    public function assigned(){
+
+        return $this->hasOne(Admin::class,'id', 'assigned_id');
+
+    }
    
    
 

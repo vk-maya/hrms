@@ -14,9 +14,7 @@ class Task extends Controller
 {
     public function task(){
         // $data = TaskFollowers::with('taskreport')->get();
-        // dd($data->toArray());
-        $task =TaskFollowers::with(['taskDetails','projectDetails','taskreport','assigned'])->where('team_id', Auth::guard('web')->user()->id)->get();
-
+        $task = TaskFollowers::with(['taskDetails.assigned','projectDetails','taskreport'])->where('team_id', Auth::guard('web')->user()->id)->get();
         // dd($task->toArray());
         return view('employees.task', compact('task'));
     }

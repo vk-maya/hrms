@@ -26,10 +26,6 @@ class TaskFollowers extends Model
     public function taskreport(){
         return $this->hasMany(taskstatus::class,'task_id','task_id');
     }
-    public function assigned(){
-
-        return $this->belongsToMany(Admin::class,'tasks','id','assigned_id');
-
-    }
+    
     
 }
