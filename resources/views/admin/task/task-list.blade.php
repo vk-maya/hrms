@@ -66,10 +66,9 @@
                                     <th>Name</th>
                                     <th>Employee ID</th>
                                     <th>Email</th>
-                                    <th>Mobile</th>
-                                    <th class="text-nowrap">Join Date</th>
-                                    <th>Role</th>
-                                    <th class="text-end no-sort">Action</th>
+                                    <th>Mobile</th>                                 
+                                    <th>Designation</th>                               
+                                    <th>Task</th>                               
                                 </tr>
                             </thead>
                             <tbody>
@@ -85,11 +84,10 @@
                                         </td>
                                         <td>SDC-EMP-{{ $item->employee_id }}</td>
                                         <td>{{ $item->email }}</td>
-                                        <td>{{ $item->phone }}</td>
-                                        <td> {{ \Carbon\Carbon::parse($item->joining_date)->format('d/m/Y') }}</td>
+                                        <td>{{ $item->phone }}</td>                                        
                                         <td>{{ $item->designation->designation_name }}</td>
                                         <td>
-                                            <a href="{{route('admin.employ.task.list',$item->id)}}">View Task</a>
+                                            <a href="{{route('admin.employ.task.list',$item->id)}}">View</a>
                                         </td>
                                     </tr>
                                 @endforeach

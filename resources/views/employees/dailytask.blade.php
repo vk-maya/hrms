@@ -2,6 +2,17 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
+    <style>
+        .chat-content-wrap .chat-wrap-inner #bodyData {
+            overflow: auto;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+    </style>
 @endpush
 @section('content')
     <div class="page-wrapper">
@@ -332,6 +343,8 @@
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script type="text/javascript">
+        var oldscrollHeight = $("#bodyData").prop("scrollHeight");
+
         function loaddata() {
             $.ajax({
                 url: "{{ route('employees.show-taskk') }}",
@@ -339,16 +352,27 @@
                 cache: false,
                 dataType: 'json',
                 success: function(dataResult) {
-                    // console.log(dataResult);
                     var resultData = dataResult.data;
                     var bodyData = '';
                     $.each(resultData, function(index, row) {
-                        bodyData += "<div class='chat-content'>" +
-                            "<p autofocus>" + row.name + "</p>" +
-                            "<span class='chat-time'>" + row.created_at + "</span>" +
+                        const today = new Date(row.created_at);
+                        bodyData += "<div class='chat mt-1 chat-right'>" +
+                            "<div class='chat-body'>" +
+                            "<div class='chat-bubble'>" +
+                            "<div class='chat-content'>" +
+                            "<p>" + row.name + "</p>" +
+                            "<span class='chat-time'>" + today.toDateString() + "</span>" +
+                            "</div>" +
+                            "</div>" +
                             "</div>"
                     });
                     $("#bodyData").html(bodyData);
+                    var newscrollHeight = $("#bodyData").prop("scrollHeight");
+                    if (newscrollHeight > oldscrollHeight) {
+                        $("#bodyData").animate({
+                            scrollTop: newscrollHeight
+                        }, 'slow');
+                    }
                 }
             });
         }

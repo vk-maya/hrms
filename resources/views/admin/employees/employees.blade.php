@@ -104,8 +104,6 @@
                                             </td>
                                         </tr>
                                     @endforeach
-
-
                                 </tbody>
                             </table>
                         </div>
@@ -118,8 +116,8 @@
                         <div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
                             <div class="profile-widget">
                                 <div class="profile-img">
-                                    <a href="java" class="avatar">
-                                        <img src="{{ asset('storage/uploads/' . $item->image) }}" alt=""></a>
+                                    <span  class="avatar">
+                                        <img src="{{ asset('storage/uploads/' . $item->image) }}" alt=""></span>
                                 </div>
                                 <div class="dropdown profile-action">
                                     <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
@@ -131,7 +129,7 @@
                                                 class="fa fa-trash-o m-r-5"></i> Delete</button>
                                     </div>
                                 </div>
-                                <h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="">{{ $item->name }}</a></h4>
+                                <h4 class="user-name m-t-10 mb-0 text-ellipsis">{{ $item->name }}</h4>
                                 <div class="small text-muted">{{ $item->designation->designation_name }}</div>
                             </div>
                         </div>

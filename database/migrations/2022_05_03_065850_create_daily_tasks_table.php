@@ -16,7 +16,9 @@ class CreateDailyTasksTable extends Migration
         Schema::create('daily_tasks', function (Blueprint $table) {
             $table->id();
             $table->string('team_id');
+            $table->string('admin_id');
             $table->string('name');
+            $table->string('check');
             $table->string('status');
             $table->timestamps();
         });

@@ -22,7 +22,7 @@ class EmployeesController extends Controller
 {
     // -----------------------email check get------------
     public function emailv(Request $request) {
-        $rrr = User::withTrashed()->where('email', 'like', "%$request->x%")->count();
+        $rrr = User::withTrashed()->where('email',$request->x)->count();
         return json_encode(['count' => $rrr]);
     }
 
@@ -99,31 +99,30 @@ class EmployeesController extends Controller
         }
     }
 
-    public function addemployeesstore(Request $request){   
-        $rules = [
-            'name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'employee_id' => ['required', 'string', 'numeric'],
-            'designation' => ['required', 'string', 'numeric','max:255'],          
-            'joining_date' => ['string','required'],          
-            'phone' => ['required', 'string', 'max:12'],          
-            'country' => ['required','string',],          
-            'state' => ['required', 'string',],
-            'city' => ['required', 'string'],
-            'department' => ['required', 'string',],
-            'designation' => ['required', 'string','numeric'],
-            'image' => [ 'required','mimes:png,jpg,jpeg,csv','max:2048'],
-            'address' => ['required', 'string', 'max:255'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            
-        ];
+    public function addemployeesstore(Request $request){
+
+        if($request->id==""){
+            $rules = [
+                'name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'employee_id' => ['required', 'string', 'numeric'],
+                'designation' => ['required', 'string', 'numeric','max:255'],
+                'joining_date' => ['string','required'],
+                'phone' => 'required|numeric|digits:10',
+                'country' => ['required','string',],
+                'state' => ['required', 'string',],
+                'city' => ['required', 'string'],
+                'department' => ['required', 'string',],
+                'designation' => ['required', 'string','numeric'],
+                'image' => [ 'required','mimes:png,jpg,jpeg,csv','max:2048'],
+                'address' => ['required', 'string', 'max:255'],
+                'password' => ['required', 'confirmed', Rules\Password::defaults()],
+                
+            ];
+        }
+       
         if ($request->id == !null) {
-            $employees = User::find($request->id);
-            storage::delete('public/uploads/' . $employees->image);
-            // $img = $employees->image;
-            // if (Storage::disk('public')->exists('uploads/' . $img)) {
-            //     unlink('storage/uploads/' . $img);
-            // }
+            $employees = User::find($request->id);                 
             $rules['email'] = ['required', 'string', 'email', 'max:255'];
             if(User::where('email',$request->email)->where('id','!',$request->id)->count() > 0){
                 return response()->back()->withErrors(['email'=>"Email Already Exist"])->withInput();
@@ -131,9 +130,9 @@ class EmployeesController extends Controller
         } else {
             $rules['email'] = ['required', 'string', 'email', 'max:255', 'unique:users'];
             $employees = new User();
+            $request->validate($rules);
         }
-        
-        $request->validate($rules);
+
         $employees->name = $request->name;
         $employees->last_name = $request->last_name;
         $employees->email = $request->email;
@@ -148,19 +147,18 @@ class EmployeesController extends Controller
         $employees->state_id = $request->state;
         $employees->city_id = $request->city;
         $employees->status = ($request->status == 1) ? 1 : 0;
-        $employees->workplace = $request->workplace;
-
-        $employees->image = '';
+        $employees->workplace = $request->workplace;        
         if ($request->hasFile('image') == 1) {
-            $file = $request->file('image');
-            $ext = $file->getClientOriginalExtension();
-            $filename = "sdc" . str_replace(' ', '', $request->name) . rand(0, 10000) . "." . $ext;
-            $file = $request->file('image')->storeAs('public/uploads', $filename);
-            $employees->image = $filename;
-        }
-        // dd($employees->toArray());
-
-        $employees->save();
+            // dd($employees->image);
+                storage::delete('public/uploads/' .$employees->image);
+                $file = $request->file('image');
+                $ext = $file->getClientOriginalExtension();
+                $filename = "sdc".str_replace(' ', '', $request->name) . rand(0, 10000) . "." . $ext;
+                $file = $request->file('image')->storeAs('public/uploads', $filename);
+                $employees->image = $filename;
+            }
+    
+         $employees->save();
         return redirect()->route('admin.employees');
     }
 }

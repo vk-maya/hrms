@@ -59,30 +59,30 @@ class ClientController extends Controller
     }
     public function store(Request $request){
         // dd($request->toArray());
-        $rules = [
-            'name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255'],
-            'client_id' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string'],
-            'company' => ['required', 'string',],
-            'website' => ['required', 'string',],
-            'address' => ['required', 'string',],
-            'country' => ['required', 'string'],
-            'state' => ['required', 'string'],
-            'city' => ['required', 'string'],
-            'status' => ['required'],
-
-        ];
+       
 
         if ($request->id == !null) {
 
             $client = ClientModel::find($request->id);
         } else {
+            $rules = [
+                'name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255'],
+                'client_id' => ['required', 'string', 'max:255'],
+                'phone' => ['required', 'string'],
+                'company' => ['required', 'string',],
+                'website' => ['required', 'string',],
+                'address' => ['required', 'string',],
+                'country' => ['required', 'string'],
+                'state' => ['required', 'string'],
+                'city' => ['required', 'string'],
+                'status' => ['required'],
+                'image' => ['required', 'mimes:png,jpg,jpeg,csv', 'max:2048'],
+                 ];
+            $request->validate($rules);
             $client = new ClientModel();
-            $rules['image'] = ['required', 'mimes:png,jpg,jpeg,csv', 'max:2048'];
         }
-        $request->validate($rules);
         $client->name = $request->name;
         $client->last_name = $request->last_name;
         $client->email = $request->email;

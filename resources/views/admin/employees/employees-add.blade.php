@@ -95,7 +95,7 @@
                                         <label class="col-form-label">First Name <span
                                                 class="text-danger">*</span></label>
                                         <input class="form-control" name="name" type="text"
-                                            value="@if (isset($employees)) {{ $employees->name }} @endif {{ old('name') }}">
+                                            value="@if(isset($employees)){{$employees->name}}@else{{old('name')}}@endif">
                                         <span class="text-danger">
                                             @error('name')
                                                 {{ $message }}
@@ -107,7 +107,7 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Last Name</label>
                                         <input class="form-control" name="last_name" type="text"
-                                            value="@if (isset($employees)) {{ $employees->last_name }} @endif {{ old('last_name') }}">
+                                            value="@if(isset($employees)){{ $employees->last_name }}@else{{ old('last_name') }}@endif">
                                         <span class="text-danger">
                                             @error('last_name')
                                                 {{ $message }}
@@ -119,7 +119,7 @@
                                     <label class="col-form-label" for="emp">Employee ID</label>
                                     <div class="input-group">
                                         <span class="input-group-text" id="inputGroupPrepend">SDC-EMP-</span>
-                                        <input type="text" class="form-control" name="employee_id" id="emp"
+                                        <input type="text" readonly class="form-control" name="employee_id" id="emp"
                                             value="@if(isset($employees)){{$employees->employee_id}}@else{{$empid}}@endif"
                                             onkeypress="empl()" aria-describedby="inputGroupPrepend">
                                     </div>
@@ -135,7 +135,7 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Email <span class="text-danger">*</span></label>
                                         <input class="form-control" name="email" type="email" id="email"
-                                            value="@if (isset($employees)) {{ $employees->email }} @endif"
+                                            value="@if(isset($employees)){{ $employees->email }}@else{{old('email')}}@endif"
                                             {{ old('email') }} onkeypress="emaill()">
                                         <span class="text-danger">
                                             @error('email')
@@ -166,8 +166,8 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Phone </label>
-                                        <input class="form-control" name="phone" type="text"
-                                            value="@if (isset($employees)) {{ $employees->phone }} @endif {{ old('phone') }}">
+                                        <input class="form-control phone" name="phone" type="text" maxlength="10" pattern="[1-9]{1}[0-9]{9}"
+                                            value="@if (isset($employees)){{ $employees->phone }}@else{{ old('phone') }}@endif">
                                     </div>
                                     <span class="text-danger">
                                         @error('phone')
@@ -179,7 +179,7 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Address</label>
                                         <input class="form-control"
-                                            value="@if (isset($employees)) {{ $employees->address }} @endif {{ old('address') }}"
+                                            value="@if(isset($employees)){{ $employees->address }}@else{{old('address')}}@endif"
                                             name="address" type="text">
                                         <span class="text-danger">
                                             @error('address')
@@ -350,7 +350,7 @@
                                 @endisset
                                 <div class="form-group">
                                     <label>Upload Photo</label>
-                                    <input name="image" class="form-control" value="{{ old('image') }}" type="file">
+                                    <input name="image" class="form-control" value="" type="file">
                                     <span class="text-danger">
                                         @error('image')
                                             {{ $message }}
@@ -373,6 +373,19 @@
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
+  
+        <script type="text/javascript">
+            $('.phone').keypress(function(e) {
+                var arr = [];
+                var kk = e.which;
+            
+                for (i = 48; i < 58; i++)
+                    arr.push(i);
+            
+                if (!(arr.indexOf(kk)>=0))
+                    e.preventDefault();
+            });
+        </script>
     <script>
 
         document.getElementById("email").onchange = function() {
