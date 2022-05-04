@@ -22,7 +22,6 @@
     <link rel="stylesheet" href="{{ asset('assets/css/line-awesome.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/plugins/morris/morris.css') }}">
-
     @stack('css')
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 </head>
