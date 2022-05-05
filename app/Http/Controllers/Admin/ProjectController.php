@@ -294,13 +294,18 @@ class ProjectController extends Controller
     }
     public function alltask(){        
         $employees  = User::all();
-        return view('admin.task.task-list',compact('employees'));
+        return view('admin.task.all-task-list',compact('employees'));
 
+    }
+    
+    public function employeestask($id){
+        $data = DailyTaskModel::where('team_id',$id)->latest()->get();
+        return view('admin.task.emplo-task-list',compact('data'));
     }
     public function empltask($id){
+        // dd($id);
+        $data = DailyTaskModel::find($id);
+        return view('admin.task.task-view-emp',compact('data'));
 
-        $data = DailyTaskModel::where('team_id',$id)->get();
-        // dd($data->toArray());
-        return view('admin.task.emplo-task',compact('data'));
-    }
+        }
     }

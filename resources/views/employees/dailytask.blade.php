@@ -10,7 +10,7 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Add Project</h3>
+                        <h3 class="page-title">Add Task</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Add Daily Task</li>
@@ -37,7 +37,7 @@
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <input readonly class="form-control"
-                                                value="{{ \Carbon\Carbon::now('Asia/Kolkata')->format('H:i: d-m-Y') }}"
+                                                value="{{ \Carbon\Carbon::now('Asia/Kolkata')->format('d-m-Y') }}"
                                                 type="text">
                                         </div>
                                     </div>
@@ -55,7 +55,6 @@
             </div>
         </div>
     </div>
-    {{-- {{$state}} --}}
 @endsection
 @push('plugin-js')
     <script>
@@ -66,28 +65,5 @@
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script src="{{ asset('assets/js/ckeditor.js') }}"></script>
     <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
-    {{-- <script>
-        $('#SubmitForm').on('submit', function(e) {
-            e.preventDefault();
-            let name = $('#editor').html();
-            let title = $('#InputTitle').val();
-            let id = $('#InputId').val();
-            let dataobj = {
-                "_token": "{{ csrf_token() }}",
-                name: name,
-                id: id,
-                title: title,
-            };
-            $.ajax({
-                url: '{{ route('employees.daily.task.store') }}',
-                type: "POST",
-                data: dataobj,
-                cache: false,
-                success: function(response) {
-                    $('#editor').html("");
-                    $('#InputTitle').val("");
-                }
-            });
-        });
-    </script> --}}
+
 @endpush

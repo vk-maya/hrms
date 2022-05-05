@@ -89,6 +89,14 @@
 								<li><a href="{{route('admin.all.task.list')}}">Task List</a></li>
 							</ul>
 						</li>
+						<li class="submenu">
+							<a href="#"><i class="la la-edit"></i> <span> Task</span> <span
+									class="menu-arrow"></span></a>
+							<ul style="display: none;">
+								<li><a href="{{route('admin.employees.daily.task')}}">Daily Task</a></li>
+								<li><a href="{{route('admin.all.task.list')}}">Task List</a></li>
+							</ul>
+						</li>
 						{{-- <li>
 							<a href="leads.html"><i class="la la-user-secret"></i> <span>Leads</span></a>
 						</li>

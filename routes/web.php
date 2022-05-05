@@ -37,7 +37,7 @@ Route::prefix('employees/')->name('employees.')->middleware(['web'])->group(func
     route::get('task/status/complete/{id}',[Task::class,'taskcomplete'])->name('task-status-complete');
     // -----------------------daily task ------------------------------
     Route::get('emp/daliy/task',[DailyTask::class,'dailytask'])->name('daily.task');
-    Route::get('emp/show/task',[DailyTask::class,'showtaskk'])->name('show-taskk');
+    Route::get('emp/show/task/{id}',[DailyTask::class,'showtaskk'])->name('show-taskk');
     Route::get('emp/task/list',[DailyTask::class,'tasklist'])->name('show-list');
     Route::post('emp/daliy/task',[DailyTask::class,'dailystore'])->name('daily.task.store');
 });
@@ -107,7 +107,9 @@ Route::prefix('admin/')->name('admin.')->middleware(['admin'])->group(function (
     Route::get('daliy/task',[ProjectController::class,'dailytask'])->name('employees.daily.task');
     Route::get('show/task',[ProjectController::class,'showtask'])->name('show-task');
     Route::post('daliy/task',[ProjectController::class,'dailystore'])->name('daily.task.store');
-    Route::get('all/task/list',[ProjectController::class,'alltask'])->name('all.task.list');
-    Route::get('employ/task/view/{id}',[ProjectController::class,'empltask'])->name('employ.task.list');
+    Route::get('all/emp/task/list',[ProjectController::class,'alltask'])->name('all.task.list');
+    Route::get('emp/all/task/{id}',[ProjectController::class,'employeestask'])->name('emp.show-taskk');
+    Route::get('task/show/{id}',[ProjectController::class,'empltask'])->name('employ.task.list');
+
 
 });

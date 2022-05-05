@@ -1,8 +1,9 @@
 @extends('layouts.app')
 @push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/ckeditor.css') }}">
+    <link rel="stylesheet" href="assets/plugins/sweetalert2/sweetalert2.min.css">
 @endpush
 @section('content')
     <div class="page-wrapper">
@@ -10,46 +11,55 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Add Project</h3>
+                        <h3 class="page-title">Task List</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Daily Task-List</li>
+                            <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Task-List</li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="job-content job-widget">
-                <div class="job-desc-title">
-                    <h4>Job Description</h4>
-                </div>
-                <div class="job-description">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                        exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                        irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-                        deserunt mollit anim id est laborum</p>
-                </div>
-                <div class="job-desc-title">
-                    <h4>Job Description</h4>
-                </div>
-                <div class="job-description">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                        exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                        irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                        pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-                        deserunt mollit anim id est laborum</p>                   
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped custom-table mb-0" id="department">
+                        <thead>
+                            <tr>
+                                <th style="width: 30px;">SR</th>
+                                <th>Title</th>
+                                <th>Date</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($data as $key => $item)
+                                <tr>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td><a href="{{ route('employees.show-taskk', $item->id) }}">{{ $item->title }}</a>
+                                    </td>
+                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }} </td>
+                                    <td class="text-end"><a href="{{ route('employees.show-taskk', $item->id) }}">
+                                            View</a></td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 @endsection
-@push('plugin-js') 
+@push('js')
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('assets/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-    <script src="{{ asset('assets/js/ckeditor.js') }}"></script>
     <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
-    
+    <script>
+        // ------------shoe data table---------------
+        $('#department').DataTable({
+            paging: true,
+            searching: true
+        });
+    </script>
 @endpush

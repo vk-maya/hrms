@@ -30,13 +30,17 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <h1>employ single</h1>
                             @foreach ($data as $key => $item)
-                                <tr>
-                                    <td>{{ $key + 1 }}</td>
-                                    <td>{{ $item->name }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}</td>
-                                </tr>
-                            @endforeach
+                            <tr>
+                                <td>{{ $key + 1 }}</td>
+                                <td><a href="{{ route('admin.employ.task.list', $item->id) }}">{{ $item->title }}</a>
+                                </td>
+                                <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }} </td>
+                                <td class="text-end"><a href="{{ route('admin.employ.task.list', $item->id) }}">
+                                        View</a></td>
+                            </tr>
+                        @endforeach
                         </tbody>
                     </table>
                 </div>

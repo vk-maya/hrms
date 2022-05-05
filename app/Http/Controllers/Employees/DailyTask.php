@@ -13,9 +13,9 @@ class DailyTask extends Controller
 
     return view('employees.dailytask');
  }
- public function showtaskk(){
-    $dailytask = DailyTaskModel::where('team_id', Auth::guard('web')->user()->id)->get();
-    return json_encode(array('data' => $dailytask));
+ public function showtaskk($id){
+    $dalilydata = DailyTaskModel::find($id);
+    return view('employees.task-view',compact('dalilydata'));
 }
 public function dailystore(Request $request){
     // dd($request->toArray());
@@ -33,7 +33,7 @@ public function dailystore(Request $request){
     return redirect()->route('dashboard');
 }
 public function tasklist(){
-    $data = DailyTaskModel::where('team_id', Auth::guard('web')->user()->id)->get();
+    $data = DailyTaskModel::where('team_id', Auth::guard('web')->user()->id)->latest()->get();
     return view('employees.task-list', compact('data'));
         }
 }

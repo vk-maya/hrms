@@ -11,14 +11,15 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Department</h3>
+                        <h3 class="page-title">Employees Task-List</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Department</li>
+                            <li class="breadcrumb-item active">Employees Task-List</li>
                         </ul>
                     </div>
                 </div>
             </div>
+            <h1>All Employees</h1>
             <div class="col-md-12">
                 <div class="table-responsive">
                     <table class="table table-striped custom-table mb-0" id="department">
@@ -41,7 +42,7 @@
                                     <td>{{ $item->phone }}</td>
                                     <td>{{ $item->designation->designation_name }}</td>
                                     <td>
-                                        <a href="{{route('admin.employ.task.list',$item->id)}}">View</a>
+                                        <a href="{{route('admin.emp.show-taskk',$item->id)}}">View</a>
                                     </td>                                </tr>
                             @endforeach
                         </tbody>
