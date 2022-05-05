@@ -22,11 +22,12 @@
                     </ul>
                 </li>
                 <li class="submenu">
-                    <a href="#"><i class="la la-rocket"></i> <span> Projects</span> <span
+                    <a href="#"><i class="la la-rocket"></i> <span> Task</span> <span
                             class="menu-arrow"></span></a>
                     <ul style="display: none;">
-                        <li><a href="{{route('employees.task')}}">Tasks</a></li>
+                        {{-- <li><a href="{{route('employees.task')}}">Tasks</a></li> --}}
                         <li><a href="{{route('employees.daily.task')}}">Daily Task</a></li>
+                        <li><a href="{{route('employees.show-list')}}">List Task</a></li>
                     </ul>
                 </li>
             </ul>

@@ -38,6 +38,7 @@ Route::prefix('employees/')->name('employees.')->middleware(['web'])->group(func
     // -----------------------daily task ------------------------------
     Route::get('emp/daliy/task',[DailyTask::class,'dailytask'])->name('daily.task');
     Route::get('emp/show/task',[DailyTask::class,'showtaskk'])->name('show-taskk');
+    Route::get('emp/task/list',[DailyTask::class,'tasklist'])->name('show-list');
     Route::post('emp/daliy/task',[DailyTask::class,'dailystore'])->name('daily.task.store');
 });
 
