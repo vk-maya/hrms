@@ -13,7 +13,7 @@
                         <h3 class="page-title">Add Project</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active"> Daily Task-List</li>
+                            <li class="breadcrumb-item active">Daily Task-List</li>
                         </ul>
                     </div>
                 </div>
