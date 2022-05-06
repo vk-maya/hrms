@@ -22,14 +22,18 @@ use App\Http\Controllers\Employees\Task;
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin_auth.php';
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
 Route::get('/', function () {
-    return view('welcome');
-});
-Route::redirect('/admin', 'admin/login');
+    return view('employees.dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 Route::get('/dashboard', function () {
     return view('employees.dashboard');
-})->middleware(['auth'])->name('dashboard');
+})->middleware(['auth'])->name('home');
+
 Route::prefix('employees/')->name('employees.')->middleware(['web'])->group(function(){
     // ----------------task route employees---------------------------
     route::get('task',[Task::class,'task'])->name('task');
@@ -43,11 +47,13 @@ Route::prefix('employees/')->name('employees.')->middleware(['web'])->group(func
 });
 
 
-Route::get('/admin/dashboard', function () {
-    return view('admin.dashboard');
-})->middleware(['admin'])->name('admin.dashboard');
-
 Route::prefix('admin/')->name('admin.')->middleware(['admin'])->group(function () {
+
+    Route::get('/', function () {
+        return view('admin.dashboard');
+    })->name('dashboard');
+
+    Route::redirect('/dashboard', '/admin');
     // ------------------------------AdminDepartmentsController Routs-------------------
     // ---------------departments--------------------
     Route::get('departments', [AdminDerpartmentController::class, 'departmentscreate'])->name('departments');
