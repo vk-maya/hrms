@@ -24,8 +24,10 @@
                         <form action="{{route('employees.daily.task.store')}}" method="POST" >
                             <div class="row">
                                 @csrf
-                                <input type="hidden" name="id" id="InputId"
+                                <input type="hidden" name="user_id" id=""
                                     value="{{ Auth::guard('web')->user()->id }}">
+                                <input type="hidden" name="post_date" id="InputPostDate"
+                                    value=" {{ \Carbon\Carbon::now()->format('d/m/Y') }}">
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="inputname">Task Title</label>
@@ -49,9 +51,9 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Description</label>
-                                    <textarea id="editor" name="name" cols="3" rows="2"></textarea>
+                                    <textarea id="editor" name="description" cols="3" rows="2"></textarea>
                                     <span class="text-danger">
-                                        @error('name')
+                                        @error('description')
                                             <p>The Description field is required</p>
                                         @enderror
                                     </span>
@@ -67,9 +69,7 @@
     </div>
 @endsection
 @push('plugin-js')
-    <script>
-        let name
-    </script>
+
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>

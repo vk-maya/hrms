@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div class="job-content job-widget">
-                <small class="text-muted"> {{ \Carbon\Carbon::parse($dalilydata->created_at)->format('d/m/Y') }}</small>
+                <small class="text-muted"> {{ \Carbon\Carbon::parse($dalilydata->post_date)->format('d/m/Y') }}</small>
                 <hr>
                 <small class="text-muted">Title</small>
                 <div class="job-desc-title">
@@ -28,7 +28,7 @@
                 <hr>
                 <small class="text-muted">Description</small>
                 <div class="">
-                    <p>{!!$dalilydata->name!!}</p>
+                    {!!$dalilydata->description!!}
                 </div>                       
             </div>
         </div>

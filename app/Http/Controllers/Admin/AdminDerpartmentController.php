@@ -21,7 +21,7 @@ class AdminDerpartmentController extends Controller
         }
     }
     public function departmentsstore(Request $request){
-
+// dd($request->toArray());
         $rules = [
             'department' => ['required', 'string', 'max:255'],
 
@@ -32,7 +32,7 @@ class AdminDerpartmentController extends Controller
             $data = new Department();
         }
         $request->validate($rules);
-        $data->departmentName = $request->department;
+        $data->department_name = $request->department;
         $data->status = ($request->status == '1') ? 1 : 0;
         $data->save();
         return redirect()->route('admin.departments');

@@ -20,20 +20,21 @@ class DailyTask extends Controller
 public function dailystore(Request $request){
     // dd($request->toArray());
     $request->validate([
-        'name'=> 'required',
+        'description'=> 'required',
         'title'=> 'required',
     ]);
     $data = new DailyTaskModel();
-    $data->team_id = $request->id;
-    $data->name = $request->name;
+    $data->user_id =$request->user_id;
+    $data->description = $request->description;
     $data->title = $request->title;
+    $data->post_date = date('Y-m-d', strtotime($request->post_date));    
     $data->status =1;
     $data->check = "emp";
     $data->save();
     return redirect()->route('dashboard');
 }
 public function tasklist(){
-    $data = DailyTaskModel::where('team_id', Auth::guard('web')->user()->id)->latest()->get();
+    $data = DailyTaskModel::where('user_id', Auth::guard('web')->user()->id)->latest()->get();
     return view('employees.task-list', compact('data'));
         }
 }

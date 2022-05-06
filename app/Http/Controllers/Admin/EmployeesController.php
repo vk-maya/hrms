@@ -100,20 +100,19 @@ class EmployeesController extends Controller
     }
 
     public function addemployeesstore(Request $request){
-
+// dd($request->toArray());
         if($request->id==""){
             $rules = [
-                'name' => ['required', 'string', 'max:255'],
+                'country_id' => ['required','string',],
+                'state_id' => ['required', 'string',],
+                'city_id' => ['required', 'string'],
+                'department_id' => ['required', 'string',],
+                'designation_id' => ['required', 'string', 'numeric','max:255'],
+                'employeeID' => ['required', 'string', 'numeric'],
+                'joiningDate' => ['string','required'],
+                'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
-                'employee_id' => ['required', 'string', 'numeric'],
-                'designation' => ['required', 'string', 'numeric','max:255'],
-                'joining_date' => ['string','required'],
                 'phone' => 'required|numeric|digits:10',
-                'country' => ['required','string',],
-                'state' => ['required', 'string',],
-                'city' => ['required', 'string'],
-                'department' => ['required', 'string',],
-                'designation' => ['required', 'string','numeric'],
                 'image' => [ 'required','mimes:png,jpg,jpeg,csv','max:2048'],
                 'address' => ['required', 'string', 'max:255'],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
@@ -133,19 +132,19 @@ class EmployeesController extends Controller
             $request->validate($rules);
         }
 
-        $employees->name = $request->name;
+        $employees->first_name = $request->first_name;
         $employees->last_name = $request->last_name;
         $employees->email = $request->email;
         $employees->password =Hash::make($request->password);
-        $employees->employee_id = $request->employee_id;
-        $employees->joining_date = date('Y-m-d', strtotime($request->joining_date));
+        $employees->employeeID = $request->employeeID;
+        $employees->joiningDate = date('Y-m-d', strtotime($request->joiningDate));
         $employees->phone = $request->phone;
-        $employees->department_id = $request->department;
-        $employees->designation_id = $request->designation;
+        $employees->department_id = $request->department_id;
+        $employees->designation_id = $request->designation_id;
         $employees->address = $request->address;
-        $employees->country_id = $request->country;
-        $employees->state_id = $request->state;
-        $employees->city_id = $request->city;
+        $employees->country_id = $request->country_id;
+        $employees->state_id = $request->state_id;
+        $employees->city_id = $request->city_id;
         $employees->status = ($request->status == 1) ? 1 : 0;
         $employees->workplace = $request->workplace;        
         if ($request->hasFile('image') == 1) {

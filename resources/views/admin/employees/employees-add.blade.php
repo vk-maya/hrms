@@ -94,10 +94,10 @@
                                     <div class="form-group">
                                         <label class="col-form-label">First Name <span
                                                 class="text-danger">*</span></label>
-                                        <input class="form-control" name="name" type="text"
-                                            value="@if (isset($employees)) {{ $employees->name }}@else{{ old('name') }} @endif">
+                                        <input class="form-control" name="first_name" type="text"
+                                            value="@if (isset($employees)) {{ $employees->first_name }}@else{{ old('name') }} @endif">
                                         <span class="text-danger">
-                                            @error('name')
+                                            @error('first_name')
                                                 <p>First Name field is required.</p>
                                             @enderror
                                         </span>
@@ -119,12 +119,12 @@
                                     <label class="col-form-label" for="emp">Employee ID</label>
                                     <div class="input-group">
                                         <span class="input-group-text" id="inputGroupPrepend">SDC-EMP-</span>
-                                        <input type="text" readonly class="form-control" name="employee_id" id="emp"
-                                            value="@if (isset($employees)) {{ $employees->employee_id }}@else{{ $empid }} @endif"
+                                        <input type="text" readonly class="form-control" name="employeeID" id="emp"
+                                            value="@if (isset($employees)) {{ $employees->employeeID }}@else{{ $empid }} @endif"
                                             onkeypress="empl()" aria-describedby="inputGroupPrepend">
                                     </div>
                                     <span class="text-danger">
-                                        @error('employee_id')
+                                        @error('employeeID')
                                             <p>Employee ID field is required.</p>
                                         @enderror
                                     </span>
@@ -169,12 +169,12 @@
                                         <input class="form-control phone" name="phone" type="text" maxlength="10"
                                             pattern="[1-9]{1}[0-9]{9}"
                                             value="@if (isset($employees)) {{ $employees->phone }}@else{{ old('phone') }} @endif">
+                                            <span class="text-danger">
+                                                @error('phone')
+                                                    <p>Phone field is required.</p>
+                                                @enderror
+                                            </span>
                                     </div>
-                                    <span class="text-danger">
-                                        @error('phone')
-                                            <p>Phone field is required.</p>
-                                        @enderror
-                                    </span>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -192,7 +192,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Country <span class="text-danger">*</span></label>
-                                        <select class="select" name="country" class="form-control"
+                                        <select class="select" name="country_id" class="form-control"
                                             id="inputcountry" onkeypress="country()">
                                             <option value="">Select Country</option>
                                             @foreach ($count as $item)
@@ -203,7 +203,7 @@
                                             @endforeach
                                         </select>
                                         <span class="text-danger">
-                                            @error('country')
+                                            @error('country_id')
                                                 <p>Country field is required.</p>
                                             @enderror
                                         </span>
@@ -213,11 +213,11 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">State <span class="text-danger">*</span></label>
-                                        <select class="select" name="state" id="inputstate">
+                                        <select class="select" name="state_id" id="inputstate">
                                             <option value="">Select State</option>
                                         </select>
                                         <span class="text-danger">
-                                            @error('state')
+                                            @error('state_id')
                                                 <p>State field is required.</p>
                                             @enderror
                                         </span>
@@ -229,11 +229,11 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">City <span class="text-danger">*</span></label>
-                                        <select class="select" name="city" id="inputcity">
+                                        <select class="select" name="city_id" id="inputcity">
                                             <option value="">Select City</option>
                                         </select>
                                         <span class="text-danger">
-                                            @error('city')
+                                            @error('city_id')
                                                 <p>City field is required.</p>
                                             @enderror
                                         </span>
@@ -246,7 +246,7 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Department <span
                                                 class="text-danger">*</span></label>
-                                        <select class="select" name="department" class="form-control"
+                                        <select class="select" name="department_id" class="form-control"
                                             id="inputDepartment" onkeypress="indepartment()">
                                             <option value="" disabled selected> Select Department </option>
                                             @foreach ($department as $item)
@@ -257,7 +257,7 @@
                                             @endforeach
                                         </select>
                                         <span class="text-danger">
-                                            @error('department')
+                                            @error('department_id')
                                                 <p>Department field is required.</p>
                                             @enderror
                                         </span>
@@ -271,11 +271,11 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Designation <span
                                                 class="text-danger">*</span></label>
-                                        <select class="select" name="designation" id="inputDesignation">
+                                        <select class="select" name="designation_id" id="inputDesignation">
                                             <option value="">Select Designation</option>
                                         </select>
                                         <span class="text-danger">
-                                            @error('designation')
+                                            @error('designation_id')
                                                 <p>Designation field is required.</p>
                                             @enderror
                                         </span>
@@ -285,11 +285,11 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Joining Date <span
                                                 class="text-danger">*</span></label>
-                                        <div class="cal-icon"><input name="joining_date"
+                                        <div class="cal-icon"><input name="joiningDate"
                                                 class="form-control datetimepicker" value="@if (isset($employees)) {{ date('m/d/Y', strtotime($employees->joining_date)) }}" @endif
                                                             type="">
-                                                        <span class="   text-danger">
-                                            @error('joining_date')
+                                                        <span class="text-danger">
+                                            @error('joiningDate')
                                                 <p>Joining Date field is required.</p>
                                             @enderror
                                             </span>

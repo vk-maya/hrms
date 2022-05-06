@@ -279,12 +279,12 @@ class ProjectController extends Controller
         return view('admin.project.dailytask');
     }
     public function dailystore(Request $request){
+        dd($request->toArray());
         $request->validate([
-            'name'=> 'required',           
+            'name'=> 'required',
         ]);
-        // $admin="admin";
         $data = new DailyTaskModel();
-        $data->team_id = $request->id;
+        $data->user_id = $request->id;
         $data->name = $request->name;
         $data->status = 0;
         $data->check = "admin";
@@ -292,17 +292,15 @@ class ProjectController extends Controller
     }
     public function showtask(){
         $dailytask = DailyTaskModel::all();
-        // dd($dailytask->toArray());
         return response()->json(['data' => $dailytask]);
     }
     public function alltask(){        
         $employees  = User::all();
         return view('admin.task.all-task-list',compact('employees'));
 
-    }
-    
+    }    
     public function employeestask($id){
-        $data = DailyTaskModel::where('team_id',$id)->latest()->get();
+        $data = DailyTaskModel::where('user_id',$id)->latest()->get();
         return view('admin.task.emplo-task-list',compact('data'));
     }
     public function empltask($id){
