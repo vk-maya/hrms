@@ -95,10 +95,10 @@
                                         <label class="col-form-label">First Name <span
                                                 class="text-danger">*</span></label>
                                         <input class="form-control" name="name" type="text"
-                                            value="@if(isset($employees)){{$employees->name}}@else{{old('name')}}@endif">
+                                            value="@if (isset($employees)) {{ $employees->name }}@else{{ old('name') }} @endif">
                                         <span class="text-danger">
                                             @error('name')
-                                                {{ $message }}
+                                                <p>First Name field is required.</p>
                                             @enderror
                                         </span>
                                     </div>
@@ -107,10 +107,10 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Last Name</label>
                                         <input class="form-control" name="last_name" type="text"
-                                            value="@if(isset($employees)){{ $employees->last_name }}@else{{ old('last_name') }}@endif">
+                                            value="@if (isset($employees)) {{ $employees->last_name }}@else{{ old('last_name') }} @endif">
                                         <span class="text-danger">
                                             @error('last_name')
-                                                {{ $message }}
+                                                <p>Last Name field is required.</p>
                                             @enderror
                                         </span>
                                     </div>
@@ -120,12 +120,12 @@
                                     <div class="input-group">
                                         <span class="input-group-text" id="inputGroupPrepend">SDC-EMP-</span>
                                         <input type="text" readonly class="form-control" name="employee_id" id="emp"
-                                            value="@if(isset($employees)){{$employees->employee_id}}@else{{$empid}}@endif"
+                                            value="@if (isset($employees)) {{ $employees->employee_id }}@else{{ $empid }} @endif"
                                             onkeypress="empl()" aria-describedby="inputGroupPrepend">
                                     </div>
                                     <span class="text-danger">
                                         @error('employee_id')
-                                            {{ $message }}
+                                            <p>Employee ID field is required.</p>
                                         @enderror
                                     </span>
                                     <div id="empt">
@@ -135,11 +135,11 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Email <span class="text-danger">*</span></label>
                                         <input class="form-control" name="email" type="email" id="email"
-                                            value="@if(isset($employees)){{ $employees->email }}@else{{old('email')}}@endif"
+                                            value="@if (isset($employees)) {{ $employees->email }}@else{{ old('email') }} @endif"
                                             {{ old('email') }} onkeypress="emaill()">
                                         <span class="text-danger">
                                             @error('email')
-                                                {{ $message }}
+                                                <p>Email ID field is required.</p>
                                             @enderror
                                         </span>
                                     </div>
@@ -152,7 +152,7 @@
                                         <input class="form-control" name="password" type="password">
                                         <span class="text-danger">
                                             @error('password')
-                                                {{ $message }}
+                                                <p>Password field is required.</p>
                                             @enderror
                                         </span>
                                     </div>
@@ -160,18 +160,19 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Confirm Password</label>
-                                        <input class="form-control" name="password_confirmation" type="password">                                     
+                                        <input class="form-control" name="password_confirmation" type="password">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Phone </label>
-                                        <input class="form-control phone" name="phone" type="text" maxlength="10" pattern="[1-9]{1}[0-9]{9}"
-                                            value="@if (isset($employees)){{ $employees->phone }}@else{{ old('phone') }}@endif">
+                                        <input class="form-control phone" name="phone" type="text" maxlength="10"
+                                            pattern="[1-9]{1}[0-9]{9}"
+                                            value="@if (isset($employees)) {{ $employees->phone }}@else{{ old('phone') }} @endif">
                                     </div>
                                     <span class="text-danger">
                                         @error('phone')
-                                            {{ $message }}
+                                            <p>Phone field is required.</p>
                                         @enderror
                                     </span>
                                 </div>
@@ -179,11 +180,11 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Address</label>
                                         <input class="form-control"
-                                            value="@if(isset($employees)){{ $employees->address }}@else{{old('address')}}@endif"
+                                            value="@if (isset($employees)) {{ $employees->address }}@else{{ old('address') }} @endif"
                                             name="address" type="text">
                                         <span class="text-danger">
                                             @error('address')
-                                                {{ $message }}
+                                                <p>Address field is required.</p>
                                             @enderror
                                         </span>
                                     </div>
@@ -195,32 +196,33 @@
                                             id="inputcountry" onkeypress="country()">
                                             <option value="">Select Country</option>
                                             @foreach ($count as $item)
-                                                <option @if (isset($employees) && $employees->country_id == $item->id) selected @endif value="{{ $item->id }} {{ old('country') }}">
+                                                <option @if (isset($employees) && $employees->country_id == $item->id) selected @endif
+                                                    value="{{ $item->id }} {{ old('country') }}">
                                                     {{ $item->name }}
                                                 </option>
                                             @endforeach
                                         </select>
                                         <span class="text-danger">
                                             @error('country')
-                                                {{ $message }}
+                                                <p>Country field is required.</p>
                                             @enderror
                                         </span>
-                                  
+
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">State <span class="text-danger">*</span></label>
-                                        <select class="select" name="state" id="inputstate" >
+                                        <select class="select" name="state" id="inputstate">
                                             <option value="">Select State</option>
                                         </select>
                                         <span class="text-danger">
                                             @error('state')
-                                                {{ $message }}
+                                                <p>State field is required.</p>
                                             @enderror
                                         </span>
                                         @isset($employees)
-                                            <input type="hidden" value="{{$employees->state_id}}" id="EditState">
+                                            <input type="hidden" value="{{ $employees->state_id }}" id="EditState">
                                         @endisset
                                     </div>
                                 </div>
@@ -232,11 +234,11 @@
                                         </select>
                                         <span class="text-danger">
                                             @error('city')
-                                                {{ $message }}
+                                                <p>City field is required.</p>
                                             @enderror
                                         </span>
                                         @isset($employees)
-                                        <input type="hidden" value="{{$employees->city_id}}" id="Editcity">                                            
+                                            <input type="hidden" value="{{ $employees->city_id }}" id="Editcity">
                                         @endisset
                                     </div>
                                 </div>
@@ -246,7 +248,7 @@
                                                 class="text-danger">*</span></label>
                                         <select class="select" name="department" class="form-control"
                                             id="inputDepartment" onkeypress="indepartment()">
-                                            <option> Select Department </option>
+                                            <option value="" disabled selected> Select Department </option>
                                             @foreach ($department as $item)
                                                 <option @if (isset($employees) && $employees->department_id == $item->id) selected @endif
                                                     value="{{ $item->id }} {{ old('department_id') }}">
@@ -256,11 +258,12 @@
                                         </select>
                                         <span class="text-danger">
                                             @error('department')
-                                                {{ $message }}
+                                                <p>Department field is required.</p>
                                             @enderror
                                         </span>
                                         @isset($employees)
-                                        <input type="hidden" value="{{$employees->designation_id}}" id="editdesignation" >
+                                            <input type="hidden" value="{{ $employees->designation_id }}"
+                                                id="editdesignation">
                                         @endisset
                                     </div>
                                 </div>
@@ -273,7 +276,7 @@
                                         </select>
                                         <span class="text-danger">
                                             @error('designation')
-                                                {{ $message }}
+                                                <p>Designation field is required.</p>
                                             @enderror
                                         </span>
                                     </div>
@@ -283,13 +286,12 @@
                                         <label class="col-form-label">Joining Date <span
                                                 class="text-danger">*</span></label>
                                         <div class="cal-icon"><input name="joining_date"
-                                                class="form-control datetimepicker"
-                                                value="@if (isset($employees)) {{ date('d/m/Y', strtotime($employees->joining_date)) }} @endif {{ old('joining_date') }}"
-                                                type="">
-                                            <span class="text-danger">
-                                                @error('joining_date')
-                                                    {{ $message }}
-                                                @enderror
+                                                class="form-control datetimepicker" value="@if (isset($employees)) {{ date('m/d/Y', strtotime($employees->joining_date)) }}" @endif
+                                                            type="">
+                                                        <span class="   text-danger">
+                                            @error('joining_date')
+                                                <p>Joining Date field is required.</p>
+                                            @enderror
                                             </span>
                                         </div>
                                     </div>
@@ -353,7 +355,7 @@
                                     <input name="image" class="form-control" value="" type="file">
                                     <span class="text-danger">
                                         @error('image')
-                                            {{ $message }}
+                                            <p>Photo field is required.</p>
                                         @enderror
                                     </span>
                                 </div>
@@ -373,21 +375,20 @@
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-  
-        <script type="text/javascript">
-            $('.phone').keypress(function(e) {
-                var arr = [];
-                var kk = e.which;
-            
-                for (i = 48; i < 58; i++)
-                    arr.push(i);
-            
-                if (!(arr.indexOf(kk)>=0))
-                    e.preventDefault();
-            });
-        </script>
-    <script>
 
+    <script type="text/javascript">
+        $('.phone').keypress(function(e) {
+            var arr = [];
+            var kk = e.which;
+
+            for (i = 48; i < 58; i++)
+                arr.push(i);
+
+            if (!(arr.indexOf(kk) >= 0))
+                e.preventDefault();
+        });
+    </script>
+    <script>
         document.getElementById("email").onchange = function() {
             emaill()
         };
@@ -458,18 +459,20 @@
                     let data = '';
                     let selected = ''
                     $.each(res.state, function(key, val) {
-                        if($(document).find("#EditState").length > 0 && $("#EditState").val()==val.id){
+                        if ($(document).find("#EditState").length > 0 && $("#EditState").val() == val
+                            .id) {
                             selected = 'selected';
-                        }else{
+                        } else {
                             selected = '';
                         }
-                        data += '<option '+selected+' value="' + val.id + '">' + val.name + '</option>';
+                        data += '<option ' + selected + ' value="' + val.id + '">' + val.name +
+                            '</option>';
                     });
                     $("#inputstate").html(data);
                     cities();
                 }
             })
-        }  
+        }
 
         function cities() {
             var id = $("#inputstate").val();
@@ -486,19 +489,21 @@
                     var data = '';
                     var selected = ''
                     $.each(res.city, function(key, val) {
-                        if($(document).find("#Editcity").length > 0 && $("#Editcity").val()==val.id){
-                            selected ='selected';
-                        }else{
-                            selected= '';
+                        if ($(document).find("#Editcity").length > 0 && $("#Editcity").val() == val
+                            .id) {
+                            selected = 'selected';
+                        } else {
+                            selected = '';
                         }
-                        data += '<option '+selected+' value="' +val.id+ '">' + val.name + '</option>';
+                        data += '<option ' + selected + ' value="' + val.id + '">' + val.name +
+                            '</option>';
                     });
                     $("#inputcity").html(data);
                 }
             });
         }
-        
-         function indepartment() {
+
+        function indepartment() {
             var dep = document.getElementById("inputDepartment");
             var de = $('#inputDepartment').val();
             var url = "{{ route('admin.designation.name') }}";
@@ -516,12 +521,14 @@
                     let data = '';
                     let selected = ''
                     $.each(desig.count, function(index, val) {
-                        if($(document).find("#editdesignation").length > 0 && $("#editdesignation").val()==val.id){
+                        if ($(document).find("#editdesignation").length > 0 && $("#editdesignation")
+                            .val() == val.id) {
                             selected = 'selected';
-                        }else{
+                        } else {
                             selected = '';
                         }
-                        data += '<option '+selected+' value="' + val.id + '">' + val.designation_name + '</option>';
+                        data += '<option ' + selected + ' value="' + val.id + '">' + val
+                            .designation_name + '</option>';
                     });
                     $("#inputDesignation").html(data);
                 }
@@ -531,9 +538,9 @@
         document.getElementById("inputDepartment").onchange = function() {
             indepartment()
         };
-        indepartment() 
+        indepartment()
 
-             states(); 
+        states();
         document.getElementById("inputcountry").onchange = function() {
             states();
         };

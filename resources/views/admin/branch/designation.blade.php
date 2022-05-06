@@ -78,7 +78,7 @@
                     <div class="col">
                         <h3 class="page-title">Designations</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Designations</li>
                         </ul>
                     </div>
@@ -165,16 +165,13 @@
                                         placeholder="Enter Designation" value="">
                                 </div>
                                 <div class="col-sm-6 col-md-12">
-                                    <div class="form-group form-focus select-focus">
-                                        <select class="select floating" name="department_id" id="inputdepartment">
-                                            <option>Select Department</option>
+                                        <select class="select" name="department_id" id="inputdepartment">
+                                            <option value="">Select Department</option>
                                             @foreach ($department as $item)
                                                 <option value="{{ $item->id }}">{{ $item->department_name }}
                                                 </option>
                                             @endforeach
-                                        </select>
-                                        <label class="focus-label">Department</label>
-                                    </div>
+                                        </select>                                   
                                 </div>
                                 <label for="statusinput">Status</label>
                                 <div class="col-md-12">
@@ -267,8 +264,9 @@
                         $("#submit").text("Update");
                         $("#inputid").val(res.msg.id);
                         $("#inputdesignation").val(res.msg.designation_name);
-                        $("#inputdepartment").find('option[value="' + res.msg.department_id +
-                            '"]').prop('selected', true);
+                        console.log(res.msg.department_id);
+                        $("#inputdepartment").children().prop('selected',false);
+                        $("#inputdepartment").find('option[value="' + res.msg.department_id +'"]').prop('selected', true);
                         if (res.msg.status == 1) {
                             $("#demo").prop("checked", true)
                         } else {

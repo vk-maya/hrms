@@ -13,13 +13,12 @@
                     <div class="col">
                         <h3 class="page-title">Employees Task-List</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Employees Task-List</li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <h1>All Employees</h1>
             <div class="col-md-12">
                 <div class="table-responsive">
                     <table class="table table-striped custom-table mb-0" id="department">
@@ -37,7 +36,7 @@
                             @foreach ($employees as $key => $item)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
-                                    <td>{{ $item->name }}</td>
+                                    <td><a href="{{route('admin.emp.show-taskk',$item->id)}}">{{ $item->name }}</a></td>
                                     <td>{{ $item->email }}</td>
                                     <td>{{ $item->phone }}</td>
                                     <td>{{ $item->designation->designation_name }}</td>

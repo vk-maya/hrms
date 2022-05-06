@@ -149,7 +149,6 @@ class EmployeesController extends Controller
         $employees->status = ($request->status == 1) ? 1 : 0;
         $employees->workplace = $request->workplace;        
         if ($request->hasFile('image') == 1) {
-            // dd($employees->image);
                 storage::delete('public/uploads/' .$employees->image);
                 $file = $request->file('image');
                 $ext = $file->getClientOriginalExtension();
