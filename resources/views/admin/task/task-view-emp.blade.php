@@ -15,7 +15,7 @@
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">
-                                <Task-View></Task-View>Task-View
+                                Task-View
                             </li>
                         </ul>
                     </div>
@@ -24,9 +24,13 @@
             <div class="job-content job-widget">
                 <div class="job-desc-title">
                     <small class="text-muted"> {{ \Carbon\Carbon::parse($data->created_at)->format('d/m/Y') }}</small>
+                    <hr>    
+                    <small class="text-muted">Title</small>
                     <h3>{{ $data->title }}</h3>
                 </div>
-                <div class="job-description">
+                <hr>
+                <small class="text-muted">Description</small>
+                <div class="">
                     <p>{!! $data->name !!}</p>
                 </div>
             </div>

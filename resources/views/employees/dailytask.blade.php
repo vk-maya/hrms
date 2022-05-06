@@ -30,6 +30,11 @@
                                     <div class="form-group">
                                         <label for="inputname">Task Title</label>
                                         <input id="InputTitle" name="title" value="" class="form-control" type="text">
+                                        <span class="text-danger">
+                                            @error('title')
+                                            <p>The Title field is required</p>
+                                            @enderror
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -45,6 +50,11 @@
                                 <div class="form-group">
                                     <label>Description</label>
                                     <textarea id="editor" name="name" cols="3" rows="2"></textarea>
+                                    <span class="text-danger">
+                                        @error('name')
+                                            <p>The Description field is required</p>
+                                        @enderror
+                                    </span>
                                 </div>
                                 <div class="submit-section">
                                     <button id="submit" type="submit" class="btn btn-primary submit-btn">Submit</button>

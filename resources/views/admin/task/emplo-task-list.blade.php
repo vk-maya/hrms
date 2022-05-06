@@ -11,10 +11,10 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Department</h3>
+                        <h3 class="page-title">Employees Task-list</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Department</li>
+                            <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Employees Task-list</li>
                         </ul>
                     </div>
                 </div>
@@ -30,7 +30,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <h1>employ single</h1>
                             @foreach ($data as $key => $item)
                             <tr>
                                 <td>{{ $key + 1 }}</td>

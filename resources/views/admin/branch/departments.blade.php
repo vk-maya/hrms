@@ -82,7 +82,7 @@
                     <div class="col">
                         <h3 class="page-title">Department</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Department</li>
                         </ul>
                     </div>
