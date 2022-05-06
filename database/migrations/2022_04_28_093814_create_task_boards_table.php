@@ -15,10 +15,10 @@ class CreateTaskBoardsTable extends Migration
     {
         Schema::create('task_boards', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('project_id')->onDelete('cascade');
             $table->string('name');
             $table->string('tbcolor');
-            $table->string('status');
-            $table->string('project_id');
+            $table->integer('status');
             $table->timestamps();
         });
     }

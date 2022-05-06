@@ -76,10 +76,10 @@
 								<li><a href="overtime.html">Overtime</a></li> --}}
 							</ul>
 						</li>
-						<li>
+						{{-- <li>
 							<a href="{{route('admin.client')}}"><i class="la la-users"></i> <span>Clients</span></a>
-						</li>
-						<li class="submenu">
+						</li> --}}
+						{{-- <li class="submenu">
 							<a href="#"><i class="la la-rocket"></i> <span> Projects</span> <span
 									class="menu-arrow"></span></a>
 							<ul style="display: none;">
@@ -88,7 +88,7 @@
 								<li><a href="task-board.html">Task Board</a></li>
 								<li><a href="{{route('admin.all.task.list')}}">Task List</a></li>
 							</ul>
-						</li>
+						</li> --}}
 						<li class="submenu">
 							<a href="#"><i class="la la-edit"></i> <span> Task</span> <span
 									class="menu-arrow"></span></a>

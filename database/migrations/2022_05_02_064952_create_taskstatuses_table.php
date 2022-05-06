@@ -15,9 +15,9 @@ class CreateTaskstatusesTable extends Migration
     {
         Schema::create('taskstatuses', function (Blueprint $table) {
             $table->id();
-            $table->string('task_id');
+            $table->integer('task_id');
             $table->string('report');
-            $table->string('status');
+            $table->integer('status');
             $table->timestamps();
         });
     }

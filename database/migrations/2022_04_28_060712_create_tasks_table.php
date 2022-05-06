@@ -15,14 +15,15 @@ class CreateTasksTable extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('project_id')->onDelete('cascade');
+            $table->foreignId('user_id')->onDelete('cascade');
+            $table->foreignId('task_board_id')->onDelete('cascade');
             $table->string('name');
-            $table->string('project_id');
+            $table->date('startDate');
+            $table->date('endDate');
             $table->string('priority');
-            $table->string('assigned_id');
-            $table->string('start_date');
-            $table->string('end_date');
-            $table->string('tb_id');
-            $table->string('status');
+            $table->string('type');
+            $table->integer('status');
             $table->timestamps();
         });
     }

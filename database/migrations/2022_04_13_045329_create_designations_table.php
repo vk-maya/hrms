@@ -15,10 +15,11 @@ class CreateDesignationsTable extends Migration
     {
         Schema::create('designations', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('department_id')->onDelete('cascade');
             $table->string('designation_name');
-            $table->string('department_id');
-            $table->string('status');
+            $table->integer('status');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

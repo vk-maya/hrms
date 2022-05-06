@@ -32,7 +32,7 @@ class AdminDerpartmentController extends Controller
             $data = new Department();
         }
         $request->validate($rules);
-        $data->department_name = $request->department;
+        $data->departmentName = $request->department;
         $data->status = ($request->status == '1') ? 1 : 0;
         $data->save();
         return redirect()->route('admin.departments');
