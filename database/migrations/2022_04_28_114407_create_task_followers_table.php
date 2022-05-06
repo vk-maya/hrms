@@ -15,10 +15,11 @@ class CreateTaskFollowersTable extends Migration
     {
         Schema::create('task_followers', function (Blueprint $table) {
             $table->id();
-            $table->string('task_id');
-            $table->string('project_id');
-            $table->string('team_id');
-            $table->string('status');
+            $table->integer('admin_id');
+            $table->integer('project_id');
+            $table->integer('task_id');
+            $table->integer('user_id');
+            $table->integer('status');
             $table->timestamps();
         });
     }

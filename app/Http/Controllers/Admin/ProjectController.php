@@ -85,19 +85,21 @@ class ProjectController extends Controller
         $project->duration = $request->duration;
         $project->priority = $request->priority;
         $project->description = $request->description;
-        $project->status = ($request->status == 1) ? 1 : 0;
+        $project->status = 1;
         $project->save();
         $project_id = ProjectModel::latest()->first();
         foreach ($request->teamlead as $item) {
             $teamleader = new projectLeader();
             $teamleader->leader_id = $item;
             $teamleader->prject_id = $project_id->id;
+            $teamleader->status = 1;
             $teamleader->save();
         }
         foreach ($request->team as $item) {
             $team = new ProjectTeamModel();
             $team->prject_id = $project_id->id;
             $team->team_id = $item;
+            $team->status = 1;
             $team->save();
         }
         if ($request->hasFile('image')) {
@@ -109,6 +111,7 @@ class ProjectController extends Controller
                 $fileimg = new ProjectImage;
                 $fileimg->prject_id = $project_id->id;
                 $fileimg->image = $newfilename;
+                $fileimg->status = 1;
                 $fileimg->save();
             }
         }

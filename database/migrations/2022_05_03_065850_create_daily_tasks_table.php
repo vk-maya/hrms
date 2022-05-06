@@ -15,11 +15,12 @@ class CreateDailyTasksTable extends Migration
     {
         Schema::create('daily_tasks', function (Blueprint $table) {
             $table->id();
-            $table->string('team_id');
+            $table->foreignId('user_id')->onDelete('cascade');
             $table->string('title');
-            $table->string('name');
+            $table->longText('description');
             $table->string('check');
-            $table->string('status');
+            $table->date('post_date');
+            $table->integer('status');
             $table->timestamps();
         });
     }

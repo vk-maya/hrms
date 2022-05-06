@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProjectTeamModelsTable extends Migration
+class CreateProjectTeamsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateProjectTeamModelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('project_team_models', function (Blueprint $table) {
+        Schema::create('project_teams', function (Blueprint $table) {
             $table->id();
-            $table->string('prject_id');
-            $table->string('team_id');
-            $table->string('status');
+            $table->foreignId('project_id')->onDelete('cascade');
+            $table->foreignId('user_id')->onDelete('cascade');
+            $table->string('type');
+            $table->integer('status');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateProjectTeamModelsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('project_team_models');
+        Schema::dropIfExists('project_teams');
     }
 }

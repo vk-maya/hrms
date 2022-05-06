@@ -15,10 +15,9 @@ class CreateProjectImagesTable extends Migration
     {
         Schema::create('project_images', function (Blueprint $table) {
             $table->id();
-            $table->string('prject_id');
+            $table->foreignId('project_id')->onDelete('cascade');
             $table->string('image');
-            $table->string('status');
-            $table->softDeletes();
+            $table->integer('status');
             $table->timestamps();
         });
     }

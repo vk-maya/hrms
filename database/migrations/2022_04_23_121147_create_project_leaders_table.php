@@ -15,11 +15,11 @@ class CreateProjectLeadersTable extends Migration
     {
         Schema::create('project_leaders', function (Blueprint $table) {
             $table->id();
-            $table->string('prject_id');
-            $table->string('leader_id');
-            $table->string('status');
-            $table->softDeletes();
+            $table->foreignId('project_id')->onDelete('cascade');
+            $table->foreignId('user_id')->onDelete('cascade');
+            $table->integer('status');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProjectModelsTable extends Migration
+class CreateProjectsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,19 @@ class CreateProjectModelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('project_models', function (Blueprint $table) {
+        Schema::create('projects', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('admin_id')->onDelete('cascade');
+            $table->foreignId('client_id')->onDelete('cascade');
             $table->string('name');
-            $table->string('client_id');
-            $table->string('client_idd');
-            $table->date('start_date');
-            $table->date('end_date');
+            $table->date('startDate');
+            $table->date('endDate');
             $table->string('rate');
             $table->string('duration');
             $table->string('priority');
-            $table->integer('description');
-            $table->integer('team');
-            $table->string('status');
+            $table->string('description');
             $table->string('image');
+            $table->integer('status');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -39,6 +38,6 @@ class CreateProjectModelsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('project_models');
+        Schema::dropIfExists('projects');
     }
 }
