@@ -1,4 +1,7 @@
 @extends('admin.layouts.loginapp')
+@section('title')
+<title>Employee Login - Scrum Digital HRMS</title>
+@endsection
 @section('content')
     <div class="main-wrapper">
         <div class="account-content">
@@ -6,11 +9,11 @@
 
                 <div class="account-logo">
                     <img src="{{ asset('assets/img/logo2.png') }}"
-                            alt="Dreamguy's Technologies">
+                            alt="Scrum Digital">
                 </div>
                 <div class="account-box">
                     <div class="account-wrapper">
-                        <h3 class="account-title"> Uer Login</h3>
+                        <h3 class="account-title"> Employee Login</h3>
                         <p class="account-subtitle">Access to Employees</p>
 
                         <form action="{{route('login')}}" method="POST"  class="register-form" id="login-form">
