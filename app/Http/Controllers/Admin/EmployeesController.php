@@ -20,6 +20,9 @@ use App\Models\City;
 
 class EmployeesController extends Controller
 {
+    public function statusEmp(Request $request){
+        // dd($request->toArray());
+    }
     // -----------------------email check get------------
     public function emailv(Request $request) {
         $rrr = User::withTrashed()->where('email',$request->x)->count();
