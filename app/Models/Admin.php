@@ -11,18 +11,20 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Admin extends Authenticatable
 {
-    use HasFactory;
+    use HasApiTokens, HasFactory, Notifiable;
+    protected $guard = 'admin';
     protected $fillable = [
         'name',
         'role',
         'email',
         'password',
     ];
-    public function autht(){
-        return $this->hasMany(ProjectModel::class,'auth_id');
-    
-}
-function assigned(){
-    return $this->hasOne(ProjectModel::class,'assigned_id');
-}
+    public function autht()
+    {
+        return $this->hasMany(ProjectModel::class, 'auth_id');
+    }
+    function assigned()
+    {
+        return $this->hasOne(ProjectModel::class, 'assigned_id');
+    }
 }

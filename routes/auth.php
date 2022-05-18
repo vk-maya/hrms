@@ -10,14 +10,9 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('web')->group(function () {
-  
-    Route::get('login', [AuthenticatedSessionController::class, 'create'])
-                ->name('login');
-    Route::post('login', [AuthenticatedSessionController::class, 'store']);   
-});
+Route::get('login', [AuthenticatedSessionController::class, 'create'])->middleware('guest')->name('login');
+Route::post('login', [AuthenticatedSessionController::class, 'store'])->middleware('guest');
 Route::middleware('auth')->group(function () {
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-                ->name('logout');
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

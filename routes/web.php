@@ -22,19 +22,13 @@ use App\Http\Controllers\Employees\Task;
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin_auth.php';
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-Route::get('/', function () {
-    return view('employees.dashboard');
-})->middleware(['auth'])->name('dashboard');
 
 Route::get('/dashboard', function () {
     return view('employees.dashboard');
-})->middleware(['auth'])->name('home');
+})->middleware(['auth'])->name('dashboard');
 
-Route::prefix('employees/')->name('employees.')->middleware(['web'])->group(function(){
+
+Route::prefix('employees/')->name('employees.')->middleware(['auth'])->group(function(){
     // ----------------task route employees---------------------------
     route::get('task',[Task::class,'task'])->name('task');
     route::post('task/status',[Task::class,'taskstatus'])->name('task.status');
@@ -46,15 +40,11 @@ Route::prefix('employees/')->name('employees.')->middleware(['web'])->group(func
     Route::post('emp/daliy/task',[DailyTask::class,'dailystore'])->name('daily.task.store');
 });
 
-
-Route::prefix('admin/')->name('admin.')->middleware(['admin'])->group(function () {
-
-    Route::get('/', function () {
+Route::redirect('/admin', '/admin/dashboard');
+Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function () {
+    Route::get('/dashboard', function () {
         return view('admin.dashboard');
-    })->name('dashboard');
-
-    Route::redirect('/dashboard', '/admin');
-    // ------------------------------AdminDepartmentsController Routs-------------------
+    })->name('dashboard');    
     // ---------------departments--------------------
     Route::get('departments', [AdminDerpartmentController::class, 'departmentscreate'])->name('departments');
     Route::post('departments', [AdminDerpartmentController::class, 'departmentsstore'])->name('departments');
