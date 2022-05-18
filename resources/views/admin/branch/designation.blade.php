@@ -95,8 +95,8 @@
                             <thead>
                                 <tr>
                                     <th style="width: 30px;">SR</th>
-                                    <th>Designation </th>
-                                    <th>Department </th>
+                                    <th class="text-center">Designation </th>
+                                    <th class="text-center">Department </th>
                                     <th class="text-center">Status</th>
                                     <th class="text-end">Action</th>
                                 </tr>
@@ -105,8 +105,8 @@
                                 @foreach ($designation as $key => $item)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
-                                        <td>{{ $item->designation_name }}</td>
-                                        <td>{{ $item->department->department_name }}</td>
+                                        <td class="text-center">{{ $item->designation_name }}</td>
+                                        <td  class="text-center">{{ $item->department->department_name }}</td>
                                         <td class="text-center">
                                             <div class="action-label">
                                                 <a class="btn btn-white btn-sm btn-rounded status"

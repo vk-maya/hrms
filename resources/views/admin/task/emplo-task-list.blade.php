@@ -25,17 +25,18 @@
                         <thead>
                             <tr>
                                 <th style="width: 30px;">SR</th>
-                                <th>Task</th>
-                                <th>Date</th>                              
+                                <th class="text-end">Task</th>
+                                <th class="text-end">Date</th>                              
+                                <th class="text-end">Action</th>                           
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($data as $key => $item)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
-                                <td><a href="{{ route('admin.employ.task.list', $item->id) }}">{{ $item->title }}</a>
+                                <td class="text-end"><a href="{{ route('admin.employ.task.list', $item->id) }}">{{ $item->title }}</a>
                                 </td>
-                                <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }} </td>
+                                <td class="text-end">{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }} </td>
                                 <td class="text-end"><a href="{{ route('admin.employ.task.list', $item->id) }}">
                                         View</a></td>
                             </tr>

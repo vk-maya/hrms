@@ -40,9 +40,8 @@
                                     <td>{{ $item->email }}</td>
                                     <td>{{ $item->phone }}</td>
                                     <td>{{ $item->designation->designation_name }}</td>
-                                    <td>
-                                        <a href="{{route('admin.emp.show-taskk',$item->id)}}">View</a>
-                                    </td>                                </tr>
+                                    <td class="text-end"><a href="{{route('admin.emp.show-taskk',$item->id)}}">View</a></td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>

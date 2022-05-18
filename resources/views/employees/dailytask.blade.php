@@ -26,8 +26,6 @@
                                 @csrf
                                 <input type="hidden" name="user_id" id=""
                                     value="{{ Auth::guard('web')->user()->id }}">
-                                <input type="hidden" name="post_date" id="InputPostDate"
-                                    value=" {{ \Carbon\Carbon::now()->format('d/m/Y') }}">
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="inputname">Task Title</label>
@@ -43,7 +41,7 @@
                                     <label for="inputname">Date</label>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <input readonly class="form-control"
+                                            <input readonly class="form-control" name="post_date"
                                                 value="{{ \Carbon\Carbon::now('Asia/Kolkata')->format('d-m-Y') }}"
                                                 type="text">
                                         </div>

@@ -81,20 +81,17 @@ class EmployeesController extends Controller
             $employees = User::find($request->id);
             $department = Department::get();
             $count = Countrie::all();
-
             return view('admin.employees.employees-add', compact('department', 'employees', 'count'));
         } else {
             $department = Department::get();
             $count = Countrie::all();
             $id = User::latest()->first();
             if($id==!null){
-                $empid=1+$id->employee_id;
+                $empid=1+$id->employeeID;
+                // dd($empid);                
             }else{
-
                 $empid=1000;
-            }
-
-          
+            }          
             return view('admin.employees.employees-add', compact('department', 'count','empid'));
         }
     }

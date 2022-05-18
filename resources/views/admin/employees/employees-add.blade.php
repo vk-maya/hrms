@@ -95,7 +95,7 @@
                                         <label class="col-form-label">First Name <span
                                                 class="text-danger">*</span></label>
                                         <input class="form-control" name="first_name" type="text"
-                                            value="@if (isset($employees)) {{ $employees->first_name }}@else{{ old('name') }} @endif">
+                                            value="@if(isset($employees)){{ $employees->first_name }}@else{{ old('first_name') }}@endif">
                                         <span class="text-danger">
                                             @error('first_name')
                                                 <p>First Name field is required.</p>
@@ -107,7 +107,7 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Last Name</label>
                                         <input class="form-control" name="last_name" type="text"
-                                            value="@if (isset($employees)) {{ $employees->last_name }}@else{{ old('last_name') }} @endif">
+                                            value="@if (isset($employees)) {{ $employees->last_name }}@else{{ old('last_name') }}@endif">
                                         <span class="text-danger">
                                             @error('last_name')
                                                 <p>Last Name field is required.</p>
@@ -120,8 +120,7 @@
                                     <div class="input-group">
                                         <span class="input-group-text" id="inputGroupPrepend">SDC-EMP-</span>
                                         <input type="text" readonly class="form-control" name="employeeID" id="emp"
-                                            value="@if (isset($employees)) {{ $employees->employeeID }}@else{{ $empid }} @endif"
-                                            onkeypress="empl()" aria-describedby="inputGroupPrepend">
+                                            value="@if(isset($employees)){{ $employees->employeeID }}@else{{$empid }}@endif">
                                     </div>
                                     <span class="text-danger">
                                         @error('employeeID')
@@ -168,7 +167,7 @@
                                         <label class="col-form-label">Phone </label>
                                         <input class="form-control phone" name="phone" type="text" maxlength="10"
                                             pattern="[1-9]{1}[0-9]{9}"
-                                            value="@if (isset($employees)) {{ $employees->phone }}@else{{ old('phone') }} @endif">
+                                            value="@if(isset($employees)){{ $employees->phone}}@else{{old('phone') }}@endif">
                                             <span class="text-danger">
                                                 @error('phone')
                                                     <p>Phone field is required.</p>
@@ -180,7 +179,7 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Address</label>
                                         <input class="form-control"
-                                            value="@if (isset($employees)) {{ $employees->address }}@else{{ old('address') }} @endif"
+                                            value="@if (isset($employees)) {{ $employees->address }}@else{{ old('address') }}@endif"
                                             name="address" type="text">
                                         <span class="text-danger">
                                             @error('address')
