@@ -60,6 +60,7 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
 
     // ---------------------EmployeesController Route-------------------------------------
     Route::get('employees', [EmployeesController::class, 'employeecreate'])->name('employees');
+    // Route::get('employees', [EmployeesController::class, 'statusEmp'])->name('employees.status');
     Route::any('employees/list', [EmployeesController::class, 'emplist'])->name('employees.list');
     Route::post('country', [EmployeesController::class, 'country'])->name('country.name');
     Route::post('state', [EmployeesController::class, 'state'])->name('country.state.name');

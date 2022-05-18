@@ -198,12 +198,7 @@
             paging: true,
             searching: true
         });
-// ---------------------open edit modal-------------------
-        // $(document).ready(function() {
-        //     $(document).on("click", '.edit', (function() {
-        //         $("#add_department").modal('show');
-        //     }));
-        // });
+  
         // -------------------show hidden column-------------
         $(document).ready(function() {
             $(document).on("click", '.edit', (function() {
