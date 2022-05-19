@@ -8,7 +8,7 @@ use App\Models\Department;
 use App\Models\Designation;
 use App\Models\User;
 
-class AdminDerpartmentController extends Controller
+class DerpartmentController extends Controller
 {
     public function departmentscreate(Request $request){
         if ($request->id > 0) {

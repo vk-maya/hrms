@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Admin\HomeController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\AdminDerpartmentController;
+use App\Http\Controllers\Admin\DerpartmentController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\EmployeesController;
 use App\Http\Controllers\Admin\ProjectController;
@@ -31,6 +31,11 @@ Route::get('/dashboard', function () {
     return view('employees.dashboard');
 })->middleware(['auth'])->name('dashboard');
 
+Route::get('/', function () {
+    return view('employees.dashboard');
+})->middleware(['auth'])->name('empdashboard');
+
+
 Route::prefix('employees/')->name('employees.')->middleware(['auth'])->group(function(){
     // ----------------task route employees---------------------------
     route::get('task',[Task::class,'task'])->name('task');
@@ -45,21 +50,19 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth'])->group(fun
 
 Route::redirect('/admin', '/admin/dashboard');
 Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');    
+    Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
     // ---------------departments--------------------
-    Route::get('departments', [AdminDerpartmentController::class, 'departmentscreate'])->name('departments');
-    Route::post('departments', [AdminDerpartmentController::class, 'departmentsstore'])->name('departments');
-    Route::post('departments/status', [AdminDerpartmentController::class, 'departmentsstatus'])->name('departments.status');
-    Route::get('departments/edit/{id}', [AdminDerpartmentController::class, 'departmentscreate'])->name('departments.edit');
-    Route::get('departments/delete/{id}', [AdminDerpartmentController::class, 'departmentdelete'])->name('departments.delete');
+    Route::get('departments', [DerpartmentController::class, 'departmentscreate'])->name('departments');
+    Route::post('departments', [DerpartmentController::class, 'departmentsstore'])->name('departments');
+    Route::post('departments/status', [DerpartmentController::class, 'departmentsstatus'])->name('departments.status');
+    Route::get('departments/edit/{id}', [DerpartmentController::class, 'departmentscreate'])->name('departments.edit');
+    Route::get('departments/delete/{id}', [DerpartmentController::class, 'departmentdelete'])->name('departments.delete');
 
-    Route::get('designation', [AdminDerpartmentController::class, 'designationcreate'])->name('designation');
-    Route::post('designation', [AdminDerpartmentController::class, 'designationstore'])->name('designation');
-    Route::post('designation/status', [AdminDerpartmentController::class, 'designationstatus'])->name('designation.status');
-    Route::get('designation/edit/{id}', [AdminDerpartmentController::class, 'designationcreate'])->name('designation.edit');
-    Route::get('designation/delete/{id}', [AdminDerpartmentController::class, 'designationdelete'])->name('designation.delete');
+    Route::get('designation', [DerpartmentController::class, 'designationcreate'])->name('designation');
+    Route::post('designation', [DerpartmentController::class, 'designationstore'])->name('designation');
+    Route::post('designation/status', [DerpartmentController::class, 'designationstatus'])->name('designation.status');
+    Route::get('designation/edit/{id}', [DerpartmentController::class, 'designationcreate'])->name('designation.edit');
+    Route::get('designation/delete/{id}', [DerpartmentController::class, 'designationdelete'])->name('designation.delete');
 
     // ---------------------EmployeesController Route-------------------------------------
     Route::get('employees', [EmployeesController::class, 'employeecreate'])->name('employees');

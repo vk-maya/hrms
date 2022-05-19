@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Auth\Events\Validated;
-use App\Models\Countrie;
+use App\Models\Countries;
 use App\Models\State;
 use App\Models\City;
 
@@ -90,11 +90,11 @@ class EmployeesController extends Controller
         if ($request->id != '') {
             $employees = User::find($request->id);
             $department = Department::get();
-            $count = Countrie::all();
+            $count = Countries::all();
             return view('admin.employees.employees-add', compact('department', 'employees', 'count'));
         } else {
             $department = Department::get();
-            $count = Countrie::all();
+            $count = Countries::all();
             $id = User::latest()->first();
             if ($id == !null) {
                 $empid = 1 + $id->employeeID;

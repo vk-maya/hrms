@@ -9,10 +9,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Department extends Model
 {
     use HasFactory , SoftDeletes;
+
     protected $fillable =[
         'department_name',
         'status'
     ];
+
     public function designations(){
         return $this->hasMany(Designation::class);
     }

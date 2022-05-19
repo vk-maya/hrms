@@ -46,16 +46,16 @@ class User extends Authenticatable
 
     public function leaders()
     {
-        // return $this->belongsTo(projectLeader::class);
-        return $this->hasMany(projectLeader::class,"leader_id");
+        // return $this->belongsTo(ProjectLeaders::class);
+        return $this->hasMany(ProjectLeaders::class,"leader_id");
     }
     public function team()
     {
-        // return $this->belongsTo(projectLeader::class);
-        return $this->hasMany(ProjectTeamModel::class,"team_id");
+        // return $this->belongsTo(ProjectLeaders::class);
+        return $this->hasMany(ProjectTeams::class,"team_id");
     }
     public function dailyTask(){
-        return $this->hasMany(DailyTaskModel::class,"user_id");
+        return $this->hasMany(DailyTasks::class,"user_id");
     }
   
   

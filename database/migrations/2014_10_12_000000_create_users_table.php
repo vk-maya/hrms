@@ -33,7 +33,7 @@ class CreateUsersTable extends Migration
             $table->string('image');
             $table->date('joining_date');
             $table->rememberToken();
-            $table->enum('status', [0,1]);
+            $table->integer('status');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -13,7 +13,7 @@ class TaskFollowers extends Model
         return $this->belongsTo(Task::class,'task_id');
     }
     public function projectDetail(){
-        return $this->belongsTo(ProjectModel::class,'project_id');
+        return $this->belongsTo(Projects::class,'project_id');
     }
 
     public function taskDetails(){
@@ -21,11 +21,11 @@ class TaskFollowers extends Model
     }
 
     public function projectDetails(){
-        return $this->hasOne(ProjectModel::class,'id','project_id');
+        return $this->hasOne(Projects::class,'id','project_id');
     }
     public function taskreport(){
-        return $this->hasMany(taskstatus::class,'task_id','task_id');
+        return $this->hasMany(TaskStatus::class,'task_id','task_id');
     }
-    
-    
+
+
 }

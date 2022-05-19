@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DailyTaskModel extends Model
+class Countries extends Model
 {
     use HasFactory;
-    public $table = 'daily_tasks';
 
+    protected $table = 'countries';
 }

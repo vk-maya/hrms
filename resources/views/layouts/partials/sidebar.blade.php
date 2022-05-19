@@ -5,14 +5,14 @@
                 <li class="menu-title">
                     <span>Main</span>
                 </li>
-                <li class="">
+                <li class="@if(\Request::route()->getName() == 'dashboard' || \Request::route()->getName() == 'empdashboard') active @endif">
                     <a href="{{ route('dashboard') }}"><i class="la la-dashboard"></i> <span> Dashboard</span> <span
                             class=""></span></a>
                 </li>
                 <li class="menu-title">
                     <span>Employees</span>
                 </li>
-                <li class="submenu">
+                {{-- <li class="submenu">
                     <a href="#"><i class="la la-user"></i> <span> Employees</span> <span
                             class="menu-arrow"></span></a>
                     <ul style="display: none;">
@@ -20,14 +20,14 @@
 
                         <li><a href="attendance-employee.html">Attendance (Employee)</a></li>
                     </ul>
-                </li>
-                <li class="submenu">
+                </li> --}}
+                <li class="submenu @if(\Request::route()->getName() == 'employees.daily.task' || \Request::route()->getName() == 'employees.show-list') active @endif">
                     <a href="#"><i class="la la-rocket"></i> <span> Task</span> <span
                             class="menu-arrow"></span></a>
                     <ul style="display: none;">
                         {{-- <li><a href="{{route('employees.task')}}">Tasks</a></li> --}}
-                        <li><a href="{{route('employees.daily.task')}}">Daily Task</a></li>
-                        <li><a href="{{route('employees.show-list')}}">List Task</a></li>
+                        <li><a class="@if(\Request::route()->getName() == 'employees.daily.task') active @endif" href="{{route('employees.daily.task')}}">Daily Task</a></li>
+                        <li><a class="@if(\Request::route()->getName() == 'employees.show-list') active @endif" href="{{route('employees.show-list')}}">List Task</a></li>
                     </ul>
                 </li>
             </ul>

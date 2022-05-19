@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ClientModel extends Model
+class Clients extends Model
 {
     use HasFactory, SoftDeletes;
 
-    
+    protected $table = 'clients';
+
     public function projectclient(){
-        return $this->hasMany(ProjectModel::class);
+        return $this->hasMany(Projects::class);
     }
 }

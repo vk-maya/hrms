@@ -2,7 +2,7 @@
 
     <div class="header-left">
         <a href="{{ route('admin.dashboard') }}" class="logo">
-            <img src="{{ asset('assets/img/logo.png') }}" width="40" height="40" alt="">
+            <img src="{{ asset('assets/img/logo.png') }}" alt="">
         </a>
     </div>
 
@@ -15,7 +15,7 @@
     </a>
 
     <div class="page-title-box">
-        <h3>Scrum Digital Pvt Ltd</h3>
+        {{-- <h3>Scrum Digital Pvt Ltd</h3> --}}
     </div>
 
     <a id="mobile_btn" class="mobile_btn" href="#sidebar"><i class="fa fa-bars"></i></a>

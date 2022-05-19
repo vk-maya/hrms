@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\DailyTaskModel;
-use App\Models\ClientModel;
+use App\Models\DailyTasks;
+use App\Models\Clients;
 use App\Models\ProjectImage;
-use App\Models\projectLeader;
-use App\Models\ProjectModel;
-use App\Models\ProjectTeamModel;
+use App\Models\ProjectLeaders;
+use App\Models\Projects;
+use App\Models\ProjectTeams;
 use App\Models\Task;
-use App\Models\taskBoard;
+use App\Models\TaskBoards;
 use App\Models\TaskFollowers;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -20,35 +20,35 @@ use Illuminate\Support\Facades\Storage;
 class ProjectController extends Controller
 {
     public function index(){
-            $project = ProjectModel::with('team', 'leaders')->get();
+            $project = Projects::with('team', 'leaders')->get();
         return view('admin.project.project', compact('project'));
     }
 
     public function view($id){
 
-        $project = ProjectModel::with('team', 'leaders', 'image')->find($id);
+        $project = Projects::with('team', 'leaders', 'image')->find($id);
 
         return view('admin.project.project-view', compact('project'));
     }
- 
+
 
     public function list(){
-        $leader = projectLeader::with('user')->get();
-        $team = ProjectTeamModel::with('user')->get();
-        $projectlist = ProjectModel::all();
+        $leader = ProjectLeaders::with('user')->get();
+        $team = ProjectTeams::with('user')->get();
+        $projectlist = Projects::all();
         return view('admin.project.project', compact('projectlist', 'leader', 'team'));
     }
 
     public function create($id = ""){
         if ($id > 0) {
             $employeesc = User::all();
-            $client = ClientModel::all();
-            $project = ProjectModel::with('team', 'leaders', 'image')->find($id);
+            $client = Clients::all();
+            $project = Projects::with('team', 'leaders', 'image')->find($id);
             return view('admin.project.add-project', compact('project', 'client', 'employeesc'));
         } else {
 
             $employeesc = User::all();
-            $client = ClientModel::all();
+            $client = Clients::all();
             return view('admin.project.add-project', compact('client', 'employeesc'));
         }
     }
@@ -71,9 +71,9 @@ class ProjectController extends Controller
             'status' => ['required'],
         ];
         if ($request->id == !null) {
-            $project = ProjectModel::find($request->id);
+            $project = Projects::find($request->id);
         } else {
-            $project = new ProjectModel();
+            $project = new Projects();
         }
         $request->validate($rules);
         $project->name = $request->name;
@@ -87,16 +87,16 @@ class ProjectController extends Controller
         $project->description = $request->description;
         $project->status = 1;
         $project->save();
-        $project_id = ProjectModel::latest()->first();
+        $project_id = Projects::latest()->first();
         foreach ($request->teamlead as $item) {
-            $teamleader = new projectLeader();
+            $teamleader = new ProjectLeaders();
             $teamleader->leader_id = $item;
             $teamleader->prject_id = $project_id->id;
             $teamleader->status = 1;
             $teamleader->save();
         }
         foreach ($request->team as $item) {
-            $team = new ProjectTeamModel();
+            $team = new ProjectTeams();
             $team->prject_id = $project_id->id;
             $team->team_id = $item;
             $team->status = 1;
@@ -118,7 +118,7 @@ class ProjectController extends Controller
         return redirect()->route('admin.project');
     }
     public function update(Request $request){
-        $project = ProjectModel::find($request->id);
+        $project = Projects::find($request->id);
         $project->name = $request->name;
         $project->auth_id = $request->project_create;
         $project->client_id = $request->clientname;
@@ -133,9 +133,9 @@ class ProjectController extends Controller
         $project_id = $request->id;
         if ($request->teamlead == !null) {
             foreach ($request->teamlead as $item) {
-                $check = projectLeader::where('prject_id',$project_id)->where('leader_id',$item)->first();
+                $check = ProjectLeaders::where('prject_id',$project_id)->where('leader_id',$item)->first();
                 if($check == null) {
-                         $team = new projectLeader();
+                         $team = new ProjectLeaders();
                          $team->prject_id = $project_id;
                          $team->leader_id = $item;
                          $team->save();
@@ -145,9 +145,9 @@ class ProjectController extends Controller
         }
         if ($request->team == !null) {
             foreach ($request->team as $item) {
-                $check = ProjectTeamModel::where('prject_id',$project_id)->where('team_id',$item)->first();
+                $check = ProjectTeams::where('prject_id',$project_id)->where('team_id',$item)->first();
                 if($check == null){
-                         $team = new ProjectTeamModel();
+                         $team = new ProjectTeams();
                          $team->prject_id = $project_id;
                          $team->team_id = $item;
                          $team->save();
@@ -178,26 +178,26 @@ class ProjectController extends Controller
     }
 
     public function delete($id){
-        ProjectModel::find($id)->delete();
+        Projects::find($id)->delete();
         $delete = ProjectImage::where('prject_id', $id);
         foreach ($delete as $key => $value) {
             storage::delete('public/project/' . $value->image);
         }
         ProjectImage::where('prject_id', $id)->delete();
-        ProjectTeamModel::where('prject_id', $id)->delete();
-        projectLeader::where('prject_id', $id)->delete();
+        ProjectTeams::where('prject_id', $id)->delete();
+        ProjectLeaders::where('prject_id', $id)->delete();
         return response()->json(['msg' => 'yes']);
     }
     public function team_member_delete(Request $request){
         // dd($request->toArray());
-      ProjectTeamModel::where('prject_id',$request->pid)->where('team_id',$request->id)->delete();
-        
+      ProjectTeams::where('prject_id',$request->pid)->where('team_id',$request->id)->delete();
+
         return response()->json(['msg' => 'yes']);
     }
     // ---------------------task--------------------------------
     public function task($id){
         $employees = User::all();
-        $project = ProjectModel::with('team', 'leaders', 'image','Tasks','TaskBoard')->find($id);
+        $project = Projects::with('team', 'leaders', 'image','Tasks','TaskBoard')->find($id);
         return view('admin.project.task-board', compact('project','employees'));
     }
     public function task_board_create(Request $request){
@@ -206,7 +206,7 @@ class ProjectController extends Controller
             'tbcolor' => ['required'],
         ];
         $request->validate($rules);
-        $data  = new taskBoard();
+        $data  = new TaskBoards();
         $data->name =$request->name;
         $data->project_id =$request->project_id;
         $data->tbcolor =$request->tbcolor;
@@ -215,7 +215,7 @@ class ProjectController extends Controller
         return redirect()->back();
     }
     public function task_create($id ,$tbid){
-        $project = ProjectModel::with('team', 'leaders', 'image','Tasks')->find($id);
+        $project = Projects::with('team', 'leaders', 'image','Tasks')->find($id);
         $tb_id = $tbid;
         return view('admin.project.add-task',compact('project','tb_id'));
     }
@@ -236,7 +236,7 @@ class ProjectController extends Controller
         $data->project_id = $request->project_id;
         $data->tb_id = $request->tb_id;
         $data->priority = $request->priority;
-        $data->start_date = $request->start_date;   
+        $data->start_date = $request->start_date;
         $data->end_date = $request->due_date;
         $data->status = ($request->status == 1) ? 1 : 0;
         $data->save();
@@ -247,10 +247,10 @@ class ProjectController extends Controller
             $data->task_id =$task_id;
             $data->project_id = $request->project_id;
             $data->team_id = $value;
-            $data->status= 1;      
-            $data->save();      
-        }  
-      
+            $data->status= 1;
+            $data->save();
+        }
+
         return redirect()->route('admin.project.task.board', compact('id'));
 
     }
@@ -259,7 +259,7 @@ class ProjectController extends Controller
         if($data>0){
             return response()->json(['msg' => 'no']);
         }else{
-            taskBoard::find($id)->delete();
+            TaskBoards::find($id)->delete();
             return response()->json(['msg' => 'yes']);
         }
 
@@ -274,7 +274,7 @@ class ProjectController extends Controller
         return response()->json(['msg' => 'yes']);
 
         }
-    
+
     public function dailytask(){
         return view('admin.project.dailytask');
     }
@@ -283,7 +283,7 @@ class ProjectController extends Controller
         $request->validate([
             'name'=> 'required',
         ]);
-        $data = new DailyTaskModel();
+        $data = new DailyTasks();
         $data->user_id = $request->id;
         $data->name = $request->name;
         $data->status = 0;
@@ -291,7 +291,7 @@ class ProjectController extends Controller
         $data->save();
     }
     public function showtask(){
-        $dailytask = DailyTaskModel::all();
+        $dailytask = DailyTasks::all();
         return response()->json(['data' => $dailytask]);
     }
     public function alltask(){        
@@ -299,14 +299,14 @@ class ProjectController extends Controller
         // dd($employees);
         return view('admin.task.all-task-list',compact('employees'));
 
-    }    
+    }
     public function employeestask($id){
-        $data = DailyTaskModel::where('user_id',$id)->latest()->get();
+        $data = DailyTasks::where('user_id',$id)->latest()->get();
         return view('admin.task.emplo-task-list',compact('data'));
     }
     public function empltask($id){
         // dd($id);
-        $data = DailyTaskModel::find($id);
+        $data = DailyTasks::find($id);
         return view('admin.task.task-view-emp',compact('data'));
 
         }
