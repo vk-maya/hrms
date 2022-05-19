@@ -54,6 +54,9 @@ class User extends Authenticatable
         // return $this->belongsTo(projectLeader::class);
         return $this->hasMany(ProjectTeamModel::class,"team_id");
     }
+    public function dailyTask(){
+        return $this->hasMany(DailyTaskModel::class,"user_id");
+    }
   
   
 

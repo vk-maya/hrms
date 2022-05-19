@@ -20,40 +20,44 @@ use App\Models\City;
 
 class EmployeesController extends Controller
 {
-    public function statusEmp(Request $request){
-        // dd($request->toArray());
-    }
+
     // -----------------------email check get------------
-    public function emailv(Request $request) {
-        $rrr = User::withTrashed()->where('email',$request->x)->count();
+    public function emailv(Request $request)
+    {
+        $rrr = User::withTrashed()->where('email', $request->x)->count();
         return json_encode(['count' => $rrr]);
     }
 
-// -----------------employees id get----------------------
-    public function epid(Request $request) {
+    // -----------------employees id get----------------------
+    public function epid(Request $request)
+    {
         $idd = User::where('employee_id', 'like', "%$request->y%")->count();
         return json_encode(['count' => $idd]);
     }
 
-// ------------------------designation get------------------
-    public function designationfatch(Request $request){
+    // ------------------------designation get------------------
+    public function designationfatch(Request $request)
+    {
         $designation = Designation::where('department_id', $request->dep)->get();
         return json_encode(['count' => $designation]);
     }
 
-// ------------------------------state and city ajax------
-    public function country(Request $request){
+    // ------------------------------state and city ajax------
+    public function country(Request $request)
+    {
         $state = State::where('country_id', $request->contid)->get();
         return response()->json(['state' => $state]);
     }
 
-    public function state(Request $request){
+    public function state(Request $request)
+    {
         $data = City::where('state_id', $request->id)->get();
         return response()->json(['city' => $data]);
     }
 
-// --------------------delete ajax-----------------------
-    public function employeesdestroy($id) {
+    // --------------------delete ajax-----------------------
+    public function employeesdestroy($id)
+    {
         $delete = User::find($id);
         if ($delete->image != '') {
             storage::delete('public/uploads/' . $delete->image);
@@ -63,23 +67,26 @@ class EmployeesController extends Controller
     }
 
     // --------------------laravel request function---------
-    public function employeecreate(){
+    public function employeecreate()
+    {
 
         $department = Designation::with('department')->get();
         $employees = User::all();
 
         return view('admin.employees.employees', compact('employees', 'department',));
     }
-    
+
     // ------------------employees list---------------------
-    public function emplist(){
+    public function emplist()
+    {
         $ldepartment = Designation::with('department')->get();
         $lemployees = User::all();
 
         return view('admin.employees.employees', compact('lemployees', 'ldepartment',));
     }
 
-    public function addemployeescreate(Request $request){
+    public function addemployeescreate(Request $request)
+    {
         if ($request->id != '') {
             $employees = User::find($request->id);
             $department = Department::get();
@@ -89,42 +96,43 @@ class EmployeesController extends Controller
             $department = Department::get();
             $count = Countrie::all();
             $id = User::latest()->first();
-            if($id==!null){
-                $empid=1+$id->employeeID;
+            if ($id == !null) {
+                $empid = 1 + $id->employeeID;
                 // dd($empid);                
-            }else{
-                $empid=1000;
-            }          
-            return view('admin.employees.employees-add', compact('department', 'count','empid'));
+            } else {
+                $empid = 1000;
+            }
+            return view('admin.employees.employees-add', compact('department', 'count', 'empid'));
         }
     }
 
-    public function addemployeesstore(Request $request){
-// dd($request->toArray());
-        if($request->id==""){
+    public function addemployeesstore(Request $request)
+    {
+        // dd($request->toArray());
+        if ($request->id == "") {
             $rules = [
-                'country_id' => ['required','string',],
+                'country_id' => ['required', 'string',],
                 'state_id' => ['required', 'string',],
                 'city_id' => ['required', 'string'],
                 'department_id' => ['required', 'string',],
-                'designation_id' => ['required', 'string', 'numeric','max:255'],
+                'designation_id' => ['required', 'string', 'numeric', 'max:255'],
                 'employeeID' => ['required', 'string', 'numeric'],
-                'joiningDate' => ['string','required'],
+                'joiningDate' => ['string', 'required'],
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
                 'phone' => 'required|numeric|digits:10',
-                'image' => [ 'required','mimes:png,jpg,jpeg,csv','max:2048'],
+                'image' => ['required', 'mimes:png,jpg,jpeg,csv', 'max:2048'],
                 'address' => ['required', 'string', 'max:255'],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
-                
+
             ];
         }
-       
+
         if ($request->id == !null) {
-            $employees = User::find($request->id);                 
+            $employees = User::find($request->id);
             $rules['email'] = ['required', 'string', 'email', 'max:255'];
-            if(User::where('email',$request->email)->where('id','!',$request->id)->count() > 0){
-                return response()->back()->withErrors(['email'=>"Email Already Exist"])->withInput();
+            if (User::where('email', $request->email)->where('id', '!', $request->id)->count() > 0) {
+                return response()->back()->withErrors(['email' => "Email Already Exist"])->withInput();
             }
         } else {
             $rules['email'] = ['required', 'string', 'email', 'max:255', 'unique:users'];
@@ -135,7 +143,7 @@ class EmployeesController extends Controller
         $employees->first_name = $request->first_name;
         $employees->last_name = $request->last_name;
         $employees->email = $request->email;
-        $employees->password =Hash::make($request->password);
+        $employees->password = Hash::make($request->password);
         $employees->employeeID = $request->employeeID;
         $employees->joiningDate = date('Y-m-d', strtotime($request->joiningDate));
         $employees->phone = $request->phone;
@@ -146,17 +154,29 @@ class EmployeesController extends Controller
         $employees->state_id = $request->state_id;
         $employees->city_id = $request->city_id;
         $employees->status = ($request->status == 1) ? 1 : 0;
-        $employees->workplace = $request->workplace;        
+        $employees->workplace = $request->workplace;
         if ($request->hasFile('image') == 1) {
-                storage::delete('public/uploads/' .$employees->image);
-                $file = $request->file('image');
-                $ext = $file->getClientOriginalExtension();
-                $filename = "sdc".str_replace(' ', '', $request->name) . rand(0, 10000) . "." . $ext;
-                $file = $request->file('image')->storeAs('public/uploads', $filename);
-                $employees->image = $filename;
-            }
-    
-         $employees->save();
+            storage::delete('public/uploads/' . $employees->image);
+            $file = $request->file('image');
+            $ext = $file->getClientOriginalExtension();
+            $filename = "sdc" . str_replace(' ', '', $request->name) . rand(0, 10000) . "." . $ext;
+            $file = $request->file('image')->storeAs('public/uploads', $filename);
+            $employees->image = $filename;
+        }
+
+        $employees->save();
         return redirect()->route('admin.employees');
+    }
+    public function status($id)
+    {
+        $idd = User::find($id);
+        if($idd->status ==1){
+            $idd->status = 0;
+        }else{
+            $idd->status = 1;
+        }
+        // dd($idd);
+        $idd->save();
+        return redirect()->back();
     }
 }

@@ -12,10 +12,6 @@
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Employee
-                                <span
-                                    class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
-                                    <span class="visually-hidden">New alerts</span>
-                                </span>
                             </li>
                         </ul>
                     </div>
@@ -48,10 +44,6 @@
                     <div class="form-group form-focus select-focus">
                         <select class="select floating">
                             <option>Select Designation</option>
-                            <option>Web Developer</option>
-                            <option>Web Designer</option>
-                            <option>Android Developer</option>
-                            <option>Ios Developer</option>
                         </select>
                         <label class="focus-label">Designation</label>
                     </div>
@@ -132,18 +124,15 @@
                                                 class="fa fa-pencil m-r-5"></i> Edit</a>
                                         <button class="dropdown-item delete" data-id="{{ $item->id }}"><i
                                                 class="fa fa-trash-o m-r-5"></i> Delete</button>
-                                                <a class="dropdown-item status" data-id="{{ $item->id }}"
-                                                    href="javascript:void(0);">
-                                                    @if ($item->status == 1)
-                                                        <i class="fa fa-check m-r-5 text-success"></i> <span
-                                                            class="yeh-data">Approved</span>
-                                                    @else
-                                                        <i class="fa fa-check m-r-5 text-danger"></i> <span
-                                                            class="yeh-data">Declined</span>
-                                                    @endif
-                                                </a>
-                                        {{-- <button class="dropdown-item delete" data-id="{{ $item->id }}"><i
-                                                class="fa fa-check m-r-5"></i> Active</button> --}}
+                                        <a class="dropdown-item status" href="{{route('admin.employees.status',$item->id)}}">
+                                            @if ($item->status == 1)
+                                                <i class="fa fa-check m-r-5 text-danger"></i> <span
+                                                    class="yeh-data">Declined</span>
+                                            @else
+                                                <i class="fa fa-check m-r-5 text-success"></i> <span
+                                                    class="yeh-data">Approved</span>
+                                            @endif
+                                        </a>                            
                                     </div>
                                 </div>
                                 <div>
@@ -172,9 +161,7 @@
             @endisset
         </div>
     </div>
-    <a href="" class="noti-dot"></a>
 @endsection
-
 @push('plugin-js')
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
@@ -218,7 +205,6 @@
                         }
                     });
             })
-        });
-
+        });      
     </script>
 @endpush

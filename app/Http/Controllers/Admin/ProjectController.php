@@ -295,7 +295,8 @@ class ProjectController extends Controller
         return response()->json(['data' => $dailytask]);
     }
     public function alltask(){        
-        $employees  = User::all();
+        $employees  = User::with('dailyTask')->get();
+        // dd($employees);
         return view('admin.task.all-task-list',compact('employees'));
 
     }    

@@ -19,6 +19,7 @@
                     </div>
                 </div>
             </div>
+            {{-- {{$employees->dailyTask->orderBy('post_date','desc')->first()->post_date}} --}}
             <div class="col-md-12">
                 <div class="table-responsive">
                     <table class="table table-striped custom-table mb-0" id="department">
@@ -27,6 +28,7 @@
                                 <th style="width: 30px;">SR</th>
                                 <th>Employees Name</th>
                                 <th>Email</th>
+                                <th>Task Status</th>
                                 <th>Mobile Name</th>
                                 <th>Designation</th>
                                 <th class="text-end">Action</th>
@@ -38,6 +40,21 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td><a href="{{route('admin.emp.show-taskk',$item->id)}}">{{ $item->first_name }}</a></td>
                                     <td>{{ $item->email }}</td>
+                                    <td>@isset($item->dailyTask()->orderBy('post_date','desc')->first()->post_date)
+                                        @php
+                                            $nowd =\Carbon\Carbon::now('Asia/Kolkata')->format('d-m-Y');
+                                            $post =$item->dailyTask()->orderBy('post_date','desc')->first()->post_date;
+                                        @endphp
+                                        {{-- {{$nowd}} --}}
+                                        @if ( == $nowd)
+                                            
+                                        {{"Submit"}}
+                                        {{-- {{$item->dailyTask()->orderBy('post_date','desc')->first()->post_date}} --}}
+                                        @else
+                                        {{'No Date'}}
+                                        @endif
+                                    @endisset</td>
+                                    <td>status{{ \Carbon\Carbon::now('Asia/Kolkata')->format('d-m-Y')}}</td>
                                     <td>{{ $item->phone }}</td>
                                     <td>{{ $item->designation->designation_name }}</td>
                                     <td class="text-end"><a href="{{route('admin.emp.show-taskk',$item->id)}}">View</a></td>
