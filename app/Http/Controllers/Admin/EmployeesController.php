@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Auth\Events\Validated;
-use App\Models\Countrie;
+use App\Models\Countries;
 use App\Models\State;
 use App\Models\City;
 
@@ -70,7 +70,7 @@ class EmployeesController extends Controller
 
         return view('admin.employees.employees', compact('employees', 'department',));
     }
-    
+
     // ------------------employees list---------------------
     public function emplist(){
         $ldepartment = Designation::with('department')->get();
@@ -83,18 +83,18 @@ class EmployeesController extends Controller
         if ($request->id != '') {
             $employees = User::find($request->id);
             $department = Department::get();
-            $count = Countrie::all();
+            $count = Countries::all();
             return view('admin.employees.employees-add', compact('department', 'employees', 'count'));
         } else {
             $department = Department::get();
-            $count = Countrie::all();
+            $count = Countries::all();
             $id = User::latest()->first();
             if($id==!null){
                 $empid=1+$id->employeeID;
-                // dd($empid);                
+                // dd($empid);
             }else{
                 $empid=1000;
-            }          
+            }
             return view('admin.employees.employees-add', compact('department', 'count','empid'));
         }
     }
@@ -116,12 +116,12 @@ class EmployeesController extends Controller
                 'image' => [ 'required','mimes:png,jpg,jpeg,csv','max:2048'],
                 'address' => ['required', 'string', 'max:255'],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
-                
+
             ];
         }
-       
+
         if ($request->id == !null) {
-            $employees = User::find($request->id);                 
+            $employees = User::find($request->id);
             $rules['email'] = ['required', 'string', 'email', 'max:255'];
             if(User::where('email',$request->email)->where('id','!',$request->id)->count() > 0){
                 return response()->back()->withErrors(['email'=>"Email Already Exist"])->withInput();
@@ -146,7 +146,7 @@ class EmployeesController extends Controller
         $employees->state_id = $request->state_id;
         $employees->city_id = $request->city_id;
         $employees->status = ($request->status == 1) ? 1 : 0;
-        $employees->workplace = $request->workplace;        
+        $employees->workplace = $request->workplace;
         if ($request->hasFile('image') == 1) {
                 storage::delete('public/uploads/' .$employees->image);
                 $file = $request->file('image');
@@ -155,7 +155,7 @@ class EmployeesController extends Controller
                 $file = $request->file('image')->storeAs('public/uploads', $filename);
                 $employees->image = $filename;
             }
-    
+
          $employees->save();
         return redirect()->route('admin.employees');
     }

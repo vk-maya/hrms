@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Countrie;
+use App\Models\Countries;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\ClientModel;
+use App\Models\Clients;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,11 +16,11 @@ class ClientController extends Controller
 {
     // -------------ajax route reposce ------------------
     public function cid(Request $request) {
-        $rrr = ClientModel::withTrashed()->where('client_id', 'like', "%$request->id%")->count();
+        $rrr = Clients::withTrashed()->where('client_id', 'like', "%$request->id%")->count();
         return response()->json(['cid' => $rrr]);
-    }   
+    }
     public function clientstatus(Request $request){
-        $data = ClientModel::find($request->id);
+        $data = Clients::find($request->id);
         if($data->status == 1){
             $data->status= 0;
         }else{
@@ -30,23 +30,23 @@ class ClientController extends Controller
         return response()->json(['success'=>"Successfully Changed"]);
     }
     public function index() {
-        $client = ClientModel::all();
+        $client = Clients::all();
 
         return view('admin.Client.client', compact('client'));
     }
     public function clist(){
-        $clist = ClientModel::all();
+        $clist = Clients::all();
 
         return view('admin.Client.client', compact('clist'));
     }
     public function create($id = ""){
         if ($id > 0) {
-            $client = ClientModel::find($id);
-            $count = Countrie::all();
+            $client = Clients::find($id);
+            $count = Countries::all();
             return view('admin.Client.add-client', compact('count', 'client'));
         } else {
-            $count = Countrie::all();
-            $id = ClientModel::latest()->first();
+            $count = Countries::all();
+            $id = Clients::latest()->first();
             if($id ==!null){
 
                 $client_id = $id->client_id;
@@ -59,11 +59,11 @@ class ClientController extends Controller
     }
     public function store(Request $request){
         // dd($request->toArray());
-       
+
 
         if ($request->id == !null) {
 
-            $client = ClientModel::find($request->id);
+            $client = Clients::find($request->id);
         } else {
             $rules = [
                 'name' => ['required', 'string', 'max:255'],
@@ -81,7 +81,7 @@ class ClientController extends Controller
                 'image' => ['required', 'mimes:png,jpg,jpeg,csv', 'max:2048'],
                  ];
             $request->validate($rules);
-            $client = new ClientModel();
+            $client = new Clients();
         }
         $client->name = $request->name;
         $client->last_name = $request->last_name;
@@ -106,7 +106,7 @@ class ClientController extends Controller
         return redirect()->route('admin.client');
     }
     public function delete($id){
-        $delete = ClientModel::find($id);
+        $delete = Clients::find($id);
         if ($delete->image != '') {
             storage::delete('public/uploads/' . $delete->image);
         }

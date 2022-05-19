@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Task as ModelsTask;
 use App\Http\Controllers\Controller;
 use App\Models\TaskFollowers;
-use App\Models\taskstatus;
+use App\Models\TaskStatus;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -19,7 +19,7 @@ class Task extends Controller
         return view('employees.task', compact('task'));
     }
     public function taskstatus(Request $request){
-        $data = new taskstatus();
+        $data = new TaskStatus();
         $data->task_id= $request->task_id;
         $data->report= $request->report;
         $data->status = ($request->status == 1) ? 1 : 0;
