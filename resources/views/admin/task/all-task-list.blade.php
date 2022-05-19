@@ -42,19 +42,20 @@
                                     <td>{{ $item->email }}</td>
                                     <td>@isset($item->dailyTask()->orderBy('post_date','desc')->first()->post_date)
                                         @php
-                                            $nowd =\Carbon\Carbon::now('Asia/Kolkata')->format('d-m-Y');
-                                            $post =$item->dailyTask()->orderBy('post_date','desc')->first()->post_date;
-                                        @endphp
-                                        {{-- {{$nowd}} --}}
-                                        @if ( == $nowd)
-                                            
-                                        {{"Submit"}}
-                                        {{-- {{$item->dailyTask()->orderBy('post_date','desc')->first()->post_date}} --}}
+                                            $nowd =\Carbon\Carbon::now()->format('d/m/Y');
+                                            $postdate =($item->dailyTask()->orderBy('post_date','desc')->first()->post_date);
+                                           $pdate =\Carbon\Carbon::parse($postdate)->format('d/m/Y')
+                                        @endphp                                
+                                        @if ($pdate == $nowd)                                            
+                                        <i class="fa fa-check m-r-5 text-success"></i> <span
+                                        class="yeh-data">Submit</span>  
                                         @else
-                                        {{'No Date'}}
+                                        <i class="fa fa-times m-r-5 text-danger"></i>No Submit  
                                         @endif
-                                    @endisset</td>
-                                    <td>status{{ \Carbon\Carbon::now('Asia/Kolkata')->format('d-m-Y')}}</td>
+                                        @else
+                                        <i class="fa fa-times m-r-5 text-danger"></i>No Submit  
+                                                                               
+                                    @endisset</td>                                  
                                     <td>{{ $item->phone }}</td>
                                     <td>{{ $item->designation->designation_name }}</td>
                                     <td class="text-end"><a href="{{route('admin.emp.show-taskk',$item->id)}}">View</a></td>
