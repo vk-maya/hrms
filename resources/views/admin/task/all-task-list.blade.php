@@ -27,10 +27,8 @@
                             <tr>
                                 <th style="width: 30px;">SR</th>
                                 <th>Employees Name</th>
-                                <th>Email</th>
-                                <th>Task Status</th>
-                                <th>Mobile Name</th>
                                 <th>Designation</th>
+                                <th>Task Status</th>
                                 <th class="text-end">Action</th>
                             </tr>
                         </thead>
@@ -39,7 +37,7 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td><a href="{{route('admin.emp.show-taskk',$item->id)}}">{{ $item->first_name }}</a></td>
-                                    <td>{{ $item->email }}</td>
+                                    <td>{{ $item->designation->designation_name }}</td>
                                     <td>@isset($item->dailyTask()->orderBy('post_date','desc')->first()->post_date)
                                         @php
                                             $nowd =\Carbon\Carbon::now()->format('d/m/Y');
@@ -56,8 +54,7 @@
                                         <i class="fa fa-times m-r-5 text-danger"></i>No Submit  
                                                                                
                                     @endisset</td>                                  
-                                    <td>{{ $item->phone }}</td>
-                                    <td>{{ $item->designation->designation_name }}</td>
+                                  
                                     <td class="text-end"><a href="{{route('admin.emp.show-taskk',$item->id)}}">View</a></td>
                                 </tr>
                             @endforeach

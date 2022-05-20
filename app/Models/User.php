@@ -39,11 +39,9 @@ class User extends Authenticatable
         'image',
         'image',
     ];
-    public function designation()
-    {
+    public function designation()    {
         return $this->belongsTo(Designation::class);
     }
-
     public function leaders()
     {
         // return $this->belongsTo(ProjectLeaders::class);
@@ -51,11 +49,19 @@ class User extends Authenticatable
     }
     public function team()
     {
-        // return $this->belongsTo(ProjectLeaders::class);
         return $this->hasMany(ProjectTeams::class,"team_id");
     }
     public function dailyTask(){
         return $this->hasMany(DailyTasks::class,"user_id");
+    }
+    public function department(){
+        return $this->hasOne(Department::class,'id','department_id');
+    }
+    public function profiledesignation(){
+        return $this->hasOne(Designation::class,'id','designation_id');
+    }
+    public function moreinfo(){
+        return $this->hasOne(userinfo::class,'user_id');
     }
   
   

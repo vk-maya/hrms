@@ -17,6 +17,7 @@ use Illuminate\Auth\Events\Validated;
 use App\Models\Countries;
 use App\Models\State;
 use App\Models\City;
+use App\Models\userinfo;
 
 class EmployeesController extends Controller
 {
@@ -118,11 +119,15 @@ class EmployeesController extends Controller
                 'designation_id' => ['required', 'string', 'numeric', 'max:255'],
                 'employeeID' => ['required', 'string', 'numeric'],
                 'joiningDate' => ['string', 'required'],
+                'dob' => ['string', 'required'],
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
+                'gender' => ['required', 'string', 'max:255'],
+                'dob' => ['required', 'string', 'max:255'],
                 'phone' => 'required|numeric|digits:10',
                 'image' => ['required', 'mimes:png,jpg,jpeg,csv', 'max:2048'],
                 'address' => ['required', 'string', 'max:255'],
+                'pincode' => ['required', 'string', 'max:255'],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
 
             ];
@@ -139,9 +144,10 @@ class EmployeesController extends Controller
             $employees = new User();
             $request->validate($rules);
         }
-
         $employees->first_name = $request->first_name;
         $employees->last_name = $request->last_name;
+        $employees->gender = $request->gender;
+        $employees->dob = date('Y-m-d', strtotime($request->dob));
         $employees->email = $request->email;
         $employees->password = Hash::make($request->password);
         $employees->employeeID = $request->employeeID;
@@ -153,6 +159,7 @@ class EmployeesController extends Controller
         $employees->country_id = $request->country_id;
         $employees->state_id = $request->state_id;
         $employees->city_id = $request->city_id;
+        $employees->pinCode = $request->pincode;
         $employees->status = ($request->status == 1) ? 1 : 0;
         $employees->workplace = $request->workplace;
         if ($request->hasFile('image') == 1) {
@@ -175,8 +182,53 @@ class EmployeesController extends Controller
         }else{
             $idd->status = 1;
         }
-        // dd($idd);
         $idd->save();
         return redirect()->back();
+    }
+    public function profile($id){
+        $employees = User::with('department','profiledesignation','moreinfo')->find($id);
+        // dd($employees->toArray());
+        return view('admin.employees.profile',compact('employees'));
+    }
+    public function information($id){
+        $userin = userinfo::where('user_id',$id)->count();
+        if($userin!= ""){
+            $data = userinfo::where('user_id',$id)->first();
+            $id= $id;
+            return view('admin.employees.information',compact('data','id'));
+        }else{
+            $id= $id;
+            return view('admin.employees.information',compact('id'));
+        }
+    }
+    public function empinfo(Request $request){
+        // dd($request->toArray());
+        $rules = [
+            'nationality' => ['required', 'string',],
+            'maritalstatus' => ['required', 'string'],
+            'children' => ['required', 'string',],
+            'bankname' => ['required', 'string',],
+            'bankAc' => ['required', 'integer',],
+            'ifsc' => ['required', 'string',],
+            'pan' => ['required', 'string',],
+        ];
+        if($request->id){
+            $data = userinfo::find($request->id);
+        }else{
+            $data = new userinfo();
+            $data->user_id = $request->user_id;
+        }
+        $request->validate($rules);
+        $data->nationality =$request->nationality;
+        $data->maritalStatus =$request->maritalstatus;
+        $data->noOfChildren =$request->children;
+        $data->bankname =$request->bankname;
+        $data->bankAc =$request->bankAc;
+        $data->ifsc =$request->ifsc;
+        $data->pan =$request->pan;
+        $data->status =1;
+        $data->save();
+        // return redirect()->back();
+        return redirect()->route('admin.employees.profile',$request->user_id);
     }
 }

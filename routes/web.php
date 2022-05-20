@@ -66,6 +66,9 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
 
     // ---------------------EmployeesController Route-------------------------------------
     Route::get('employees', [EmployeesController::class, 'employeecreate'])->name('employees');
+    Route::post('employees/info', [EmployeesController::class, 'empinfo'])->name('employees.info');
+    Route::get('employees/profile/{id}', [EmployeesController::class, 'profile'])->name('employees.profile');
+    Route::get('employees/information/{id}', [EmployeesController::class, 'information'])->name('employees.information');
     Route::get('employees/status/{id}', [EmployeesController::class, 'status'])->name('employees.status');
     Route::any('employees/list', [EmployeesController::class, 'emplist'])->name('employees.list');
     Route::post('country', [EmployeesController::class, 'country'])->name('country.name');

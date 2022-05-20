@@ -113,17 +113,19 @@
                         <div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
                             <div class="profile-widget">
                                 <div class="profile-img">
+                                    <a href="{{route('admin.employees.profile',$item->id)}}">
                                     <span class="avatar">
-                                        <img src="{{ asset('storage/uploads/' . $item->image) }}" alt=""></span>
+                                        <img src="{{ asset('storage/uploads/' . $item->image) }}" alt="Eemployees Image"></span></a>
                                 </div>
                                 <div class="dropdown profile-action">
                                     <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
                                         aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                     <div class="dropdown-menu dropdown-menu-right">
                                         <a class="dropdown-item" href="{{ route('admin.employees.edit', $item->id) }}"><i
-                                                class="fa fa-pencil m-r-5"></i> Edit</a>
+                                                class="fa fa-pencil text-warning m-r-5"></i> Edit</a>
                                         <button class="dropdown-item delete" data-id="{{ $item->id }}"><i
-                                                class="fa fa-trash-o m-r-5"></i> Delete</button>
+                                                class="fa fa-trash-o text-danger m-r-5"></i> Delete</button>
+                                        <a class="dropdown-item more-add" href="{{route('admin.employees.information',$item->id)}}"><i class="fa fa-plus text-info  m-r-5"></i>Add More</a>
                                         <a class="dropdown-item status" href="{{route('admin.employees.status',$item->id)}}">
                                             @if ($item->status == 1)
                                                 <i class="fa fa-check m-r-5 text-danger"></i> <span

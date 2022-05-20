@@ -2,7 +2,7 @@
 @push('css')
     <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
-
+    
     <style>
         .input-switch {
             display: none;
@@ -80,6 +80,12 @@
                             <li class="breadcrumb-item active">Add Employee</li>
                         </ul>
                     </div>
+                    @isset($employees)
+                    <div class="col-auto float-end ms-auto">
+                        <a href="{{route('admin.employees.information',$employees->id)}}" class="btn add-btn"><i
+                                class="fa fa-plus"></i> Add More Info</a>
+                    </div> 
+                    @endisset 
                 </div>
             </div>
             <div class="col-lg-12">
@@ -88,7 +94,7 @@
                         <form action="{{ route('admin.storeemployees') }}" enctype="multipart/form-data" method="POST">
                             @csrf
                             <input type="text" hidden
-                                value="@if (isset($employees)) {{ $employees->id }} @endif" name="id">
+                                value="@if (isset($employees)){{$employees->id }}@endif" name="id">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -113,6 +119,35 @@
                                                 <p>Last Name field is required.</p>
                                             @enderror
                                         </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Gender</label>
+                                        <select class="select form-control" name="gender">
+                                            <option value="">Selected Gender</option>
+                                            <option value="m" @if(isset($employees) && $employees->gender == "m")selected @endif>Male</option>
+                                            <option value="f" @if(isset($employees) && $employees->gender == "f")selected @endif>Female</option>
+                                        </select>
+                                        <span class="text-danger">
+                                            @error('gender')
+                                                <p>Employee Gender field is required.</p>
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group"> 
+                                        <label>Birth Date</label>
+                                        <div class="">
+                                            <input type="date" class="form-control" name="dob" 
+                                            value="@if(isset($employees)){{$employees->dob}}@endif">
+                                                <span class="text-danger">
+                                                    @error('dob')
+                                                        <p>Employee Birth Date field is required.</p>
+                                                    @enderror
+                                                </span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -243,6 +278,17 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
+                                        <label class="col-form-label">Pin Code</label>
+                                        <input type="text"  name="pincode" class="form-control" value="@if(isset($employees)){{$employees->pinCode }}@else{{old('pincode')}}@endif">
+                                        <span class="text-danger">
+                                            @error('pincode')
+                                                <p>Pin Code field is required.</p>
+                                            @enderror
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <label class="col-form-label">Department <span
                                                 class="text-danger">*</span></label>
                                         <select class="select" name="department_id" class="form-control"
@@ -284,9 +330,9 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Joining Date <span
                                                 class="text-danger">*</span></label>
-                                        <div class="cal-icon"><input name="joiningDate"
-                                                class="form-control datetimepicker" value="@if (isset($employees)) {{ date('m/d/Y', strtotime($employees->joining_date)) }}" @endif
-                                                            type="">
+                                        <div class="">
+                                            <input name="joiningDate"
+                                                class="form-control" type="date" value="@if(isset($employees)){{$employees->joiningDate}}@endif">
                                                         <span class="text-danger">
                                             @error('joiningDate')
                                                 <p>Joining Date field is required.</p>
@@ -318,7 +364,7 @@
                                                     checked
                                                     @if (isset($employees)) @if ($employees->workplace == 'wfo')checked @endif
                                                     @endif
-                                                name="workplace" id="wfo" value="wfo{{ old('workplace') }}">
+                                                name="workplace" id="wfo" value="wfo">
                                                 <label class="form-check-label" title="Work From Office"
                                                     for="wfo">WFO</label>
                                             </div>
@@ -327,7 +373,7 @@
                                                     name="workplace" id="wfh"
                                                     @if (isset($employees)) @if ($employees->workplace == 'wfh') checked @endif
                                                     @endif
-                                                value="wfh{{ old('workplace') }}">
+                                                value="wfh">
                                                 <label class="form-check-label" title="Work From House"
                                                     for="wfh">WFH</label>
                                             </div>
@@ -336,7 +382,7 @@
                                                     name="workplace" id="both"
                                                     @if (isset($employees)) @if ($employees->workplace == 'both') checked @endif
                                                     @endif
-                                                value=" both{{ old('workplace') }}">
+                                                value=" both">
                                                 <label class="form-check-label" title="Both" for="both">both</label>
                                             </div>
 
@@ -374,8 +420,7 @@
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-
-    <script type="text/javascript">
+ <script type="text/javascript">
         $('.phone').keypress(function(e) {
             var arr = [];
             var kk = e.which;
@@ -546,5 +591,6 @@
         document.getElementById("inputstate").onchange = () => {
             cities();
         };
+ 
     </script>
 @endpush

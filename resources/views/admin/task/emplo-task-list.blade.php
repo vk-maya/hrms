@@ -36,7 +36,7 @@
                                 <td>{{ $key + 1 }}</td>
                                 <td class="text-end"><a href="{{ route('admin.employ.task.list', $item->id) }}">{{ $item->title }}</a>
                                 </td>
-                                <td class="text-end">{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }} </td>
+                                <td class="text-end">{{ \Carbon\Carbon::parse($item->post_date)->format('d/m/Y') }} </td>
                                 <td class="text-end"><a href="{{ route('admin.employ.task.list', $item->id) }}">
                                         View</a></td>
                             </tr>
