@@ -31,11 +31,6 @@ Route::get('/dashboard', function () {
     return view('employees.dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-Route::get('/', function () {
-    return view('employees.dashboard');
-})->middleware(['auth'])->name('empdashboard');
-
-
 Route::prefix('employees/')->name('employees.')->middleware(['auth'])->group(function(){
     // ----------------task route employees---------------------------
     route::get('task',[Task::class,'task'])->name('task');
