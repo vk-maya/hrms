@@ -49,7 +49,10 @@
 									class="menu-arrow"></span></a>
 							<ul style="display: none;">
 								<li><a class="@if(\Request::route()->getName() == 'admin.employees') active @endif" href="{{route('admin.employees')}}">All Employees</a></li>
+								<li><a class="@if(\Request::route()->getName() == 'admin.leave.setting') active @endif" href="{{route('admin.leave.setting')}}">Leave Settings</a></li>
+								<li><a class="@if(\Request::route()->getName() == 'admin.leave.list') active @endif" href="{{route('admin.leave.list')}}">Leave</a></li>
 							</ul>
+						
 						</li>
 						<li class="submenu @if(\Request::route()->getName() == 'admin.all.task.list') active @endif">
 							<a href="#"><i class="la la-edit"></i> <span> Task</span> <span

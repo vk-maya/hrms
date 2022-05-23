@@ -12,15 +12,15 @@
                 <li class="menu-title">
                     <span>Employees</span>
                 </li>
-                {{-- <li class="submenu">
+                <li class="submenu">
                     <a href="#"><i class="la la-user"></i> <span> Employees</span> <span
                             class="menu-arrow"></span></a>
                     <ul style="display: none;">
-                        <li><a href="leaves-employee.html">Leaves (Employee)</a></li>
+                        <li><a href="{{route('employees.leave')}}">Leaves (Employee)</a></li>
 
                         <li><a href="attendance-employee.html">Attendance (Employee)</a></li>
                     </ul>
-                </li> --}}
+                </li>
                 <li class="submenu @if(\Request::route()->getName() == 'employees.daily.task' || \Request::route()->getName() == 'employees.show-list') active @endif">
                     <a href="#"><i class="la la-rocket"></i> <span> Task</span> <span
                             class="menu-arrow"></span></a>

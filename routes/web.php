@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\EmployeesController;
 use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Employees\DailyTask;
 use App\Http\Controllers\Employees\Task;
+use App\Http\Controllers\LeaveController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,10 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 Route::prefix('employees/')->name('employees.')->middleware(['auth'])->group(function(){
+    // ----------------------leave emloyees route------------------------
+    route::get('employees/leave',[LeaveController::class,'leave'])->name('leave');
+    Route::get('employees/add/leave',[LeaveController::class,'leaveadd'])->name('add.leave');
+    Route::post('employees/store/leave',[LeaveController::class,'storeleave'])->name('store.leave');
     // ----------------task route employees---------------------------
     route::get('task',[Task::class,'task'])->name('task');
     route::post('task/status',[Task::class,'taskstatus'])->name('task.status');
@@ -75,6 +80,11 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::post('save-employees', [EmployeesController::class, 'addemployeesstore'])->name('storeemployees');
     Route::get('employees/edid/{id}', [EmployeesController::class, 'addemployeescreate'])->name('employees.edit');
     Route::get('employees/delete/{id}', [EmployeesController::class, 'employeesdestroy'])->name('employees.delete');
+
+    // ---------------------------leave route----------------------------------
+    Route::get('setting/leave',[LeaveController::class,'leavesetting'])->name('leave.setting');
+    Route::post('leave/type',[LeaveController::class,'leavetype'])->name('leave.type');
+    Route::get('leave/list',[LeaveController::class,'leavelist'])->name('leave.list');
 
     // ---------------------client route-----------------------
     Route::get('client', [ClientController::class, 'index'])->name('client');
