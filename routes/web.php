@@ -1,14 +1,16 @@
 <?php
 
-use App\Http\Controllers\Admin\HomeController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\DerpartmentController;
-use App\Http\Controllers\Admin\ClientController;
-use App\Http\Controllers\Admin\EmployeesController;
-use App\Http\Controllers\Admin\ProjectController;
-use App\Http\Controllers\Employees\DailyTask;
 use App\Http\Controllers\Employees\Task;
 use App\Http\Controllers\LeaveController;
+use App\Http\Controllers\Employees\DailyTask;
+use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\ClientController;
+use App\Http\Controllers\Admin\ProjectController;
+use App\Http\Controllers\Admin\EmployeesController;
+use App\Http\Controllers\Admin\DerpartmentController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,12 +27,12 @@ require __DIR__ . '/auth.php';
 require __DIR__ . '/admin_auth.php';
 
 Route::get('/', function () {
+    
     return view('welcome');
 });
+Route::get('/dashboard',[HomeController::class,'empdashboard'])->name('dashboard');
 
-Route::get('/dashboard', function () {
-    return view('employees.dashboard');
-})->middleware(['auth'])->name('dashboard');
+
 
 Route::prefix('employees/')->name('employees.')->middleware(['auth'])->group(function(){
     // ----------------------leave emloyees route------------------------
@@ -85,6 +87,7 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::get('setting/leave',[LeaveController::class,'leavesetting'])->name('leave.setting');
     Route::post('leave/type',[LeaveController::class,'leavetype'])->name('leave.type');
     Route::get('leave/list',[LeaveController::class,'leavelist'])->name('leave.list');
+    Route::post('leave/report/{id}',[LeaveController::class,'leavereport'])->name('leave.report');
 
     // ---------------------client route-----------------------
     Route::get('client', [ClientController::class, 'index'])->name('client');
@@ -121,6 +124,5 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::get('all/emp/task/list',[ProjectController::class,'alltask'])->name('all.task.list');
     Route::get('emp/all/task/{id}',[ProjectController::class,'employeestask'])->name('emp.show-taskk');
     Route::get('task/show/{id}',[ProjectController::class,'empltask'])->name('employ.task.list');
-
 
 });

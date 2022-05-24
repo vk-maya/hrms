@@ -41,8 +41,8 @@
                                     <label for="inputname">Date</label>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <input readonly class="form-control" name="post_date"
-                                                value="{{ \Carbon\Carbon::now('Asia/Kolkata')->format('d-m-Y') }}"
+                                            <input  readonly class="form-control" name="post_date"
+                                                value="{{ \Carbon\Carbon::now()->format('d-m-Y') }}"
                                                 type="text">
                                         </div>
                                     </div>
