@@ -16,9 +16,8 @@
                     <a href="#"><i class="la la-user"></i> <span> Employees</span> <span
                             class="menu-arrow"></span></a>
                     <ul style="display: none;">
-                        <li><a href="{{route('employees.leave')}}">Leaves (Employee)</a></li>
-
-                        <li><a href="attendance-employee.html">Attendance (Employee)</a></li>
+                        <li><a class="@if(\Request::route()->getName() == 'employees.leave') active @endif" href="{{route('employees.leave')}}">Leaves</a></li>
+                        
                     </ul>
                 </li>
                 <li class="submenu @if(\Request::route()->getName() == 'employees.daily.task' || \Request::route()->getName() == 'employees.show-list') active @endif">

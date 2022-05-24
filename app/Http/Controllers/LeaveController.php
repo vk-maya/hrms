@@ -11,7 +11,7 @@ class LeaveController extends Controller
 {
 //    ------------------------employees function ----------------------
     public function leave(){
-        $data = Leave::where('user_id',Auth::guard('web')->user()->id)->with('leaveType')->get();
+        $data = Leave::where('user_id',Auth::guard('web')->user()->id)->with('leaveType')->latest()->get();
         return view('employees.leave.leave',compact('data'));
     }
     public function leaveadd(){
@@ -26,7 +26,7 @@ class LeaveController extends Controller
         $data->form =date('Y-m-d', strtotime($request->from));
         $data->to = date('Y-m-d', strtotime($request->to));
         $data->reason = $request->reason;
-        $data->status = 1;
+        $data->status = "";
         $data->save();
         return redirect()->route('employees.leave');
     }
@@ -35,17 +35,23 @@ class LeaveController extends Controller
         return view('admin.leave.leave-setting');
     }
     public function leavelist(){
-        $data = Leave::all();
+        $data = Leave::with('user')->latest()->get();
+        // dd($data->toArray());
         return view('admin.leave.leave',compact('data'));
     }
     public function leavetype(Request $request){
         $data = new settingleave();
         $data->type =$request->type;
         $data->day =$request->day;
-        $data->status=1;
+        $data->status="";
         $data->save();
         return redirect()->back();
-
-
+    }
+    public function leavereport(Request $request){
+        // dd($request->toArray());
+        $data = Leave::find($request->id);
+        $data->status = ($request->status != 'null') ? $request->status : '';
+        $data->update();
+        return redirect()->back();  
     }
 }

@@ -40,17 +40,8 @@
                 <img src="{{ asset('assets/img/flags/us.png') }}" alt="" height="20"> <span>India</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
-                <a href="javascript:void(0);" class="dropdown-item">
-                    <img src="{{ asset('assets/img/flags/us.png') }}" alt="" height="16"> English
-                </a>
-                <a href="javascript:void(0);" class="dropdown-item">
-                    <img src="{{ asset('assets/img/flags/fr.png') }}" alt="" height="16"> French
-                </a>
-                <a href="javascript:void(0);" class="dropdown-item">
-                    <img src="{{ asset('assets/img/flags/es.png') }}" alt="" height="16"> Spanish
-                </a>
-                <a href="javascript:void(0);" class="dropdown-item">
-                    <img src="{{ asset('assets/img/flags/de.png') }}" alt="" height="16"> German
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">
+                    <img src="{{ asset('assets/img/flags/us.png') }}" alt="" height="20"> <span>India</span>
                 </a>
             </div>
         </li>

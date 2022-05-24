@@ -75,12 +75,20 @@
                                 <td>{{ $start->diff($end)->format('%a') }}</td>
                                 <td>{{$item->reason}}</td>
                                 <td class="text-center">
-                                    <div class="action-label">
-                                        <span class="btn btn-white btn-sm btn-rounded" >
-                                            <i class="fa fa-dot-circle-o text-purple"></i> New
-                                        </span>
+                                    <div class="">                                     
+                                            @if ($item->status == '')
+                                                <span class="item  btn-white btn-sm btn-rounded "><i
+                                                        class="fa fa-dot-circle-o text-purple"></i> New</span>
+                                            @elseif($item->status == 1)
+                                                <span class="item  btn-white btn-sm btn-rounded" ><i
+                                                        class="fa fa-dot-circle-o text-danger"></i> Declined</span>
+                                            @else
+                                                <span class="item  btn-white btn-sm btn-rounded"><i
+                                                        class="fa fa-dot-circle-o text-success"></i> Approved</span>
+                                            @endif
+                                        </div>
                                     </div>
-                                </td>      
+                                </td>     
                             </tr>
                             @endforeach
                         </tbody>
