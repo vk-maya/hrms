@@ -26,14 +26,10 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin_auth.php';
 
-Route::get('/', function () {
-    
+Route::get('/', function () {    
     return view('welcome');
 });
 Route::get('/dashboard',[HomeController::class,'empdashboard'])->name('dashboard');
-
-
-
 Route::prefix('employees/')->name('employees.')->middleware(['auth'])->group(function(){
     // ----------------------leave emloyees route------------------------
     route::get('employees/leave',[LeaveController::class,'leave'])->name('leave');
