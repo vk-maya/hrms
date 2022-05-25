@@ -7,7 +7,7 @@ use App\Models\Department;
 use App\Models\Designation;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
-// use App\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redis;
@@ -99,7 +99,7 @@ class EmployeesController extends Controller
             $id = User::latest()->first();
             if ($id == !null) {
                 $empid = 1 + $id->employeeID;
-                // dd($empid);                
+                // dd($empid);
             } else {
                 $empid = 1000;
             }
@@ -116,7 +116,7 @@ class EmployeesController extends Controller
         $employees->password = Hash::make($request->password);
         // dd($employees->toArray());
         $employees->update();
-        return redirect()->route('dashboard');    
+        return redirect()->route('dashboard');
     }
 
     public function addemployeesstore(Request $request)
