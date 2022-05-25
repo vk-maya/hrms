@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\Admin\EmployeesController;
 use App\Http\Controllers\Admin\DerpartmentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,12 +30,15 @@ require __DIR__ . '/admin_auth.php';
 Route::get('/', function () {    
     return view('welcome');
 });
-Route::get('/dashboard',[HomeController::class,'empdashboard'])->name('dashboard');
+Route::get('/dashboard',[HomeController::class,'empdashboard'])->middleware('auth')->name('dashboard');
 Route::prefix('employees/')->name('employees.')->middleware(['auth'])->group(function(){
     // ----------------------leave emloyees route------------------------
     route::get('employees/leave',[LeaveController::class,'leave'])->name('leave');
     Route::get('employees/add/leave',[LeaveController::class,'leaveadd'])->name('add.leave');
     Route::post('employees/store/leave',[LeaveController::class,'storeleave'])->name('store.leave');
+    // --------------------------Profile route ---------------------------
+    Route::get('profiles',[HomeController::class,'profile'])->name('profile');
+    Route::post('save-employees', [EmployeesController::class, 'proPassword'])->name('propassword');
     // ----------------task route employees---------------------------
     route::get('task',[Task::class,'task'])->name('task');
     route::post('task/status',[Task::class,'taskstatus'])->name('task.status');
@@ -82,6 +86,7 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     // ---------------------------leave route----------------------------------
     Route::get('setting/leave',[LeaveController::class,'leavesetting'])->name('leave.setting');
     Route::post('leave/type',[LeaveController::class,'leavetype'])->name('leave.type');
+    Route::post('leave/type/sick',[LeaveController::class,'leavetype'])->name('leave.type.sick');
     Route::get('leave/list',[LeaveController::class,'leavelist'])->name('leave.list');
     Route::post('leave/report/{id}',[LeaveController::class,'leavereport'])->name('leave.report');
 

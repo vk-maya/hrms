@@ -6,6 +6,8 @@ use App\Models\Leave\Leave;
 use Illuminate\Http\Request;
 use App\Models\Leave\settingleave;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Events\Validated;
+
 
 class LeaveController extends Controller
 {
@@ -20,6 +22,14 @@ class LeaveController extends Controller
         return view('employees.leave.add-leave',compact('data'));
     }
     public function storeleave(Request $request){
+        $rules = [
+            'day' => ['required', 'string'],   
+            'type_id' => ['required', 'integer'],   
+            'from' => ['required', 'date'],   
+            'to' => ['required', 'date'],   
+            'reason' => ['required', 'string'],
+        ];
+        $request->validate($rules);
         $data = new Leave();
         $data->user_id =$request->user_id;
         $data->leaves_id =$request->type_id;
@@ -40,6 +50,11 @@ class LeaveController extends Controller
         return view('admin.leave.leave',compact('data'));
     }
     public function leavetype(Request $request){
+        $rules = [
+            'day' => ['required', 'string'],   
+
+        ];
+        $request->validate($rules);
         $data = new settingleave();
         $data->type =$request->type;
         $data->day =$request->day;

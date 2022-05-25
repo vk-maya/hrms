@@ -7,7 +7,7 @@ use App\Models\Department;
 use App\Models\Designation;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
-use App\Http\Controllers\Controller;
+// use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redis;
@@ -106,13 +106,24 @@ class EmployeesController extends Controller
             return view('admin.employees.employees-add', compact('department', 'count', 'empid'));
         }
     }
+    public function proPassword(Request $request){
+        // dd($request->toArray());
+        $rules=[
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ];
+        $request->validate($rules);
+        $employees = User::find($request->id);
+        $employees->password = Hash::make($request->password);
+        // dd($employees->toArray());
+        $employees->update();
+        return redirect()->route('dashboard');    
+    }
 
     public function addemployeesstore(Request $request)
     {
-        // dd($request->toArray());
         if ($request->id == "") {
             $rules = [
-                'country_id' => ['required', 'string',],
+                'country_id' => ['required', 'string'],
                 'state_id' => ['required', 'string',],
                 'city_id' => ['required', 'string'],
                 'department_id' => ['required', 'string',],
@@ -141,8 +152,8 @@ class EmployeesController extends Controller
             }
         } else {
             $rules['email'] = ['required', 'string', 'email', 'max:255', 'unique:users'];
-            $employees = new User();
             $request->validate($rules);
+            $employees = new User();
         }
         $employees->first_name = $request->first_name;
         $employees->last_name = $request->last_name;

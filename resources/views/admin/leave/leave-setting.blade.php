@@ -47,6 +47,11 @@
                                                     <input type="hidden" name="type" value="Annual">
                                                     <label>Days</label>
                                                     <input type="number" name="day" class="form-control" disabled>
+                                                    @error('day')
+                                                        <span class="text-danger">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                         </div>
@@ -55,7 +60,7 @@
                                         </div>
                                     </div>
                                 </form>
-                                <div class="leave-row">
+                                {{-- <div class="leave-row">
                                     <div class="leave-left">
                                         <div class="input-box">
                                             <label class="d-block">Carry forward</label>
@@ -82,7 +87,7 @@
                                             Edit
                                         </button>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>
@@ -109,6 +114,11 @@
                                                     <input type="hidden" name="type" value="Sick">
                                                     <label>Days</label>
                                                     <input type="number" name="day" class="form-control" disabled>
+                                                    @error('day')
+                                                    <span class="text-danger">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
                                                 </div>
                                             </div>
                                         </div>
@@ -143,6 +153,11 @@
                                                     <input type="hidden" name="type" value="Hospitalisation">
                                                     <label>Days</label>
                                                     <input type="number" name="day" class="form-control" disabled>
+                                                    @error('day')
+                                                    <span class="text-danger">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
                                                 </div>
                                             </div>
                                         </div>
@@ -174,9 +189,15 @@
                                         <div class="leave-left">
                                             <div class="input-box">
                                                 <div class="form-group">
-                                                    <input type="hidden" name="type" value="Maternity Assigned to female only">
+                                                    <input type="hidden" name="type"
+                                                        value="Maternity Assigned to female only">
                                                     <label>Days</label>
                                                     <input type="number" name="day" class="form-control" disabled>
+                                                    @error('day')
+                                                    <span class="text-danger">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
                                                 </div>
                                             </div>
                                         </div>
@@ -208,9 +229,15 @@
                                         <div class="leave-left">
                                             <div class="input-box">
                                                 <div class="form-group">
-                                                    <input type="hidden" name="type" value="Paternity Assigned to male only">
+                                                    <input type="hidden" name="type"
+                                                        value="Paternity Assigned to male only">
                                                     <label>Days</label>
                                                     <input type="number" name="day" class="form-control" disabled>
+                                                    @error('day')
+                                                    <span class="text-danger">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
                                                 </div>
                                             </div>
                                         </div>
@@ -246,6 +273,11 @@
                                                     <input type="hidden" name="type" value="LOP">
                                                     <label>Days</label>
                                                     <input type="number" name="day" class="form-control" disabled>
+                                                    @error('day')
+                                                    <span class="text-danger">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
                                                 </div>
                                             </div>
                                         </div>
@@ -254,7 +286,7 @@
                                         </div>
                                     </div>
                                 </form>
-                                <div class="leave-row">
+                                {{-- <div class="leave-row">
                                     <div class="leave-left">
                                         <div class="input-box">
                                             <label class="d-block">Carry forward</label>
@@ -281,7 +313,7 @@
                                             Edit
                                         </button>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>
@@ -310,6 +342,11 @@
                                                     <input type="text" class="form-control" name="type" value="">
                                                     <label>Days</label>
                                                     <input type="number" name="day" class="form-control" disabled>
+                                                    @error('day')
+                                                    <span class="text-danger">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
                                                 </div>
                                             </div>
                                         </div>
@@ -318,7 +355,7 @@
                                         </div>
                                     </div>
                                 </form>
-                                <div class="leave-row">
+                                {{-- <div class="leave-row">
                                     <div class="leave-left">
                                         <div class="input-box">
                                             <label class="d-block">Carry forward</label>
@@ -345,7 +382,7 @@
                                             Edit
                                         </button>
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>

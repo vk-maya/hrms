@@ -13,14 +13,20 @@
                 </div>
                 <div class="account-box">
                     <div class="account-wrapper">
-                        <h3 class="account-title"> Employee Login</h3>
+                        <h3 class="account-title">Login</h3>
                         <p class="account-subtitle">Access to Employees</p>
 
                         <form action="{{route('login')}}" method="POST"  class="register-form" id="login-form">
                             @csrf
+                            @error('email')
+                            <span class="text-danger">
+                                 <i class="fa fa-times" aria-hidden="true"><strong> {{$message}}</strong></i>                                   
+                                </span>
+                                @enderror
                             <div class="form-group">
                                 <label>Email Address</label>
                                 <input class="form-control" name="email" type="text" value="{{old('email')}}">
+                              
                             </div>
                             <div class="form-group">
                                 <div class="row">
@@ -31,6 +37,11 @@
                                 <div class="position-relative">
                                     <input class="form-control" type="password" name="password" value="" id="password">
                                     <span class="fa fa-eye-slash" id="toggle-password"></span>
+                                    <span class="text-danger">
+                                        @error('password')
+                                            <p>Password required.</p>
+                                        @enderror
+                                    </span>
                                 </div>
                             </div>
                             <div class="form-group text-center">

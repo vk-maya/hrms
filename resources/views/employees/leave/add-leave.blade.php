@@ -36,6 +36,11 @@
                                     <option value="{{$item->id}}">{{$item->type}}</option>                                 
                                     @endforeach
                                 </select>
+                                @error('type_id')
+                                <span class="text-danger">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
@@ -43,6 +48,11 @@
                                         <label>From <span class="text-danger">*</span></label>
                                         <div class="">
                                             <input class="form-control" name="from" type="date">
+                                            @error('from')
+                                            <span class="text-danger">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
                                         </div> 
                                     </div>
 
@@ -52,17 +62,23 @@
                                         <label>To <span class="text-danger">*</span></label>
                                         <div class="">
                                             <input class="form-control " name="to" type="date">
+                                            @error('to')
+                                            <span class="text-danger">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
                                         </div>
                                     </div>   
-                                </div>
-                               
-                                        
-
-                            </div>
-                                         
+                                </div> 
+                             </div>      
                             <div class="form-group">
                                 <label>Leave Reason <span class="text-danger">*</span></label>
                                 <textarea name="reason" rows="4" class="form-control"></textarea>
+                                @error('reason')
+                                <span class="text-danger">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                             </div>
                             <div class="submit-section">
                                 <button class="btn btn-primary submit-btn">Submit</button>

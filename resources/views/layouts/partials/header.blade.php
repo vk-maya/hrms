@@ -272,12 +272,13 @@
                 <span> {{ Auth::guard('web')->user()->name }}</span>
             </a>
             <div class="dropdown-menu">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button class="btn" type="submit">
-                        Log Out
-                    </button>
-                </form>
+                <a class="dropdown-item" href="{{route('employees.profile')}}">My Profile</a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button class=" dropdown-item" type="submit">
+                            Log Out
+                        </button>
+                    </form>              
             </div>
         </li>
     </ul>
