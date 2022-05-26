@@ -99,7 +99,7 @@ class EmployeesController extends Controller
             $id = User::latest()->first();
             if ($id == !null) {
                 $empid = 1 + $id->employeeID;
-                // dd($empid);                
+                // dd($empid);
             } else {
                 $empid = 1000;
             }
@@ -116,7 +116,7 @@ class EmployeesController extends Controller
         $employees->password = Hash::make($request->password);
         // dd($employees->toArray());
         $employees->update();
-        return redirect()->route('dashboard');    
+        return redirect()->route('dashboard');
     }
 
     public function addemployeesstore(Request $request)
