@@ -60,34 +60,7 @@
                                         </div>
                                     </div>
                                 </form>
-                                {{-- <div class="leave-row">
-                                    <div class="leave-left">
-                                        <div class="input-box">
-                                            <label class="d-block">Carry forward</label>
-                                            <div class="leave-inline-form">
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                                        id="carry_no" value="option1" disabled>
-                                                    <label class="form-check-label" for="carry_no">No</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                                        id="carry_yes" value="option2" disabled>
-                                                    <label class="form-check-label" for="carry_yes">Yes</label>
-                                                </div>
-                                                <div class="input-group">
-                                                    <span class="input-group-text">Max</span>
-                                                    <input type="text" class="form-control" disabled>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="leave-right">
-                                        <button class="leave-edit-btn">
-                                            Edit
-                                        </button>
-                                    </div>
-                                </div> --}}
+                        
                             </div>
                         </div>
                     </div>
