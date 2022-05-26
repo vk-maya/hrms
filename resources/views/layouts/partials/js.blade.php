@@ -8,7 +8,6 @@
 
 <script src="{{asset('assets/js/jquery.slimscroll.min.js')}}"></script>
 @stack('plugin-js')
-
 <script src="{{asset('assets/plugins/morris/morris.min.js')}}"></script>
 <script src="{{asset('assets/plugins/raphael/raphael.min.js')}}"></script>
 <script src="{{asset('assets/js/chart.js')}}"></script>

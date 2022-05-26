@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\City;
 use App\Models\User;
+use App\Models\State;
+use App\Models\userinfo;
+use App\Models\Countries;
 use App\Models\Department;
 use App\Models\Designation;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
-use Illuminate\Auth\Events\Validated;
-use App\Models\Countries;
-use App\Models\State;
-use App\Models\City;
-use App\Models\userinfo;
 
 class EmployeesController extends Controller
 {
@@ -86,8 +87,7 @@ class EmployeesController extends Controller
         return view('admin.employees.employees', compact('lemployees', 'ldepartment',));
     }
 
-    public function addemployeescreate(Request $request)
-    {
+    public function addemployeescreate(Request $request){
         if ($request->id != '') {
             $employees = User::find($request->id);
             $department = Department::get();
@@ -119,28 +119,15 @@ class EmployeesController extends Controller
         return redirect()->route('dashboard');
     }
 
-    public function addemployeesstore(Request $request)
-    {
+    public function addemployeesstore(Request $request){
         if ($request->id == "") {
             $rules = [
-                'country_id' => ['required', 'string'],
-                'state_id' => ['required', 'string',],
-                'city_id' => ['required', 'string'],
                 'department_id' => ['required', 'string',],
                 'designation_id' => ['required', 'string', 'numeric', 'max:255'],
                 'employeeID' => ['required', 'string', 'numeric'],
                 'joiningDate' => ['string', 'required'],
-                'dob' => ['string', 'required'],
                 'first_name' => ['required', 'string', 'max:255'],
-                'last_name' => ['required', 'string', 'max:255'],
-                'gender' => ['required', 'string', 'max:255'],
-                'dob' => ['required', 'string', 'max:255'],
-                'phone' => 'required|numeric|digits:10',
-                'image' => ['required', 'mimes:png,jpg,jpeg,csv', 'max:2048'],
-                'address' => ['required', 'string', 'max:255'],
-                'pincode' => ['required', 'string', 'max:255'],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
-
             ];
         }
 
@@ -213,7 +200,6 @@ class EmployeesController extends Controller
         }
     }
     public function empinfo(Request $request){
-        // dd($request->toArray());
         $rules = [
             'nationality' => ['required', 'string',],
             'maritalstatus' => ['required', 'string'],
@@ -241,5 +227,67 @@ class EmployeesController extends Controller
         $data->save();
         // return redirect()->back();
         return redirect()->route('admin.employees.profile',$request->user_id);
+    }
+    public function fill(){
+        $id = Auth::guard('web')->user()->id;
+            $employees = User::find($id);
+            $department = Department::get();
+            $count = Countries::all();
+            return view('employees.profile.fill-details', compact('department', 'employees', 'count'));        
+        
+    }
+    public function fillstore(Request $request){
+        $rules = [
+            'department_id' => ['required', 'string',],
+            'designation_id' => ['required', 'string', 'numeric', 'max:255'],
+            'employeeID' => ['required', 'string', 'numeric'],
+            'joiningDate' => ['string', 'required'],
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'gender' => ['required', 'string'],
+            'dob' => ['required', 'date'],
+            'phone' => ['required', 'integer'],
+            'address' => ['required', 'string', 'max:255'],
+            'country_id' => ['required', 'integer'],
+            'state_id' => ['required', 'integer'],
+            'city_id' => ['required', 'integer'],
+            'pincode' => ['required', 'integer'],
+            'status' => ['required', 'integer'],
+            'workplace' => ['required', 'string'],
+        ];        
+        $request->validate($rules);
+        // dd($request->toArray());
+        $employees = User::find($request->id);           
+        $employees->verified =1;       
+        $employees->first_name = $request->first_name;
+        $employees->last_name = $request->last_name;
+        $employees->gender = $request->gender;
+        $employees->dob = date('Y-m-d', strtotime($request->dob));
+        $employees->email = $request->email;
+        $employees->password = Hash::make($request->password);
+        $employees->employeeID = $request->employeeID;
+        $employees->joiningDate = date('Y-m-d', strtotime($request->joiningDate));
+        $employees->phone = $request->phone;
+        $employees->department_id = $request->department_id;
+        $employees->designation_id = $request->designation_id;
+        $employees->address = $request->address;
+        $employees->country_id = $request->country_id;
+        $employees->state_id = $request->state_id;
+        $employees->city_id = $request->city_id;
+        $employees->pinCode = $request->pincode;
+        $employees->status = ($request->status == 1) ? 1 : 0;
+        $employees->workplace = $request->workplace;
+        if ($request->hasFile('image') == 1) {
+            storage::delete('public/uploads/' . $employees->image);
+            $file = $request->file('image');
+            $ext = $file->getClientOriginalExtension();
+            $filename = "sdc" . str_replace(' ', '', $request->name) . rand(0, 10000) . "." . $ext;
+            $file = $request->file('image')->storeAs('public/uploads', $filename);
+            $employees->image = $filename;
+        }
+
+        $employees->save();
+        return redirect('/');
     }
 }

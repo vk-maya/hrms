@@ -12,7 +12,6 @@ class DerpartmentController extends Controller
 {
     public function departmentscreate(Request $request){
         if ($request->id > 0) {
-            // dd($request->id);
             $edit = Department::find($request->id);
             return response()->json(['edit' => $edit]);
         } else {
@@ -21,7 +20,6 @@ class DerpartmentController extends Controller
         }
     }
     public function departmentsstore(Request $request){
-// dd($request->toArray());
         $rules = [
             'department' => ['required', 'string', 'max:255'],
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Employees\Task;
@@ -8,10 +9,10 @@ use App\Http\Controllers\Employees\DailyTask;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\ProjectController;
+use Symfony\Component\HttpKernel\Profiler\Profile;
 use App\Http\Controllers\Admin\EmployeesController;
 use App\Http\Controllers\Admin\DerpartmentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use Symfony\Component\HttpKernel\Profiler\Profile;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,10 +31,20 @@ require __DIR__ . '/admin_auth.php';
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-Route::get('/',[HomeController::class,'empdashboard'])->middleware('auth')->name('empdashboard');
-Route::get('/dashboard',[HomeController::class,'empdashboard'])->middleware('auth')->name('dashboard');
+Route::get('/fill/UserData',[EmployeesController::class,'fill'])->name('fill.data');
+Route::post('fill/Userstore', [EmployeesController::class, 'fillstore'])->name('fill.data.store');
+Route::post('country', [EmployeesController::class, 'country'])->name('state.name');
+Route::post('state', [EmployeesController::class, 'state'])->name('state.city.name');
+Route::post('designationd', [EmployeesController::class, 'designationfatch'])->name('designation.name');
 
-Route::prefix('employees/')->name('employees.')->middleware(['auth'])->group(function(){
+
+
+// Route::get('employees/edid/',Auth::guard('web')->user()->id,[EmployeesController::class, 'addemployeescreate'])->name('employees.edit');
+
+Route::get('/',[HomeController::class,'empdashboard'])->middleware(['auth','checkdata'])->name('empdashboard');
+Route::get('/dashboard',[HomeController::class,'empdashboard'])->middleware(['auth','checkdata'])->name('dashboard');
+
+Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata'])->group(function(){
     // ----------------------leave emloyees route------------------------
     route::get('employees/leave',[LeaveController::class,'leave'])->name('leave');
     Route::get('employees/add/leave',[LeaveController::class,'leaveadd'])->name('add.leave');
