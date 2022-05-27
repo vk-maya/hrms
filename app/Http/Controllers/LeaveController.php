@@ -23,13 +23,13 @@ class LeaveController extends Controller
     }
     public function storeleave(Request $request){
         $rules = [
-            'day' => ['required', 'string'],   
             'type_id' => ['required', 'integer'],   
             'from' => ['required', 'date'],   
             'to' => ['required', 'date'],   
             'reason' => ['required', 'string'],
         ];
         $request->validate($rules);
+        // dd($request->toArray());
         $data = new Leave();
         $data->user_id =$request->user_id;
         $data->leaves_id =$request->type_id;
@@ -52,7 +52,7 @@ class LeaveController extends Controller
     public function leavetype(Request $request){
         $rules = [
             'day' => ['required', 'string'],   
-
+            
         ];
         $request->validate($rules);
         $data = new settingleave();

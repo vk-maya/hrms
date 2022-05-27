@@ -44,7 +44,7 @@
                                         <div class="leave-left">
                                             <div class="input-box">
                                                 <div class="form-group">
-                                                    <input type="hidden" name="type" value="Annual">
+                                                    <input type="hidden" name="type"value="Annual">
                                                     <label>Days</label>
                                                     <input type="number" name="day" class="form-control" disabled>
                                                     @error('day')

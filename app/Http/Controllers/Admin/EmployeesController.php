@@ -286,7 +286,6 @@ class EmployeesController extends Controller
             $file = $request->file('image')->storeAs('public/uploads', $filename);
             $employees->image = $filename;
         }
-
         $employees->save();
         return redirect('/');
     }
