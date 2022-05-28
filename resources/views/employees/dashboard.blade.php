@@ -7,7 +7,7 @@
                     <div class="welcome-box">
                         <div class="welcome-img">
                             <a href="{{route('employees.add.moreinfo')}}">
-                            <img alt="" src="@if(Auth::guard('web')->user()->image != NULL){{ asset('storage/uploads/' . Auth::guard('web')->user()->image) }}@else{{ asset('storage/uploads/avtar.jpg')}}@endif">
+                            <img alt="" src="@if(Auth::guard('web')->user()->image != NULL){{ asset('storage/uploads/' . Auth::guard('web')->user()->image) }}@else{{ asset('assets/img/avtar.jpg')}}@endif">
                         </a>
                         </div>
                         <div class="welcome-det">

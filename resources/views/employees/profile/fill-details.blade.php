@@ -115,7 +115,7 @@
                 <li class="nav-item dropdown has-arrow main-drop">
                     <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
                         <span class="user-img"><img
-                                src="@if(Auth::guard('web')->user()->image!= NULL){{ asset('storage/uploads/' . Auth::guard('web')->user()->image) }}@else{{ asset('storage/uploads/avtar.jpg')}}@endif" alt="">
+                                src="@if(Auth::guard('web')->user()->image!= NULL){{ asset('storage/uploads/' . Auth::guard('web')->user()->image) }}@else{{ asset('assets/img/avtar.jpg')}}@endif" alt="">
                             <span class="status online"></span></span>
                         <span> {{ Auth::guard('web')->user()->name }}</span>
                     </a>

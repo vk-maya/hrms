@@ -75,7 +75,7 @@
                                             <td>
                                                 <h2 class="table-avatar">
                                                     <a href="{{route('admin.employees.profile',$item->id)}}" class="avatar"> <img
-                                                            src="@if($item->image != NULL){{ asset('storage/uploads/' . $item->image) }}@else{{ asset('storage/uploads/avtar.jpg')}}@endif" alt="Employees Image"></a>
+                                                            src="@if($item->image != NULL){{ asset('storage/uploads/' . $item->image) }}@else{{ asset('assets/img/avtar.jpg')}}@endif" alt="Employees Image"></a>
                                                     <a href="{{route('admin.employees.profile',$item->id)}}"><b>{{ $item->name }}</b>
                                                         <span>{{ $item->designation->designation_name }}</span></a>
                                                 </h2>
@@ -114,7 +114,7 @@
                                 <div class="profile-img">
                                     <a href="{{route('admin.employees.profile',$item->id)}}">
                                     <span class="avatar">
-                                        <img src="@if($item->image != NULL){{ asset('storage/uploads/' . $item->image) }}@else{{ asset('storage/uploads/avtar.jpg')}}@endif"></span></a>
+                                        <img src="@if($item->image != NULL){{ asset('storage/uploads/' . $item->image) }}@else{{ asset('assets/img/avtar.jpg')}}@endif"></span></a>
                                 </div>
                                 <div class="dropdown profile-action">
                                     <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"

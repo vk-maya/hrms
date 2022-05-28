@@ -45,10 +45,10 @@
             <a class="nav-link disabled">
                 <img src="{{ asset('assets/img/flags/us.png') }}" alt="" height="20"> <span>India</span>
             </a>
-            {{-- @if($employees->image != NULL){{ asset('storage/uploads/' . $employees->image) }}@else{{ asset('storage/uploads/avtar.jpg')}}@endif"        </li> --}}
+            {{-- @if($employees->image != NULL){{ asset('storage/uploads/' . $employees->image) }}@else{{ asset('assets/img/avtar.jpg')}}@endif"        </li> --}}
         <li class="nav-item dropdown has-arrow main-drop">
             <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
-                <span class="user-img"><img src="@if(Auth::guard('web')->user()->image != NULL){{ asset('storage/uploads/' . Auth::guard('web')->user()->image) }}@else{{ asset('storage/uploads/avtar.jpg')}}@endif" alt="">
+                <span class="user-img"><img src="@if(Auth::guard('web')->user()->image != NULL){{ asset('storage/uploads/' . Auth::guard('web')->user()->image) }}@else{{ asset('assets/img/avtar.jpg')}}@endif" alt="">
                     <span class="status online"></span></span>
                 <span> {{ Auth::guard('web')->user()->name }}</span>
             </a>

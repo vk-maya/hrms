@@ -35,7 +35,7 @@
                             <div class="profile-img-wrap">
                                 <div class="profile-img">
                                     <a href="#"><img alt=""
-                                            src="@if ($employees->image != null) {{ asset('storage/uploads/' . $employees->image) }}@else{{ asset('storage/uploads/avtar.jpg') }} @endif"></a>
+                                            src="@if ($employees->image != null) {{ asset('storage/uploads/' . $employees->image) }}@else{{ asset('assets/img/avtar.jpg') }} @endif"></a>
                                 </div>
                             </div>
                             <div class="profile-basic">
