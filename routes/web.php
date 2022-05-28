@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 use App\Http\Controllers\Admin\EmployeesController;
 use App\Http\Controllers\Admin\DerpartmentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Employees\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,13 +32,12 @@ require __DIR__ . '/admin_auth.php';
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-Route::get('/fill/UserData',[EmployeesController::class,'fill'])->middleware('guest:web')->name('fill.data');
-Route::post('fill/Userstore', [EmployeesController::class, 'fillstore'])->name('fill.data.store');
-Route::post('country', [EmployeesController::class, 'country'])->name('state.name');
-Route::post('state', [EmployeesController::class, 'state'])->name('state.city.name');
-
-Route::get('/',[HomeController::class,'empdashboard'])->middleware(['auth','checkdata'])->name('empdashboard');
-Route::get('/dashboard',[HomeController::class,'empdashboard'])->middleware(['auth','checkdata'])->name('dashboard');
+Route::get('/fill/UserData',[UserController::class,'fill'])->middleware('auth')->name('fill.data');
+Route::post('fill/Userstore', [UserController::class, 'fillstore'])->middleware('auth')->name('fill.data.store');
+Route::post('country', [UserController::class, 'country'])->name('state.name');
+Route::post('state', [UserController::class, 'state'])->name('state.city.name');
+Route::get('/',[UserController::class,'empdashboard'])->middleware(['auth','checkdata'])->name('empdashboard');
+Route::get('/dashboard',[UserController::class,'empdashboard'])->middleware(['auth','checkdata'])->name('dashboard');
 
 Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata'])->group(function(){
     // ----------------------leave emloyees route------------------------
@@ -45,11 +45,11 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
     Route::get('employees/add/leave',[LeaveController::class,'leaveadd'])->name('add.leave');
     Route::post('employees/store/leave',[LeaveController::class,'storeleave'])->name('store.leave');
     // --------------------------Profile route ---------------------------
-    Route::get('profiles',[HomeController::class,'profile'])->name('profile');
-    Route::get('profiles/show',[HomeController::class,'profileinfo'])->name('add.moreinfo');
-    Route::any('More/info/show/',[HomeController::class,'profilemoreinfo'])->name('add.moreinfo.create');
-    Route::post('More/info/save/',[HomeController::class,'empmoreinfo'])->name('add.moreinfo.save');
-    Route::post('save-employees', [EmployeesController::class, 'proPassword'])->name('propassword');
+    Route::get('profiles',[UserController::class,'profile'])->name('profile');
+    Route::get('profiles/show',[UserController::class,'profileinfo'])->name('add.moreinfo');
+    Route::any('More/info/show/',[UserController::class,'profilemoreinfo'])->name('add.moreinfo.create');
+    Route::post('More/info/save/',[UserController::class,'empmoreinfo'])->name('add.moreinfo.save');
+    Route::post('save-employees', [UserController::class, 'proPassword'])->name('propassword');
     // ----------------task route employees---------------------------
     route::get('task',[Task::class,'task'])->name('task');
     route::post('task/status',[Task::class,'taskstatus'])->name('task.status');
