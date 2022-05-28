@@ -23,7 +23,7 @@ class LeaveController extends Controller
     }
     public function storeleave(Request $request){
         $rules = [
-            'type_id' => ['required', 'integer'],   
+            'type_id' => ['required', 'integer'],
             'from' => ['required', 'date'],   
             'to' => ['required', 'date'],   
             'reason' => ['required', 'string'],

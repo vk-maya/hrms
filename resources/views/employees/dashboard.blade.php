@@ -6,15 +6,18 @@
                 <div class="col-md-12">
                     <div class="welcome-box">
                         <div class="welcome-img">
-                            <img alt="" src="{{ asset('storage/uploads/' . Auth::guard('web')->user()->image) }}">
+                            <a href="{{route('employees.add.moreinfo')}}">
+                            <img alt="" src="@if(Auth::guard('web')->user()->image != NULL){{ asset('storage/uploads/' . Auth::guard('web')->user()->image) }}@else{{ asset('storage/uploads/avtar.jpg')}}@endif">
+                        </a>
                         </div>
                         <div class="welcome-det">
                             <h3>{{ Auth::guard('web')->user()->first_name }}</h3>
                             <p>{{ \Carbon\Carbon::now()->format('d-m-Y') }}</p>
                         </div>
                     </div>
-                </div>
+                </div>              
             </div>
+           
             @if (count($data->toArray()))
                 @php
                     $nowd = \Carbon\Carbon::now()->format('d/m/Y');

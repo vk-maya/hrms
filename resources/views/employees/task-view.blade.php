@@ -12,7 +12,7 @@
                     <div class="col">
                         <h3 class="page-title">Task-View</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active"> Daily Task-List</li>
                         </ul>
                     </div>
@@ -39,6 +39,5 @@
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script src="{{ asset('assets/js/ckeditor.js') }}"></script>
-    <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
-    
+    <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>    
 @endpush

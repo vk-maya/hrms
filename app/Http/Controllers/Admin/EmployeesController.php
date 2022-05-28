@@ -120,6 +120,8 @@ class EmployeesController extends Controller
     }
 
     public function addemployeesstore(Request $request){
+        // dd($request->toArray());
+
         if ($request->id == "") {
             $rules = [
                 'department_id' => ['required', 'string',],
@@ -225,7 +227,6 @@ class EmployeesController extends Controller
         $data->pan =$request->pan;
         $data->status =1;
         $data->save();
-        // return redirect()->back();
         return redirect()->route('admin.employees.profile',$request->user_id);
     }
     public function fill(){
@@ -237,12 +238,8 @@ class EmployeesController extends Controller
         
     }
     public function fillstore(Request $request){
+
         $rules = [
-            'department_id' => ['required', 'string',],
-            'designation_id' => ['required', 'string', 'numeric', 'max:255'],
-            'employeeID' => ['required', 'string', 'numeric'],
-            'joiningDate' => ['string', 'required'],
-            'email' => ['required', 'string', 'email', 'max:255'],
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'gender' => ['required', 'string'],
@@ -253,13 +250,11 @@ class EmployeesController extends Controller
             'state_id' => ['required', 'integer'],
             'city_id' => ['required', 'integer'],
             'pincode' => ['required', 'integer'],
-            'status' => ['required', 'integer'],
-            'workplace' => ['required', 'string'],
-        ];        
+           
+        ];
         $request->validate($rules);
-        // dd($request->toArray());
         $employees = User::find($request->id);           
-        $employees->verified =1;       
+        $employees->verified =1;
         $employees->first_name = $request->first_name;
         $employees->last_name = $request->last_name;
         $employees->gender = $request->gender;
@@ -267,17 +262,12 @@ class EmployeesController extends Controller
         $employees->email = $request->email;
         $employees->password = Hash::make($request->password);
         $employees->employeeID = $request->employeeID;
-        $employees->joiningDate = date('Y-m-d', strtotime($request->joiningDate));
         $employees->phone = $request->phone;
-        $employees->department_id = $request->department_id;
-        $employees->designation_id = $request->designation_id;
         $employees->address = $request->address;
         $employees->country_id = $request->country_id;
         $employees->state_id = $request->state_id;
         $employees->city_id = $request->city_id;
         $employees->pinCode = $request->pincode;
-        $employees->status = ($request->status == 1) ? 1 : 0;
-        $employees->workplace = $request->workplace;
         if ($request->hasFile('image') == 1) {
             storage::delete('public/uploads/' . $employees->image);
             $file = $request->file('image');
@@ -289,4 +279,6 @@ class EmployeesController extends Controller
         $employees->save();
         return redirect('/');
     }
+   
+    
 }

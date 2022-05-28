@@ -20,7 +20,7 @@ class CreateUserinfosTable extends Migration
             $table->string('maritalStatus')->nullable();
             $table->string('noOfChildren')->nullable();         
             $table->string('bankname')->nullable();
-            $table->integer('bankAc')->nullable();
+            $table->bigInteger('bankAc')->nullable();
             $table->string('ifsc')->nullable();
             $table->string('pan')->nullable();
             $table->integer('status')->nullable();

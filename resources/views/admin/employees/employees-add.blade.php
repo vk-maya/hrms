@@ -300,8 +300,8 @@
                                             <option value="" disabled selected> Select Department </option>
                                             @foreach ($department as $item)
                                                 <option @if (isset($employees) && $employees->department_id == $item->id) selected @endif
-                                                    value="{{ $item->id }} {{ old('department_id') }}">
-                                                    {{ $item->department_name }}
+                                                    value="{{$item->id}}">
+                                                    {{$item->department_name}}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -311,7 +311,7 @@
                                             @enderror
                                         </span>
                                         @isset($employees)
-                                            <input type="hidden" value="{{ $employees->designation_id }}"
+                                            <input type="hidden" value="{{$employees->designation_id}}"
                                                 id="editdesignation">
                                         @endisset
                                     </div>
@@ -395,7 +395,7 @@
                                 </div>
                                 @isset($employees)
                                     <div class="profile-img">
-                                        <a href="" class="">
+                                        <a href="" class="avatar">
                                             <img src="{{ asset('storage/uploads/' . $employees->image) }}" alt=""></a>
                                     </div>
                                 @endisset

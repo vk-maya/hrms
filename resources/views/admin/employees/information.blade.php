@@ -22,19 +22,22 @@
                                     <h4 class="modal-title">Personal Information</h4>
                                 </div>
                                 <div class="card-body">
-                                    <form action="{{route('admin.employees.info')}}" method="POST">
+                                    <form action="{{ route('admin.employees.info') }}" method="POST">
                                         @csrf
-                                        @isset($data)<input type="hidden" name="id" value="{{$data->id}}">
+                                        @isset($data)
+                                            <input type="hidden" name="id" value="{{ $data->id }}">
                                         @endisset
-                                        <input type="hidden" name="user_id" value="{{$id}}">
+                                        <input type="hidden" name="user_id" value="{{ $id }}">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Nationality</label>
                                                     <select class="select form-control" name="nationality">
                                                         <option value="">Select-Nationality</option>
-                                                        <option @if(isset($data)&& $data->nationality=="indian") selected @endif value="indian">Indian</option>
-                                                        <option @if(isset($data)&& $data->nationality=="other") selected @endif value="other">Other</option>
+                                                        <option @if (isset($data) && $data->nationality == 'indian') selected @endif
+                                                            value="indian">Indian</option>
+                                                        <option @if (isset($data) && $data->nationality == 'other') selected @endif
+                                                            value="other">Other</option>
                                                     </select>
                                                     <span class="text-danger">
                                                         @error('nationality')
@@ -48,8 +51,10 @@
                                                     <label>Marital status <span class="text-danger">*</span></label>
                                                     <select class="select form-control" name="maritalstatus">
                                                         <option value="">-</option>
-                                                        <option @if(isset($data)&& $data->maritalStatus=="single") selected @endif value="single">Single</option>
-                                                        <option @if(isset($data)&& $data->maritalStatus=="married") selected @endif value="married">Married</option>
+                                                        <option @if (isset($data) && $data->maritalStatus == 'single') selected @endif
+                                                            value="single">Single</option>
+                                                        <option @if (isset($data) && $data->maritalStatus == 'married') selected @endif
+                                                            value="married">Married</option>
                                                     </select>
                                                     <span class="text-danger">
                                                         @error('maritalstatus')
@@ -61,10 +66,11 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>No. of children</label>
-                                                    <input class="form-control" name="children" type="number" value="@isset($data){{$data->noOfChildren}}@else{{old('children')}}@endisset">
+                                                    <input class="form-control" name="children" type="number"
+                                                        value="@isset($data) {{ $data->noOfChildren }}@else{{ old('children') }} @endisset">
                                                     <span class="text-danger">
                                                         @error('children')
-                                                            <p>children  field is required.</p>
+                                                            <p>children field is required.</p>
                                                         @enderror
                                                     </span>
                                                 </div>
@@ -74,7 +80,8 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Bank Name <span class="text-danger">*</span></label>
-                                                    <input class="form-control" name="bankname" type="text" value="@isset($data){{$data->bankname}}@else{{old('bankname')}}@endisset">
+                                                    <input class="form-control" name="bankname" type="text"
+                                                        value="@isset($data) {{ $data->bankname }}@else{{ old('bankname') }} @endisset">
                                                     <span class="text-danger">
                                                         @error('bankname')
                                                             <p>Bank Name field is required.</p>
@@ -86,7 +93,8 @@
                                                 <div class="form-group">
                                                     <label>Bank account No.</label>
                                                     <div>
-                                                        <input name="bankAc" class="form-control" type="text" value="@isset($data){{$data->bankAc}}@else{{old('bankAc')}}@endisset">
+                                                        <input name="bankAc" class="form-control" type="text"
+                                                            value="@isset($data) {{ $data->bankAc }}@else{{ old('bankAc') }} @endisset">
                                                         <span class="text-danger">
                                                             @error('bankAc')
                                                                 <p>Bank A/c field is required.</p>
@@ -98,7 +106,8 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>IFSC Code</label>
-                                                    <input name="ifsc" class="form-control" type="text" value="@isset($data){{$data->ifsc}}@else{{old('ifsc')}}@endisset">
+                                                    <input name="ifsc" class="form-control" type="text"
+                                                        value="@isset($data) {{ $data->ifsc }}@else{{ old('ifsc') }} @endisset">
                                                     <span class="text-danger">
                                                         @error('ifsc')
                                                             <p>IFSC Code field is required.</p>
@@ -109,7 +118,8 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Pan Number</label>
-                                                    <input name="pan" class="form-control" type="text" value="@isset($data){{$data->pan}}@else{{old('pan')}}@endisset">
+                                                    <input name="pan" class="form-control" type="text"
+                                                        value="@isset($data) {{ $data->pan }}@else{{ old('pan') }} @endisset">
                                                     <span class="text-danger">
                                                         @error('pan')
                                                             <p>Pan Number field is required.</p>
@@ -129,11 +139,12 @@
                 </div>
             </div>
         </div>
-    @endsection
-    @push('plugin-js')
-        <script src="{{ asset('assets/js/select2.min.js') }}"></script>
-        <script src="{{ asset('assets/js/moment.min.js') }}"></script>
-        <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-        <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
-        <script></script>
-    @endpush
+    </div>
+@endsection
+@push('plugin-js')
+    <script src="{{ asset('assets/js/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/js/moment.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
+    <script></script>
+@endpush

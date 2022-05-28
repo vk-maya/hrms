@@ -45,17 +45,16 @@
             <a class="nav-link disabled">
                 <img src="{{ asset('assets/img/flags/us.png') }}" alt="" height="20"> <span>India</span>
             </a>
-           
-        </li>
+            {{-- @if($employees->image != NULL){{ asset('storage/uploads/' . $employees->image) }}@else{{ asset('storage/uploads/avtar.jpg')}}@endif"        </li> --}}
         <li class="nav-item dropdown has-arrow main-drop">
             <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
-                <span class="user-img"><img
-                        src="{{ asset('storage/uploads/' . Auth::guard('web')->user()->image) }}" alt="">
+                <span class="user-img"><img src="@if(Auth::guard('web')->user()->image != NULL){{ asset('storage/uploads/' . Auth::guard('web')->user()->image) }}@else{{ asset('storage/uploads/avtar.jpg')}}@endif" alt="">
                     <span class="status online"></span></span>
                 <span> {{ Auth::guard('web')->user()->name }}</span>
             </a>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="{{route('employees.profile')}}">My Profile</a>
+                <a class="dropdown-item" href="{{route('employees.profile')}}">Password</a>
+                <a class="dropdown-item" href="{{route('employees.add.moreinfo')}}">My Profile</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button class=" dropdown-item" type="submit">
@@ -64,14 +63,5 @@
                     </form>              
             </div>
         </li>
-    </ul>
-    <div class="dropdown mobile-user-menu">
-        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i
-                class="fa fa-ellipsis-v"></i></a>
-        <div class="dropdown-menu dropdown-menu-right">
-            <a class="dropdown-item" href="profile.html">My Profile</a>
-            <a class="dropdown-item" href="settings.html">Settings</a>
-            <a class="dropdown-item" href="index.html">Logout</a>
-        </div>
-    </div>
+    </ul>   
 </div>

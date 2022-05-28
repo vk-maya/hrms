@@ -12,7 +12,7 @@
                     <div class="col">
                         <h3 class="page-title">Add Task</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Add Daily Task</li>
                         </ul>
                     </div>
