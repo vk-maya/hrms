@@ -26,7 +26,16 @@
                             class="menu-arrow"></span></a>
                     <ul style="display: none;">
                         {{-- <li><a href="{{route('employees.task')}}">Tasks</a></li> --}}
-                        <li><a class="@if(\Request::route()->getName() == 'employees.daily.task') active @endif" href="{{route('employees.daily.task')}}">Daily Task</a></li>
+                        @php
+                        $date = now();
+                               $task = \App\Models\DailyTasks::where('user_id',Auth::guard('web')->user()->id)->whereDate('post_date', date('Y-m-d', strtotime($date)))->count();
+                        @endphp
+                        @if($task<2)
+                            <li><a class="@if(\Request::route()->getName() == 'employees.daily.task') active @endif" href="{{route('employees.daily.task')}}">Daily Task</a></li>
+                        @else
+                            <li><a disabled>Daily Task</a></li>
+                        @endif
+                    
                         <li><a class="@if(\Request::route()->getName() == 'employees.show-list') active @endif" href="{{route('employees.show-list')}}">List Task</a></li>
                     </ul>
                 </li>

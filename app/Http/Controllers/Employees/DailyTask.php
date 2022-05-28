@@ -10,12 +10,25 @@ use Illuminate\Support\Facades\Auth;
 class DailyTask extends Controller
 {
  public function dailytask (){
+     $date = now();
+     $task = DailyTasks::where('user_id',Auth::guard('web')->user()->id)->whereDate('post_date', date('Y-m-d', strtotime($date)))->count();
+    if($task<2){
+        $limit = DailyTasks::where('post_date',date('Y-m-d', strtotime($date)))->count();
+
+    }else{
+        return redirect()->back();
+    }
 
     return view('employees.dailytask');
  }
  public function showtaskk($id){
-    $dalilydata = DailyTasks::find($id);
-    return view('employees.task-view',compact('dalilydata'));
+     $task = DailyTasks::find($id);
+     if($task->user_id==Auth::guard('web')->user()->id){
+         $dalilydata = DailyTasks::find($id);
+         return view('employees.task-view',compact('dalilydata'));
+     }else{
+         return redirect()->back();
+     }
 }
 public function dailystore(Request $request){
     // dd($request->toArray());
