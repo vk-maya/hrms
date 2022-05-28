@@ -10,5 +10,7 @@ class DailyTasks extends Model
     use HasFactory;
 
     public $table = 'daily_tasks';
-
+public function limitdate(){
+    return $this->hasMany(user::class,'id','user_id');
+}
 }

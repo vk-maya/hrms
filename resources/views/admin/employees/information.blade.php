@@ -62,12 +62,12 @@
                                                         @enderror
                                                     </span>
                                                 </div>
-                                            </div>
+                                            </div>{{$data}}
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>No. of children</label>
                                                     <input class="form-control" name="children" type="number"
-                                                        value="@isset($data) {{ $data->noOfChildren }}@else{{ old('children') }} @endisset">
+                                                        value="@isset($data){{ $data->noOfChildren}}@else{{old('children')}}@endisset">
                                                     <span class="text-danger">
                                                         @error('children')
                                                             <p>children field is required.</p>
@@ -81,7 +81,7 @@
                                                 <div class="form-group">
                                                     <label>Bank Name <span class="text-danger">*</span></label>
                                                     <input class="form-control" name="bankname" type="text"
-                                                        value="@isset($data) {{ $data->bankname }}@else{{ old('bankname') }} @endisset">
+                                                        value="@isset($data){{$data->bankname}}@else{{old('bankname')}}@endisset">
                                                     <span class="text-danger">
                                                         @error('bankname')
                                                             <p>Bank Name field is required.</p>

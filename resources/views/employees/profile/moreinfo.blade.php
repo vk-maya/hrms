@@ -15,8 +15,7 @@
                         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
                         <li class="breadcrumb-item active">More Information</li>
                     </ul>
-                </div>
-                {{-- {{$data}} --}}
+                </div>            
                 <div>
                     <div class="mt-5">
                         <div class="modal-content">
