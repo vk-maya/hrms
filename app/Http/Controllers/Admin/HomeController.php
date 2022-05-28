@@ -36,7 +36,7 @@ class HomeController extends Controller
     }
     public function profile(){
         return view('employees.profile.profile-password');
-    } 
+    }
     public function profileinfo(){
         $moreinfo = userinfo::where('user_id',Auth::guard('web')->user()->id)->count();
         $employees = User::with('moreinfo')->find(Auth::guard('web')->user()->id);
@@ -50,7 +50,8 @@ class HomeController extends Controller
         }else{
             return view('employees.profile.moreinfo');
         }
-        }
+    }
+
     public function empmoreinfo(Request $request){
         // dd($request->toArray());
         $rules = [
