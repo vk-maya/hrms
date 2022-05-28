@@ -45,14 +45,12 @@ class EmployeesController extends Controller
     }
 
     // ------------------------------state and city ajax------
-    public function country(Request $request)
-    {
+    public function country(Request $request){
         $state = State::where('country_id', $request->contid)->get();
         return response()->json(['state' => $state]);
     }
 
-    public function state(Request $request)
-    {
+    public function state(Request $request){
         $data = City::where('state_id', $request->id)->get();
         return response()->json(['city' => $data]);
     }
@@ -106,18 +104,7 @@ class EmployeesController extends Controller
             return view('admin.employees.employees-add', compact('department', 'count', 'empid'));
         }
     }
-    public function proPassword(Request $request){
-        // dd($request->toArray());
-        $rules=[
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ];
-        $request->validate($rules);
-        $employees = User::find($request->id);
-        $employees->password = Hash::make($request->password);
-        // dd($employees->toArray());
-        $employees->update();
-        return redirect()->route('dashboard');
-    }
+
 
     public function addemployeesstore(Request $request){
         // dd($request->toArray());
@@ -229,56 +216,7 @@ class EmployeesController extends Controller
         $data->save();
         return redirect()->route('admin.employees.profile',$request->user_id);
     }
-    public function fill(){
-        $id = Auth::guard('web')->user()->id;
-            $employees = User::find($id);
-            $department = Department::get();
-            $count = Countries::all();
-            return view('employees.profile.fill-details', compact('department', 'employees', 'count'));        
-        
-    }
-    public function fillstore(Request $request){
 
-        $rules = [
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'gender' => ['required', 'string'],
-            'dob' => ['required', 'date'],
-            'phone' => ['required', 'integer'],
-            'address' => ['required', 'string', 'max:255'],
-            'country_id' => ['required', 'integer'],
-            'state_id' => ['required', 'integer'],
-            'city_id' => ['required', 'integer'],
-            'pincode' => ['required', 'integer'],
-           
-        ];
-        $request->validate($rules);
-        $employees = User::find($request->id);           
-        $employees->verified =1;
-        $employees->first_name = $request->first_name;
-        $employees->last_name = $request->last_name;
-        $employees->gender = $request->gender;
-        $employees->dob = date('Y-m-d', strtotime($request->dob));
-        $employees->email = $request->email;
-        $employees->password = Hash::make($request->password);
-        $employees->employeeID = $request->employeeID;
-        $employees->phone = $request->phone;
-        $employees->address = $request->address;
-        $employees->country_id = $request->country_id;
-        $employees->state_id = $request->state_id;
-        $employees->city_id = $request->city_id;
-        $employees->pinCode = $request->pincode;
-        if ($request->hasFile('image') == 1) {
-            storage::delete('public/uploads/' . $employees->image);
-            $file = $request->file('image');
-            $ext = $file->getClientOriginalExtension();
-            $filename = "sdc" . str_replace(' ', '', $request->name) . rand(0, 10000) . "." . $ext;
-            $file = $request->file('image')->storeAs('public/uploads', $filename);
-            $employees->image = $filename;
-        }
-        $employees->save();
-        return redirect('/');
-    }
    
     
 }
