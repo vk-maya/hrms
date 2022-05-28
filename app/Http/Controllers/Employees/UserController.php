@@ -71,7 +71,6 @@ class UserController extends Controller
         $request->validate($rules);
         $employees = User::find($request->id);
         $employees->password = Hash::make($request->password);
-        // dd($employees->toArray());
         $employees->update();
         return redirect()->route('dashboard');
     }
@@ -111,7 +110,6 @@ class UserController extends Controller
         $employees->gender = $request->gender;
         $employees->dob = date('Y-m-d', strtotime($request->dob));
         $employees->email = $request->email;
-        $employees->password = Hash::make($request->password);
         $employees->employeeID = $request->employeeID;
         $employees->phone = $request->phone;
         $employees->address = $request->address;
