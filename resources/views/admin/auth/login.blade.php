@@ -25,7 +25,7 @@
                             <div class="form-group">
                                 <label>Email Address</label>
                                 <input class="form-control" name="email" type="text" value="{{ old('email') }}">
-                             
+
                             </div>
                             <div class="form-group">
                                 <div class="row">
@@ -34,8 +34,8 @@
                                     </div>
                                 </div>
                                 <div class="position-relative">
-                                    <input class="form-control" type="password" name="password" value="" id="password">
-                                    <span class="fa fa-eye-slash" id="toggle-password"></span>                                
+                                    <input class="form-control" type="password" name="password" id="password">
+                                    <span class="fa fa-eye-slash" id="toggle-password"></span>
                                 </div>
                             </div>
                             <div class="form-group text-center">
