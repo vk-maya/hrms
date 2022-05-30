@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\EmployeesController;
 use App\Http\Controllers\Admin\DerpartmentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Employees\UserController;
+use App\Http\Controllers\Admin\AdminLeaveController;
 
 /*
 |--------------------------------------------------------------------------
@@ -95,11 +96,15 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::get('employees/delete/{id}', [EmployeesController::class, 'employeesdestroy'])->name('employees.delete');
 
     // ---------------------------leave route----------------------------------
-    Route::get('setting/leave',[LeaveController::class,'leavesetting'])->name('leave.setting');
-    Route::post('leave/type',[LeaveController::class,'leavetype'])->name('leave.type');
-    Route::post('leave/type/sick',[LeaveController::class,'leavetype'])->name('leave.type.sick');
-    Route::get('leave/list',[LeaveController::class,'leavelist'])->name('leave.list');
-    Route::post('leave/report/{id}',[LeaveController::class,'leavereport'])->name('leave.report');
+    Route::get('setting/leave',[AdminLeaveController::class,'leavesetting'])->name('leave.setting');
+    Route::post('leave/type',[AdminLeaveController::class,'leavetype'])->name('leave.type');
+    Route::post('leave/type/sick',[AdminLeaveController::class,'leavetype'])->name('leave.type.sick');
+    Route::get('leave/list',[AdminLeaveController::class,'leavelist'])->name('leave.list');
+    Route::post('leave/report/{id}',[AdminLeaveController::class,'leavereport'])->name('leave.report');
+    Route::get('holiday',[AdminLeaveController::class,'holidays'])->name('holidays');
+    Route::post('holiday',[AdminLeaveController::class,'holidayStore'])->name('holiday');
+    Route::any('holiday/edit/{id}',[AdminLeaveController::class,'holidays'])->name('holiday.edit');
+    Route::any('holiday/delete/{id}',[AdminLeaveController::class,'holidaydistroy'])->name('holiday.delete');
 
     // ---------------------client route-----------------------
     Route::get('client', [ClientController::class, 'index'])->name('client');
