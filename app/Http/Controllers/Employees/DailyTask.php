@@ -36,6 +36,11 @@ public function dailystore(Request $request){
         'description'=> 'required',
         'title'=> 'required',
     ]);
+    $date = date('Y-m-d', strtotime($request->post_date)) ;
+    $nowdate =date('Y-m-d', strtotime(now()));
+    if($date!=$nowdate){
+        return back()->withErrors(["from" => "Please Select From date"])->withInput();
+    }
     $data = new DailyTasks();
     $data->user_id =$request->user_id;
     $data->description = $request->description;

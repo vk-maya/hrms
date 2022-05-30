@@ -47,7 +47,7 @@
                                     <div class="form-group">
                                         <label>From <span class="text-danger">*</span></label>
                                         <div class="">
-                                            <input class="form-control" name="from" type="date">
+                                            <input class="form-control" name="from" type="date" min="{{date('Y-m-d')}}">
                                             @error('from')
                                             <span class="text-danger">
                                                 <strong>{{ $message }}</strong>
@@ -61,7 +61,7 @@
                                     <div class="form-group">
                                         <label>To <span class="text-danger">*</span></label>
                                         <div class="">
-                                            <input class="form-control " name="to" type="date">
+                                            <input class="form-control " name="to" type="date" min="{{date('Y-m-d')}}">
                                             @error('to')
                                             <span class="text-danger">
                                                 <strong>{{ $message }}</strong>

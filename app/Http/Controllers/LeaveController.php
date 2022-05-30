@@ -22,18 +22,27 @@ class LeaveController extends Controller
         return view('employees.leave.add-leave',compact('data'));
     }
     public function storeleave(Request $request){
+        // dd($request->from);
         $rules = [
             'type_id' => ['required', 'integer'],
             'from' => ['required', 'date'],   
             'to' => ['required', 'date'],   
             'reason' => ['required', 'string'],
         ];
+        $date = date('Y-m-d', strtotime($request->from)) ;
+        $nowdate =date('Y-m-d', strtotime(now()));
+        if($date<=$nowdate){
+            return back()->withErrors(["from" => "Please Select From date"])->withInput();
+        }
+        if( date('Y-m-d', strtotime($request->to)) < $date){
+            return back()->withErrors(["to" => "Please Select to date"])->withInput();
+        }
         $request->validate($rules);
-        // dd($request->toArray());
+        dd($request->toArray());
         $data = new Leave();
         $data->user_id =$request->user_id;
         $data->leaves_id =$request->type_id;
-        $data->form =date('Y-m-d', strtotime($request->from));
+        $data->form = date('Y-m-d', strtotime($request->from));
         $data->to = date('Y-m-d', strtotime($request->to));
         $data->reason = $request->reason;
         $data->status = "";
@@ -46,7 +55,6 @@ class LeaveController extends Controller
     }
     public function leavelist(){
         $data = Leave::with('user')->latest()->get();
-        // dd($data->toArray());
         return view('admin.leave.leave',compact('data'));
     }
     public function leavetype(Request $request){
