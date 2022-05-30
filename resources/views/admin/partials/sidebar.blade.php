@@ -49,6 +49,7 @@
 									class="menu-arrow"></span></a>
 							<ul style="display: none;">
 								<li><a class="@if(\Request::route()->getName() == 'admin.employees') active @endif" href="{{route('admin.employees')}}">All Employees</a></li>
+								<li><a class="@if(\Request::route()->getName() == 'admin.holidays') active @endif" href="{{route('admin.holidays')}}">Holiday</a></li>
 								<li><a class="@if(\Request::route()->getName() == 'admin.leave.setting') active @endif" href="{{route('admin.leave.setting')}}">Leave Settings</a></li>
 								<li><a class="@if(\Request::route()->getName() == 'admin.leave.list') active @endif" href="{{route('admin.leave.list')}}">Leave</a></li>
 							</ul>

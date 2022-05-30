@@ -55,7 +55,6 @@
                                         @enderror
                                         </div> 
                                     </div>
-
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -68,9 +67,9 @@
                                             </span>
                                         @enderror
                                         </div>
-                                    </div>   
-                                </div> 
-                             </div>      
+                                    </div>
+                                </div>
+                             </div>
                             <div class="form-group">
                                 <label>Leave Reason <span class="text-danger">*</span></label>
                                 <textarea name="reason" rows="4" class="form-control"></textarea>
