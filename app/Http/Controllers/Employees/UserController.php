@@ -65,7 +65,6 @@ class UserController extends Controller
         return redirect()->route('employees.add.moreinfo');
     }
     public function proPassword(Request $request){
-        // dd($request->toArray());
         $rules=[
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ];

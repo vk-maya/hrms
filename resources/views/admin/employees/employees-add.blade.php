@@ -153,7 +153,7 @@
                                 <div class="col-sm-6">
                                     <label class="col-form-label" for="emp">Employee ID</label>
                                     <div class="input-group">
-                                        <span class="input-group-text" id="inputGroupPrepend">SDC-EMP-</span>
+                                        <span class="input-group-text" id="inputGroupPrepend">SDPL-JAI-</span>
                                         <input type="text" readonly class="form-control" name="employeeID" id="emp"
                                             value="@if(isset($employees)){{ $employees->employeeID }}@else{{$empid }}@endif">
                                     </div>
@@ -162,7 +162,36 @@
                                             <p>Employee ID field is required.</p>
                                         @enderror
                                     </span>
+                                    
                                     <div id="empt">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="col-form-label" for="machine">Machine ID</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="inputGroupPrepend">Mac-ID-</span>
+                                        <input type="text"  class="form-control" name="machineID" id="machine"
+                                            value="@if(isset($employees)){{ $employees->machineID }}@endif" placeholder="Enter Machine Id">
+                                    </div>
+                                    <span class="text-danger">
+                                        @error('employeeID')
+                                            <p>Employee ID field is required.</p>
+                                        @enderror
+                                    </span>
+                                    <div id="empt">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label">Phone </label>
+                                        <input class="form-control phone" name="phone" type="text" maxlength="10"
+                                            pattern="[1-9]{1}[0-9]{9}"
+                                            value="@if(isset($employees)){{ $employees->phone}}@else{{old('phone') }}@endif">
+                                            <span class="text-danger">
+                                                @error('phone')
+                                                    <p>Phone field is required.</p>
+                                                @enderror
+                                            </span>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -180,6 +209,7 @@
                                     <div id="emailerror">
                                     </div>
                                 </div>
+                             
                                 <div class="col-sm-6">
                                     <div class="position-relative">
                                         <label class="col-form-label">Password</label>                                      
@@ -194,6 +224,7 @@
                                         </span>
                                     </div>
                                 </div>
+                              
                                 <div class="col-sm-6">
                                     <div class="position-relative">
                                         <label class="col-form-label">Confirm Password</label>
@@ -201,19 +232,7 @@
 
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="col-form-label">Phone </label>
-                                        <input class="form-control phone" name="phone" type="text" maxlength="10"
-                                            pattern="[1-9]{1}[0-9]{9}"
-                                            value="@if(isset($employees)){{ $employees->phone}}@else{{old('phone') }}@endif">
-                                            <span class="text-danger">
-                                                @error('phone')
-                                                    <p>Phone field is required.</p>
-                                                @enderror
-                                            </span>
-                                    </div>
-                                </div>
+                               
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Address</label>
@@ -291,6 +310,21 @@
                                         </span>
                                     </div>
                                 </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label">Joining Date <span
+                                                class="text-danger">*</span></label>
+                                        <div class="">
+                                            <input name="joiningDate"
+                                                class="form-control" type="date" value="@if(isset($employees)){{$employees->joiningDate}}@endif">
+                                                        <span class="text-danger">
+                                            @error('joiningDate')
+                                                <p>Joining Date field is required.</p>
+                                            @enderror
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Department <span
@@ -330,21 +364,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="col-form-label">Joining Date <span
-                                                class="text-danger">*</span></label>
-                                        <div class="">
-                                            <input name="joiningDate"
-                                                class="form-control" type="date" value="@if(isset($employees)){{$employees->joiningDate}}@endif">
-                                                        <span class="text-danger">
-                                            @error('joiningDate')
-                                                <p>Joining Date field is required.</p>
-                                            @enderror
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
+                             
                                 <div class="col-sm-6">
                                     <label for="statusinput" class="mb-4">Status</label>
                                     <div class="col-md-12">
@@ -393,7 +413,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                @isset($employees)
+                                @if(isset($employees)&& $employees->image !='')
                                     <div class="profile-img">
                                         <a href="" class="avatar">
                                             <img src="{{ asset('storage/uploads/' . $employees->image) }}" alt=""></a>
@@ -418,7 +438,6 @@
             </div>
         </div>
     </div>
-    {{-- {{$state}} --}}
 @endsection
 @push('plugin-js')
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
