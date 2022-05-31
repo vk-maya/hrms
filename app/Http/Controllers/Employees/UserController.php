@@ -13,6 +13,7 @@ use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 use App\Http\Controllers\Controller;
+use App\Models\Holiday;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -75,9 +76,9 @@ class UserController extends Controller
         return redirect()->route('dashboard');
     }
     public function empdashboard(){
-        $data = DailyTasks::where('user_id', Auth::guard('web')->user()->id)->latest()->take(1)->get();
-        return view('employees.dashboard',compact('data'));
-        // dd($data);
+        $data = DailyTasks::where('user_id', Auth::guard('web')->user()->id)->where('post_date','>=',now()->toDateString())->count();
+        $holi= Holiday::where('date','>',now()->toDateString())->first();
+        return view('employees.dashboard',compact('data','holi'));
     }
     public function fill(){
         $id = Auth::guard('web')->user()->id;

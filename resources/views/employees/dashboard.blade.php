@@ -16,22 +16,15 @@
                         </div>
                     </div>
                 </div>              
-            </div>
-           
-            @if (count($data->toArray()))
-                @php
-                    $nowd = \Carbon\Carbon::now()->format('d/m/Y');
-                    $postdate = $data[0]->orderBy('post_date', 'desc')->first()->post_date;
-                    $pdate = \Carbon\Carbon::parse($postdate)->format('d/m/Y');
-                @endphp
-            @endif
+            </div>           
+         
             <div class="row">
                 <div class="col-lg-8 col-md-8">
                     <section class="dash-section">
                         <h1 class="dash-sec-title">Today</h1>
                         <div class="dash-sec-content">
                             <div class="dash-info-list">
-                                @if (count($data->toArray()) > 0 && $pdate == $nowd)
+                                @if ( $data> 0 )
                                     <span class="dash-card text-success">
                                         <div class="dash-card-container">
                                             <div class="dash-card-icon">
@@ -129,7 +122,8 @@
                         <h5 class="dash-title">Upcoming Holiday</h5>
                         <div class="card">
                             <div class="card-body text-center">
-                                <h4 class="holiday-title mb-0">Mon 20 May 2019 - Ramzan</h4>
+                                <h4 class="holiday-title mb-0"> <b>{{$holi->holidayName}}</b> {{\Carbon\Carbon::parse($holi->date)->format('d-m-Y')}} {{date("l",strtotime($holi->date))}}</h4>
+                            
                             </div>
                         </div>
                     </section>
@@ -137,6 +131,5 @@
             </div>
         </div>
     </div>
-
 </div>
 @endsection

@@ -16,7 +16,6 @@ class AdminLeaveController extends Controller
             $data = Holiday::all();
             return view('admin.leave.holiday',compact('holi','data'));
         }else{
-
             $data = Holiday::all();
             return view('admin.leave.holiday',compact('data'));
             
