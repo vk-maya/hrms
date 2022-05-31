@@ -136,8 +136,12 @@ class EmployeesController extends Controller
         $employees->gender = $request->gender;
         $employees->dob = date('Y-m-d', strtotime($request->dob));
         $employees->email = $request->email;
-        $employees->password = Hash::make($request->password);
         $employees->employeeID = $request->employeeID;
+        $employees->machineID = $request->machineID;
+        if($request->password != ''){
+
+            $employees->password = Hash::make($request->password);
+        }
         $employees->joiningDate = date('Y-m-d', strtotime($request->joiningDate));
         $employees->phone = $request->phone;
         $employees->department_id = $request->department_id;

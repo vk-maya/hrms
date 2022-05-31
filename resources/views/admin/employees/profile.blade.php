@@ -40,8 +40,8 @@
                                                     {{ $employees->profiledesignation->designation_name }}</h6>
                                                 <small
                                                     class="text-muted">{{ $employees->department->department_name }}</small>
-                                                <div class="staff-id">Employee ID : {{ $employees->employeeID }}
-                                                </div>
+                                                <div class="staff-id">Employee ID : {{ $employees->employeeID }}</div>
+                                                <div class="staff-id">Machine ID :@if(isset($employees)&& $employees->machineID != NULL){{ $employees->machineID }}@else NO @endif</div>
                                                 <div class="small doj text-muted">Date of Join :
                                                     {{ \Carbon\Carbon::parse($employees->joiningDate)->format('d/m/Y') }}
                                                 </div>
@@ -54,27 +54,30 @@
                                             <ul class="personal-info">
                                                 <li>
                                                     <div class="title">Phone:</div>
-                                                    <div class="text">{{ $employees->phone }}</div>
+                                                    <div class="text">@if(isset($employees)&& $employees->phone != NULL){{ $employees->phone }}@else NO @endisset</div>
                                                 </li>
                                                 <li>
                                                     <div class="title">Email:</div>
-                                                    <div class="text">{{ $employees->email }}</div>
+                                                    <div class="text">@if(isset($employees)&& $employees->email != NULL){{ $employees->email }}@else NO @endisset</div>
                                                 </li>
                                                 <li>
                                                     <div class="title">Birthday:</div>
-                                                    <div class="text">{{ $employees->dob }}</div>
+                                                    <div class="text">@if(isset($employees)&& $employees->dob != NULL){{ $employees->dob }}@else NO @endisset</div>
+                                                   
                                                 </li>
                                                 <li>
                                                     <div class="title">Address:</div>
-                                                    <div class="text">{{ $employees->address }}</div>
+                                                    <div class="text">@if(isset($employees)&& $employees->address != NULL){{ $employees->address }}@else NO @endisset</div>
                                                 </li>
                                                 <li>
                                                     <div class="title">Gender:</div>
                                                     <div class="text">
                                                         @if ($employees->gender == 'm')
                                                             {{ 'Male' }}
-                                                        @else
+                                                        @elseif($employees->gender == 'm')
                                                             {{ 'Female' }}
+                                                            @else
+                                                            NO
                                                         @endif
                                                     </div>
                                                 </li>
