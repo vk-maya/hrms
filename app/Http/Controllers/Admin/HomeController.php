@@ -26,5 +26,5 @@ class HomeController extends Controller
         $project_count = Projects::count();
         return view('admin.dashboard', compact('emp_count', 'project_count'));
     }
-  
+
 }
