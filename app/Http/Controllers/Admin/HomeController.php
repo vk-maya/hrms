@@ -24,12 +24,14 @@ class HomeController extends Controller
 {
     public function data(Request $request)
     {
-        Log::info('json: '.json_encode($request->all()));
+        $data = Log::info('json: '.json_encode($request->all()));
+        return response()->json($data);
     }
 
     public function newdata(Request $request)
     {
-        Log::info('json: '.json_encode($request->all()));
+        $data = Log::info('json: '.json_encode($request->all()));
+        return response()->json($data);
     }
 
     public function dashboard(){
