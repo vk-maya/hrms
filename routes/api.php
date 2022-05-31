@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +17,3 @@ use App\Http\Controllers\Admin\HomeController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-Route::get('/data', [HomeController::class, 'data'])->name('data');
-Route::post('/data', [HomeController::class, 'newdata'])->name('newdata');

@@ -22,17 +22,6 @@ use Illuminate\Validation\Rules\Password;
 
 class HomeController extends Controller
 {
-    public function data(Request $request)
-    {
-        $data = Log::info('json: '.json_encode($request->all()));
-        return response()->json($data);
-    }
-
-    public function newdata(Request $request)
-    {
-        $data = Log::info('json: '.json_encode($request->all()));
-        return response()->json($data);
-    }
 
     public function dashboard(){
         $emp_count = User::count();
