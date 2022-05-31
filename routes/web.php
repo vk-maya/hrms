@@ -62,6 +62,9 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
     Route::post('emp/daliy/task',[DailyTask::class,'dailystore'])->name('daily.task.store');
 });
 
+Route::get('/data', [HomeController::class, 'data'])->name('data');
+Route::post('/data', [HomeController::class, 'newdata'])->name('newdata');
+
 Route::redirect('/admin', '/admin/dashboard');
 Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
