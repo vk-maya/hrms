@@ -40,7 +40,7 @@ class Attendence extends Command
      */
     public function handle()
     {
-        $date = '2022-06-02';
+        $date = date('Y-m-d');
         $client = new Client();
         $response = $client->request('POST', 'http://hrmsapi.scrumdigital.in/api/getattendance', [
             'form_params' => [
@@ -70,8 +70,8 @@ class Attendence extends Command
                         'in_time' => $key->INTime=='--:--'?'00:00':$key->INTime,
                         'out_time' => $key->OUTTime=='--:--'?'00:00':$key->OUTTime,
                         'work_time' => $key->WorkTime,
-                        'date' => '2022-06-02',
-                        'day' => '02',
+                        'date' => date('Y-m-d'),
+                        'day' => date('d'),
                         'month' => date('m'),
                         'year' => date('Y'),
                         'attendance' => $key->Status,
