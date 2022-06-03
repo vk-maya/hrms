@@ -55,7 +55,7 @@ class Attendence extends Command
             $user = User::where('employeeID', $key->Empcode)->first();
 
             if (!empty($user)) {
-                $attend = Attendance::where('user_id', $user->employeeID)->where('date', $date)->first();
+                $attend = Attendance::where('user_id', $user->machineID)->where('date', $date)->first();
 
                 if (!empty($attend)) {
                     $attend->in_time = $key->INTime=='--:--'?'00:00':$key->INTime;
