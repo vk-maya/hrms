@@ -63,10 +63,12 @@ class User extends Authenticatable
     public function moreinfo(){
         return $this->hasOne(userinfo::class,'user_id');
     }
-  
-  
 
-
+    public function attendence()
+    {
+        return $this->hasMany(Attendance::class, 'user_id', 'employeeID');
+    }
+  
     /**
      * The attributes that should be hidden for serialization.
      *

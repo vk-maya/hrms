@@ -13,6 +13,7 @@ use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 use App\Http\Controllers\Controller;
+use App\Models\Attendance;
 use App\Models\Holiday;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -28,7 +29,6 @@ class UserController extends Controller
     public function profileinfo(){
         $moreinfo = userinfo::where('user_id',Auth::guard('web')->user()->id)->count();
         $employees = User::with('moreinfo')->find(Auth::guard('web')->user()->id);
-        // dd($employees->toArray());
         return view('employees.profile.profile',compact('employees','moreinfo'));
     }
     public function profilemoreinfo(){
@@ -77,7 +77,10 @@ class UserController extends Controller
     public function empdashboard(){
         $data = DailyTasks::where('user_id', Auth::guard('web')->user()->id)->where('post_date','>=',now()->toDateString())->count();
         $holi= Holiday::where('date','>',now()->toDateString())->first();
-        return view('employees.dashboard',compact('data','holi'));
+        $attendance = Attendance::where('user_id',Auth::guard('web')->user()->employeeID)->where('date','>=',now()->toDateString())->latest()->first();
+        $allatendance =  Attendance::where('user_id',Auth::guard('web')->user()->employeeID)->get();
+        // dd($attendance);   
+        return view('employees.dashboard',compact('data','holi','attendance','allatendance'));
     }
     public function fill(){
         $id = Auth::guard('web')->user()->id;

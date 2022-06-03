@@ -15,6 +15,8 @@ use App\Http\Controllers\Admin\DerpartmentController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Employees\UserController;
 use App\Http\Controllers\Admin\AdminLeaveController;
+use App\Http\Controllers\Admin\AttendanceController;
+use App\Http\Controllers\Employees\EmpAttendanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +47,8 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
     route::get('employees/leave',[LeaveController::class,'leave'])->name('leave');
     Route::get('employees/add/leave',[LeaveController::class,'leaveadd'])->name('add.leave');
     Route::post('employees/store/leave',[LeaveController::class,'storeleave'])->name('store.leave');
+    // ------------------------------attendance route--------------------------
+    Route::get('employees/attendance',[EmpAttendanceController::class,'get'])->name('attendance');
     // --------------------------Profile route ---------------------------
     Route::get('profiles',[UserController::class,'profile'])->name('profile');
     Route::get('profiles/show',[UserController::class,'profileinfo'])->name('add.moreinfo');
@@ -94,6 +98,9 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::post('save-employees', [EmployeesController::class, 'addemployeesstore'])->name('storeemployees');
     Route::get('employees/edid/{id}', [EmployeesController::class, 'addemployeescreate'])->name('employees.edit');
     Route::get('employees/delete/{id}', [EmployeesController::class, 'employeesdestroy'])->name('employees.delete');
+    // -----------------------------------attendance route-----------------------------------------
+
+    Route::get('attendance',[AttendanceController::class,'attendance'])->name('attendance');
 
     // ---------------------------leave route----------------------------------
     Route::get('setting/leave',[AdminLeaveController::class,'leavesetting'])->name('leave.setting');

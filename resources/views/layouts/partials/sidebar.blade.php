@@ -17,6 +17,7 @@
                     <a href="#"><i class="la la-user"></i> <span> Employees</span> <span
                             class="menu-arrow"></span></a>
                     <ul style="display: none;">
+                        <li><a class="@if(\Request::route()->getName() == 'employees.attendance') active @endif" href="{{route('employees.attendance')}}">Attendance</a></li>
                         <li><a class="@if(\Request::route()->getName() == 'employees.leave') active @endif" href="{{route('employees.leave')}}">Leaves</a></li>
                         
                     </ul>
