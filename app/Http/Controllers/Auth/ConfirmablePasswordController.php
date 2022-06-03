@@ -17,6 +17,7 @@ class ConfirmablePasswordController extends Controller
      */
     public function show()
     {
+        dd('stop');
         return view('auth.confirm-password');
     }
 
