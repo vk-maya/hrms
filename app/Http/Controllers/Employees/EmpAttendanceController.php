@@ -11,7 +11,7 @@ class EmpAttendanceController extends Controller
 {
     //
     public function get(){
-        $attendance= Attendance::where('user_id',Auth::guard('web')->user()->employeeID)->get();
+        $attendance= Attendance::where('user_id',Auth::guard('web')->user()->machineID)->get();
         return view('employees.leave.attendance',compact('attendance'));
     }
 }
