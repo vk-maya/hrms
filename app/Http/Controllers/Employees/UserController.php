@@ -25,7 +25,7 @@ class UserController extends Controller
 {
     public function profile(){
         return view('employees.profile.profile-password');
-    } 
+    }
     public function profileinfo(){
         $moreinfo = userinfo::where('user_id',Auth::guard('web')->user()->id)->count();
         $employees = User::with('moreinfo')->find(Auth::guard('web')->user()->id);
@@ -77,9 +77,9 @@ class UserController extends Controller
     public function empdashboard(){
         $data = DailyTasks::where('user_id', Auth::guard('web')->user()->id)->where('post_date','>=',now()->toDateString())->count();
         $holi= Holiday::where('date','>',now()->toDateString())->first();
-        $attendance = Attendance::where('user_id',Auth::guard('web')->user()->employeeID)->where('date','>=',now()->toDateString())->latest()->first();
-        $allatendance =  Attendance::where('user_id',Auth::guard('web')->user()->employeeID)->get();
-        // dd($attendance);   
+        $attendance = Attendance::where('user_id',Auth::guard('web')->user()->machineID)->where('date','>=',now()->toDateString())->latest()->first();
+        $allatendance =  Attendance::where('user_id',Auth::guard('web')->user()->machineID)->get();
+        // dd($attendance);
         return view('employees.dashboard',compact('data','holi','attendance','allatendance'));
     }
     public function fill(){
@@ -87,8 +87,8 @@ class UserController extends Controller
             $employees = User::find($id);
             $department = Department::get();
             $count = Countries::all();
-            return view('employees.profile.fill-details', compact('department', 'employees', 'count'));        
-        
+            return view('employees.profile.fill-details', compact('department', 'employees', 'count'));
+
     }
     public function fillstore(Request $request){
 
@@ -103,10 +103,10 @@ class UserController extends Controller
             'state_id' => ['required', 'integer'],
             'city_id' => ['required', 'integer'],
             'pincode' => ['required', 'integer'],
-           
+
         ];
         $request->validate($rules);
-        $employees = User::find($request->id);           
+        $employees = User::find($request->id);
         $employees->verified =1;
         $employees->first_name = $request->first_name;
         $employees->last_name = $request->last_name;
