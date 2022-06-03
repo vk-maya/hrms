@@ -40,7 +40,7 @@ class Attendence extends Command
      */
     public function handle()
     {
-        $date = date('Y-m-d');
+        $date = '2022-06-01';
         $client = new Client();
         $response = $client->request('POST', 'http://hrmsapi.scrumdigital.in/api/getattendance', [
             'form_params' => [
