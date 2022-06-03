@@ -66,7 +66,7 @@ class Attendence extends Command
                     $attend->save();
                 }else{
                     Attendance::create([
-                        'user_id' => $user->id,
+                        'user_id' => $user->machineID,
                         'in_time' => $key->INTime=='--:--'?'00:00':$key->INTime,
                         'out_time' => $key->OUTTime=='--:--'?'00:00':$key->OUTTime,
                         'work_time' => $key->WorkTime,
