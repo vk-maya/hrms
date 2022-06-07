@@ -88,8 +88,8 @@
                                         <i class="fa fa-sun-o" aria-hidden="true"></i>
                                     </div>
                                     <div class="dash-card-content">
-                                       
-                                            
+
+
                                         <p> {{ date('l', strtotime($holi->date)) }}
                                             {{ \Carbon\Carbon::parse($holi->date)->format('d-m-Y') }}
                                             {{ $holi->holidayName }}</p>
@@ -109,7 +109,7 @@
                                 </span>
                                         @endif
 
-                              
+
                         </div>
                 </section>
             </div>
@@ -262,6 +262,7 @@
         const date = new Date();
         let hours = date.getHours();
         let minutes = date.getMinutes();
+        let seconds = date.getSeconds();
 
         //   Adding a zero to the left of the time if it's less or equal than 9.
         if (+hours <= 9) {
@@ -270,9 +271,12 @@
         if (+minutes <= 9) {
             minutes = '0' + minutes;
         }
+        if (+seconds <= 9) {
+            seconds = '0' + seconds;
+        }
 
         // adding the time to the h1 element.
-        h1.innerHTML = hours + ':' + minutes;
+        h1.innerHTML = hours + ':' + minutes + ':' + seconds;
 
         //   Toggling the animate class.
         container.classList.toggle('animate');
