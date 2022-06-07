@@ -14,5 +14,18 @@
 	<link rel="stylesheet" href="{{ asset('assets/css/font-awesome.min.css')}}">
 
 	<link rel="stylesheet" href="{{ asset('assets/css/style.css')}}">
+
+	<style>
+		.login-scrum{
+			height: 100vh;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		.account-page .main-wrapper.login-scrum .account-content .account-logo{
+			margin-bottom: 5px!important;
+		}
+		
+		</style>
 </head>
 <body class="account-page">

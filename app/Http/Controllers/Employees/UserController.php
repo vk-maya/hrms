@@ -79,7 +79,8 @@ class UserController extends Controller
         $holi= Holiday::where('date','>',now()->toDateString())->first();
         $attendance = Attendance::where('user_id',Auth::guard('web')->user()->machineID)->where('date','>=',now()->toDateString())->latest()->first();
         $allatendance =  Attendance::where('user_id',Auth::guard('web')->user()->machineID)->get();
-        // dd($attendance);
+        // $nextday= User::all();
+        // dd($nextday->toArray());
         return view('employees.dashboard',compact('data','holi','attendance','allatendance'));
     }
     public function fill(){
