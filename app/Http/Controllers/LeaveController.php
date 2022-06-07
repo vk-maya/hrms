@@ -39,11 +39,32 @@ class LeaveController extends Controller
             return back()->withErrors(["to" => "Please Select to date"])->withInput();
         }
         $request->validate($rules);
+        // dd($leave->toArray());
         $data = new Leave();
-        $data->user_id =$request->user_id;
+        $data->user_id =Auth::guard('web')->user()->id;
+        // dd($data);
         $data->leaves_id =$request->type_id;
-        $data->form = date('Y-m-d', strtotime($request->from));
-        $data->to = date('Y-m-d', strtotime($request->to));
+        $date = now();
+        $fromdate=date( "Y-m-d",strtotime("$date + 30 day"));
+        if($request->from <=$fromdate){
+            $data->form = date('Y-m-d', strtotime($request->from));
+            $todate = date( "Y-m-d",strtotime("$request->from + 30 day"));
+            if($request->to <=$todate){
+                $data->to = date('Y-m-d', strtotime($request->to));
+            }else{
+                return redirect()->back();
+            }
+        }else{
+            return redirect()->back();
+        }
+        $leave = Leave::where('user_id',Auth::guard('web')->user()->id)->where(function($query) use($request){
+            $query->where('form','<=',$request->from)->where('to','>=',$request->from);
+        })->orWhere(function($query) use($request){
+            $query->where('form','<=',$request->to)->where('to','>=',$request->to);
+        })->count();
+        if($leave > 0){
+            return back()->withErrors(["from" => "Please Select another From date"])->withInput();
+        }
         $data->reason = $request->reason;
         $data->status = "";
         $data->save();

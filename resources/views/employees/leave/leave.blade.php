@@ -70,8 +70,8 @@
                                     $end = new DateTime($item->to);
                                 @endphp
                                 <td>{{$item->leaveType->type}}</td>
-                                <td> {{ $start->format('Y-m-d') }}</td>
-                                <td> {{ $end->format('Y-m-d') }}</td>
+                                <td> {{ $start->format('d-m-Y') }}</td>
+                                <td> {{ $end->format('d-m-Y') }}</td>
                                 <td>{{ $start->diff($end)->format('%a') }}</td>
                                 <td>{{$item->reason}}</td>
                                 <td class="text-center">

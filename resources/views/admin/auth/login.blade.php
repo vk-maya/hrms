@@ -2,18 +2,24 @@
 @section('title')
     <title>Admin Login - Scrum Digital HRMS</title>
 @endsection
+@push('css')
+
+    
+@endpush
 @section('content')
-    <div class="main-wrapper">
+
+    <div class="main-wrapper login-scrum" style="background-image: url('{{ asset('assets/img/admin-bg.jpg')}}'); background-size: cover">
         <div class="account-content">
             <div class="container">
 
-                <div class="account-logo">
-                    <img src="{{ asset('assets/img/logo2.png') }}" alt="Scrum Digital">
-                </div>
                 <div class="account-box">
                     <div class="account-wrapper">
-                        <h3 class="account-title">Login</h3>
-                        <p class="account-subtitle">Access to Admin</p>
+                        
+                        <div class="account-logo">
+                            <img src="{{ asset('assets/img/logo2.png') }}" alt="Scrum Digital">
+                        </div>
+                        {{-- <h3 class="account-title">Login</h3> --}}
+                        <p class="account-title">Access to Admin</p>
 
                         <form action="{{ route('admin.login') }}" method="POST">
                             @csrf
