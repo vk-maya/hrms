@@ -18,7 +18,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('attend:data')->everyFifteenMinutes();
+        $schedule->command('attend:data')->everyFifteenMinutes()->weekdays()->between('09:00', '11:00');
+        $schedule->command('attend:data')->everyFifteenMinutes()->weekdays()->between('18:00', '20:00');
     }
 
     /**
