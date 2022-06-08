@@ -89,7 +89,7 @@
 
                                     @for ($i = 1; $i <= $month; $i++)
                                         @php
-                                            $attend = \App\Models\Attendance::where('day', $i)->where('month', date('m'))->where('year', date('Y'))->where('user_id', $item->employeeID)->first();
+                                            $attend = \App\Models\Attendance::where('day', $i)->where('month', date('m'))->where('year', date('Y'))->where('user_id', $item->machineID)->first();
                                         @endphp
                                         @if (!empty($attend))
                                             @if ($attend->attendance == 'P')
