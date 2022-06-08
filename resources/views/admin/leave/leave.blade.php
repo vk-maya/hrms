@@ -48,6 +48,18 @@
                     </div>
                 </div>
             </div>
+            @if ($message = Session::get('success'))
+            <div class="alert alert-success alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>{{ $message }}</strong>
+            </div>
+        @endif
+            @if ($message = Session::get('unsuccess'))
+            <div class="alert alert-warning alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>{{ $message }}</strong>
+            </div>
+        @endif
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-responsive">
@@ -60,6 +72,7 @@
                                     <th>To</th>
                                     <th>No of Days</th>
                                     <th>Reason</th>
+                                    <th>Action</th>
                                     <th class="text-center">Status</th>
                                 </tr>
                             </thead>
@@ -76,6 +89,19 @@
                                         <td> {{ $end->format('Y-m-d') }}</td>
                                         <td>{{ $start->diff($end)->format('%a') }}</td>
                                         <td>{{ $item->reason }}</td>
+                                        <td class="text-end">
+											<div class="dropdown dropdown-action">
+												<a href="#" class="action-icon dropdown-toggle"
+													data-bs-toggle="dropdown" aria-expanded="false"><i
+														class="material-icons">more_vert</i></a>
+												<div class="dropdown-menu dropdown-menu-right">
+													<a class="dropdown-item" href="{{route('admin.leave.edit',$item->id)}}"><i
+															class="fa fa-pencil m-r-5"></i> Edit</a>
+													<a class="dropdown-item" href="{{route('admin.leave.delete',$item->id)}}" ><i
+															class="fa fa-trash-o m-r-5"></i> Delete</a>
+												</div>
+											</div>
+										</td>
                                         <td class="text-center">
                                             <div class="dropdown action-label">
                                                 @if ($item->status == '')

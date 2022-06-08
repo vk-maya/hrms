@@ -82,9 +82,9 @@
                             @foreach ($attendance as $item)
                                 <tr>
                                     <td><h2 class="table-avatar">
-                                            <a class="avatar avatar-xs" href="profile.html"><img alt=""
+                                            <a class="avatar avatar-xs" href="{{route('admin.employees.profile',$item->id)}}"><img alt=""
                                                     src="@if ($item->image != null) {{ asset('storage/uploads/' . $item->image) }}@else{{ asset('assets/img/avtar.jpg') }} @endif""></a>
-                                            <a href="profile.html">{{$item->first_name}}</a>
+                                            <a href="{{route('admin.employees.profile',$item->id)}}">{{$item->first_name}}</a>
                                         </h2></td>                                    
                                     
                                     @for ($i = 1; $i <= $month; $i++)

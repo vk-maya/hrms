@@ -13,6 +13,9 @@ class Leave extends Model
         return $this->hasOne(settingleave::class,'id','leaves_id');
     }
 public function user(){
-return $this->hasOne(User::class,'id','user_id');
-}
+        return $this->hasOne(User::class,'id','user_id');
+    }
+    // public function leavetype(){
+
+    // }
 }

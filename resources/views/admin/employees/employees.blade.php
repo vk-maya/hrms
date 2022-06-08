@@ -127,11 +127,12 @@
                                         <a class="dropdown-item more-add" href="{{route('admin.employees.information',$item->id)}}"><i class="fa fa-plus text-info  m-r-5"></i>Add More</a>
                                         <a class="dropdown-item status" href="{{route('admin.employees.status',$item->id)}}">
                                             @if ($item->status == 1)
-                                                <i class="fa fa-check m-r-5 text-danger"></i> <span
-                                                    class="yeh-data">Declined</span>
+                                                 <i class="fa fa-times text-danger" aria-hidden="true"></i>
+                                                <span
+                                                    class="yeh-data">Inactive</span>
                                             @else
                                                 <i class="fa fa-check m-r-5 text-success"></i> <span
-                                                    class="yeh-data">Approved</span>
+                                                    class="yeh-data">Active</span>
                                             @endif
                                         </a>                            
                                     </div>
