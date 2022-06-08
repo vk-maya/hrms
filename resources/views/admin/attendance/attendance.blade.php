@@ -75,7 +75,7 @@
                                 <th>Employee</th>
                                 @for ($i = 1; $i <= $month; $i++)
                                 <th>{{$i}}</th>
-                                @endfor                    
+                                @endfor
                              </tr>
                         </thead>
                         <tbody>
@@ -85,11 +85,11 @@
                                             <a class="avatar avatar-xs" href="profile.html"><img alt=""
                                                     src="@if ($item->image != null) {{ asset('storage/uploads/' . $item->image) }}@else{{ asset('assets/img/avtar.jpg') }} @endif""></a>
                                             <a href="profile.html">{{$item->first_name}}</a>
-                                        </h2></td>                                    
-                                    
+                                        </h2></td>
+
                                     @for ($i = 1; $i <= $month; $i++)
                                         @php
-                                            $attend = \App\Models\Attendance::where('day', $i)->where('user_id', $item->employeeID)->first();
+                                            $attend = \App\Models\Attendance::where('day', $i)->where('month', date('m'))->where('year', date('Y'))->where('user_id', $item->employeeID)->first();
                                         @endphp
                                         @if (!empty($attend))
                                             @if ($attend->attendance == 'P')
@@ -102,7 +102,7 @@
                                         @endif
                                     @endfor
                                    </tr>
-                            @endforeach                                             
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -119,5 +119,5 @@
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
     <script src="{{ asset('assets/js/multiselect.min.js') }}"></script>
-   
+
 @endpush
