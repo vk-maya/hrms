@@ -12,7 +12,7 @@
                     <div class="col">
                         <h3 class="page-title">Leaves</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Leaves</li>
                         </ul>
                     </div>
@@ -27,7 +27,6 @@
                         <div class="card-body">
                             <form action="{{ route('employees.store.leave') }}" method="POST">
                                 @csrf
-                                {{-- <input type="hidden" name="user_id" value="{{ Auth::guard('web')->user()->id }}"> --}}
                                 <div class="form-group">
                                     <label>Leave Type <span class="text-danger">*</span></label>
                                     <select class="select" name="type_id">

@@ -72,7 +72,7 @@
                                 <td>{{$item->leaveType->type}}</td>
                                 <td> {{ $start->format('d-m-Y') }}</td>
                                 <td> {{ $end->format('d-m-Y') }}</td>
-                                <td>{{ $start->diff($end)->format('%a') }}</td>
+                                <td>{{ $start->diff($end)->format('%a')+1 }}</td>
                                 <td>{{$item->reason}}</td>
                                 <td class="text-center">
                                     <div class="">                                     

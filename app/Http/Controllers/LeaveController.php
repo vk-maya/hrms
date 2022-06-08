@@ -42,8 +42,11 @@ class LeaveController extends Controller
         // dd($leave->toArray());
         $data = new Leave();
         $data->user_id =Auth::guard('web')->user()->id;
-        // dd($data);
-        $data->leaves_id =$request->type_id;
+        $leavetype = settingleave::where('id',$request->type_id)->count();
+            if($leavetype>0){
+                $data->leaves_id =$request->type_id;
+            }else{
+                return back()->withErrors(["type_id" => "Please Select Leave Type"])->withInput();            }
         $date = now();
         $fromdate=date( "Y-m-d",strtotime("$date + 30 day"));
         if($request->from <=$fromdate){
