@@ -72,6 +72,8 @@ class LeaveController extends Controller
         $data->status = "";
         $data->save();
         return redirect()->route('employees.leave');
+        Carbon::createFromTime()->diff()->h
+        // now()->toTimeString()
     }
     // ----------------------------admin leave function-----------------------------
     

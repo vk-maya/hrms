@@ -10,6 +10,56 @@ use App\Models\Holiday;
 
 class AdminLeaveController extends Controller
 {
+    public function edit($id){
+        $data = Leave::find($id);
+        $type = settingleave::all();
+
+        // dd($data->toArray());   
+        return view('admin.leave.edit-leave',compact('data','type'));
+    }
+
+    public function update(Request $request){
+        // dd($request->toArray());
+        $data = Leave::find($request->id);
+        // dd($data->toArray());
+        // $data->leaves_id = $request->type;
+        // $data->form = $request->from;
+        // $data->to = $request->to;
+        // $data->reason = $request->reason;
+        // $data->save();
+        // return redirect()->route('admin.leave.list');
+        // $data->user_id =Auth::guard('web')->user()->id;
+        $leavetype = settingleave::where('id',$request->type)->count();
+            if($leavetype>0){
+                $data->leaves_id =$request->type;
+            }else{
+                return back()->withErrors(["type_id" => "Please Select Leave Type"])->withInput();            }
+        $date = now();
+        $fromdate=date( "Y-m-d",strtotime("$date + 30 day"));
+        if($request->from <=$fromdate){
+            $data->form = date('Y-m-d', strtotime($request->from));
+            $todate = date( "Y-m-d",strtotime("$request->from + 30 day"));
+            if($request->to <=$todate){
+                $data->to = date('Y-m-d', strtotime($request->to));
+            }else{
+                return redirect()->back()->withErrors(["to" => "Please Select to Date Type"])->withInput(); ;
+            }
+        }else{
+            return redirect()->back()->withErrors(["from" => "Please Select Leave Type"])->withInput(); ;
+        }
+        $leave = Leave::where('user_id',$request->user_id)->where(function($query) use($request){
+            $query->where('form','<=',$request->from)->where('to','>=',$request->from);
+        })->orWhere(function($query) use($request){
+            $query->where('form','<=',$request->to)->where('to','>=',$request->to);
+        })->where('id',"!=", $request->id)->count();
+        if($leave > 0){
+            return back()->withErrors(["from" => "Please Select another From date"])->withInput();
+        }
+        $data->reason = $request->reason;
+        $data->save();
+        return redirect()->route('admin.leave.list');
+
+    }
     public function holidays(Request $request){
         if($request->id!=''){
             $holi = Holiday::find($request->id);
@@ -20,6 +70,14 @@ class AdminLeaveController extends Controller
             return view('admin.leave.holiday',compact('data'));
             
         }
+    }
+    public function delete($id){
+        $data = Leave::find($id);
+        if($data->status != null){
+            return back()->with(["unsuccess" => "Don't Delete This Record"])->withInput(); 
+        }else{
+            $data->delete();
+            return back()->with(["success" => "Success Delete This Record"])->withInput();        }
     }
     public function holidayStore(Request $request){
         $rules = [

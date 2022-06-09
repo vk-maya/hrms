@@ -13,14 +13,33 @@
         }
 
         /* .animate{
-                                border:  rgb(245, 39, 32) 10px solid;
-                            } */
+                                                        border:  rgb(245, 39, 32) 10px solid;
+                                                    } */
         .container h1 {
             font-weight: 200;
             font-size: 25px;
             color: black;
         }
 
+        #timer {
+            font-size: 1.8em;
+            font-weight: 100;
+            /* color: white; */
+            text-shadow: 0 0 20px #7aa3a3;
+        }
+
+        #timer div {
+            display: inline-block;
+            min-width: 60px;
+            min-height: 10px;
+        }
+
+        #timer div span {
+            color: #0d0d0e;
+            display: block;
+            font-size: .35em;
+            font-weight: 400;
+        }
     </style>
 @endpush
 @section('content')
@@ -29,7 +48,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="welcome-box">
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <div class="welcome-img">
                                 <a href="{{ route('employees.add.moreinfo') }}">
                                     <img alt=""
@@ -38,33 +57,50 @@
                                 {{ Auth::guard('web')->user()->first_name }}
                             </div>
                         </div>
-                            <div class="col-md-2">
-                                <div class="stats-box text-center">
-                                    <p>Timesheet</p>
-                                    {{ \Carbon\Carbon::now()->format('d-m-Y') }}
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="stats-box text-center">
-                                    <p>In Time</p>
-                                    @if (isset($attendance) && ($attendance->attendance = 'P'))
-                                        <h6>{{ $attendance->in_time }}</h6>
-                                    @else
-                                        <h6>00:00:00</h6>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="col-md-2 col-6">
-                                <div class="stats-box text-center">
-                                    <p>Out Time</p>
-                                    @if (isset($attendance) && $attendance->attendance == 'P')
-                                        <h6>{{ $attendance->out_time }}</h6>
-                                    @else
-                                        <h6>00:00:00</h6>
-                                    @endif
-                                </div>
+                        <div class="col-md-2">
+                            <div class="stats-box text-center">
+                                <p>Date</p>
+                                {{ \Carbon\Carbon::now()->format('d-m-Y') }}
                             </div>
                         </div>
+                        <div class="col-md-3">                         
+                            @if (isset($attendance) && $attendance->out_time != "00:00:00")
+                                @php                                    
+                                    $tt = \Carbon\Carbon::create($attendance->in_time)->diff($attendance->out_time);                                   
+                                @endphp
+                                <div class="stats-box text-center">
+                                    <p>Working Time</p>
+                                    <label>{{ \Carbon\Carbon::createFromTime($tt->h,$tt->i,$tt->s)->format('h:i:s') }}</label>
+                                </div>
+                            @else
+                                <div class="stats-box text-center">
+                                    <p>Working Time</p> <label id="hours">00</label>:<label id="minutes">00</label>:<label
+                                        id="seconds">00</label>
+                                </div>
+                        @endif
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="stats-box text-center">
+                                <p>In Time</p>
+                                @if (isset($attendance) && ($attendance->attendance = 'P'))
+                                    <h6>{{ $attendance->in_time }}</h6>
+                                @else
+                                    <h6>00:00:00</h6>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-6">
+                            <div class="stats-box text-center">
+                                <p>Out Time</p>
+                                @if (isset($attendance) && $attendance->attendance == 'P')
+                                    <h6>{{ $attendance->out_time }}</h6>
+                                @else
+                                    <h6>00:00:00</h6>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -102,6 +138,7 @@
                         </div>
                 </section>
             </div>
+
             <div class="col-md-6">
                 <section class="dash-section">
                     <h1 class="dash-sec-title">UPCOMING HOLIDAY</h1>
@@ -136,67 +173,47 @@
                 </section>
             </div>
         </div>
-        {{-- <div class="row">
-            <div class="col-md-6">
-                <div class="card punch-status">
-                    <div class="card-body">
-                        <h5 class="card-title">NEXT SEVEN DAYS <small
-                                class="text-muted"></small>
-                        </h5>
+        <div class="col-md-4">
+            <div class="card punch-status">
+                <div class="card-body">
+                    <h5 class="card-title">Working Time</h5>
 
 
-                        </div>
-                    </div>
                 </div>
             </div>
+        </div>
 
-            <div class="col-md-6">
-                <div class="card recent-activity">
-                    <div class="card-body">
-                        <h5 class="card-title">Notification News</h5>
-                        <ul class="res-activity-list">
-
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
     </div>
 </div>
-</div>
+@php
+
+$diff = \Carbon\Carbon::create($attendance->in_time)->diffInSeconds(now()->toTimeString());
+@endphp
 @endsection
 @push('js')
 <script>
-    const container = document.querySelector('.container');
-    const h1 = document.querySelector('.container h1');
+    $(document).ready(function() {
+        var hoursLabel = document.getElementById("hours");
+        var minutesLabel = document.getElementById("minutes");
+        var secondsLabel = document.getElementById("seconds");
+        var totalSeconds = {{ $diff }};
+        setInterval(setTime, 1000);
 
-    // The clock function.
-    const clock = () => {
-        //   Accessing the date object.
-        const date = new Date();
-        let hours = date.getHours();
-        let minutes = date.getMinutes();
-        let seconds = date.getSeconds();
-
-        //   Adding a zero to the left of the time if it's less or equal than 9.
-        if (+hours <= 9) {
-            hours = '0' + hours;
-        }
-        if (+minutes <= 9) {
-            minutes = '0' + minutes;
-        }
-        if (+seconds <= 9) {
-            seconds = '0' + seconds;
+        function setTime() {
+            ++totalSeconds;
+            secondsLabel.innerHTML = pad(totalSeconds % 60);
+            minutesLabel.innerHTML = pad(parseInt(totalSeconds / 60) % 60);
+            hoursLabel.innerHTML = pad(parseInt(totalSeconds / 3600));
         }
 
-        // adding the time to the h1 element.
-        h1.innerHTML = hours + ':' + minutes + ':' + seconds;
-
-        //   Toggling the animate class.
-        container.classList.toggle('animate');
-    }
-
-    // calling the clock function after each second(1000ms).
-    setInterval(clock, 1000);
+        function pad(val) {
+            var valString = val + "";
+            if (valString.length < 2) {
+                return "0" + valString;
+            } else {
+                return valString;
+            }
+        }
+    });
 </script>
 @endpush

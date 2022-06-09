@@ -66,6 +66,7 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
     Route::post('emp/daliy/task',[DailyTask::class,'dailystore'])->name('daily.task.store');
 });
 
+// ------------------------------admin Route----------------------------------
 Route::redirect('/admin', '/admin/dashboard');
 Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
@@ -112,6 +113,10 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::post('holiday',[AdminLeaveController::class,'holidayStore'])->name('holiday');
     Route::any('holiday/edit/{id}',[AdminLeaveController::class,'holidays'])->name('holiday.edit');
     Route::any('holiday/delete/{id}',[AdminLeaveController::class,'holidaydistroy'])->name('holiday.delete');
+    Route::get('leave/edit/{id}',[AdminLeaveController::class,'edit'])->name('leave.edit');
+    Route::any('leave/update',[AdminLeaveController::class,'update'])->name('leave.update');
+    Route::get('leave/delete/{id}',[AdminLeaveController::class,'delete'])->name('leave.delete');
+
 
     // ---------------------client route-----------------------
     Route::get('client', [ClientController::class, 'index'])->name('client');
