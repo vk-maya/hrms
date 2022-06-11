@@ -173,24 +173,16 @@
                 </section>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card punch-status">
-                <div class="card-body">
-                    <h5 class="card-title">Working Time</h5>
-
-
-                </div>
-            </div>
-        </div>
-
     </div>
 </div>
+@if(isset($attendance) && $attendance->in_time != "00:00:00")
 @php
-
 $diff = \Carbon\Carbon::create($attendance->in_time)->diffInSeconds(now()->toTimeString());
 @endphp
+@endif
 @endsection
 @push('js')
+@if(isset($attendance) && $attendance->in_time != "00:00:00")
 <script>
     $(document).ready(function() {
         var hoursLabel = document.getElementById("hours");
@@ -216,4 +208,6 @@ $diff = \Carbon\Carbon::create($attendance->in_time)->diffInSeconds(now()->toTim
         }
     });
 </script>
+@endif
+
 @endpush
