@@ -48,9 +48,6 @@ class Attendence extends Command
         ]]);
         $response = json_decode($response->getBody()->getContents());
 
-        // var_dump(json_decode($response));
-        // ResultJob::dispatch();
-
         foreach ($response->data as $key) {
             $user = User::where('employeeID', $key->Empcode)->first();
 

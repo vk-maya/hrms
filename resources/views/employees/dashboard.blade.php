@@ -63,10 +63,10 @@
                                 {{ \Carbon\Carbon::now()->format('d-m-Y') }}
                             </div>
                         </div>
-                        <div class="col-md-3">                         
+                        <div class="col-md-3">
                             @if (isset($attendance) && $attendance->out_time != "00:00:00")
-                                @php                                    
-                                    $tt = \Carbon\Carbon::create($attendance->in_time)->diff($attendance->out_time);                                   
+                                @php
+                                    $tt = \Carbon\Carbon::create($attendance->in_time)->diff($attendance->out_time);
                                 @endphp
                                 <div class="stats-box text-center">
                                     <p>Working Time</p>
@@ -84,19 +84,19 @@
                             <div class="stats-box text-center">
                                 <p>In Time</p>
                                 @if (isset($attendance) && ($attendance->attendance = 'P'))
-                                    <h6>{{ $attendance->in_time }}</h6>
+                                    <h6>{{ \Carbon\Carbon::parse($attendance->in_time)->format('H:i A') }}</h6>
                                 @else
-                                    <h6>00:00:00</h6>
+                                    <h6>00:00</h6>
                                 @endif
                             </div>
                         </div>
                         <div class="col-md-2 col-6">
                             <div class="stats-box text-center">
                                 <p>Out Time</p>
-                                @if (isset($attendance) && $attendance->attendance == 'P')
-                                    <h6>{{ $attendance->out_time }}</h6>
+                                @if (isset($attendance) && $attendance->attendance == 'P' && $attendance->out_time != "00:00:00")
+                                    <h6>{{ \Carbon\Carbon::parse($attendance->out_time)->format('H:i A') }}</h6>
                                 @else
-                                    <h6>00:00:00</h6>
+                                    <h6>00:00</h6>
                                 @endif
                             </div>
                         </div>
