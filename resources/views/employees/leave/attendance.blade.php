@@ -78,20 +78,30 @@
                                     <th>Punch In</th>
                                     <th>Punch Out</th>
                                     <th>Work Hour</th>
-                                   
+
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($attendance as $key => $item)
+                                    @php
+                                        $in_time = \Carbon\Carbon::parse($item->in_time)->format('H:i A');
+                                        if ($item->out_time == '00:00:00') {
+                                            $out_time = '00:00:00';
+                                            $work_time = '00:00:00';
+                                        }else{
+                                            $out_time = \Carbon\Carbon::parse($item->out_time)->format('H:i A');
+                                            $work_time = \Carbon\Carbon::parse($item->in_time)->diff(\Carbon\Carbon::parse($item->out_time))->format('%H:%I');
+                                        }
+                                    @endphp
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }} </td>
-                                        <td>{{ $item->in_time }}</td>
-                                        <td>{{ $item->out_time }}</td>
-                                        <td>{{$item->work_time}}</td>
-                                      
+                                        <td>{{ $in_time }}</td>
+                                        <td>{{ $out_time }}</td>
+                                        <td>{{ $work_time }}</td>
+
                                     </tr>
-                                @endforeach                               
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
