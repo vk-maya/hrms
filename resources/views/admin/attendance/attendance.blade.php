@@ -95,7 +95,7 @@
                                         @for ($i = 1; $i <= $month; $i++)
                                             @php
                                                 $attend = \App\Models\Attendance::where('day', $i)
-                                                    ->where('user_id', $item->employeeID)
+                                                    ->where('user_id', $item->machineID)
                                                     ->first();
                                             @endphp
 
