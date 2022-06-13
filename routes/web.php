@@ -101,7 +101,8 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::get('employees/delete/{id}', [EmployeesController::class, 'employeesdestroy'])->name('employees.delete');
     // -----------------------------------attendance route-----------------------------------------
 
-    Route::get('attendance',[AttendanceController::class,'attendance'])->name('attendance');
+    Route::any('attendance',[AttendanceController::class,'attendance'])->name('attendance');
+    Route::get('attendance/info/{id}',[AttendanceController::class,'attinfo'])->name('attendance.info');
 
     // ---------------------------leave route----------------------------------
     Route::get('setting/leave',[AdminLeaveController::class,'leavesetting'])->name('leave.setting');

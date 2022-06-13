@@ -6,6 +6,8 @@ use App\Models\Leave\Leave;
 use Illuminate\Http\Request;
 use App\Models\Leave\settingleave;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\LeaveController;
+use App\Models\Admin\Session;
 use App\Models\Holiday;
 
 class AdminLeaveController extends Controller
@@ -105,6 +107,7 @@ class AdminLeaveController extends Controller
         return redirect()->back();
 
     }
+
     public function leavesetting(){
         return view('admin.leave.leave-setting');
     }
@@ -113,10 +116,16 @@ class AdminLeaveController extends Controller
         return view('admin.leave.leave',compact('data'));
     }
     public function leavetype(Request $request){
+        $type = settingleave::where('type',$request->type)->get();
+      
         $rules = [
             'day' => ['required', 'string'],   
             
         ];
+        $dd = now('y-m-d');
+                dd($dd->toArray());
+
+        // $session = Session::where('from',)
         $request->validate($rules);
         $data = new settingleave();
         $data->type =$request->type;

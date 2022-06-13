@@ -39,7 +39,6 @@ class LeaveController extends Controller
             return back()->withErrors(["to" => "Please Select to date"])->withInput();
         }
         $request->validate($rules);
-        // dd($leave->toArray());
         $data = new Leave();
         $data->user_id =Auth::guard('web')->user()->id;
         $leavetype = settingleave::where('id',$request->type_id)->count();

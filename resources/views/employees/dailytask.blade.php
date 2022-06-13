@@ -21,18 +21,18 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <form action="{{route('employees.daily.task.store')}}" method="POST" >
+                        <form action="{{ route('employees.daily.task.store') }}" method="POST" id="form">
                             <div class="row">
                                 @csrf
-                                <input type="hidden" name="user_id" id=""
-                                    value="{{ Auth::guard('web')->user()->id }}">
+                                <input type="hidden" name="user_id" id="" value="{{ Auth::guard('web')->user()->id }}">
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label for="inputname">Task Title</label>
-                                        <input id="InputTitle" name="title" value="" class="form-control" type="text">
+                                        <input id="InputTitle" name="title" value="{{ old('title') }}" required
+                                            class="form-control" type="text">
                                         <span class="text-danger">
                                             @error('title')
-                                            <p>The Title field is required</p>
+                                                <p>The Title field is required</p>
                                             @enderror
                                         </span>
                                     </div>
@@ -41,15 +41,15 @@
                                     <label for="inputname">Date</label>
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <input  readonly class="form-control" name="post_date"
-                                                value="{{ \Carbon\Carbon::now()->format('d-m-Y') }}"
-                                                type="text">
+                                            <input readonly class="form-control" required name="post_date"
+                                                value="{{ \Carbon\Carbon::now()->format('d-m-Y') }}" type="text">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label>Description</label>
                                     <textarea id="editor" name="description" cols="3" rows="2"></textarea>
+                                    <div id="demo"></div>
                                     <span class="text-danger">
                                         @error('description')
                                             <p>The Description field is required</p>
@@ -59,6 +59,7 @@
                                 <div class="submit-section">
                                     <button id="submit" type="submit" class="btn btn-primary submit-btn">Submit</button>
                                 </div>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -67,11 +68,19 @@
     </div>
 @endsection
 @push('plugin-js')
-
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script src="{{ asset('assets/js/ckeditor.js') }}"></script>
     <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
+    <script>
+        $("form").submit( function(e) {
+            var totalcontentlength = $('#editor').html();
+            if( totalcontentlength =='' || totalcontentlength.length < 10) {
+                document.getElementById("demo").innerHTML ="<p style='color:red;'>Please enter Your a Any Description</p>";
 
+                e.preventDefault();
+            }
+        });
+    </script>
 @endpush

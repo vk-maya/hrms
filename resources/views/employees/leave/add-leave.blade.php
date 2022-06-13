@@ -29,11 +29,11 @@
                                 @csrf
                                 <div class="form-group">
                                     <label>Leave Type <span class="text-danger">*</span></label>
-                                    <select class="select" name="type_id">
+                                    <select class="select" name="type_id" required>
                                         <option value=""> Select Leave Type</option>
-                                        @foreach ($data as $item)
-                                            <option value="{{ $item->id }}">{{ $item->type }}</option>
-                                        @endforeach
+                                            @foreach ($data as $item)
+                                            <option value="{{ $item->id }}" @if (old('type_id') ==  $item->id)selected @endif>{{  $item->type }}</option>
+                                            @endforeach
                                     </select>
                                     @error('type_id')
                                         <span class="text-danger">
@@ -46,8 +46,9 @@
                                         <div class="form-group">
                                             <label>From <span class="text-danger">*</span></label>
                                             <div class="">
-                                                <input class="form-control" name="from" type="date"
-                                                    min="{{ date('Y-m-d') }}" id="fromdate" max="{{ \Carbon\Carbon::now()->addDays(30)->toDateString() }}">
+                                                <input class="form-control" name="from" required type="date" value="{{old('from')}}"
+                                                    min="{{ date('Y-m-d') }}" id="fromdate"
+                                                    max="{{ \Carbon\Carbon::now()->addDays(30)->toDateString() }}">
                                                 @error('from')
                                                     <span class="text-danger">
                                                         <strong>{{ $message }}</strong>
@@ -60,8 +61,7 @@
                                         <div class="form-group">
                                             <label>To <span class="text-danger">*</span></label>
                                             <div class="">
-                                                <input class="form-control " name="to" type="date"
-                                                     id="todate">
+                                                <input class="form-control " required name="to" type="date" id="todate" value="{{old('to')}}">
                                                 @error('to')
                                                     <span class="text-danger">
                                                         <strong>{{ $message }}</strong>
@@ -73,7 +73,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Leave Reason <span class="text-danger">*</span></label>
-                                    <textarea name="reason" rows="4" class="form-control"></textarea>
+                                    <textarea name="reason" required rows="4" class="form-control">{{old('reason')}}</textarea>
                                     @error('reason')
                                         <span class="text-danger">
                                             <strong>{{ $message }}</strong>
@@ -98,14 +98,14 @@
     <script src="{{ asset('assets/js/ckeditor.js') }}"></script>
     <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
     <script>
-        $(document).ready(function(){
+        $(document).ready(function() {
             Date.prototype.addDays = function(days) {
                 var date = new Date(this.valueOf());
                 date.setDate(date.getDate() + days);
                 return date;
             }
 
-            $('#fromdate').change(function(){
+            $('#fromdate').change(function() {
                 var myInput = document.getElementById('todate');
                 var mindate = document.getElementById('fromdate').value;
                 myInput.setAttribute('min', mindate);

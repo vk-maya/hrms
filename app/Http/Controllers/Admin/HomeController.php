@@ -27,7 +27,11 @@ class HomeController extends Controller
     public function dashboard(){
         $emp_count = User::count();
         $project_count = Projects::count();
-        return view('admin.dashboard', compact('emp_count', 'project_count'));
+        // $department = Designation::with('department')->get();
+        $users = User::with('userDesignation','attendance')->get();
+        // dd($users->toArray() );
+
+        return view('admin.dashboard', compact('emp_count', 'project_count','users'));
     }
  
 

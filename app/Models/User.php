@@ -42,6 +42,9 @@ class User extends Authenticatable
     public function designation()    {
         return $this->belongsTo(Designation::class);
     }
+    public function userDesignation()    {
+        return $this->belongsTo(Designation::class,'designation_id');
+    }
     public function leaders()
     {
         // return $this->belongsTo(ProjectLeaders::class);
@@ -67,6 +70,9 @@ class User extends Authenticatable
     public function attendence()
     {
         return $this->hasMany(Attendance::class, 'user_id', 'employeeID');
+    }
+    public function attendance(){
+        return $this->hasOne(Attendance::class,'user_id','employeeID');
     }
   
     /**
