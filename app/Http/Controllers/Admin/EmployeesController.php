@@ -136,7 +136,12 @@ class EmployeesController extends Controller
         $employees->gender = $request->gender;
         $employees->dob = date('Y-m-d', strtotime($request->dob));
         $employees->email = $request->email;
-        $employees->employeeID = $request->employeeID;
+        if($request->employeeID <= 9){
+
+            $employees->employeeID ='SDPL-JAI-000'. $request->employeeID;
+        }else{
+            $employees->employeeID ='SDPL-JAI-00'. $request->employeeID;
+        }
         $employees->machineID = $request->machineID;
         if($request->password != ''){
 
