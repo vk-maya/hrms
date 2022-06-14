@@ -69,10 +69,10 @@ class User extends Authenticatable
 
     public function attendence()
     {
-        return $this->hasMany(Attendance::class, 'user_id', 'employeeID');
+        return $this->hasMany(Attendance::class, 'user_id', 'machineID');
     }
     public function attendance(){
-        return $this->hasOne(Attendance::class,'user_id','employeeID');
+        return $this->hasOne(Attendance::class,'user_id','machineID');
     }
   
     /**

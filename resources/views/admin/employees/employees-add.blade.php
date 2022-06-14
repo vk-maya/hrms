@@ -140,7 +140,7 @@
                                     <div class="form-group"> 
                                         <label>Birth Date</label>
                                         <div class="">
-                                            <input type="date" class="form-control" name="dob" 
+                                            <input type="date" class="form-control" name="dob" mini max="{{ \Carbon\Carbon::now()->subMonths(216)->toDateString() }}"
                                             value="@if(isset($employees)){{$employees->dob}}@endif">
                                                 <span class="text-danger">
                                                     @error('dob')
@@ -154,7 +154,7 @@
                                     <label class="col-form-label" for="emp">Employee ID</label>
                                     <div class="input-group">
                                         <span class="input-group-text" id="inputGroupPrepend">SDPL-JAI-</span>
-                                        <input type="text" readonly class="form-control" name="employeeID" id="emp"
+                                        <input type="text" readonly class="form-control" id="emp"
                                             value="@if(isset($employees)){{ $employees->employeeID }}@else{{$empid }}@endif">
                                     </div>
                                     <span class="text-danger">
@@ -316,7 +316,7 @@
                                                 class="text-danger">*</span></label>
                                         <div class="">
                                             <input name="joiningDate"
-                                                class="form-control" type="date" value="@if(isset($employees)){{$employees->joiningDate}}@endif">
+                                                class="form-control" type="date"  max="{{ \Carbon\Carbon::now()->toDateString() }}" min="2019-01-01" value="@if(isset($employees)){{$employees->joiningDate}}@endif">
                                                         <span class="text-danger">
                                             @error('joiningDate')
                                                 <p>Joining Date field is required.</p>

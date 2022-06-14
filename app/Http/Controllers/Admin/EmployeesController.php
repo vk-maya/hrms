@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
 use App\Models\City;
 use App\Models\User;
 use App\Models\State;
@@ -113,7 +114,6 @@ class EmployeesController extends Controller
             $rules = [
                 'department_id' => ['required', 'string',],
                 'designation_id' => ['required', 'string', 'numeric', 'max:255'],
-                'employeeID' => ['required', 'string', 'numeric'],
                 'joiningDate' => ['string', 'required'],
                 'first_name' => ['required', 'string', 'max:255'],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
@@ -134,20 +134,38 @@ class EmployeesController extends Controller
         $employees->first_name = $request->first_name;
         $employees->last_name = $request->last_name;
         $employees->gender = $request->gender;
-        $employees->dob = date('Y-m-d', strtotime($request->dob));
-        $employees->email = $request->email;
-        if($request->employeeID <= 9){
-
-            $employees->employeeID ='SDPL-JAI-000'. $request->employeeID;
+        $dobmax = Carbon::now()->subMonths(216)->toDateString();
+        if($request->dob <= $dobmax){
+            $employees->dob = date('Y-m-d', strtotime($request->dob));
         }else{
-            $employees->employeeID ='SDPL-JAI-00'. $request->employeeID;
+            return back()->withErrors(["dob" => "Min. 18 years be employed or permitted to work"])->withInput();
+        }
+        $employees->email = $request->email;
+        $id = User::latest()->first();
+        if ($id == !null) {
+            $emp = explode('-',$id->employeeID);
+            $empid = 1 + $emp[2];
+        } else {
+            $empid = "SDPL-JAI-0001";
+        }
+        if($empid <= 9){
+
+            $employees->employeeID ='SDPL-JAI-000'. $empid;
+        }else{
+            $employees->employeeID ='SDPL-JAI-00'. $empid;
         }
         $employees->machineID = $request->machineID;
         if($request->password != ''){
 
             $employees->password = Hash::make($request->password);
         }
-        $employees->joiningDate = date('Y-m-d', strtotime($request->joiningDate));
+        $companydate = "2019-01-01";
+        if($request->joiningDate >= $companydate && $request->joiningDate <= Carbon::now()->toDateString()){
+
+            $employees->joiningDate = date('Y-m-d', strtotime($request->joiningDate));
+        }else{
+            return back()->withErrors(["joiningDate" => "as per company rules"])->withInput();
+        }
         $employees->phone = $request->phone;
         $employees->department_id = $request->department_id;
         $employees->designation_id = $request->designation_id;

@@ -29,9 +29,11 @@ class HomeController extends Controller
         $project_count = Projects::count();
         // $department = Designation::with('department')->get();
         $users = User::with('userDesignation','attendance')->get();
-        // dd($users->toArray() );
-
-        return view('admin.dashboard', compact('emp_count', 'project_count','users'));
+        $absent = User::where('status','1')->whereHas('attendance',function($query){
+            $query->where('attendance','A')->where('date',now()->format('Y-m-d'));
+        })->count();
+        // dd($absent );
+        return view('admin.dashboard', compact('emp_count', 'project_count','users','absent'));
     }
  
 

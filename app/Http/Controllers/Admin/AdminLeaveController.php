@@ -16,21 +16,11 @@ class AdminLeaveController extends Controller
         $data = Leave::find($id);
         $type = settingleave::all();
 
-        // dd($data->toArray());   
         return view('admin.leave.edit-leave',compact('data','type'));
     }
 
     public function update(Request $request){
-        // dd($request->toArray());
-        $data = Leave::find($request->id);
-        // dd($data->toArray());
-        // $data->leaves_id = $request->type;
-        // $data->form = $request->from;
-        // $data->to = $request->to;
-        // $data->reason = $request->reason;
-        // $data->save();
-        // return redirect()->route('admin.leave.list');
-        // $data->user_id =Auth::guard('web')->user()->id;
+        $data = Leave::find($request->id);      
         $leavetype = settingleave::where('id',$request->type)->count();
             if($leavetype>0){
                 $data->leaves_id =$request->type;

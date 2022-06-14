@@ -158,7 +158,7 @@
                     <div class="col-md-12 col-lg-6 col-xl-4 d-flex">
                         <div class="card flex-fill">
                             <div class="card-body">
-                                <h4 class="card-title">Today Absent <span class="badge bg-inverse-danger ms-2">5</span>
+                                <h4 class="card-title">Today Absent <span class="badge bg-inverse-danger ms-2">{{$absent}}</span>
                                 </h4>
                                 <div class="leave-info-box">
                                     <div class="media d-flex align-items-center">
@@ -223,44 +223,63 @@
                                         <tbody>
                                             @foreach ($users as $user)
                                                 <tr>
-                                                    <td>
-                                                        <h2 class="table-avatar">
-                                                            <a href="#" class="avatar"><img alt=""
-                                                                    src="@if ($user->image != null) {{ asset('storage/uploads/' . $user->image) }}@else{{ asset('assets/img/avtar.jpg') }} @endif"></a>
-                                                            <a href=""><b>{{ $user->first_name }}
-                                                                </b><span>{{ $user->userDesignation->designation_name }}</span></a>
-                                                        </h2>
-                                                    </td>
-                                                    <td>
-                                                        @if (isset( $user->attendance()->latest()->first()->in_time))
-                                                            {{ $user->attendance()->latest()->first()->in_time }}
-                                                        @else
-                                                            00:00
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if (isset(
-                                                            $user->attendance()->latest()->first()->out_time,
-                                                        ))
-                                                            {{ $user->attendance()->latest()->first()->out_time }}
-                                                        @else
-                                                            00:00
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if (isset($user->attendance()->latest()->first()->out_time) && $user->attendance()->latest()->first()->out_time != "00:00:00")
-                                                        @php                                    
-                                                            $tt = \Carbon\Carbon::create($user->attendance()->latest()->first()->in_time)->diff($user->attendance()->latest()->first()->out_time);                                   
-                                                        @endphp                                                     
-                                                           
-                                                            <label>{{ \Carbon\Carbon::createFromTime($tt->h,$tt->i,$tt->s)->format('h:i:s') }}</label>
-                                                       
-                                                    @else                                                       
-                                                            <label id="hours">00</label>:<label id="minutes">00</label>:<label
-                                                                id="seconds">00</label>
-                                                      
-                                                @endif
-                                                    </td>
+                                                    @if(isset($user->attendance()->where('date',now()->format('Y-m-d'))->first()->in_time) && $user->attendance()->where('date',now()->format('Y-m-d'))->first()->in_time != '00:00:00')
+                                                        <td>
+                                                            <h2 class="table-avatar d-flex align-items-center">
+                                                                <a href="#" class="avatar d-inline-block"><img alt=""
+                                                                        class="d-inline-block"
+                                                                        src="@if ($user->image != null) {{ asset('storage/uploads/' . $user->image) }}@else{{ asset('assets/img/avtar.jpg') }} @endif"></a>
+                                                                <a href=""><b>{{ $user->first_name }}
+                                                                    </b>
+                                                                    <p class="mb-0" style="font-size:12px">
+                                                                        {{ $user->userDesignation->designation_name }}</p>
+                                                                </a>
+                                                            </h2>
+                                                        </td>
+                                                        <td>
+                                                            @if (isset(
+                                                                $user->attendance()->where('date',now()->format('Y-m-d'))->first()->in_time,
+                                                            ))
+                                                                {{ $user->attendance()->where('date',now()->format('Y-m-d'))->first()->in_time }}
+                                                            @else
+                                                                00:00
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if (isset(
+                                                                $user->attendance()->where('date',now()->format('Y-m-d'))->first()->out_time,
+                                                            ))
+                                                                {{ $user->attendance()->where('date',now()->format('Y-m-d'))->first()->out_time }}
+                                                            @else
+                                                                00:00
+                                                            @endif
+                                                        </td>
+                                                        <td>
+                                                            @if (isset(
+                                                                $user->attendance()->where('date',now()->format('Y-m-d'))->first()->out_time,
+                                                            ) &&
+                                                                $user->attendance()->where('date',now()->format('Y-m-d'))->first()->out_time != '00:00:00')
+                                                                @php
+                                                                    $tt = \Carbon\Carbon::create(
+                                                                        $user
+                                                                            ->attendance()
+                                                                            ->where('date',now()->format('Y-m-d'))
+                                                                            ->first()->in_time,
+                                                                    )->diff(
+                                                                        $user
+                                                                            ->attendance()
+                                                                            ->where('date',now()->format('Y-m-d'))
+                                                                            ->first()->out_time,
+                                                                    );
+                                                                @endphp
+
+                                                                <label>{{ \Carbon\Carbon::createFromTime($tt->h, $tt->i, $tt->s)->format('h:i:s') }}</label>
+                                                            @else
+                                                                <label id="hours">00</label>:<label
+                                                                    id="minutes">00</label>:<label id="seconds">00</label>
+                                                            @endif
+                                                        </td>
+                                                    @endif
                                                 </tr>
                                             @endforeach
                                         </tbody>
