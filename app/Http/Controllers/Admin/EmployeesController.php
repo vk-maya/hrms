@@ -96,10 +96,10 @@ class EmployeesController extends Controller
             $count = Countries::all();
             $id = User::latest()->first();
             if ($id == !null) {
-                $empid = 1 + $id->employeeID;
-                // dd($empid);
+                $emp = explode('-',$id->employeeID);
+                $empid = 1 + $emp[2];
             } else {
-                $empid = 1000;
+                $empid = "SDPL-JAI-0001";
             }
             return view('admin.employees.employees-add', compact('department', 'count', 'empid'));
         }
