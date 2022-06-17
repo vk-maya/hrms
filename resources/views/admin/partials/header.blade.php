@@ -54,7 +54,8 @@
             </a>
             <div class="dropdown-menu">
                 <a class="dropdown-item" href="profile.html">My Profile</a>
-                <a class="dropdown-item" href="settings.html">Settings</a>
+                <a class="dropdown-item" href="{{route('admin.settings')}}">Settings</a>
+                <a class="dropdown-item" href="{{route('admin.salary.settings')}}">Salary Settings</a>
                 <form method="POST" action="{{ route('admin.logout') }}">
                     @csrf
                     <button class="btn" type="submit">
