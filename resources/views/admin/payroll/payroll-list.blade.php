@@ -24,10 +24,11 @@
                             <li class="breadcrumb-item active">Salary</li>
                         </ul>
                     </div>
-                    <div class="col-auto float-end ms-auto">
+                  <div class="col-auto float-end ms-auto">
                         <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_salary"><i
                                 class="fa fa-plus"></i> Add Salary</a>
                     </div>
+                    
                 </div>
             </div>
             <div class="row filter-row">
@@ -151,7 +152,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>Employee</label>
-                                        <select class="select" name="employee_id" id="employeeId" >
+                                        <select class="form-control" name="employee_id" id="employeeId" >
                                             <option value="">Select Employee</option>
                                             @foreach ($employee as $item)
                                             <option  value="{{$item->id}}">{{$item->first_name}}</option>
@@ -164,7 +165,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <label>Net Salary</label>
-                                    <input class="form-control" id="NetSalary" name="net_salary" type="text">
+                                    <input class="form-control" id="NetSalary_incre1" name="net_salary" type="text" onkeyup="Percentage(1)">
                                     @error('net_salary')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
@@ -175,57 +176,82 @@
                                     <h4 class="text-primary">Earnings</h4>
                                     <div class="form-group">
                                         <label>Basic</label>
-                                        <input class="form-control"name="basic_salary" id="BasicSalary" type="text">
+                                        <input class="form-control"name="basic_salary"  id="basic_increment1" type="text">
+                                        <input type="hidden"  id="basic_type1" value="{{$increment[10]->type}}">
+                                        <input type="hidden" class="form-control" value="{{$increment[10]->description}}" id="BasicSalary_incre1" type="text">
                                         @error('basic_salary')
                                         <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label>DA(40%)</label>
-                                        <input class="form-control"name="da" id="Da" type="text">
+                                        <label>DA</label>
+                                        <input type="hidden" class="form-control"  value="{{$increment[11]->description}}" id="Da_incre1" type="text">
+                                        <input class="form-control"name="da" id="Da_incre_total1" type="text">
+                                        <input type="hidden"  id="da_type1" value="{{$increment[11]->type}}">
                                     </div>
                                     <div class="form-group">
-                                        <label>HRA(15%)</label>
-                                        <input class="form-control" name="hra" id="Hra" type="text">
+                                        <label>HRA</label>
+                                        <input type="hidden" class="form-control" value="{{$increment[12]->description}}" id="Hra_incre1" type="text">
+                                        <input class="form-control" name="hra"  id="Hra_incre_total1" type="text">
+                                        <input type="hidden"  id="hra_type1" value="{{$increment[12]->type}}">
                                     </div>
                                     <div class="form-group">
                                         <label>Conveyance</label>
-                                        <input class="form-control"name="conveyance" id="Conveyance" type="text">
+                                        <input type="hidden" class="form-control" value="{{$increment[13]->description}}" id="Conveyance_incre1" type="text">
+                                        <input class="form-control"name="conveyance" id="Conveyance_incre_total1" type="text">
+                                        <input type="hidden"  id="conveyance_type1" value="{{$increment[13]->type}}">
                                     </div>
                                     <div class="form-group">
                                         <label>Allowance</label>
-                                        <input class="form-control" name="allowance" id="Allowance"  type="text">
+                                        <input type="hidden" class="form-control" value="{{$increment[14]->description}}" id="Allowance_incre1"  type="text">
+                                        <input class="form-control" name="allowance"  id="Allowance_incre_total1"  type="text">
+                                        <input type="hidden"  id="allowance_type1" value="{{$increment[14]->type}}">
                                     </div>
                                     <div class="form-group">
                                         <label>Medical Allowance</label>
-                                        <input class="form-control"name="Medical_allow" id="Medical_allow" type="text">
+                                        <input type="hidden" class="form-control" value="{{$increment[15]->description}}" id="Medical_allow_incre1" type="text">
+                                        <input class="form-control"name="Medical_allow"  id="Medical_allow_total1" type="text">
+                                        <input type="hidden"  id="Medical_type1" value="{{$increment[15]->type}}">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <h4 class="text-primary">Deductions</h4>
                                     <div class="form-group">
                                         <label>TDS</label>
-                                        <input class="form-control"name="tds" id="Tds" type="text">
+                                        <input type="hidden" class="form-control" value="{{$increment[16]->description}}" id="Tds_incre1" type="text">
+                                        <input class="form-control"name="tds" id="Tds_incre_total1" type="text">
+                                        <input type="hidden"  id="Tds_type1" value="{{$increment[16]->type}}">
                                     </div>
                                     <div class="form-group">
                                         <label>ESI</label>
-                                        <input class="form-control"name="est" id="Est" type="text">
+                                        <input type="hidden" class="form-control" value="{{$increment[17]->description}}" id="Est_incre1" type="text">
+                                        <input class="form-control"name="est" id="Est_incre_total1" type="text">
+                                        <input type="hidden"  id="Est_type1" value="{{$increment[17]->type}}">
                                     </div>
                                     <div class="form-group">
                                         <label>PF</label>
-                                        <input class="form-control" name="pf" id="Pf" type="text">
+                                        <input type="hidden" class="form-control"  value="{{$increment[18]->description}}" id="Pf_incre1" type="text">
+                                        <input class="form-control" name="pf"  id="Pf_incre_total1" type="text">
+                                        <input type="hidden"  id="Pf_type1" value="{{$increment[18]->type}}">
                                     </div>
                                     <div class="form-group">
                                         <label>Prof. Tax</label>
-                                        <input class="form-control" name="Prof_tax" id="Prof_tax" type="text">
+                                        <input type="hidden" class="form-control"  value="{{$increment[19]->description}}" id="Prof_tax_incre1" type="text">
+                                        <input class="form-control" name="Prof_tax"  id="Prof_tax_incre_total1" type="text">
+                                        <input type="hidden"  id="Prof_type1" value="{{$increment[19]->type}}">
                                     </div>
                                     <div class="form-group">
                                         <label>Labour Welfare</label>
-                                        <input class="form-control"name="Labour_welf" id="Labour_welf" type="text">
+                                        <input type="hidden" class="form-control" value="{{$increment[20]->description}}"  id="Labour_welf_incre1" type="text">
+                                        <input class="form-control"name="Labour_welf"  id="Labour_welf_total1" type="text">
+                                        <input type="hidden"  id="Labour_type1" value="{{$increment[20]->type}}">
+    
                                     </div>
                                     <div class="form-group">
                                         <label>Others</label>
-                                        <input class="form-control"name="other" id="Other" type="text">
+                                        <input type="hidden" class="form-control" value="{{$increment[21]->description}}" id="Other_incre1" type="text">
+                                        <input class="form-control"name="other"  id="Other_incre_total1" type="text">
+                                        <input type="hidden"  id="Other_type1" value="{{$increment[21]->type}}">
                                     </div>
                                 </div>
                             </div>
@@ -248,7 +274,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="POST" id="employee">
+                    <form action="{{route('admin.employee.increment')}}" method="POST" id="employee">
                         @csrf
                         <div id="incrementid">
                         </div>
@@ -256,8 +282,8 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Employee</label>
-                                    <select disabled="true" class="form-control" name="employee_id" id="employeeId_incre">
-                                        @foreach ($employee as $item)
+                                    <select class="form-control" name="employee_id" id="employeeId_incre">
+                                        @foreach ($employeeincre as $item)
                                         <option  value="{{$item->id}}">{{$item->first_name}}</option>
                                         @endforeach
                                     </select>
@@ -268,7 +294,7 @@
                             </div>
                             <div class="col-sm-6">
                                 <label>Net Salary</label>
-                                <input class="form-control" id="NetSalary_incre" name="net_salary" type="text">
+                                <input class="form-control" id="NetSalary_incre2" name="net_salary" type="text" onkeyup="Percentage(2)">
                                 @error('net_salary')
                                 <div class="text-danger">{{ $message }}</div>
                                 @enderror
@@ -278,7 +304,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Month</label>
-                                    <input class="form-control"name="basic_salary" id="monthInc" type="text" onkeyup="salaryInc()">
+                                    <input class="form-control"name="monthly" id="monthly" type="text" readonly onkeyup="salaryInc()">
                                     @error('basic_salary')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
@@ -287,7 +313,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Increment</label>
-                                    <input class="form-control"name="basic_salary" id="Inc" type="text" onkeyup="salaryInc()">
+                                    <input class="form-control"name="increment" id="Inc" type="text" onkeyup="salaryInc()">
                                     @error('basic_salary')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
@@ -298,7 +324,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Total</label>
-                                    <input class="form-control"name="basic_salary" id="basic_incre" type="text"  onKeyUp="multiply()">
+                                    <input class="form-control"name="monthly_new" id="basic_incre"  readonly type="text"  onKeyUp="multiply()">
                                     @error('basic_salary')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
@@ -308,7 +334,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Net Salary</label>
-                                    <input class="form-control"name="basic_salary" id="TOTAL" type="text">
+                                    <input class="form-control"name="net_salary_new" readonly id="TOTAL" type="text">
                                     @error('basic_salary')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
@@ -320,57 +346,82 @@
                                 <h4 class="text-primary">Earnings</h4>
                                 <div class="form-group">
                                     <label>Basic</label>
-                                    <input class="form-control"name="basic_salary" value="{{$increment[10]->description}}" id="BasicSalary_incre" type="text">
+                                    <input class="form-control"name="basic_salary"  id="basic_increment2" type="text">
+                                    <input type="hidden" id="basic_type2" value="{{$increment[10]->type}}">
+                                    <input type="hidden" class="form-control" value="{{$increment[10]->description}}" id="BasicSalary_incre2" type="text">
                                     @error('basic_salary')
                                     <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="form-group">
-                                    <label>DA(40%)</label>
-                                    <input class="form-control"name="da" value="{{$increment[11]->description}}" id="Da_incre" type="text">
+                                    <label>DA</label>
+                                    <input type="hidden" class="form-control" value="{{$increment[11]->description}}" id="Da_incre2" type="text">
+                                    <input class="form-control"name="da" id="Da_incre_total2" type="text">
+                                    <input type="hidden"  id="da_type2" value="{{$increment[11]->type}}">
                                 </div>
                                 <div class="form-group">
-                                    <label>HRA(15%)</label>
-                                    <input class="form-control" name="hra" value="{{$increment[12]->description}}" id="Hra_incre" type="text">
+                                    <label>HRA</label>
+                                    <input type="hidden" class="form-control"  value="{{$increment[12]->description}}" id="Hra_incre2" type="text">
+                                    <input class="form-control" name="hra"  id="Hra_incre_total2" type="text">
+                                    <input type="hidden"  id="hra_type2" value="{{$increment[12]->type}}">
                                 </div>
                                 <div class="form-group">
                                     <label>Conveyance</label>
-                                    <input class="form-control"name="conveyance" value="{{$increment[13]->description}}" id="Conveyance_incre" type="text">
+                                    <input type="hidden" class="form-control" value="{{$increment[13]->description}}" id="Conveyance_incre2" type="text">
+                                    <input class="form-control"name="conveyance" id="Conveyance_incre_total2" type="text">
+                                    <input type="hidden"  id="conveyance_type2" value="{{$increment[13]->type}}">
                                 </div>
                                 <div class="form-group">
                                     <label>Allowance</label>
-                                    <input class="form-control" name="allowance" value="{{$increment[14]->description}}" id="Allowance_incre"  type="text">
+                                    <input type="hidden" class="form-control"  value="{{$increment[14]->description}}" id="Allowance_incre2"  type="text">
+                                    <input class="form-control" name="allowance"  id="Allowance_incre_total2"  type="text">
+                                    <input type="hidden"  id="allowance_type2" value="{{$increment[14]->type}}">
                                 </div>
                                 <div class="form-group">
                                     <label>Medical Allowance</label>
-                                    <input class="form-control"name="Medical_allow" value="{{$increment[15]->description}}" id="Medical_allow_incre" type="text">
+                                    <input type="hidden" class="form-control" value="{{$increment[15]->description}}" id="Medical_allow_incre2" type="text">
+                                    <input class="form-control"name="Medical_allow"  id="Medical_allow_total2" type="text">
+                                    <input type="hidden"  id="Medical_type2" value="{{$increment[15]->type}}">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <h4 class="text-primary">Deductions</h4>
                                 <div class="form-group">
                                     <label>TDS</label>
-                                    <input class="form-control"name="tds" value="{{$increment[16]->description}}" id="Tds_incre" type="text">
+                                    <input type="hidden" class="form-control" value="{{$increment[16]->description}}" id="Tds_incre2" type="text">
+                                    <input class="form-control"name="tds" id="Tds_incre_total2" type="text">
+                                    <input type="hidden"  id="Tds_type2" value="{{$increment[16]->type}}">
                                 </div>
                                 <div class="form-group">
                                     <label>ESI</label>
-                                    <input class="form-control"name="est" value="{{$increment[17]->description}}" id="Est_incre" type="text">
+                                    <input type="hidden" class="form-control" value="{{$increment[17]->description}}" id="Est_incre2" type="text">
+                                    <input class="form-control"name="est" id="Est_incre_total2" type="text">
+                                    <input type="hidden"  id="Est_type2" value="{{$increment[17]->type}}">
                                 </div>
                                 <div class="form-group">
                                     <label>PF</label>
-                                    <input class="form-control" name="pf" value="{{$increment[18]->description}}" id="Pf_incre" type="text">
+                                    <input type="hidden" class="form-control" value="{{$increment[18]->description}}" id="Pf_incre2" type="text">
+                                    <input class="form-control" name="pf"  id="Pf_incre_total2" type="text">
+                                    <input type="hidden"  id="Pf_type2" value="{{$increment[18]->type}}">
                                 </div>
                                 <div class="form-group">
                                     <label>Prof. Tax</label>
-                                    <input class="form-control" name="Prof_tax" value="{{$increment[19]->description}}" id="Prof_tax_incre" type="text">
+                                    <input type="hidden" class="form-control" value="{{$increment[19]->description}}" id="Prof_tax_incre2" type="text">
+                                    <input class="form-control" name="Prof_tax"  id="Prof_tax_incre_total2" type="text">
+                                    <input type="hidden"  id="Prof_type2" value="{{$increment[19]->type}}">
                                 </div>
                                 <div class="form-group">
                                     <label>Labour Welfare</label>
-                                    <input class="form-control"name="Labour_welf" value="{{$increment[18]->description}}"  id="Labour_welf_incre" type="text">
+                                    <input type="hidden" class="form-control" value="{{$increment[20]->description}}"  id="Labour_welf_incre2" type="text">
+                                    <input class="form-control"name="Labour_welf"  id="Labour_welf_total2" type="text">
+                                    <input type="hidden"  id="Labour_type2" value="{{$increment[20]->type}}">
+
                                 </div>
                                 <div class="form-group">
                                     <label>Others</label>
-                                    <input class="form-control"name="other" value="{{$increment[19]->description}}" id="Other_incre" type="text">
+                                    <input type="hidden" class="form-control"value="{{$increment[21]->description}}" id="Other_incre2" type="text">
+                                    <input class="form-control"name="other"  id="Other_incre_total2" type="text">
+                                    <input type="hidden"  id="Other_type2" value="{{$increment[21]->type}}">
                                 </div>
                             </div>
                         </div>
@@ -408,11 +459,125 @@
             document.getElementById('TOTAL').value = c;
         }
         function salaryInc() {
-            a = Number(document.getElementById('monthInc').value);
+            a = Number(document.getElementById('monthly').value);
             b = Number(document.getElementById('Inc').value);
             c = a + b;
             document.getElementById('basic_incre').value = c;
             multiply();
+        }
+            
+        function Percentage(model) {
+            a = Number(document.getElementById('NetSalary_incre'+model).value);
+            b = Number(document.getElementById('BasicSalary_incre'+model).value);
+           var basic = document.getElementById("basic_type"+model);
+           var da = document.getElementById("da_type"+model);
+           var hram = document.getElementById("hra_type"+model);
+           var conveyance_type = document.getElementById("conveyance_type"+model);
+           var allowance_type = document.getElementById("allowance_type"+model);
+           var Medical_type = document.getElementById("Medical_type"+model);
+           var Tds_type = document.getElementById("Tds_type"+model);
+           var Est_type = document.getElementById("Est_type"+model);
+           var Pf_type = document.getElementById("Pf_type"+model);
+           var Prof_type = document.getElementById("Prof_type"+model);
+           var Labour_type = document.getElementById("Labour_type"+model);
+           var Other_type = document.getElementById("Other_type"+model);
+          
+           if (basic !== null && basic.value === "per")
+            {
+                c = a * b/100;
+            }
+            else{ c = a - b;
+            }
+            document.getElementById('basic_increment'+model).value = c;
+
+            f = Number(document.getElementById('Da_incre'+model).value);
+            if (da !==null && da.value ==="per")  {
+                g = a * f/100;
+            } else {
+                g = a - f;
+            }
+            document.getElementById('Da_incre_total'+model).value = g;
+            
+            hra = Number(document.getElementById('Hra_incre'+model).value);
+            if (hram !==null && hram.value ==="per")  {
+                hrat = a * hra/100;
+            } else {
+                hrat = a - hra;
+            }
+            document.getElementById('Hra_incre_total'+model).value = hrat;
+
+            Conveyance = Number(document.getElementById('Conveyance_incre'+model).value);
+            if (conveyance_type !==null && conveyance_type.value ==="per")  {
+                Conveyance_incre = a * Conveyance/100;
+            } else {
+                Conveyance_incre = a - Conveyance;
+            }
+            document.getElementById('Conveyance_incre_total'+model).value = Conveyance_incre;
+
+            Allowance_incre = Number(document.getElementById('Allowance_incre'+model).value);
+            if (allowance_type !==null && allowance_type.value ==="per")  {
+                Allowance = a * Allowance_incre/100;
+            } else {
+                Allowance = a - Allowance_incre;
+            } 
+            document.getElementById('Allowance_incre_total'+model).value = Allowance;
+
+            Medical_allow_incre = Number(document.getElementById('Medical_allow_incre'+model).value);
+            if (Medical_type !==null && Medical_type.value ==="per")  {
+                Medical_allow = a * Medical_allow_incre/100;
+            } else {
+                Medical_allow = a - Medical_allow_incre;
+            }
+            document.getElementById('Medical_allow_total'+model).value = Medical_allow;
+
+            Tds_incre = Number(document.getElementById('Tds_incre'+model).value);
+            if (Tds_type !==null && Tds_type.value ==="per")  {
+                Tds = a * Tds_incre/100;
+            } else {
+                Tds = a - Tds_incre;
+            }
+            document.getElementById('Tds_incre_total'+model).value = Tds;
+
+            Est_incre = Number(document.getElementById('Est_incre'+model).value);
+            if (Est_type !==null && Est_type.value ==="per")  {
+                Est = a * Est_incre/100;
+            } else {
+                Est = a - Est_incre;
+            }
+            document.getElementById('Est_incre_total'+model).value = Est;
+
+            Pf_incre = Number(document.getElementById('Pf_incre'+model).value);
+            if (Pf_type !==null && Pf_type.value ==="per")  {
+                pf = a * Pf_incre/100;
+            } else {
+                pf = a - Pf_incre;
+            }
+            document.getElementById('Pf_incre_total'+model).value = pf;
+
+            Prof_tax_incre = Number(document.getElementById('Prof_tax_incre'+model).value);
+            if (Prof_type !==null && Prof_type.value ==="per")  {
+                 Prof = a * Prof_tax_incre/100;
+            } else {
+                Prof = a - Prof_tax_incre;
+            }
+            document.getElementById('Prof_tax_incre_total'+model).value = Prof;
+
+            Labour_welf_incre = Number(document.getElementById('Labour_welf_incre'+model).value);
+            if (Labour_type !==null && Labour_type.value ==="per")  {
+                Labour = a * Labour_welf_incre/100;
+            } else {
+                Labour = a - Labour_welf_incre;
+            }
+            document.getElementById('Labour_welf_total'+model).value = Labour;
+
+            Other_incre = Number(document.getElementById('Other_incre'+model).value);
+            if (Other_type !==null && Other_type.value ==="per")  {
+                Other = a * Other_incre/100;
+            } else {
+                Other = a - Other_incre;
+            }
+            document.getElementById('Other_incre_total'+model).value = Other;
+            
         }
           // -------------------show hidden column-------------
           $(document).ready(function() {
@@ -426,19 +591,19 @@
             $('#add_salary').on('hidden.bs.modal', function(e) {
                 $("#editid").html('');
                 $("#employeeId").val('');
-                $("#NetSalary").val('');
-                $("#BasicSalary").val('');
-                $("#Tds").val('');
-                $("#Da").val('');
-                $("#Est").val('');
-                $("#Hra").val('');
-                $("#Pf").val('');
-                $("#Conveyance").val('');
-                $("#Prof_tax").val('');
-                $("#Allowance").val('');
-                $("#Labour_welf").val('');
-                $("#Medical_allow").val('');
-                $("#Other").val('');
+                $("#NetSalary_incre1").val('');
+                $("#basic_increment1").val('');
+                $("#Da_incre_total1").val('');
+                $("#Tds_incre_total1").val('');
+                $("#Est_incre_total1").val('');
+                $("#Hra_incre_total1").val('');
+                $("#Pf_incre_total1").val('');
+                $("#Conveyance_incre_total1").val('');
+                $("#Prof_tax_incre_total1").val('');
+                $("#Allowance_incre_total1").val('');
+                $("#Labour_welf_total1").val('');
+                $("#Medical_allow_total1").val('');
+                $("#Other_incre_total1").val('');
             })
             $(document).on("click", ".edit", function() {
                 var id = $(this).data('id');
@@ -450,20 +615,22 @@
                         $('#submit').text("Update");
                         $('#inputid').val(res.edit.id);
                         $('#employeeId').val(res.edit.employee_id);
-                        $('#NetSalary').val(res.edit.net_salary);
-                        $('#BasicSalary').val(res.edit.basic_salary);
-                        $('#Tds').val(res.edit.tds);
-                        $('#Da').val(res.edit.da);
-                        $('#Est').val(res.edit.est);
-                        $('#Hra').val(res.edit.hra);
-                        $('#Pf').val(res.edit.pf);
-                        $('#Conveyance').val(res.edit.conveyance);
-                        $('#Prof_tax').val(res.edit.Prof_tax);
-                        $('#Allowance').val(res.edit.allowance);
-                        $('#Labour_welf').val(res.edit.Labour_welf);
-                        $('#Medical_allow').val(res.edit.Medical_allow);
-                        $('#Other').val(res.edit.other);
+                        $('#NetSalary_incre1').val(res.edit.net_salary);
+                        $('#basic_increment1').val(res.edit.basic_salary);
+                        $('#Da_incre_total1').val(res.edit.da);
+                        $('#Tds_incre_total1').val(res.edit.tds);
+                        $('#Est_incre_total1').val(res.edit.est);
+                        $('#Hra_incre_total1').val(res.edit.hra);
+                        $('#Pf_incre_total1').val(res.edit.pf);
+                        $('#Conveyance_incre_total1').val(res.edit.conveyance);
+                        $('#Prof_tax_incre_total1').val(res.edit.Prof_tax);
+                        $('#Allowance_incre_total1').val(res.edit.allowance);
+                        $('#Labour_welf_total1').val(res.edit.Labour_welf);
+                        $('#Medical_allow_total1').val(res.edit.Medical_allow);
+                        $('#Other_incre_total1').val(res.edit.other);
                         $("#add_salary").modal('show');
+                        Percentage(1);
+                        
                     }
 
                 });
@@ -482,7 +649,8 @@
             $('#increment_salary').on('hidden.bs.modal', function(e) {
                 $("#incrementid").html('');
                 $("#employeeId_incre").val('');
-                $("#NetSalary_incre").val('');
+                $("#NetSalary_incre2").val('');
+                $("#monthly").val('');
                
             })
             $(document).on("click", ".increment", function() {
@@ -495,8 +663,10 @@
                         $('#submit').text("Update");
                         $('#inputid').val(res.edit.id);
                         $('#employeeId_incre').val(res.edit.employee_id);
-                        $('#NetSalary_incre').val(res.edit.net_salary);
+                        $('#NetSalary_incre2').val(res.edit.net_salary);
+                        $('#monthly').val(res.edit.monthly);
                         $("#increment_salary").modal('show');
+                        Percentage(2);
                     }
 
                 });

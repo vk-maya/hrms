@@ -34,13 +34,13 @@
                                             <div class="col-sm-6">
                                                 <input class="form-check-input" type="radio" name="flexRadioDefault1" value="per"
                                                     id="flexRadioDefault1" @if (isset($salary[10]->type)){{$salary[10]->type == 'per' ? 'checked':''}}
-                                                  @endif >
+                                                 @else checked @endif >
                                                 <label class="form-check-label" for="flexRadioDefault1">Percentage</label>
                                             </div>
                                             <div class="col-sm-6">
                                                 <input class="form-check-input" type="radio"  name="flexRadioDefault1" value="fix"
                                                     id="fle" @if (isset($salary[10]->type)){{$salary[10]->type == 'fix' ? 'checked':''}}
-                                                    @else checked  @endif>
+                                                  @endif>
                                                 <label class="form-check-label" for="fle"> Fix</label>
                                             </div>
                                         </div>

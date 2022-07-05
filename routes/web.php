@@ -155,7 +155,9 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::get('emp/all/task/{id}',[ProjectController::class,'employeestask'])->name('emp.show-taskk');
     Route::get('task/show/{id}',[ProjectController::class,'empltask'])->name('employ.task.list');
 
-     
+     ///............................employee increment......................../////
+    Route::post('employee-increment',[PayrollController::class,'increment'])->name('employee.increment');
+
        // -------------------------setings--------------------------------------//////
     Route::get('settings',[PayrollController::class,'settings'])->name('settings');
     Route::post('settings-store',[PayrollController::class,'setting_store'])->name('settings-store');
@@ -163,12 +165,17 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::get('salary',[PayrollController::class,'salary_settings'])->name('salary.settings');
     Route::post('salary-store',[PayrollController::class,'salary_store'])->name('salary.store');
     //..............................view_slip...................................////
+    Route::get('slip-generate/{employee_id}',[PayrollController::class,'slip'])->name('employee.slip');
     Route::get('view-slip/{employee_id}',[PayrollController::class,'view_slip'])->name('employee.view_slip');
     Route::get('employee-slip/{id}',[PayrollController::class,'genrateslip'])->name('employee.generate_slip');
   // -------------------------payroll--------------------------------------//////
     Route::get('payroll',[PayrollController::class,'payroll'])->name('payroll.list');
     Route::post('payroll-store',[PayrollController::class,'store'])->name('payroll.store');
     Route::get('payroll/edit/{id}',[PayrollController::class,'payroll'])->name('payroll.edit');
+
+    //...................PDF..................//
+    Route::get('export-pdf/{id}', [PayrollController::class, 'downloadPdf'])->name('export-pdf');
+    
 
    
 

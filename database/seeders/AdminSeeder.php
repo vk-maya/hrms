@@ -16,12 +16,12 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
-        // Admin::insert([
-        //     "name" => "Admin",
-        //     "role" => "Admin",
-        //     "email" => "admin@gmail.com",
-        //     "password" => Hash::make("admin@12345"),
-        // ]);
+        Admin::insert([
+            "name" => "Admin",
+            "role" => "Admin",
+            "email" => "admin@gmail.com",
+            "password" => Hash::make("admin@12345"),
+        ]);
         Setting::truncate();
         $setting =  [
             ["title" => "description",],

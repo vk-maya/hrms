@@ -1,33 +1,81 @@
-@extends('admin.layouts.app')
-@push('css')
-    <link rel="stylesheet" href="{{ asset('assets/css/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
-    {{-- <link rel="stylesheet" href="assets/plugins/sweetalert2/sweetalert2.min.css"> --}}
-@endpush
-@section('content')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+</head>
+<style>
+    .payslip-title {
+    text-align: center;
+    text-decoration: underline;
+    text-transform: uppercase;
+    margin: 0 0 20px;
+}
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, 
+{
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+
+}
+.m-b-20 {
+    margin-bottom: 20px!important;
+}
+
+
+.col-sm-6 {
+    flex: 0 0 auto;
+    width: 50%;
+}
+.invoice-details {
+    float: right;
+    text-align: right;
+}
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+}
+.row {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(-1 * var(--bs-gutter-y));
+    margin-right: calc(-.5 * var(--bs-gutter-x));
+    margin-left: calc(-.5 * var(--bs-gutter-x));
+}
+
+.card-body {
+    flex: 1 1 auto;
+    padding: 1rem 1rem;
+}
+.table {
+    --bs-table-bg: transparent;
+    --bs-table-accent-bg: transparent;
+    --bs-table-striped-color: #212529;
+    --bs-table-striped-bg: rgba(0, 0, 0, 0.05);
+    --bs-table-active-color: #212529;
+    --bs-table-active-bg: rgba(0, 0, 0, 0.1);
+    --bs-table-hover-color: #212529;
+    --bs-table-hover-bg: rgba(0, 0, 0, 0.075);
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+    vertical-align: top;
+    border-color: #dee2e6;
+}
+
+</style>
+<body>
+    
     <div class="page-wrapper">
 
         <div class="content container-fluid">
-
-            <div class="page-header">
-                <div class="row align-items-center">
-                    <div class="col">
-                        <h3 class="page-title">Payslip</h3>
-                        <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Payslip</li>
-                        </ul>
-                    </div>
-                    <div class="col-auto float-end ms-auto">
-                        <div class="btn-group btn-group-sm">
-                            <button class="btn btn-white">CSV</button>
-                            <a class="btn btn-white" href="{{ route('admin.export-pdf',$employeesalary->id) }}">PDF</a>
-                            <button class="btn btn-white"><i class="fa fa-print fa-lg"></i> Print</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <div class="row">
                 <div class="col-md-12">
@@ -36,7 +84,6 @@
                             <h4 class="payslip-title">Payslip for the month of Feb 2019</h4>
                             <div class="row">
                                 <div class="col-sm-6 m-b-20">
-                                    <img src="assets/img/logo2.png" class="inv-logo" alt="">
                                     <ul class="list-unstyled mb-0">
                                         <li>Dreamguy's Technologies</li>
                                         <li>3864 Quiet Valley Lane,</li>
@@ -180,21 +227,16 @@
         </div>
 
     </div>
-@endsection
-@push('js')
-    <script src="{{ asset('assets/js/select2.min.js') }}"></script>
-    <script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/js/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('assets/js/moment.min.js') }}"></script>
-    <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-    <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script>
-        // ------------shoe data table---------------
-        $('#department').DataTable({
-            paging: true,
-            searching: true
-        });
-    </script>
-@endpush
+    <script src="assets/js/jquery-3.6.0.min.js"></script>
+
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+
+    <script src="assets/js/jquery.slimscroll.min.js"></script>
+
+    <script src="assets/js/app.js"></script>
+</body>
+
+<!-- Mirrored from smarthr.dreamguystech.com/blue/salary-view.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 12 Apr 2022 10:27:29 GMT -->
+
+</html>
+

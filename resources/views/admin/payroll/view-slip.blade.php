@@ -6,11 +6,11 @@
     {{-- <link rel="stylesheet" href="assets/plugins/sweetalert2/sweetalert2.min.css"> --}}
 @endpush
 @section('content')
-<style>
-    .error{
-        color: rgb(229, 33, 33);
-    }
-</style>
+    <style>
+        .error {
+            color: rgb(229, 33, 33);
+        }
+    </style>
     <div class="page-wrapper">
 
         <div class="content container-fluid">
@@ -20,15 +20,34 @@
                     <div class="col">
                         <h3 class="page-title">Employee Salary Slips</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Slips</li>
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
-                        <a href="{{route('admin.payroll.list')}}" class="btn add-btn"><i class="fa fa-arrow-left" aria-hidden="true"></i>Back</a>
+                        <a class="btn add-btn"
+                            href="{{ route('admin.employee.slip', $slipgenerate[0]->employee_id) }}">Generate
+                            Slip
+                        </a>
+                    </div>
+                    <div class="col-auto float-end ms-auto">
+                        <a href="{{ route('admin.payroll.list') }}" class="btn add-btn"><i class="fa fa-arrow-left"
+                                aria-hidden="true"></i>Back</a>
                     </div>
                 </div>
             </div>
+            @if ($message = Session::get('error'))
+            <div class="alert alert-danger alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>    
+                <strong>{{ $message }}</strong>
+            </div>
+            @endif
+            @if ($message = Session::get('success'))
+                <div class="alert alert-success alert-block">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <strong>{{ $message }}</strong>
+                </div>
+            @endif
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-responsive">
@@ -38,29 +57,30 @@
                                     <th>Employee</th>
                                     <th>Employee ID</th>
                                     <th>Email</th>
-                                    <th>Join Date</th>
+                                    <th>Date</th>
                                     <th>Salary</th>
                                     <th>Payslip</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($employeeslip as $item)
-                                    
-                                <tr>
-                                    <td>
-                                        <h2 class="table-avatar">
-                                            <a>{{$item->user->first_name}}</a>
-                                        </h2>
-                                    </td>
-                                    <td>{{$item->user->employeeID}}</td>
-                                    <td>
-                                        {{$item->user->email}}
-                                    </td>
-                                    <td>{{$item->user->joiningDate}}</td>
-                                    <td>{{$item->basic_salary}}</td>
-                                    <td><a class="btn btn-sm btn-primary" href="{{(route('admin.employee.generate_slip',$item->id))}}">Generate Slip</a></td>
-                                   
-                                </tr>
+                                    <tr>
+                                        <td>
+                                            <h2 class="table-avatar">
+                                                <a>{{ $item->user->first_name }}</a>
+                                            </h2>
+                                        </td>
+                                        <td>{{ $item->user->employeeID }}</td>
+                                        <td>
+                                            {{ $item->user->email }}
+                                        </td>
+                                        <td>{{ $item->date }}</td>
+                                        <td>{{ $item->monthly }}</td>
+                                        <td><a class="btn btn-sm btn-primary"
+                                                href="{{ route('admin.employee.generate_slip', $item->id) }}">View
+                                                Slip</a></td>
+
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -83,7 +103,6 @@
             searching: true
         });
 
-  // -------------------show hidden column-------------
-     
+        // -------------------show hidden column-------------
     </script>
 @endpush
