@@ -17,6 +17,8 @@
                     <div class="col-auto float-end ms-auto">
                         <a href="{{ route('admin.addemployees') }}" class="btn add-btn"><i class="fa fa-plus"></i>
                             Add Employee</a>
+                        <a href="{{ route('admin.add.employees.leavemonth') }}" class="btn add-btn"><i class="fa fa-plus"></i>
+                            Add Leave</a>
                         <div class="view-icons">
                             <a href="{{ route('admin.employees') }}" class="grid-view btn btn-link active"><i
                                     class="fa fa-th"></i></a>

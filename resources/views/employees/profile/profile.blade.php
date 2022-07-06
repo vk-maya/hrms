@@ -20,6 +20,9 @@
                
                 @else
                 <div class="col-auto float-end ms-auto">
+                    <a href="{{ route('employees.employees.document',Auth::guard('web')->user()->id) }}" class="btn add-btn"><i class="fa fa-file-o" aria-hidden="true"></i>
+                    </i>View Document</a>
+
                     <a href="{{ route('employees.add.moreinfo.create')}}" class="btn add-btn"><i
                             class="fa fa-plus"></i>Add More</a>
                 </div>

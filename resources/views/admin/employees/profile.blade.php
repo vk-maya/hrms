@@ -15,8 +15,8 @@
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
-                        <a href="{{ route('admin.employees.edit', $employees->id) }}" class="btn add-btn"><i
-                                class="fa fa-plus"></i>Edit User</a>
+                        <a href="{{ route('admin.employees.attach', $employees->id) }}" class="btn add-btn"><i class="fa fa-paperclip" aria-hidden="true"></i>Attach Document</a>
+                        <a href="{{ route('admin.employees.edit', $employees->id) }}" class="btn add-btn"><i class="fa fa-plus"></i>Edit User</a>
                     </div> 
                 </div>
             </div>

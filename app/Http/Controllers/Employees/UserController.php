@@ -13,6 +13,7 @@ use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 use App\Http\Controllers\Controller;
+use App\Models\Admin\Attach;
 use App\Models\Attendance;
 use App\Models\Holiday;
 use Illuminate\Support\Facades\Auth;
@@ -23,23 +24,27 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function profile(){
+    public function profile()
+    {
         return view('employees.profile.profile-password');
     }
-    public function profileinfo(){
-        $moreinfo = userinfo::where('user_id',Auth::guard('web')->user()->id)->count();
+    public function profileinfo()
+    {
+        $moreinfo = userinfo::where('user_id', Auth::guard('web')->user()->id)->count();
         $employees = User::with('moreinfo')->find(Auth::guard('web')->user()->id);
-        return view('employees.profile.profile',compact('employees','moreinfo'));
+        return view('employees.profile.profile', compact('employees', 'moreinfo'));
     }
-    public function profilemoreinfo(){
-        $moreinfo = userinfo::where('user_id',Auth::guard('web')->user()->id)->count();
-        if($moreinfo>0){
+    public function profilemoreinfo()
+    {
+        $moreinfo = userinfo::where('user_id', Auth::guard('web')->user()->id)->count();
+        if ($moreinfo > 0) {
             return redirect()->back();
-        }else{
+        } else {
             return view('employees.profile.moreinfo');
         }
     }
-    public function empmoreinfo(Request $request){
+    public function empmoreinfo(Request $request)
+    {
         // dd($request->toArray());
         $rules = [
             'nationality' => ['required', 'string',],
@@ -53,19 +58,20 @@ class UserController extends Controller
         $request->validate($rules);
         $data = new userinfo();
         $data->user_id = $request->user_id;
-        $data->nationality =$request->nationality;
-        $data->maritalStatus =$request->maritalstatus;
-        $data->noOfChildren =$request->children;
-        $data->bankname =$request->bankname;
-        $data->bankAc =$request->bankAc;
-        $data->ifsc =$request->ifsc;
-        $data->pan =$request->pan;
-        $data->status =1;
+        $data->nationality = $request->nationality;
+        $data->maritalStatus = $request->maritalstatus;
+        $data->noOfChildren = $request->children;
+        $data->bankname = $request->bankname;
+        $data->bankAc = $request->bankAc;
+        $data->ifsc = $request->ifsc;
+        $data->pan = $request->pan;
+        $data->status = 1;
         $data->save();
         return redirect()->route('employees.add.moreinfo');
     }
-    public function proPassword(Request $request){
-        $rules=[
+    public function proPassword(Request $request)
+    {
+        $rules = [
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ];
         $request->validate($rules);
@@ -74,24 +80,26 @@ class UserController extends Controller
         $employees->update();
         return redirect()->route('dashboard');
     }
-    public function empdashboard(){
-        $data = DailyTasks::where('user_id', Auth::guard('web')->user()->id)->where('post_date','>=',now()->toDateString())->count();
-        $holi= Holiday::where('date','>',now()->toDateString())->first();
-        $attendance = Attendance::where('user_id',Auth::guard('web')->user()->machineID)->where('date','>=',now()->toDateString())->latest()->first();
-        $allatendance =  Attendance::where('user_id',Auth::guard('web')->user()->machineID)->get();
+    public function empdashboard()
+    {
+        $data = DailyTasks::where('user_id', Auth::guard('web')->user()->id)->where('post_date', '>=', now()->toDateString())->count();
+        $holi = Holiday::where('date', '>', now()->toDateString())->first();
+        $attendance = Attendance::where('user_id', Auth::guard('web')->user()->machineID)->where('date', '>=', now()->toDateString())->latest()->first();
+        $allatendance =  Attendance::where('user_id', Auth::guard('web')->user()->machineID)->get();
         // $nextday= User::all();
         // dd($nextday->toArray());
-        return view('employees.dashboard',compact('data','holi','attendance','allatendance'));
+        return view('employees.dashboard', compact('data', 'holi', 'attendance', 'allatendance'));
     }
-    public function fill(){
+    public function fill()
+    {
         $id = Auth::guard('web')->user()->id;
-            $employees = User::find($id);
-            $department = Department::get();
-            $count = Countries::all();
-            return view('employees.profile.fill-details', compact('department', 'employees', 'count'));
-
+        $employees = User::find($id);
+        $department = Department::get();
+        $count = Countries::all();
+        return view('employees.profile.fill-details', compact('department', 'employees', 'count'));
     }
-    public function fillstore(Request $request){
+    public function fillstore(Request $request)
+    {
 
         $rules = [
             'first_name' => ['required', 'string', 'max:255'],
@@ -108,7 +116,7 @@ class UserController extends Controller
         ];
         $request->validate($rules);
         $employees = User::find($request->id);
-        $employees->verified =1;
+        $employees->verified = 1;
         $employees->first_name = $request->first_name;
         $employees->last_name = $request->last_name;
         $employees->gender = $request->gender;
@@ -132,13 +140,22 @@ class UserController extends Controller
         $employees->save();
         return redirect('/');
     }
-    public function country(Request $request){
+    public function country(Request $request)
+    {
         $state = State::where('country_id', $request->contid)->get();
         return response()->json(['state' => $state]);
     }
 
-    public function state(Request $request){
+    public function state(Request $request)
+    {
         $data = City::where('state_id', $request->id)->get();
         return response()->json(['city' => $data]);
     }
+
+    public function getdocument($id)
+    {
+        $files = Attach::where('user_id', $id)->get();
+        return view('employees.Attach.attach-file', compact('files'));
+    }
+     
 }

@@ -13,6 +13,10 @@ use App\Models\Designation;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 use App\Http\Controllers\Controller;
+use App\Models\Admin\Attach;
+use App\Models\Admin\Session;
+use App\Models\Admin\UserleaveYear;
+use App\Models\Leave\settingleave;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -112,16 +116,18 @@ class EmployeesController extends Controller
 
         if ($request->id == "") {
             $rules = [
-                'department_id' => ['required', 'string',],
-                'designation_id' => ['required', 'string', 'numeric', 'max:255'],
-                'joiningDate' => ['string', 'required'],
                 'first_name' => ['required', 'string', 'max:255'],
                 'password' => ['required', 'confirmed', Rules\Password::defaults()],
+                'joiningDate' => ['string', 'required'],
+                'department_id' => ['required', 'string',],
+                'designation_id' => ['required', 'string', 'numeric', 'max:255'],
             ];
         }
 
         if ($request->id == !null) {
             $employees = User::find($request->id);
+            $leaveyearr= UserleaveYear::where('user_id',$request->id)->where('status',1)->first();
+            // dd($leaveyear->toArray());
             $rules['email'] = ['required', 'string', 'email', 'max:255'];
             if (User::where('email', $request->email)->where('id', '!', $request->id)->count() > 0) {
                 return response()->back()->withErrors(['email' => "Email Already Exist"])->withInput();
@@ -129,8 +135,9 @@ class EmployeesController extends Controller
         } else {
             $rules['email'] = ['required', 'string', 'email', 'max:255', 'unique:users'];
             $request->validate($rules);
-            $employees = new User();
-        }
+            $employees = new User();           
+    }
+        // dd("ohoo");
         $employees->first_name = $request->first_name;
         $employees->last_name = $request->last_name;
         $employees->gender = $request->gender;
@@ -144,6 +151,7 @@ class EmployeesController extends Controller
         $id = User::latest()->first();
         if ($id == !null) {
             $emp = explode('-',$id->employeeID);
+            // dd($emp);
             $empid = 1 + $emp[2];
         } else {
             $empid = "SDPL-JAI-0001";
@@ -184,10 +192,62 @@ class EmployeesController extends Controller
             $file = $request->file('image')->storeAs('public/uploads', $filename);
             $employees->image = $filename;
         }
+        $ert =$employees->save();
 
-        $employees->save();
+        $employeesId= User::latest()->first();
+        if ($request->id == null) {
+            $leaveyear= new UserleaveYear();
+        }else{
+            $leaveyear= UserleaveYear::find($leaveyearr->id);
+
+        }
+            $allleave = settingleave::all()->where('status',1);
+            $leaveyear->user_id= $employeesId->id;
+            $jd =$request->joiningDate;           
+            $sess = Session::where('status',1)->latest()->first();    
+            $leaveyear->session_id =$sess->id;
+            if ($jd >= $sess->from) {
+                $jd =$request->joiningDate;
+            }else{
+                $jd =$sess->from;
+            }
+            $diffr = round(Carbon::parse($jd)->floatDiffInMonths($sess->to));
+            foreach ($allleave as $key => $value) {
+                if ($value->type == 'Annual') {
+                    $day=$diffr*=$value->day/12;
+                    $leaveyear->basicAnual=$day;
+                }elseif($value->type == 'Sick'){
+                    $day=$diffr*=$value->day/12;
+                    $leaveyear->basicSick=$day;
+                }elseif($value->type == 'other'){
+                    $day=$diffr=$value->day;
+                    $leaveyear->other=$day;
+            }
+            $leaveyear->status=1;
+            $leaveyear->save();
+        }
+        if ($request->hasFile('files')) {
+            $files = $request->file('files');
+            foreach ($files as $file) {
+                    if ($request->id == null) {
+                    $fileimg = new Attach;
+                }else{
+                    $fileimg = Attach::where('user_id',$request->id);
+                }
+                    $fname =$request->first_name;
+                    $newfilename = $fname. '_' . rand(0, 10000) . '.' . $file->getClientoriginalExtension();
+                    $file->storeAs('public/file', $newfilename);
+                    $fileimg->user_id = $employeesId->id;
+                    $fileimg->type ="user";
+                    $file->status=1;               
+                    $fileimg->fileName = $newfilename;
+                    $fileimg->save();
+            }
+        }
+    
         return redirect()->route('admin.employees');
     }
+
     public function status($id)
     {
         $idd = User::find($id);
@@ -243,7 +303,35 @@ class EmployeesController extends Controller
         $data->save();
         return redirect()->route('admin.employees.profile',$request->user_id);
     }
-
-   
+    public function attachfile($id){
+        $files = Attach::where('user_id',$id)->get();
+        $user= User::find($id);
+        // dd($files->toArray());
+        return view('admin.attach.user-file',compact('files','user'));
+    }
+    public function attachfileStore(Request $request){
+        if ($request->hasFile('files')) {
+            $files = $request->file('files');
+            foreach ($files as $file) {                  
+                    $fileimg = new Attach;                
+                    $fname =$request->first_name;
+                    $newfilename = $fname. '_' . rand(0, 10000) . '.' . $file->getClientoriginalExtension();
+                    $file->storeAs('public/file', $newfilename);
+                    $fileimg->user_id =$request->user_id;
+                    $fileimg->type ="user";
+                    $file->status=1;               
+                    $fileimg->fileName = $newfilename;
+                    $fileimg->save();
+            }
+            return redirect()->back();
+        }
+    }
+    public function filedelete($id){
+        $data = Attach::find($id);
+        // dd($data->fileName);
+        storage::delete('public/file/' . $data->fileName);
+        $data->delete();
+        return redirect()->back();
+    } 
     
 }

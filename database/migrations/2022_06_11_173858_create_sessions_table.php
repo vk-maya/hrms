@@ -16,8 +16,8 @@ class CreateSessionsTable extends Migration
         
                 Schema::create('sessions', function (Blueprint $table) {
                     $table->id();
-                    $table->date('From');
-                    $table->date('to');
+                    $table->string('from');
+                    $table->string('to');
                     $table->string('status');
                     $table->timestamps();
                 });

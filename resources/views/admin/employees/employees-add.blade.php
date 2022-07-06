@@ -231,8 +231,7 @@
                                         <input class="form-control" name="password_confirmation" type="password">
 
                                     </div>
-                                </div>
-                               
+                                </div>                               
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Address</label>
@@ -363,8 +362,7 @@
                                             @enderror
                                         </span>
                                     </div>
-                                </div>
-                             
+                                </div>                             
                                 <div class="col-sm-6">
                                     <label for="statusinput" class="mb-4">Status</label>
                                     <div class="col-md-12">
@@ -422,6 +420,15 @@
                                 <div class="form-group">
                                     <label>Upload Photo</label>
                                     <input name="image" class="form-control" value="" type="file">
+                                    <span class="text-danger">
+                                        @error('image')
+                                            <p>Photo field is required.</p>
+                                        @enderror
+                                    </span>
+                                </div>
+                                <div class="form-group">
+                                    <label>Attach Employees Document</label>
+                                    <input name="files[]" class="form-control" value="" type="file" multiple>
                                     <span class="text-danger">
                                         @error('image')
                                             <p>Photo field is required.</p>

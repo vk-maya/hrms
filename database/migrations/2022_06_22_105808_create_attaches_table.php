@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSettingleavesTable extends Migration
+class CreateAttachesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateSettingleavesTable extends Migration
      */
     public function up()
     {
-        Schema::create('settingleaves', function (Blueprint $table) {
+        Schema::create('attaches', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id')->nullable();
-            $table->string('type');
-            $table->float('day');
-            $table->string('status')->default(1);
+            $table->string('fileName')->nullable();
+            $table->string('type')->nullable();
+            $table->integer('status')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateSettingleavesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('settingleaves');
+        Schema::dropIfExists('attaches');
     }
 }

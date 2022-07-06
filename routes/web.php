@@ -55,6 +55,13 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
     Route::any('More/info/show/',[UserController::class,'profilemoreinfo'])->name('add.moreinfo.create');
     Route::post('More/info/save/',[UserController::class,'empmoreinfo'])->name('add.moreinfo.save');
     Route::post('save-employees', [UserController::class, 'proPassword'])->name('propassword');
+    // -------------------------------------document Attach-----------------------
+    Route::get('file/attach/{id}',[UserController::class,'getdocument'])->name('employees.document');
+    Route::get('get/file/{id}',[UserController::class,'download'])->name('employees.download');
+    // Route::get('get/file', function(){
+    //     return Storage::download('path to file');
+    // })
+
     // ----------------task route employees---------------------------
     route::get('task',[Task::class,'task'])->name('task');
     route::post('task/status',[Task::class,'taskstatus'])->name('task.status');
@@ -103,13 +110,18 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
 
     Route::any('attendance',[AttendanceController::class,'attendance'])->name('attendance');
     Route::get('attendance/info/{id}',[AttendanceController::class,'attinfo'])->name('attendance.info');
+    // -----------------------------------file Document Attach------------------------------------------
+    Route::get('file/attach/{id}',[EmployeesController::class,'attachfile'])->name('employees.attach');
+    Route::post('file/attach',[EmployeesController::class,'attachfileStore'])->name('employees.attach.store');
+    Route::get('get/file/delete{id}',[EmployeesController::class,'filedelete'])->name('fileattach.delete');
+
 
     // ---------------------------leave route----------------------------------
     Route::get('setting/leave',[AdminLeaveController::class,'leavesetting'])->name('leave.setting');
     Route::post('leave/type',[AdminLeaveController::class,'leavetype'])->name('leave.type');
     Route::post('leave/type/sick',[AdminLeaveController::class,'leavetype'])->name('leave.type.sick');
     Route::get('leave/list',[AdminLeaveController::class,'leavelist'])->name('leave.list');
-    Route::post('leave/report/{id}',[AdminLeaveController::class,'leavereport'])->name('leave.report');
+    Route::post('leave/report',[AdminLeaveController::class,'leavereport'])->name('leave.report');
     Route::get('holiday',[AdminLeaveController::class,'holidays'])->name('holidays');
     Route::post('holiday',[AdminLeaveController::class,'holidayStore'])->name('holiday');
     Route::any('holiday/edit/{id}',[AdminLeaveController::class,'holidays'])->name('holiday.edit');
@@ -117,6 +129,7 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::get('leave/edit/{id}',[AdminLeaveController::class,'edit'])->name('leave.edit');
     Route::any('leave/update',[AdminLeaveController::class,'update'])->name('leave.update');
     Route::get('leave/delete/{id}',[AdminLeaveController::class,'delete'])->name('leave.delete');
+    Route::get('leave/add/employees',[AdminLeaveController::class,'monthleave'])->name('add.employees.leavemonth');
 
 
     // ---------------------client route-----------------------

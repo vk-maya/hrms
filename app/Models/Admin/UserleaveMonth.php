@@ -2,11 +2,10 @@
 
 namespace App\Models\Admin;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Session extends Model
+class UserleaveMonth extends Model
 {
     use HasFactory;
 }

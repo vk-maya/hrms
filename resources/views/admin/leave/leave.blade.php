@@ -17,37 +17,12 @@
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
-                        <a href="{{ route('employees.add.leave') }}" class="btn add-btn"><i class="fa fa-plus"></i>
-                            Add Leave</a>
+                        <a href="{{ route('admin.leave.setting') }}" class="btn add-btn"><i class="fa fa-plus"></i>
+                            Add Leave Type</a>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="stats-info">
-                        <h6>Annual Leave</h6>
-                        <h4>12</h4>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stats-info">
-                        <h6>Medical Leave</h6>
-                        <h4>3</h4>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stats-info">
-                        <h6>Other Leave</h6>
-                        <h4>4</h4>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="stats-info">
-                        <h6>Remaining Leave</h6>
-                        <h4>5</h4>
-                    </div>
-                </div>
-            </div>
+            
             @if ($message = Session::get('success'))
             <div class="alert alert-success alert-block">
                 <button type="button" class="close" data-dismiss="alert">×</button>
@@ -62,7 +37,7 @@
         @endif
             <div class="row">
                 <div class="col-md-12">
-                    <div class="table-responsive">
+                    <div class="table-responsivesss">
                         <table class="table table-striped custom-table mb-0 datatable">
                             <thead>
                                 <tr>
@@ -78,7 +53,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($data as $item)
-                                    <tr>
+                                    <tr>                                     
                                         @php
                                             $start = new DateTime($item->form);
                                             $end = new DateTime($item->to);
@@ -87,7 +62,13 @@
                                         <td>{{ $item->leaveType->type }}</td>
                                         <td> {{ $start->format('Y-m-d') }}</td>
                                         <td> {{ $end->format('Y-m-d') }}</td>
-                                        <td>{{ $start->diff($end)->format('%a') }}</td>
+                                        @php
+                                           
+                                            $interval = $start->diff($end);
+                                            $da = $interval->format('%a');
+                                            $days = $da+1;
+                                        @endphp
+                                        <td>{{ $days}}</td>
                                         <td>{{ $item->reason }}</td>
                                         <td class="text-end">
 											<div class="dropdown dropdown-action">
@@ -104,12 +85,12 @@
 										</td>
                                         <td class="text-center">
                                             <div class="dropdown action-label">
-                                                @if ($item->status == '')
+                                                @if ($item->status == 2)
                                                 <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href=""
                                                     data-bs-toggle="dropdown" aria-expanded="false">
                                                     <i class="fa fa-dot-circle-o text-purple"></i> New
                                                 </a>
-                                                @elseif($item->status == 1)
+                                                @elseif($item->status == 0)
                                                 <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href=""
                                                 data-bs-toggle="dropdown" aria-expanded="false"><i
                                                     class="fa fa-dot-circle-o text-danger"></i> Declined</a>  
@@ -120,28 +101,30 @@
                                                 @endif
 
                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                    <form action="{{route('admin.leave.report',$item->id)}}" method="POST">
+                                                    <form action="{{route('admin.leave.report')}}" method="POST">
                                                         @csrf
-                                                        <input type="hidden" name="status" value="null">
+                                                        <input type="hidden" name="status" value="2">
+                                                        <input type="hidden" name="id" value="{{$item->id}}">
                                                         <button type="submit" class="dropdown-item"><i
                                                                 class="fa fa-dot-circle-o text-purple"></i> New</button>                                                  
-                                                        </form>                                             
-                                                        <form action="{{route('admin.leave.report',$item->id)}}" method="POST">
+                                                        </form>
+                                                        <form action="{{route('admin.leave.report')}}" method="POST">
                                                             @csrf
-                                                            <input type="hidden" name="status" value="0">
+                                                            <input type="hidden" name="status" value="1">
+                                                            <input type="hidden" name="id" value="{{$item->id}}">
+                                                            <input type="hidden" name="type_id" value="{{$item->leaves_id}}">
                                                             <button type="submit" class="dropdown-item"><i
                                                                     class="fa fa-dot-circle-o text-success"></i> Approved</button>                                                  
                                                             </form>                                             
-                                                    <form action="{{route('admin.leave.report',$item->id)}}" method="POST">
+                                                    <form action="{{route('admin.leave.report')}}" method="POST">
                                                         @csrf
-                                                        <input type="hidden" name="status" value="1">
+                                                        <input type="hidden" name="status" value="0">
+                                                        <input type="hidden" name="id" value="{{$item->id}}">
+
                                                         <button type="submit" class="dropdown-item"><i
                                                                 class="fa fa-dot-circle-o text-danger"></i> Declined</button>                                                  
-                                                        </form>                                             
-                                                                                                      
-                                                       
-                                             
-                                                </div>
+                                                        </form>  
+                                                    </div>
                                             </div>
                                         </td>
                                     </tr>
