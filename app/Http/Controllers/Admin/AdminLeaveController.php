@@ -15,6 +15,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LeaveController;
 use App\Models\Leave\Leaverecord;
+use App\Models\monthleave;
 
 class AdminLeaveController extends Controller
 {
@@ -135,12 +136,19 @@ class AdminLeaveController extends Controller
     public function leavereport(Request $request)
     {
         $data = Leave::find($request->id);
-        $data->status = $request->status;
+        // dd($request->toArray(),$data->toArray());
+        // dd($data->toArray());
+       
         $leaverall = Leaverecord::where("leave_id", $request->id)->get();
-        if ($request->status == 1) {
-            foreach ($leaverall as $key => $value) {
+        // $leave= Leave::find($request->id);
+     
+        
+        if ($data->status == 2 or $data->status == 0 && $request->status == 1) {
+            // dd("appr");
+            foreach ($leaverall as $value) {
                 $setl = settingleave::find($value->type_id);
-                $totaleave = UserleaveYear::where('user_id', Auth::guard('web')->user()->id)->latest()->first();
+                $totaleave = UserleaveYear::where('user_id',$data->user_id)->first();
+                // dd($totaleave);
                 if ($setl->id == $value->type_id && $setl->type == 'Annual') {
                     if ($totaleave->netAnual != null) {
                         $tt = $totaleave->netAnual;
@@ -165,18 +173,61 @@ class AdminLeaveController extends Controller
                 }
                 $totaleave->save();
             }
+            $data->status = $request->status;
             $data->update();
-        }
+                $leaverecord = Leaverecord::where('leave_id',$request->id)->get();
+                    foreach ($leaverecord as $key => $record) {
+                        $record->status= $request->status;
+                        $record->save();
+                    }
+        }elseif($data->status == 1 or $data->status == 2 && $request->status ==0 or $request->status == 2 ){
+          
+            foreach ($leaverall as $key => $value) {
+                $setl = settingleave::find($value->type_id);
+                $totaleave = UserleaveYear::where('user_id',$data->user_id)->first();
+                // dd($leavercc->toArray(),"hello");
+                if ($setl->id == $value->type_id && $setl->type == 'Annual') {                  
+                        $tt = $totaleave->netAnual;
+                        $totaleave->netAnual = $tt - $value->day;                 
+                } elseif ($setl->id == $value->type_id && $setl->type == 'Sick') {
+                  
+                        $tt = $totaleave->netSick;
+                        $totaleave->netSick = $tt - $value->day;
+                   
+                
+                } elseif ($setl->id == $value->type_id && $setl->type == 'Other') {
+                  
+                        $tt = $totaleave->other;
+                        $totaleave->other = $tt - $value->day;
+                   
+                }
+                  $totaleave->save();
+            }
+            $data->status = $request->status;
+                $data->update();
+            $leaverecord = Leaverecord::where('leave_id',$request->id)->get();
+                foreach ($leaverecord as $key => $record) {
+                    $record->status= $request->status;
+                    $record->save();
+                }     
+            }
+           
         return redirect()->back();
-    }
-    public function monthleave()
-    {
-        // dd("hello");
+
+
+
+
+    /*public function monthleave(){
         $session= Session::where('status',1)->latest()->first();
-        // dd($session->toArray());
         $users = User::where('status', 1)->get();
         $yearleave=settingleave::where('status',1)->get();
-        dd($yearleave->toArray());
+        foreach ($yearleave as $key => $value) {
+           if ($value->type=="Annual") {
+            $anual =$value->day/12;
+           }elseif($value->type=="Sick"){
+            $sickl = $value->day/12;
+        }
+    }
         foreach ($users as $key => $user) {
             $jd = $user->joiningDate;
             $str = date('Y-m',strtotime($jd));
@@ -196,12 +247,28 @@ class AdminLeaveController extends Controller
             $end=Carbon::parse($end)->endOfMonth();
             $end=date('Y-m-d',strtotime($end));
                 $diffr = round(Carbon::parse($jd)->floatDiffInMonths($end));
-                dd($diffr);
-                $jd=$session->from;
-                dd($jd);             
             }
+            $data= new monthleave();
+            $data->user_id=$user->id;
+                        $from=date('Y-m-d',strtotime($jd));
+                        $to =date('Y-m-d',strtotime($end));
+            $data->from= $from;
+            $data->to=$to;
+                        $anual=$diffr*$anual;         
+                        $sick=$diffr*$sickl;
+            $data->anualLeave=$anual;
+            $data->sickLeave=$sick;
+            $data->status=1;
+            $data->save();
             
-
+            
         }
+        return redirect()->back();
+    }*/
+    }
+    public function moreleave($id){
+        $data = Leaverecord::where('leave_id',$id)->with('leavetype')->get();
+        // dd($data->toArray());
+        return view('admin.leave.leaverecord',compact('data'));
     }
 }

@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Leaverecord extends Model
 {
     use HasFactory;
+
+    public function leavetype(){
+       return $this->hasOne(settingleave::class,'id','type_id');
+    }
 }

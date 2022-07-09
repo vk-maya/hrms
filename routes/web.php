@@ -73,7 +73,8 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
     Route::post('emp/daliy/task',[DailyTask::class,'dailystore'])->name('daily.task.store');
 });
 
-// ------------------------------admin Route----------------------------------
+// ------------------------------admin Route----------------------------------//////////
+
 Route::redirect('/admin', '/admin/dashboard');
 Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
@@ -130,6 +131,7 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::any('leave/update',[AdminLeaveController::class,'update'])->name('leave.update');
     Route::get('leave/delete/{id}',[AdminLeaveController::class,'delete'])->name('leave.delete');
     Route::get('leave/add/employees',[AdminLeaveController::class,'monthleave'])->name('add.employees.leavemonth');
+    Route::get('leave/view/{id}',[AdminLeaveController::class,'moreleave'])->name('leave.view');
 
 
     // ---------------------client route-----------------------

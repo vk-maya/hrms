@@ -33,7 +33,7 @@
                 <div class="col-md-2">
                     <div class="stats-info">
                         <h6>Medical Leave</h6>
-                        <h6>                          
+                        <h6>
                         </h6>
 
                     </div>
@@ -42,27 +42,27 @@
                     <div class="stats-info">
                         <h6>Other Leave</h6>
                         <h6>
-                            
+
                         </h6>
                     </div>
-                </div>                        
+                </div>
                 <div class="col-md-2">
                     <div class="stats-info">
-                        <h6>Remaining Leave</h6>                                                
-                        <h6></h6>                           
+                        <h6>Remaining Leave</h6>
+                        <h6></h6>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="stats-info">
                         <h6>Next A/M Leave</h6>
-                       <h6></h6>
+                        <h6></h6>
                     </div>
                 </div>
                 <div class="col-md-2">
                     <div class="stats-info">
                         <h6>Total Leave</h6>
-                  
-                       <h6></h6>
+
+                        <h6></h6>
                     </div>
                 </div>
             </div>
@@ -91,7 +91,9 @@
                                         <td> {{ $start->format('d-m-Y') }}</td>
                                         <td> {{ $end->format('d-m-Y') }}</td>
                                         <td>{{ $start->diff($end)->format('%a') + 1 }}</td>
-                                        <td>{{ $item->reason }}</td>
+                                        <td><a href="#"
+                                                data-bs-toggle="modal"data-bs-target="#add_department{{ $item->id }}">{{ \Illuminate\Support\Str::limit($item->reason, 20, '..') }}</a>
+                                        </td>
                                         <td class="text-center">
                                             <div class="">
                                                 @if ($item->status == 2)
@@ -115,7 +117,27 @@
             </div>
         </div>
     </div>
+    @foreach ($data as $item)
+    <div id="add_department{{ $item->id }}" class="modal custom-modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">View Reason</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            {{ $item->reason }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+@endforeach
 @endsection
 @push('plugin-js')
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>

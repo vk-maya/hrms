@@ -9,14 +9,15 @@ use App\Models\State;
 use App\Models\userinfo;
 use App\Models\Countries;
 use App\Models\Department;
+use App\Models\monthleave;
 use App\Models\Designation;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rules;
-use App\Http\Controllers\Controller;
 use App\Models\Admin\Attach;
+use Illuminate\Http\Request;
 use App\Models\Admin\Session;
-use App\Models\Admin\UserleaveYear;
+use Illuminate\Validation\Rules;
 use App\Models\Leave\settingleave;
+use App\Models\Admin\UserleaveYear;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -192,30 +193,33 @@ class EmployeesController extends Controller
             $file = $request->file('image')->storeAs('public/uploads', $filename);
             $employees->image = $filename;
         }
-        $ert =$employees->save();
+            $employees->save();
+// -------------------------yearleave function------------------------
 
-        $employeesId= User::latest()->first();
-        if ($request->id == null) {
-            $leaveyear= new UserleaveYear();
-        }else{
-            $leaveyear= UserleaveYear::find($leaveyearr->id);
-
-        }
-            $allleave = settingleave::all()->where('status',1);
+$sess = Session::where('status',1)->latest()->first();    
+if ($request->id == null) {
+            $employeesId= User::latest()->first();
+            $leaveyear= new UserleaveYear();    
             $leaveyear->user_id= $employeesId->id;
-            $jd =$request->joiningDate;           
-            $sess = Session::where('status',1)->latest()->first();    
             $leaveyear->session_id =$sess->id;
-            if ($jd >= $sess->from) {
-                $jd =$request->joiningDate;
-            }else{
-                $jd =$sess->from;
-            }
+
+        }else{
+            $leaveyear= UserleaveYear::where('user_id',$request->id)->where('status',1)->latest()->first();
+        }
+        $allleave = settingleave::where('status',1)->get();
+        // dd($allleave->toArray());
+            $jd =$request->joiningDate;
+                if ($jd >= $sess->from) {
+                    $jd =$request->joiningDate;
+                }else{
+                    $jd =$sess->from;
+                }
             $diffr = round(Carbon::parse($jd)->floatDiffInMonths($sess->to));
-            foreach ($allleave as $key => $value) {
+            foreach ($allleave as  $value) {
                 if ($value->type == 'Annual') {
                     $day=$diffr*=$value->day/12;
                     $leaveyear->basicAnual=$day;
+                    // dd($leaveyear->basicAnual);
                 }elseif($value->type == 'Sick'){
                     $day=$diffr*=$value->day/12;
                     $leaveyear->basicSick=$day;
@@ -226,20 +230,67 @@ class EmployeesController extends Controller
             $leaveyear->status=1;
             $leaveyear->save();
         }
+    
+        // ----------------------------monthleave function--------------------
+        if ($request->id == null) {
+            $leaveyear = UserleaveYear::latest()->first();
+                $yearleave=settingleave::where('status',1)->get();
+                foreach ($yearleave as $key => $value) {
+                    if ($value->type=="Annual") {
+                    $anual =$value->day/12;
+                    }elseif($value->type=="Sick"){
+                    $sickl = $value->day/12;
+                }
+            }
+                $data= new monthleave();
+                $data->user_id=$employeesId->id;
+                $data->useryear_id= $leaveyear->id;
+                $jd =$employeesId->joiningDate;
+                $str = date('Y-m',strtotime($jd));
+                $strr = $str."-15";
+                if ($jd>$sess->from) {
+                    if ($jd<$strr){
+                        $jd=date('Y-m',strtotime($jd));
+                        $jd= $jd."-01";
+                        // dd($jd);
+                    }else{
+                        $jd=Carbon::parse($jd)->addMonths();
+                        $jd=date('Y-m',strtotime($jd));
+                        $jd = $jd."-01";
+                        }
+                }            
+                    $end = now();
+                    $end=date('Y-m',strtotime($end));
+                    $end=Carbon::parse($end)->endOfMonth();
+                    $end=date('Y-m-d',strtotime($end));
+                    $diffr = round(Carbon::parse($jd)->floatDiffInMonths($end));                       
+                            $from=date('Y-m-d',strtotime($jd));
+                            $to =date('Y-m-d',strtotime($end));
+                        $data->from= $from;
+                        $data->to=$to;
+                            $anual=$diffr*$anual;         
+                            $sick=$diffr*$sickl;
+                        $data->anualLeave=$anual;
+                        $data->sickLeave=$sick;
+                        $data->status=1;
+                        $data->save();
+        }
+        // -----------------------file save function------------------------
+
         if ($request->hasFile('files')) {
             $files = $request->file('files');
             foreach ($files as $file) {
                     if ($request->id == null) {
                     $fileimg = new Attach;
                 }else{
-                    $fileimg = Attach::where('user_id',$request->id);
+                    $fileimg = Attach::where('user_id',$request->id)->get();
                 }
                     $fname =$request->first_name;
                     $newfilename = $fname. '_' . rand(0, 10000) . '.' . $file->getClientoriginalExtension();
                     $file->storeAs('public/file', $newfilename);
                     $fileimg->user_id = $employeesId->id;
                     $fileimg->type ="user";
-                    $file->status=1;               
+                    $file->status=1;
                     $fileimg->fileName = $newfilename;
                     $fileimg->save();
             }
@@ -264,6 +315,7 @@ class EmployeesController extends Controller
         // dd($employees->toArray());
         return view('admin.employees.profile',compact('employees'));
     }
+
     public function information($id){
         $userin = userinfo::where('user_id',$id)->count();
         if($userin!= ""){
@@ -275,6 +327,7 @@ class EmployeesController extends Controller
             return view('admin.employees.information',compact('id'));
         }
     }
+
     public function empinfo(Request $request){
         $rules = [
             'nationality' => ['required', 'string',],
@@ -306,9 +359,11 @@ class EmployeesController extends Controller
     public function attachfile($id){
         $files = Attach::where('user_id',$id)->get();
         $user= User::find($id);
-        // dd($files->toArray());
         return view('admin.attach.user-file',compact('files','user'));
     }
+    // ------------attach file store function---------------------
+
+
     public function attachfileStore(Request $request){
         if ($request->hasFile('files')) {
             $files = $request->file('files');
@@ -326,9 +381,10 @@ class EmployeesController extends Controller
             return redirect()->back();
         }
     }
+    // ---------------save employees file delete function------------
+
     public function filedelete($id){
         $data = Attach::find($id);
-        // dd($data->fileName);
         storage::delete('public/file/' . $data->fileName);
         $data->delete();
         return redirect()->back();

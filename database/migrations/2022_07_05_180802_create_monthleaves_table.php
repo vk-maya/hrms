@@ -16,8 +16,8 @@ class CreateMonthleavesTable extends Migration
         Schema::create('monthleaves', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
-            $table->integer('from');
-            $table->string('to');
+            $table->date('from');
+            $table->date('to');
             $table->float('anualLeave');
             $table->float('sickLeave');
             $table->float('apprAnual')->nullable();

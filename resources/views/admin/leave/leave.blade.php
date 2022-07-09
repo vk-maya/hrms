@@ -45,10 +45,11 @@
                                     <th>Leave Type</th>
                                     <th>From</th>
                                     <th>To</th>
-                                    <th>No of Days</th>
+                                    <th>Days</th>
                                     <th>Reason</th>
-                                    <th>Action</th>
+                                    <th>More...</th>
                                     <th class="text-center">Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -57,32 +58,19 @@
                                         @php
                                             $start = new DateTime($item->form);
                                             $end = new DateTime($item->to);
-                                        @endphp
-                                        <td>{{ $item->user->first_name }}</td>
+                                        @endphp                                     
+                                        <td><a href="{{route('admin.leave.view',$item->id)}}">{{ $item->user->first_name }}</a></td>
                                         <td>{{ $item->leaveType->type }}</td>
                                         <td> {{ $start->format('Y-m-d') }}</td>
                                         <td> {{ $end->format('Y-m-d') }}</td>
-                                        @php
-                                           
+                                        @php                                           
                                             $interval = $start->diff($end);
                                             $da = $interval->format('%a');
                                             $days = $da+1;
-                                        @endphp
+                                        @endphp                                        
                                         <td>{{ $days}}</td>
-                                        <td>{{ $item->reason }}</td>
-                                        <td class="text-end">
-											<div class="dropdown dropdown-action">
-												<a href="#" class="action-icon dropdown-toggle"
-													data-bs-toggle="dropdown" aria-expanded="false"><i
-														class="material-icons">more_vert</i></a>
-												<div class="dropdown-menu dropdown-menu-right">
-													<a class="dropdown-item" href="{{route('admin.leave.edit',$item->id)}}"><i
-															class="fa fa-pencil m-r-5"></i> Edit</a>
-													<a class="dropdown-item" href="{{route('admin.leave.delete',$item->id)}}" ><i
-															class="fa fa-trash-o m-r-5"></i> Delete</a>
-												</div>
-											</div>
-										</td>
+                                        <td><a href="#" data-bs-toggle="modal"data-bs-target="#add_department{{ $item->id }}">{{ \Illuminate\Support\Str::limit($item->reason, 20, '..') }}</a></td>
+                                        <td><a href="{{route('admin.leave.view',$item->id)}}">More View</a></td>                                      
                                         <td class="text-center">
                                             <div class="dropdown action-label">
                                                 @if ($item->status == 2)
@@ -127,6 +115,19 @@
                                                     </div>
                                             </div>
                                         </td>
+                                        <td class="text-end">
+											<div class="dropdown dropdown-action">
+												<a href="#" class="action-icon dropdown-toggle"
+													data-bs-toggle="dropdown" aria-expanded="false"><i
+														class="material-icons">more_vert</i></a>
+												<div class="dropdown-menu dropdown-menu-right">
+													<a class="dropdown-item" href="{{route('admin.leave.edit',$item->id)}}"><i
+															class="fa fa-pencil m-r-5"></i> Edit</a>
+													<a class="dropdown-item" href="{{route('admin.leave.delete',$item->id)}}" ><i
+															class="fa fa-trash-o m-r-5"></i> Delete</a>
+												</div>
+											</div>
+										</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -136,6 +137,27 @@
             </div>
         </div>
     </div>
+    @foreach ($data as $item)
+    <div id="add_department{{ $item->id }}" class="modal custom-modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">View Reason</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            {{ $item->reason }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endforeach
 @endsection
 @push('plugin-js')
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
