@@ -33,7 +33,6 @@ class LeaveController extends Controller
         return view('employees.leave.add-leave',compact('data'));
     }
     public function storeleave(Request $request){   
-        // dd($request->toArray());
         $rules = [
             'type_id' => ['required', 'integer'],
             'from' => ['required', 'date'],
@@ -51,7 +50,7 @@ class LeaveController extends Controller
         $request->validate($rules);
         $data = new Leave();
         $data->user_id =Auth::guard('web')->user()->id;
-        $leavetype = settingleave::where('id',$request->type_id)->count();   
+        $leavetype = settingleave::where('id',$request->type_id)->count();
             if($leavetype>0){
                     // dd($leavetyp);
                     $data->leaves_id =$request->type_id;
@@ -69,11 +68,10 @@ class LeaveController extends Controller
                 }          
             }else{
                 return redirect()->back();
-            }
+            }      
         $leave = Leave::where('user_id',Auth::guard('web')->user()->id)->where(function($query) use($request){
-            $query->where('form','<=',$request->from)->where('to','>=',$request->from);
-        })->orWhere(function($query) use($request){
-            $query->where('form','<=',$request->to)->where('to','>=',$request->to);
+            $query->whereBetween('form',[$request->from,$request->to])
+            ->orWhereBetween('to',[$request->from,$request->to]);
         })->count();
         if($leave > 0){
             return back()->withErrors(["from" => "Please Select another From date"])->withInput();
@@ -538,6 +536,22 @@ class LeaveController extends Controller
         return redirect()->route('employees.leave');
      
     }
+    // --------------delete function-----------------------
+    public function delete($id){
+        // dd("dele");
+        $data = Leave::find($id);
+        if ($data->status == 1) {
+            return back()->with(["unsuccess" => "Don't Delete This Record"])->withInput();
+        } else {
+            $leaverecord = Leaverecord::where('leave_id',$id)->get();
+            foreach ($leaverecord as $record) {
+               $record->delete();
+            }
+            $data->delete();
+            return back()->with(["success" => "Success Delete This Record"])->withInput();
+        }
+    }
+   
     // ----------------------------admin leave function-----------------------------
     
 }

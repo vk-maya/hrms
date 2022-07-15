@@ -22,6 +22,19 @@
                     </div>
                 </div>
             </div>
+             
+            @if ($message = Session::get('success'))
+            <div class="alert alert-success alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>{{ $message }}</strong>
+            </div>
+        @endif
+            @if ($message = Session::get('unsuccess'))
+            <div class="alert alert-warning alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>{{ $message }}</strong>
+            </div>
+        @endif
             <div class="row">
                 <div class="col-md-2">
                     <div class="stats-info">
@@ -78,6 +91,7 @@
                                     <th>No of Days</th>
                                     <th>Reason</th>
                                     <th class="text-center">Status</th>
+                                    <th class="text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -107,42 +121,59 @@
                                                             class="fa fa-dot-circle-o text-success"></i> Approved</span>
                                                 @endif
                                             </div>
+                                        </td>
+                                        @if ($item->status ==2 || $item->status==0 )                                            
+                                        <td class="text-end">
+                                                <div class="dropdown dropdown-action">
+                                                <a href="#" class="action-icon dropdown-toggle"
+                                                data-bs-toggle="dropdown" aria-expanded="false"><i
+                                                class="material-icons">more_vert</i></a>
+                                                <div class="dropdown-menu dropdown-menu-right">                                                  
+                                                        <a class="dropdown-item" href="{{route('employees.leave.delete',$item->id)}}" ><i
+                                                            class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                                        </div>
+                                                    </div>
+                                            </td>
+                                            @else
+                                            <td class="text-end">
+                                                <div class="dropdown dropdown-action">                                               
+                                                    </div>
+                                            </td>
+                                    @endif
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
-                    </td>
-                    </tr>
-                    @endforeach
-                    </tbody>
-                    </table>
                 </div>
             </div>
         </div>
-    </div>
-    @foreach ($data as $item)
-    <div id="add_department{{ $item->id }}" class="modal custom-modal fade" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">View Reason</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            {{ $item->reason }}
+        @foreach ($data as $item)
+            <div id="add_department{{ $item->id }}" class="modal custom-modal fade" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">View Reason</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                    </form>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    {{ $item->reason }}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-@endforeach
-@endsection
-@push('plugin-js')
-    <script src="{{ asset('assets/js/select2.min.js') }}"></script>
-    <script src="{{ asset('assets/js/moment.min.js') }}"></script>
-    <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-    <script src="{{ asset('assets/js/ckeditor.js') }}"></script>
-    <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
-@endpush
+        @endforeach
+    @endsection
+    @push('plugin-js')
+        <script src="{{ asset('assets/js/select2.min.js') }}"></script>
+        <script src="{{ asset('assets/js/moment.min.js') }}"></script>
+        <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
+        <script src="{{ asset('assets/js/ckeditor.js') }}"></script>
+        <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
+    @endpush

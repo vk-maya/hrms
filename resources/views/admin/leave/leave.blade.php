@@ -93,41 +93,47 @@
                                                         @csrf
                                                         <input type="hidden" name="status" value="2">
                                                         <input type="hidden" name="id" value="{{$item->id}}">
-                                                        <button type="submit" class="dropdown-item"><i
-                                                                class="fa fa-dot-circle-o text-purple"></i> New</button>                                                  
+                                                        <button type="submit" class="dropdown-item">
+                                                            <i  class="fa fa-dot-circle-o text-purple"></i> New</button>                                                  
                                                         </form>
                                                         <form action="{{route('admin.leave.report')}}" method="POST">
                                                             @csrf
                                                             <input type="hidden" name="status" value="1">
                                                             <input type="hidden" name="id" value="{{$item->id}}">
                                                             <input type="hidden" name="type_id" value="{{$item->leaves_id}}">
-                                                            <button type="submit" class="dropdown-item"><i
-                                                                    class="fa fa-dot-circle-o text-success"></i> Approved</button>                                                  
+                                                            <button type="submit" class="dropdown-item">
+                                                                <i class="fa fa-dot-circle-o text-success"></i> Approved</button>                                                  
                                                             </form>                                             
                                                     <form action="{{route('admin.leave.report')}}" method="POST">
                                                         @csrf
-                                                        <input type="hidden" name="status" value="0">
+                                                        <input type="hidden" name="status" value=0>
                                                         <input type="hidden" name="id" value="{{$item->id}}">
-
-                                                        <button type="submit" class="dropdown-item"><i
-                                                                class="fa fa-dot-circle-o text-danger"></i> Declined</button>                                                  
+                                                        <button type="submit" class="dropdown-item">
+                                                            <i class="fa fa-dot-circle-o text-danger"></i> Declined</button>                                                  
                                                         </form>  
                                                     </div>
                                             </div>
                                         </td>
-                                        <td class="text-end">
-											<div class="dropdown dropdown-action">
-												<a href="#" class="action-icon dropdown-toggle"
-													data-bs-toggle="dropdown" aria-expanded="false"><i
-														class="material-icons">more_vert</i></a>
-												<div class="dropdown-menu dropdown-menu-right">
-													<a class="dropdown-item" href="{{route('admin.leave.edit',$item->id)}}"><i
-															class="fa fa-pencil m-r-5"></i> Edit</a>
-													<a class="dropdown-item" href="{{route('admin.leave.delete',$item->id)}}" ><i
-															class="fa fa-trash-o m-r-5"></i> Delete</a>
-												</div>
-											</div>
-										</td>
+                                        {{-- {{$item}} --}}
+                                        @if ($item->status ==2 || $item->status==0 )                                            
+                                            <td class="text-end">
+                                                    <div class="dropdown dropdown-action">
+                                                    <a href="#" class="action-icon dropdown-toggle"
+                                                    data-bs-toggle="dropdown" aria-expanded="false"><i
+                                                    class="material-icons">more_vert</i></a>
+                                                    <div class="dropdown-menu dropdown-menu-right">                                                       
+                                                            <a class="dropdown-item" href="{{route('admin.leave.delete',$item->id)}}" ><i
+                                                                class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                                            </div>
+                                                        </div>
+                                                </td>
+                                                @else
+                                                <td class="text-end">
+                                                    <div class="dropdown dropdown-action">
+                                                   
+                                                        </div>
+                                                </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>

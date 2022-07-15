@@ -9,6 +9,14 @@
         <div class="content container-fluid">
             <div class="row">
                 <div class="col-md-12">
+                    <div class="col">
+                        <h3 class="page-title">Leaves</h3>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{{route('admin.leave.list')}}">Leaves</a></li>
+                            <li class="breadcrumb-item active">Record</li>
+                        </ul>
+                    </div>
                     <div class="table-responsivesss">
                         <table class="table table-striped custom-table mb-0 datatable">
                             <thead>

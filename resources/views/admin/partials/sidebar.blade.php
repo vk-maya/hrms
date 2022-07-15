@@ -37,6 +37,14 @@
 							</ul>
 						
 						</li>
+						<li class="submenu @if(\Request::route()->getName() == 'admin.departments' || \Request::route()->getName() == 'admin.designation') active @endif">
+							<a href="#"><i class="la la-pie-chart"></i> <span>Report</span> <span
+									class="menu-arrow"></span></a>
+							<ul style="display: none;">
+								<li><a class="@if(\Request::route()->getName() == 'admin.departments') active @endif" href="{{route('admin.emp.report')}}">Leave Report</a></li>
+								{{-- <li><a class="@if(\Request::route()->getName() == 'admin.designation') active @endif" href="{{route('admin.designation')}}">All Designation</a></li> --}}
+							</ul>
+						</li>
 						<li class="submenu @if(\Request::route()->getName() == 'admin.all.task.list') active @endif">
 							<a href="#"><i class="la la-edit"></i> <span> Task</span> <span
 									class="menu-arrow"></span></a>

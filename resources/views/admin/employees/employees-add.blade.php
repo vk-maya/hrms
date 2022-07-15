@@ -77,6 +77,7 @@
                         <h3 class="page-title">Add Employee</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                            <li class="breadcrumb-item active"><a href="{{ route('admin.employees') }}">Employees</a></li>
                             <li class="breadcrumb-item active">Add Employee</li>
                         </ul>
                     </div>

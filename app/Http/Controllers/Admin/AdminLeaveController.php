@@ -72,12 +72,16 @@ class AdminLeaveController extends Controller
             return view('admin.leave.holiday', compact('data'));
         }
     }
-    public function delete($id)
-    {
+    public function delete($id){
+        // dd("dele");
         $data = Leave::find($id);
-        if ($data->status != null) {
+        if ($data->status == 1) {
             return back()->with(["unsuccess" => "Don't Delete This Record"])->withInput();
         } else {
+            $leaverecord = Leaverecord::where('leave_id',$id)->get();
+            foreach ($leaverecord as $record) {
+               $record->delete();
+            }
             $data->delete();
             return back()->with(["success" => "Success Delete This Record"])->withInput();
         }
@@ -135,15 +139,14 @@ class AdminLeaveController extends Controller
     }
     public function leavereport(Request $request)
     {
+        // dd($request->toArray());
         $data = Leave::find($request->id);
-        // dd($request->toArray(),$data->toArray());
-        // dd($data->toArray());
+    //   dd($data->status);
        
         $leaverall = Leaverecord::where("leave_id", $request->id)->get();
-        // $leave= Leave::find($request->id);
      
         
-        if ($data->status == 2 or $data->status == 0 && $request->status == 1) {
+        if ($request->status == 1 && $data->status != $request->status ) {
             // dd("appr");
             foreach ($leaverall as $value) {
                 $setl = settingleave::find($value->type_id);
@@ -180,12 +183,10 @@ class AdminLeaveController extends Controller
                         $record->status= $request->status;
                         $record->save();
                     }
-        }elseif($data->status == 1 or $data->status == 2 && $request->status ==0 or $request->status == 2 ){
-          
+        }elseif($data->status == 1 && ($request->status == 0 || $request->status == 2)){
             foreach ($leaverall as $key => $value) {
                 $setl = settingleave::find($value->type_id);
                 $totaleave = UserleaveYear::where('user_id',$data->user_id)->first();
-                // dd($leavercc->toArray(),"hello");
                 if ($setl->id == $value->type_id && $setl->type == 'Annual') {                  
                         $tt = $totaleave->netAnual;
                         $totaleave->netAnual = $tt - $value->day;                 
@@ -210,8 +211,16 @@ class AdminLeaveController extends Controller
                     $record->status= $request->status;
                     $record->save();
                 }     
-            }
-           
+            }else{
+                
+                $data->status = $request->status;
+                $data->update();
+                $leaverecord = Leaverecord::where('leave_id',$request->id)->get();
+                    foreach ($leaverecord as $key => $record) {
+                        $record->status= $request->status;
+                        $record->save();
+                    }    
+            }        
         return redirect()->back();
 
 

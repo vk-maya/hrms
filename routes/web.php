@@ -16,6 +16,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Employees\UserController;
 use App\Http\Controllers\Admin\AdminLeaveController;
 use App\Http\Controllers\Admin\AttendanceController;
+use App\Http\Controllers\Admin\EmployeesReport;
 use App\Http\Controllers\Employees\EmpAttendanceController;
 
 /*
@@ -47,6 +48,9 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
     route::get('employees/leave',[LeaveController::class,'leave'])->name('leave');
     Route::get('employees/add/leave',[LeaveController::class,'leaveadd'])->name('add.leave');
     Route::post('employees/store/leave',[LeaveController::class,'storeleave'])->name('store.leave');
+    Route::get('leave/delete/{id}',[LeaveController::class,'delete'])->name('leave.delete');
+
+
     // ------------------------------attendance route--------------------------
     Route::get('employees/attendance',[EmpAttendanceController::class,'get'])->name('attendance');
     // --------------------------Profile route ---------------------------
@@ -127,7 +131,6 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::post('holiday',[AdminLeaveController::class,'holidayStore'])->name('holiday');
     Route::any('holiday/edit/{id}',[AdminLeaveController::class,'holidays'])->name('holiday.edit');
     Route::any('holiday/delete/{id}',[AdminLeaveController::class,'holidaydistroy'])->name('holiday.delete');
-    Route::get('leave/edit/{id}',[AdminLeaveController::class,'edit'])->name('leave.edit');
     Route::any('leave/update',[AdminLeaveController::class,'update'])->name('leave.update');
     Route::get('leave/delete/{id}',[AdminLeaveController::class,'delete'])->name('leave.delete');
     Route::get('leave/add/employees',[AdminLeaveController::class,'monthleave'])->name('add.employees.leavemonth');
@@ -169,5 +172,7 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::get('all/emp/task/list',[ProjectController::class,'alltask'])->name('all.task.list');
     Route::get('emp/all/task/{id}',[ProjectController::class,'employeestask'])->name('emp.show-taskk');
     Route::get('task/show/{id}',[ProjectController::class,'empltask'])->name('employ.task.list');
+    // ----------------------------------------report route-------------------------
+    Route::get('employees/report',[EmployeesReport::class,'empreport'])->name('emp.report');
 
 });
