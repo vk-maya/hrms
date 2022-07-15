@@ -53,8 +53,9 @@
                 <span> {{ Auth::guard('admin')->user()->name }}</span>
             </a>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="">My Profile</a>
-                <a class="dropdown-item" href="">Settings</a>
+                <a class="dropdown-item" href="profile.html">My Profile</a>
+                <a class="dropdown-item" href="{{route('admin.settings')}}">Settings</a>
+                <a class="dropdown-item" href="{{route('admin.salary.settings')}}">Salary Settings</a>
                 <form method="POST" action="{{ route('admin.logout') }}">
                     @csrf
                     <button class="btn" type="submit">

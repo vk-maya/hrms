@@ -52,6 +52,14 @@
 								<li><a class="@if(\Request::route()->getName() == 'admin.all.task.list') active @endif" href="{{route('admin.all.task.list')}}">Task List</a></li>
 							</ul>
 						</li>
+						<li class="submenu @if (\Request::route()->getName() == 'admin.payroll.list') active @endif">
+							<a href="#" class=""><i class="la la-money"></i> <span> Payroll </span> <span
+									class="menu-arrow"></span></a>
+							<ul style="display: none;">
+								<li><a class="@if (\Request::route()->getName() == 'admin.payroll.list') active @endif"
+									 href="{{route('admin.payroll.list')}}"> Employee Salary </a></li>
+							</ul>
+						</li>
 					</ul>
 				</div>
 			</div>
