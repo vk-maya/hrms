@@ -17,9 +17,10 @@ class EmpAttendanceController extends Controller
             $first_date = date('Y-m-d',strtotime('first day of this month'));
             $last_date = date('Y-m-d',strtotime('last day of this month'));
         // })->count();
-        $attendance= Attendance::where('user_id',Auth::guard('web')->user()->machineID)->where(function($query)use($first_date,$last_date){
-            $query->whereBetween('date',[$first_date,$last_date]);})->get();
-            
+        $attendance= Attendance::where('user_id',Auth::guard('web')->user()->id)->where(function($query)use($first_date,$last_date){
+            $query->whereBetween('date',[$first_date,$last_date]);
+        })->orderBy('created_at', 'DESC')->get();
+
             // dd($attendance);
         return view('employees.leave.attendance',compact('attendance'));
     }

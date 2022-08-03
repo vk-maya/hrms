@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\Admin::factory(10)->create();
         $this->call([AdminSeeder::class]);
+        $this->call([CountrySeeder::class]);
         $this->call([SessionSeeder::class]);
         $this->call([SalaryManagement::class]);
 

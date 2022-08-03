@@ -18,10 +18,6 @@ class SalaryManagement extends Seeder
         SalaryManagment::truncate();
         SalaryManagment::insert([
             [
-                'title'=>'Basic',
-                'type'=>'earning'
-            ],
-            [
                 'title'=>'DA',
                 'type'=>'earning'
             ],

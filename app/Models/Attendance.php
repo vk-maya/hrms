@@ -12,6 +12,6 @@ class Attendance extends Model
     protected $fillable = ['user_id', 'in_time', 'out_time', 'work_time', 'date', 'day', 'month', 'year', 'attendance', 'status'];
 
     public function userinfo(){
-        return $this->hasOne(User::class, 'machineID','user_id');
+        return $this->hasOne(User::class);
     }
 }

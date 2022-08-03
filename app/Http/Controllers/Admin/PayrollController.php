@@ -52,7 +52,7 @@ class PayrollController extends Controller
         $user = User::find($id);
         return response()->json(['salary' => $salary, 'user' => $user]);
     }
-    //employees salary add & salary list show 
+    //employees salary add & salary list show
     public function payroll(Request $request)
     {
         $employees = User::where('status', 1)->with('salary')->get();
@@ -75,7 +75,7 @@ class PayrollController extends Controller
         $slip = UserSlip::with(['user.userDesignation'])->find($id);
         return response()->json(compact('company', 'slip'));
     }
-    //Earning And Deduction  Value Save in fnction 
+    //Earning And Deduction  Value Save in fnction
     public function salary_store(Request $request)
     {
         foreach ($request->ids as $key => $title) {
@@ -136,7 +136,7 @@ class PayrollController extends Controller
         $employeeslip = UserSlip::where('user_id', $id)->with('user')->orderBy('id', 'DESC')->get();
         return view('admin.payroll.view-slip', compact('employeeslip', 'id'));
     }
-    //salary blade redricet 
+    //salary blade redricet
     public function genrateslip($id)
     {
         $id = $id;
@@ -271,7 +271,7 @@ class PayrollController extends Controller
 
     /*
     public function handle($id){
-        
+
         $today = \Carbon\Carbon::now();
         $fristMonthofDay =  Carbon::now()->startOfMonth()->subMonthsNoOverflow()->toDateString();
         $lastMonthofDay = Carbon::now()->subMonthsNoOverflow()->endOfMonth()->toDateString();
@@ -290,7 +290,7 @@ class PayrollController extends Controller
                     $monthleave->apprAnual = $monthleave->apprAnual + $leave->day;
                 } else {
                     $monthleave->apprAnual = $leave->day;
-                }               
+                }
             } elseif ($leavetype->type == "Sick") {
                 if ($monthleave != null) {
                     $monthleave->apprSick = $monthleave->apprSick + $leave->day;
@@ -299,7 +299,7 @@ class PayrollController extends Controller
                 }
             } else {
                 if ($monthleave != null) {
-                
+
                     $monthleave->other = $monthleave->other + $leave->day;
                 } else {
                     $monthleave->other = $leave->day;
@@ -307,12 +307,12 @@ class PayrollController extends Controller
             }
             $monthleave->status = 1;
             $monthleave->save();
-            
+
         }
-    
+
         if (isset($monthleave)) {
             # code...
-        
+
         if ($monthleave->apprAnual>$monthleave->anualLeave) {
             $leaveDeduction= $monthleave->apprAnual-$monthleave->anualLeave;
             if ($monthleave->other != null) {
@@ -332,13 +332,13 @@ class PayrollController extends Controller
             $monthleave->save();
         }
     }
-          //Attendance Vs Month Leave Table 
+          //Attendance Vs Month Leave Table
         $salarymonthLastDate=Carbon::now()->subMonthsNoOverflow()->endOfMonth()->toDateString();
         $firstDayofPreviousMonth = Carbon::now()->startOfMonth()->subMonth()->toDateString();
         $dd = date('d', strtotime($salarymonthLastDate));
         $monthFingerApproved= LeaveMonthAttandance::where('user_id',$id)->where('date',$firstDayofPreviousMonth)->first();
         $monthLeaveCalculate=monthleave::where('status',1)->where('user_id',$id)->where('to',$salarymonthLastDate)->first();
-        
+
         if (isset($monthFingerApproved)&&$monthFingerApproved->anual != null) {
             $anual=$monthLeaveCalculate->apprAnual-$monthFingerApproved->anual;
             $monthLeaveCalculate->apprAnual=$anual;
@@ -353,13 +353,13 @@ class PayrollController extends Controller
             $other=$monthLeaveCalculate->other-$monthFingerApproved->other;
             $monthLeaveCalculate->other=$other;
         }
-        $monthLeaveCalculate->save();   
+        $monthLeaveCalculate->save();
         //monthLeave In status 0 Update Function
         $monthleave = monthleave::where('user_id', $id)->where('status', 1)->where('to', $lastMonthofDay)->first();
         $monthleave->status = 0;
         $monthleave->save();
 
-        //get a new entery month in user 
+        //get a new entery month in user
         $monthdata = $monthleave;
         $session = Session::where('status', 1)->first();
         $fristMonthofDay =  Carbon::now()->startOfMonth()->toDateString();
@@ -403,7 +403,7 @@ class PayrollController extends Controller
         }
         $monthleave->status = 1;
         $monthleave->save();
-        
+
     } */
     public function handle($id)
     {

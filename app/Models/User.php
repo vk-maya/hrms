@@ -76,7 +76,7 @@ class User extends Authenticatable
         return $this->hasOne(userinfo::class,'user_id');
     }
 
-  
+
 // })->count();
     //  $attendance= Attendance::where('user_id',Auth::guard('web')->user()->machineID)->where(function($query)use($first_date,$last_date){
     // $query->whereBetween('date',[$first_date,$last_date]);})->get();
@@ -85,8 +85,8 @@ class User extends Authenticatable
 
     public function attendence()
     {
-        
-        return $this->hasMany(Attendance::class, 'user_id', 'machineID');
+
+        return $this->hasMany(Attendance::class);
     }
     public function attendance(){
         return $this->hasOne(Attendance::class,'user_id','machineID');
@@ -94,7 +94,7 @@ class User extends Authenticatable
     public function salary(){
         return $this->hasOne(UserSalary::class,'user_id');
     }
-    
+
     public function userSalaryData()
     {
         return $this->belongsToMany(SalaryManagment::class,'user_earndeducations','user_id','salary_earndeductionID');
@@ -107,8 +107,8 @@ class User extends Authenticatable
     public function usersalaryget(){
         return $this->hasMany(UserSalary::class);
     }
-    
-   
+
+
     /**
      * The attributes that should be hidden for serialization.
      *
