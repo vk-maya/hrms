@@ -6,6 +6,7 @@ use App\Models\Admin;
 use App\Models\Setting;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Admin\SalaryManagment;
 
 class AdminSeeder extends Seeder
 {
@@ -47,6 +48,7 @@ class AdminSeeder extends Seeder
             ["title" => "Labour_welf",],
             ["title" => "other",],
         ];
-        Setting::insert($setting);
+        Setting::insert($setting); 
+        
     }
 }

@@ -15,6 +15,6 @@ class SalarySlip extends Model
     ];
     public function user()
     {
-        return $this->belongsTo(User::class ,'employee_id' ,'id');
+        return $this->belongsTo(User::class ,'user_id' ,'id');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMonthleavesTable extends Migration
+class CreateUserEarndeducationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,13 @@ class CreateMonthleavesTable extends Migration
      */
     public function up()
     {
-        Schema::create('monthleaves', function (Blueprint $table) {
+        Schema::create('user_earndeducations', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
-            $table->date('from');
-            $table->date('to');
-            $table->float('anualLeave')->default(0);
-            $table->float('sickLeave')->default(0);
-            $table->float('apprAnual')->nullable();
-            $table->float('apprSick')->nullable();
-            $table->float('other')->nullable();
+            $table->integer('salary_earndeductionID');
             $table->integer('status');
             $table->timestamps();
         });
-    
     }
 
     /**
@@ -36,6 +29,6 @@ class CreateMonthleavesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('monthleaves');
+        Schema::dropIfExists('user_earndeducations');
     }
 }

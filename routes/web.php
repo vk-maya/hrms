@@ -127,7 +127,6 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::post('leave/type',[AdminLeaveController::class,'leavetype'])->name('leave.type');
     Route::post('leave/type/sick',[AdminLeaveController::class,'leavetype'])->name('leave.type.sick');
     Route::get('leave/list',[AdminLeaveController::class,'leavelist'])->name('leave.list');
-    Route::post('leave/report',[AdminLeaveController::class,'leavereport'])->name('leave.report');
     Route::get('holiday',[AdminLeaveController::class,'holidays'])->name('holidays');
     Route::post('holiday',[AdminLeaveController::class,'holidayStore'])->name('holiday');
     Route::any('holiday/edit/{id}',[AdminLeaveController::class,'holidays'])->name('holiday.edit');
@@ -136,7 +135,8 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::get('leave/delete/{id}',[AdminLeaveController::class,'delete'])->name('leave.delete');
     Route::get('leave/add/employees',[AdminLeaveController::class,'monthleave'])->name('add.employees.leavemonth');
     Route::get('leave/view/{id}',[AdminLeaveController::class,'moreleave'])->name('leave.view');
-
+    // ---------------------employees salary generate---------------------------------
+    Route::post('salary/report',[AdminLeaveController::class,'leavereport'])->name('leave.report');
 
     // ---------------------client route-----------------------
     Route::get('client', [ClientController::class, 'index'])->name('client');
@@ -166,37 +166,46 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::post('project/task/save', [ProjectController::class, 'task_store'])->name('project.task.store');
     Route::get('project/task/board/delete/{id}', [ProjectController::class, 'taskboardelete'])->name('project.delete.task.board');
     Route::get('project/task/task/delete/{id}', [ProjectController::class, 'taskdelete'])->name('project.delete.task');
-    // -------------------------daily task route--------------------------------------
+    // daily task route
     Route::get('daliy/task',[ProjectController::class,'dailytask'])->name('employees.daily.task');
     Route::get('show/task',[ProjectController::class,'showtask'])->name('show-task');
     Route::post('daliy/task',[ProjectController::class,'dailystore'])->name('daily.task.store');
     Route::get('all/emp/task/list',[ProjectController::class,'alltask'])->name('all.task.list');
     Route::get('emp/all/task/{id}',[ProjectController::class,'employeestask'])->name('emp.show-taskk');
     Route::get('task/show/{id}',[ProjectController::class,'empltask'])->name('employ.task.list');
-    // ----------------------------------------report route-------------------------
-    Route::get('employees/report',[EmployeesReport::class,'empreport'])->name('emp.report');
+    // salary generate route
+    Route::get('employees/salary/generate/{id}',[PayrollController::class,'empreport'])->name('emp.report.emp');
+    Route::get('employees/salary/generate',[PayrollController::class,'empreport'])->name('emp.report');
+    Route::post('employees/salary/generate',[PayrollController::class,'salaryGenerate'])->name('employees.salary.generate');
 
-     ///............................employee increment......................../////
+     ///employee increment
     Route::post('employee-increment',[PayrollController::class,'increment'])->name('employee.increment');
 
-       // -------------------------setings--------------------------------------//////
-    Route::get('settings',[PayrollController::class,'settings'])->name('settings');
-    Route::post('settings-store',[PayrollController::class,'setting_store'])->name('settings-store');
+       // setings-
+    Route::get('salary/earndeduction/{id}',[PayrollController::class,'salaryEarnDeducation'])->name('salary.earn.deducation');
+    Route::post('salary/earndeduction/edit',[PayrollController::class,'salarymanagementedit'])->name('salary.earn.deducation.edit');
+    
+    //company setting route 
+    Route::get('settings',[HomeController::class,'settings'])->name('settings');
+    Route::post('settings-store',[HomeController::class,'setting_store'])->name('settings-store');
 
     Route::get('salary',[PayrollController::class,'salary_settings'])->name('salary.settings');
     Route::post('salary-store',[PayrollController::class,'salary_store'])->name('salary.store');
     //..............................view_slip...................................////
     Route::get('slip-generate/{employee_id}',[PayrollController::class,'slip'])->name('employee.slip');
-    Route::get('view-slip/{employee_id}',[PayrollController::class,'view_slip'])->name('employee.view_slip');
+    Route::get('view-slip/{id}',[PayrollController::class,'view_slip'])->name('employee.view_slip');
     Route::get('employee-slip/{id}',[PayrollController::class,'genrateslip'])->name('employee.generate_slip');
+    Route::get('employees/view/slip/{id}',[PayrollController::class,'viewSlip'])->name('employees.view.slip');
   // -------------------------payroll--------------------------------------//////
     Route::get('payroll',[PayrollController::class,'payroll'])->name('payroll.list');
+    Route::get('salary/info/{id}',[PayrollController::class,'salaryinfo'])->name('salaryinfo');
     Route::post('payroll-store',[PayrollController::class,'store'])->name('payroll.store');
     Route::get('payroll/edit/{id}',[PayrollController::class,'payroll'])->name('payroll.edit');
+    Route::get('add/salary/{id}',[PayrollController::class,'parolljs'])->name('add.salary');
 
     //...................PDF..................//
     Route::get('export-pdf/{id}', [PayrollController::class, 'downloadPdf'])->name('export-pdf');
-    
+    Route::get('atten/{id}',[PayrollController::class,'handle'])->name('attan.hit');
 
    
 

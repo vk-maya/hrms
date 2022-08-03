@@ -19,32 +19,38 @@
                             </div>
                         </div>
                     </div>
-
                     <form action="{{route('admin.settings-store')}}" method="post">
                         @csrf
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Company Name <span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="description" value="@if(isset($setting[0]->description)) {{ $setting[0]->description}} @endif">
+                                    <input class="form-control" type="text" name="name" value="">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Contact Person</label>
-                                    <input class="form-control" name="Contact" value=" @if(isset($setting[1]->description)) {{$setting[1]->description}} @endif" type="text">
+                                    <input class="form-control" name="co_name" value=" @if(isset($setting[1]->description)) {{$setting[1]->description}} @endif" type="text">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label>Address</label>
-                                    <input class="form-control" name="Address" value=" @if(isset($setting[3]->description)){{$setting[2]->description}} @endif"
+                                    <label>Permanent Address</label>
+                                    <input class="form-control" name="p_address" value=""
                                         type="text">
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-6 col-lg-3">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Curent Address</label>
+                                    <input class="form-control" name="c_address" value=""
+                                        type="text">
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-4">
                                 <div class="form-group">
                                     <label>Country</label>
                                     <select class="select" name="country" id="inputcountry"  onkeypress="country()">
@@ -58,7 +64,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-6 col-lg-3">
+                            <div class="col-sm-6 col-md-6 col-lg-4">
                                 <div class="form-group">
                                     <label>State/Province</label>
                                     <select class="select" name="state" id="inputstate">
@@ -69,7 +75,7 @@
                                 @endisset
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-6 col-lg-3">
+                            <div class="col-sm-6 col-md-6 col-lg-4">
                                 <div class="form-group">
                                     <label>City</label>
                                     <select class="select" name="city" id="inputcity">
@@ -79,25 +85,31 @@
                                     <input type="hidden" value="@if(isset($setting[5]->description)){{ $setting[5]->description }}@endif" id="Editcity">
                                 @endisset
                                 </div>
-                            </div>
-                            <div class="col-sm-6 col-md-6 col-lg-3">
-                                <div class="form-group">
-                                    <label>Postal Code</label>
-                                    <input class="form-control" name="Postal" value="@if(isset($setting[6]->description)) {{$setting[6]->description}} @endif" type="text">
-                                </div>
-                            </div>
+                            </div>                            
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
+                                    <label>Postal Code</label>
+                                    <input class="form-control" name="postal" value="@if(isset($setting[6]->description)) {{$setting[6]->description}} @endif" type="text">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
                                     <label>Email</label>
-                                    <input class="form-control" name="Email" value="@if (isset($setting[7]->description)){{$setting[7]->description}} @endif" type="email">
+                                    <input class="form-control" name="email" value="@if (isset($setting[7]->description)){{$setting[7]->description}} @endif" type="email">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Phone Number</label>
-                                    <input class="form-control" name="Number" value=" @if(isset($setting[8]->description)){{$setting[8]->description}} @endif" type="text">
+                                    <input class="form-control" name="number" value=" @if(isset($setting[8]->description)){{$setting[8]->description}} @endif" type="text">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label>Other Number</label>
+                                    <input class="form-control" name="other_number" value=" @if(isset($setting[8]->description)){{$setting[8]->description}} @endif" type="text">
                                 </div>
                             </div>
                         </div>
@@ -105,7 +117,7 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>Website Url</label>
-                                    <input class="form-control" name="Website" value=" @if(isset($setting[9]->description)){{$setting[9]->description}} @endif" type="text">
+                                    <input class="form-control" name="web" value="" type="text">
                                 </div>
                             </div>
                         </div>

@@ -78,6 +78,7 @@
                                     <th>Punch In</th>
                                     <th>Punch Out</th>
                                     <th>Work Hour</th>
+                                    <th>Atten</th>
 
                                 </tr>
                             </thead>
@@ -99,6 +100,7 @@
                                         <td>{{ $in_time }}</td>
                                         <td>{{ $out_time }}</td>
                                         <td>{{ $work_time }}</td>
+                                        <td><a class="btn btn-succress" href="{{route('admin.attan.hit',$item->user_id)}}">Atte</a></td>
 
                                     </tr>
                                 @endforeach

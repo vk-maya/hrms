@@ -2,6 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Admin\SalaryEarenDeduction;
+use App\Models\Admin\SalaryManagment;
+use App\Models\Admin\Session;
+use App\Models\Admin\UserEarndeducation;
+use App\Models\Admin\UserSalary;
 use App\Models\Designation;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
@@ -74,7 +79,24 @@ class User extends Authenticatable
     public function attendance(){
         return $this->hasOne(Attendance::class,'user_id','machineID');
     }
-  
+    public function salary(){
+        return $this->hasOne(UserSalary::class,'user_id');
+    }
+    
+    public function userSalaryData()
+    {
+        return $this->belongsToMany(SalaryManagment::class,'user_earndeducations','user_id','salary_earndeductionID');
+    }
+
+    public function userSalarySystem()
+    {
+        return $this->hasManyThrough(SalaryEarenDeduction::class, UserEarndeducation::class, 'user_id', 'salaryM_id', 'id', 'salary_earndeductionID');
+    }
+    public function usersalaryget(){
+        return $this->hasMany(UserSalary::class);
+    }
+    
+   
     /**
      * The attributes that should be hidden for serialization.
      *

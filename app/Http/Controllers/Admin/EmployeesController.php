@@ -18,6 +18,8 @@ use Illuminate\Validation\Rules;
 use App\Models\Leave\settingleave;
 use App\Models\Admin\UserleaveYear;
 use App\Http\Controllers\Controller;
+use App\Models\Admin\SalaryEarenDeduction;
+use App\Models\Admin\UserEarndeducation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -25,6 +27,7 @@ use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
+use phpDocumentor\Reflection\Types\Null_;
 
 class EmployeesController extends Controller
 {
@@ -90,14 +93,21 @@ class EmployeesController extends Controller
 
         return view('admin.employees.employees', compact('lemployees', 'ldepartment',));
     }
+// -----------------------employees form create && edit From  ---------------------
 
     public function addemployeescreate(Request $request){
+        // dd($request->toArray());
         if ($request->id != '') {
+            $sess= Session::where('status',1)->first();
+            $salared= SalaryEarenDeduction::with('salarymanag')->where('session_id',$sess->id)->where('status',1)->get();
+            $salaryedit = UserEarndeducation::where('User_id',$request->id)->pluck('salary_earndeductionID');
             $employees = User::find($request->id);
             $department = Department::get();
             $count = Countries::all();
-            return view('admin.employees.employees-add', compact('department', 'employees', 'count'));
-        } else {
+            return view('admin.employees.employees-add', compact('department', 'employees', 'count','salared','salaryedit'));
+        } else {            
+            $sess= Session::where('status',1)->first();
+            $salared= SalaryEarenDeduction::with('salarymanag')->where('session_id',$sess->id)->where('status',1)->get();
             $department = Department::get();
             $count = Countries::all();
             $id = User::latest()->first();
@@ -107,14 +117,14 @@ class EmployeesController extends Controller
             } else {
                 $empid = "SDPL-JAI-0001";
             }
-            return view('admin.employees.employees-add', compact('department', 'count', 'empid'));
+            return view('admin.employees.employees-add', compact('department', 'count', 'empid','salared'));
         }
     }
 
+// ------------------employees store function------------------------
 
     public function addemployeesstore(Request $request){
         // dd($request->toArray());
-
         if ($request->id == "") {
             $rules = [
                 'first_name' => ['required', 'string', 'max:255'],
@@ -208,7 +218,7 @@ if ($request->id == null) {
         }
         $allleave = settingleave::where('status',1)->get();
         // dd($allleave->toArray());
-            $jd =$request->joiningDate;
+        $jd =$request->joiningDate;
                 if ($jd >= $sess->from) {
                     $jd =$request->joiningDate;
                 }else{
@@ -228,10 +238,12 @@ if ($request->id == null) {
                     $leaveyear->other=$day;
             }
             $leaveyear->status=1;
+        // dd($leaveyear->toArray());
             $leaveyear->save();
         }
     
         // ----------------------------monthleave function--------------------
+        
         if ($request->id == null) {
             $leaveyear = UserleaveYear::latest()->first();
                 $yearleave=settingleave::where('status',1)->get();
@@ -245,6 +257,50 @@ if ($request->id == null) {
                 $data= new monthleave();
                 $data->user_id=$employeesId->id;
                 $data->useryear_id= $leaveyear->id;
+                $jd =$employeesId->joiningDate;
+                $str = date('Y-m',strtotime($jd));
+                $strr = $str."-15";
+                if ($jd>$sess->from) {
+                    if ($jd<$strr){
+                        $jd=date('Y-m',strtotime($jd));
+                        $jd= $jd."-01";
+                        // dd($jd);
+                    }else{
+                        $jd=Carbon::parse($jd)->addMonths();
+                        $jd=date('Y-m',strtotime($jd));
+                        $jd = $jd."-01";
+                        }
+                }            
+                    $end = now();
+                    $end=date('Y-m',strtotime($end));
+                    $end=Carbon::parse($end)->endOfMonth();
+                    $end=date('Y-m-d',strtotime($end));
+                    $diffr = round(Carbon::parse($jd)->floatDiffInMonths($end));                       
+                            $from=date('Y-m-d',strtotime($jd));
+                            $to =date('Y-m-d',strtotime($end));
+                        $data->from= $from;
+                        $data->to=$to;
+                            $anual=$diffr*$anual;         
+                            $sick=$diffr*$sickl;
+                        $data->anualLeave=$anual;
+                        $data->sickLeave=$sick;
+                        $data->status=1;
+                        $data->save();
+        }
+        //curent month leave update
+        if ($request->id == null) {
+            $leaveyear = UserleaveYear::latest()->first();
+                $yearleave=settingleave::where('status',1)->get();
+                foreach ($yearleave as $key => $value) {
+                    if ($value->type=="Annual") {
+                    $anual =$value->day/12;
+                    }elseif($value->type=="Sick"){
+                    $sickl = $value->day/12;
+                }
+            }
+            $sess= Session::where('status',1)->first();
+                $data= UserleaveYear::where('user_id',$id)->where('status',1)->where('session_id',$sess->id)->first();
+               
                 $jd =$employeesId->joiningDate;
                 $str = date('Y-m',strtotime($jd));
                 $strr = $str."-15";
@@ -295,7 +351,19 @@ if ($request->id == null) {
                     $fileimg->save();
             }
         }
-    
+        // -------------------------earning and deducation code -----------------------
+
+        // dd($request->toArray());
+        if ($request->id !='') {
+            $user= $request->id;
+        }else{
+
+            $user=$employeesId->id;
+        }
+       
+            User::find($user)->userSalaryData()->sync($request->earning);
+          
+         
         return redirect()->route('admin.employees');
     }
 

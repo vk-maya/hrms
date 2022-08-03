@@ -62,7 +62,7 @@
                                                         @enderror
                                                     </span>
                                                 </div>
-                                            </div>{{$data}}
+                                            </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>No. of children</label>

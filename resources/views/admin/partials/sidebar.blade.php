@@ -34,23 +34,7 @@
 								<li><a class="@if(\Request::route()->getName() == 'admin.holidays') active @endif" href="{{route('admin.holidays')}}">Holiday</a></li>
 								<li><a class="@if(\Request::route()->getName() == 'admin.leave.setting') active @endif" href="{{route('admin.leave.setting')}}">Leave Settings</a></li>
 								<li><a class="@if(\Request::route()->getName() == 'admin.leave.list') active @endif" href="{{route('admin.leave.list')}}">Leave</a></li>
-							</ul>
-						
-						</li>
-						<li class="submenu @if(\Request::route()->getName() == 'admin.departments' || \Request::route()->getName() == 'admin.designation') active @endif">
-							<a href="#"><i class="la la-pie-chart"></i> <span>Report</span> <span
-									class="menu-arrow"></span></a>
-							<ul style="display: none;">
-								<li><a class="@if(\Request::route()->getName() == 'admin.departments') active @endif" href="{{route('admin.emp.report')}}">Leave Report</a></li>
-								{{-- <li><a class="@if(\Request::route()->getName() == 'admin.designation') active @endif" href="{{route('admin.designation')}}">All Designation</a></li> --}}
-							</ul>
-						</li>
-						<li class="submenu @if(\Request::route()->getName() == 'admin.all.task.list') active @endif">
-							<a href="#"><i class="la la-edit"></i> <span> Task</span> <span
-									class="menu-arrow"></span></a>
-							<ul style="display: none;">
-								<li><a class="@if(\Request::route()->getName() == 'admin.all.task.list') active @endif" href="{{route('admin.all.task.list')}}">Task List</a></li>
-							</ul>
+							</ul>						
 						</li>
 						<li class="submenu @if (\Request::route()->getName() == 'admin.payroll.list') active @endif">
 							<a href="#" class=""><i class="la la-money"></i> <span> Payroll </span> <span
@@ -60,6 +44,20 @@
 									 href="{{route('admin.payroll.list')}}"> Employee Salary </a></li>
 							</ul>
 						</li>
+						<li class="submenu @if(\Request::route()->getName() == 'admin.departments' || \Request::route()->getName() == 'admin.designation') active @endif">
+							<a href="#"><i class="la la-pie-chart"></i> <span>Report</span> <span
+									class="menu-arrow"></span></a>
+							<ul style="display: none;">
+								<li><a class="@if(\Request::route()->getName() == 'admin.emp.report') active @endif" href="{{route('admin.emp.report')}}">Payslip</a></li>
+							</ul>
+						</li>
+						<li class="submenu @if(\Request::route()->getName() == 'admin.all.task.list') active @endif">
+							<a href="#"><i class="la la-edit"></i> <span> Task</span> <span
+									class="menu-arrow"></span></a>
+							<ul style="display: none;">
+								<li><a class="@if(\Request::route()->getName() == 'admin.all.task.list') active @endif" href="{{route('admin.all.task.list')}}">Task List</a></li>
+							</ul>
+						</li>					
 					</ul>
 				</div>
 			</div>
