@@ -138,6 +138,7 @@ class EmployeesController extends Controller
             {
                 $empid = "SDPL-JAI-0001";
             }
+        
             return view('admin.employees.employees-add', compact('department', 'count', 'empid', 'salared'));
         }
     }
@@ -275,7 +276,7 @@ class EmployeesController extends Controller
             ->first();
         if ($request->id == null)
         {
-            $employeesId = User::latest()->first();
+            $employeesId = User::latest()->first('id');
             $leaveyear = new UserleaveYear();
             $leaveyear->user_id = $employeesId->id;
             $leaveyear->session_id = $sess->id;
@@ -318,9 +319,9 @@ class EmployeesController extends Controller
                 $leaveyear->other = $day;
             }
             $leaveyear->status = 1;
+            // dd($leaveyear->toArray());
             $leaveyear->save();
         }
-        // dd($leaveyear->toArray());
         // ----------------------------monthleave function--------------------
         if ($request->id == null)
         {

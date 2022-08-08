@@ -52,7 +52,7 @@ class PayrollController extends Controller
         $user = User::find($id);
         return response()->json(['salary' => $salary, 'user' => $user]);
     }
-    //employees salary add & salary list show
+    //employees salary add & salary list show 
     public function payroll(Request $request)
     {
         $employees = User::where('status', 1)->with('salary')->get();
@@ -75,7 +75,7 @@ class PayrollController extends Controller
         $slip = UserSlip::with(['user.userDesignation'])->find($id);
         return response()->json(compact('company', 'slip'));
     }
-    //Earning And Deduction  Value Save in fnction
+    //Earning And Deduction  Value Save in fnction 
     public function salary_store(Request $request)
     {
         foreach ($request->ids as $key => $title) {
@@ -136,7 +136,7 @@ class PayrollController extends Controller
         $employeeslip = UserSlip::where('user_id', $id)->with('user')->orderBy('id', 'DESC')->get();
         return view('admin.payroll.view-slip', compact('employeeslip', 'id'));
     }
-    //salary blade redricet
+    //salary blade redricet 
     public function genrateslip($id)
     {
         $id = $id;
@@ -180,6 +180,7 @@ class PayrollController extends Controller
     //monthly salary Generate
     public function salaryGenerate(Request $request)
     {
+        // dd($request->toArray());
         $salary = UserSalary::where('user_id', $request->user_id)->where('status', 1)->select('net_salary', 'id')->first();
         $userearndedu = UserEarndeducation::with('salaryEarningDeduction')->where('user_id', $request->user_id)->get();
         $salarymonth = Carbon::now()->startOfMonth($request->month)->subMonth(1);
@@ -218,7 +219,25 @@ class PayrollController extends Controller
             }
             $salarygenerate->user_id = $request->user_id;
             $month = $salary->net_salary / 12;
-            $salarygenerate->monthly_netsalary = $month;
+            $netMonthSalary = $salary->net_salary / 12;
+            //net 
+            $dd = date('d', strtotime($salarymonthLastDate));
+            $NetDay = $salarymonthDay; //total working day in month
+            $monthLeaveCalculate = monthleave::where('user_id', $request->user_id)->where('status', 3)->where('to', $salarymonthLastDate)->latest()->first();
+            // dd($request->user_id);
+            // dd($monthLeaveCalculate->toArray());
+            $daySalary = $month / $dd; //pr day salary calculate
+            if (isset($monthLeaveCalculate->other) && $monthLeaveCalculate->other != null) {
+
+                $dd = $dd - $monthLeaveCalculate->other; //net day working in month
+            }
+            $paysalary = $dd * $daySalary; //paysalary calculate prday Vs Net working day && pay salary decuction of leave
+            $monthLeaveCalculate->status = 3;
+            $monthLeaveCalculate->save();
+
+            $month = round($paysalary);
+            // dd($month);
+            $salarygenerate->monthly_netsalary = $netMonthSalary; // net monthly salary
             $salarygenerate->payslip_number = "SDCS-" . $request->user_id . rand(10, 10000);
             $salarygenerate->net_salary = $salary->net_salary;
             $salarygenerate->slip_month = $request->month;
@@ -235,134 +254,148 @@ class PayrollController extends Controller
                     $deduct = $month * $eardedu->salaryEarningDeduction->value / 100;
                     $total_deduct += (int)$deduct;
                 }
-                $salarygenerate[str_replace(' ', '_', strtolower($eardedu->salaryEarningDeduction->salarymanagement->title))] = $deduct;
+                $salarygenerate[str_replace(' ', '_', strtolower($eardedu->salaryEarningDeduction->salarymanagement->title))] = round($deduct);
             }
             $salarygenerate->tDeducation = $total_deduct;
             $salarygenerate->tEarning = $total_earn;
             $totaled = $month - $total_deduct;
-            $dd = date('d', strtotime($salarymonthLastDate));
-            $NetDay = $salarymonthDay;
-            $monthFingerApproved = LeaveMonthAttandance::where('user_id', $request->user_id)->where('date', $firstDayofPreviousMonth)->first();
-            $monthLeaveCalculate = monthleave::where('user_id', $request->user_id)->where('to', $salarymonthLastDate)->latest()->first();
-            $daySalary = $month / $dd; //pr day salary calculate
-            if (isset($monthLeaveCalculate->other) && $monthLeaveCalculate->other != null) {
-                # code...
-                $dd = $dd - $monthLeaveCalculate->other; //net day working in month
-            }
-            $paysalary = $NetDay * $daySalary; //paysalary calculate prday Vs Net working day
-            // dd($paysalary);
             $grossMonthSalary = $paysalary - $total_deduct;
-            $salarygenerate->basic_salary = $totaled;
             if (isset($monthLeaveCalculate->other) && $monthLeaveCalculate->other != null) {
                 $salarygenerate->leave_deduction = round($monthLeaveCalculate->other * $daySalary);
-                $grossMonthSalary = $grossMonthSalary - $salarygenerate->leave_deduction;
             } else {
                 $salarygenerate->leave_deduction = 0 * $daySalary;
-                $grossMonthSalary = $grossMonthSalary - $salarygenerate->leave_deduction;
             }
             $salarygenerate->paysalary = round($grossMonthSalary);
-            // dd($salarygenerate->toArray());
+            $salarygenerate->basic_salary = $totaled + $salarygenerate->leave_deduction;
             $salarygenerate->save();
         }
         return redirect()->route('admin.payroll.list');
     }
 
 
-
-    /*
-    public function handle($id){
-
+    public function handle($id)
+    {
         $today = \Carbon\Carbon::now();
-        $fristMonthofDay =  Carbon::now()->startOfMonth()->subMonthsNoOverflow()->toDateString();
+        $fristMonthofDay = Carbon::now()->startOfMonth()->subMonthsNoOverflow()->toDateString();
         $lastMonthofDay = Carbon::now()->subMonthsNoOverflow()->endOfMonth()->toDateString();
         $leaves = Leaverecord::where('user_id', $id)->where(function ($query) use ($fristMonthofDay, $lastMonthofDay) {
             $query->whereBetween('from', [$fristMonthofDay, $lastMonthofDay]);
         })->get();
-        $approvedLeaveDay =0;
+        $leavesGet = Leaverecord::where('user_id', $id)->where(function ($query) use ($fristMonthofDay, $lastMonthofDay) {
+            $query->whereBetween('from', [$fristMonthofDay, $lastMonthofDay]);
+        })->count();
+
         $leavet = settingleave::where('status', 1)->get();
-        foreach ($leaves as $leave) {
-            $approvedLeaveDay=$approvedLeaveDay+$leave->day;
-            $leavetype = settingleave::find($leave->type_id);
-            $monthleave = monthleave::where('user_id', $leave->user_id)->where('status', 1)->where('to', $lastMonthofDay)->first();
-            // dd($monthleave->toArray());
-            if ($leavetype->type == "Annual") {
-                if ($monthleave->apprAnual != null) {
-                    $monthleave->apprAnual = $monthleave->apprAnual + $leave->day;
-                } else {
-                    $monthleave->apprAnual = $leave->day;
-                }
-            } elseif ($leavetype->type == "Sick") {
-                if ($monthleave != null) {
-                    $monthleave->apprSick = $monthleave->apprSick + $leave->day;
-                } else {
-                    $monthleave->apprSick = $leave->day;
-                }
-            } else {
-                if ($monthleave != null) {
+        if ($leavesGet > 0) {
+            foreach ($leaves as $leave) {
 
-                    $monthleave->other = $monthleave->other + $leave->day;
+                $leavetype = settingleave::find($leave->type_id);
+                $monthleave = monthleave::where('user_id', $leave->user_id)->where('status', 1)->where('to', $lastMonthofDay)->first();
+                if ($leavetype->type == "Annual") {
+                    if ($monthleave != null) {
+                        $monthleave->apprAnual = $monthleave->apprAnual + $leave->day;
+                    } else {
+                        $monthleave->apprAnual = $leave->day;
+                    }
+                } elseif ($leavetype->type == "Sick") {
+                    if ($monthleave != null) {
+                        $monthleave->apprSick = $monthleave->apprSick + $leave->day;
+                    } else {
+                        $monthleave->apprSick = $leave->day;
+                    }
                 } else {
-                    $monthleave->other = $leave->day;
+                    if ($monthleave != null) {
+                        $monthleave->other = $monthleave->other + $leave->day;
+                    } else {
+                        $monthleave->other = $leave->day;
+                    }
                 }
+                $monthleave->status = 1;
+                $monthleave->save();
             }
-            $monthleave->status = 1;
-            $monthleave->save();
-
-        }
-
-        if (isset($monthleave)) {
-            # code...
-
-        if ($monthleave->apprAnual>$monthleave->anualLeave) {
-            $leaveDeduction= $monthleave->apprAnual-$monthleave->anualLeave;
-            if ($monthleave->other != null) {
-                $monthleave->other =$monthleave->other +$leaveDeduction;
-            }else{
-                $monthleave->other =$leaveDeduction;
-            }
+        } else {
+            $monthleave = monthleave::where('user_id', $id)->where('status', 1)->first();
+            $monthleave->status = 3;
             $monthleave->save();
         }
-        if ($monthleave->apprSick>$monthleave->sickLeave) {
-            $leaveDeduction= $monthleave->apprSick-$monthleave->sickLeave;
-            if ($monthleave->other != null) {
-                $monthleave->other =$monthleave->other +$leaveDeduction;
-            }else{
-                $monthleave->other =$leaveDeduction;
-            }
-            $monthleave->save();
-        }
-    }
-          //Attendance Vs Month Leave Table
-        $salarymonthLastDate=Carbon::now()->subMonthsNoOverflow()->endOfMonth()->toDateString();
+        //Attendance Vs Month Leave Table
+        $salarymonthLastDate = Carbon::now()->subMonthsNoOverflow()->endOfMonth()->toDateString();
         $firstDayofPreviousMonth = Carbon::now()->startOfMonth()->subMonth()->toDateString();
         $dd = date('d', strtotime($salarymonthLastDate));
-        $monthFingerApproved= LeaveMonthAttandance::where('user_id',$id)->where('date',$firstDayofPreviousMonth)->first();
-        $monthLeaveCalculate=monthleave::where('status',1)->where('user_id',$id)->where('to',$salarymonthLastDate)->first();
+        $monthFingerApproved = LeaveMonthAttandance::where('user_id', $id)->where(function ($query) use ($fristMonthofDay, $lastMonthofDay) {
+            $query->whereBetween('date', [$fristMonthofDay, $lastMonthofDay]);
+        })->count();
+        if ($monthFingerApproved > 0) {
+            $monthFingerApproved = LeaveMonthAttandance::where('user_id', $id)->where(function ($query) use ($fristMonthofDay, $lastMonthofDay) {
+                $query->whereBetween('date', [$fristMonthofDay, $lastMonthofDay]);
+            })->get();
 
-        if (isset($monthFingerApproved)&&$monthFingerApproved->anual != null) {
-            $anual=$monthLeaveCalculate->apprAnual-$monthFingerApproved->anual;
-            $monthLeaveCalculate->apprAnual=$anual;
+            foreach ($monthFingerApproved as $key => $aLeave) {
+                $monthleave = monthleave::where('user_id', $leave->user_id)->where('status', 1)->where('to', $lastMonthofDay)->first();
+                $leavetype = settingleave::find($aLeave->type_id);
+                if ($leavetype->type == "Annual") {
+                    if ($monthleave->apprAnual > 0) {
+                        $monthleave->apprAnual = $monthleave->apprAnual - $aLeave->anual;
+                    }
+                } elseif ($leavetype->type == "Sick") {
+                    if ($monthleave->apprSick > 0) {
+                        $monthleave->apprSick = $monthleave->apprSick - $aLeave->sick;
+                    }
+                } else {
+                    if ($monthleave->other > 0) {
+                        $monthleave->other = $monthleave->other - $aLeave->other;
+                    }
+                }
+                $monthleave->save();
+            }
         }
-        if (isset($monthFingerApproved)&&$monthFingerApproved->sick != null) {
-            # code...
-            $sick=$monthLeaveCalculate->apprSick-$monthFingerApproved->sick;
-            $monthLeaveCalculate->apprSick=$sick;
+
+        $monthFingerAbsunt = Attendance::where('user_id', $id)->where('status', 0)->where(function ($query) use ($fristMonthofDay, $lastMonthofDay) {
+            $query->whereBetween('date', [$fristMonthofDay, $lastMonthofDay]);})->count();
+            if ($monthFingerAbsunt > 0) {
+                $monthleave = monthleave::where('user_id', $id)->where('status', 1)->where('to', $lastMonthofDay)->first();
+                // dd($monthleave);
+                $totalLeave = $monthleave->apprAnual+$monthleave->apprSick + $monthleave->other; //total leave add 
+                // dd($monthFingerAbsunt,$totalLeave);
+            if ($monthFingerAbsunt > $totalLeave) {
+                // dd("kkkkk");
+                $netLeave = $monthFingerAbsunt - $totalLeave; //leave diffrance machine and leave compare
+                if ($monthleave->other != null) {
+                    $monthleave->other = $monthleave->other + $netLeave;
+                } else {
+                    $monthleave->other = $netLeave;
+                }
+            }
+            $monthleave->status = 3;
+            $monthleave->save();
         }
-        if (isset($monthFingerApproved)&&$monthFingerApproved->other) {
-            # code...
-            $other=$monthLeaveCalculate->other-$monthFingerApproved->other;
-            $monthLeaveCalculate->other=$other;
+        //monthLeave In status 0 Update Function   
+
+        // ----------------------------other leave shift function ------------------------------------ 
+        $monthleave = monthleave::where('user_id', $id)->where('to', $lastMonthofDay)->where('status', 3)->first();
+        // dd($monthleave->toArray());
+        if ($monthleave->apprAnual > $monthleave->anualLeave) {
+            $netleaveAnual = $monthleave->apprAnual - $monthleave->anualLeave;
+            if ($monthleave->other != null) {
+                $monthleave->other = $monthleave->other + $netleaveAnual;
+            } else {
+                $monthleave->other = $netleaveAnual;
+            }
         }
-        $monthLeaveCalculate->save();
-        //monthLeave In status 0 Update Function
-        $monthleave = monthleave::where('user_id', $id)->where('status', 1)->where('to', $lastMonthofDay)->first();
-        $monthleave->status = 0;
+        if ($monthleave->apprSick > $monthleave->sickLeave) {
+            $netleaveAnual = $monthleave->apprSick - $monthleave->sickLeave;
+            if ($monthleave->other != null) {
+                $monthleave->other = $monthleave->other + $netleaveAnual;
+            } else {
+                $monthleave->other = $netleaveAnual;
+            }
+        }
         $monthleave->save();
-
-        //get a new entery month in user
+        // dd($monthleave->toArray());
         $monthdata = $monthleave;
+        //get a new entery month in user
         $session = Session::where('status', 1)->first();
-        $fristMonthofDay =  Carbon::now()->startOfMonth()->toDateString();
+        $fristMonthofDay = Carbon::now()->startOfMonth()->toDateString();
         $lastMonthofDay = Carbon::now()->endOfMonth()->toDateString();
         $monthleave = new monthleave();
         $monthleave->user_id = $id;
@@ -403,10 +436,5 @@ class PayrollController extends Controller
         }
         $monthleave->status = 1;
         $monthleave->save();
-
-    } */
-    public function handle($id)
-    {
-       dd("test route");
     }
 }

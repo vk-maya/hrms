@@ -23,13 +23,22 @@ class LeaveController extends Controller
 
     public function leave()
     {
-
-        $data = Leave::where('user_id', Auth::guard('web')->user()->id)->with('leaveType')->latest()->get();
-        $leaveyear = UserleaveYear::where('user_id', Auth::guard('web')->user()->id)->latest()->first();
-        $current = Leave::where('user_id', Auth::guard('web')->user()->id)->where('status', 1)->whereMonth('form', date('m'))->whereYear('form', date('Y'))->get();
-        $session = Session::latest()->first();
-        // dd($leaveyear);
-        return view('employees.leave.leave', compact('data', 'leaveyear', 'current', 'session'));
+        $firstDayofMonth = Carbon::now()->startOfMonth()->toDateString();
+        $lastDayofMonth = Carbon::now()->endOfMonth()->toDateString();
+        $month= monthleave::where('user_id',Auth::guard('web')->user()->id)->where('status',1)->first();
+        $data = Leave::with('leaverecordEmp','leaveType')->where('user_id',Auth::guard('web')->user()->id)->where(function ($query) use ($firstDayofMonth,$lastDayofMonth)
+        {
+            $query->where("form", ">=",$firstDayofMonth)->where("to", "<=", $lastDayofMonth);
+        })->get();
+        $totalLeave = Leaverecord::where('user_id',Auth::guard('web')->user()->id)->where('status',1)->where(function ($query) use ($firstDayofMonth,$lastDayofMonth)
+        {
+            $query->where("from", ">=",$firstDayofMonth)->where("to", "<=", $lastDayofMonth);
+        })->get();
+        // $totalLeave= Leaverecord::where('user_id',Auth::guard('web')->user()->id)->where('status',1)->get();
+    
+     
+        // dd($totalLeave->toArray());
+        return view('employees.leave.leave', compact('data','month','totalLeave'));
     }
     public function leaveadd()
     {

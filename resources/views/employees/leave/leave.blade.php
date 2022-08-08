@@ -22,60 +22,45 @@
                     </div>
                 </div>
             </div>
-             
+
             @if ($message = Session::get('success'))
-            <div class="alert alert-success alert-block">
-                <button type="button" class="close" data-dismiss="alert">×</button>
-                <strong>{{ $message }}</strong>
-            </div>
-        @endif
+                <div class="alert alert-success alert-block">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <strong>{{ $message }}</strong>
+                </div>
+            @endif
             @if ($message = Session::get('unsuccess'))
-            <div class="alert alert-warning alert-block">
-                <button type="button" class="close" data-dismiss="alert">×</button>
-                <strong>{{ $message }}</strong>
-            </div>
-        @endif
+                <div class="alert alert-warning alert-block">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <strong>{{ $message }}</strong>
+                </div>
+            @endif
             <div class="row">
-                <div class="col-md-2">
+                <div class="col-md">
                     <div class="stats-info">
-                        <h6>Annual Leave</h6>
-                        <h6>
-                        </h6>
+                        <h6>Annual Remaining Leave</h6>
+                        <h6>{{ $month->anualLeave }}</h6>
                     </div>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md">
                     <div class="stats-info">
-                        <h6>Medical Leave</h6>
-                        <h6>
-                        </h6>
+                        <h6>Medical Remaining Leave</h6>
+                        <h6>{{ $month->sickLeave }}</h6>
 
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <div class="stats-info">
-                        <h6>Other Leave</h6>
-                        <h6>
+                @php
+                    $approvedLeave = 0;
+                    foreach ($totalLeave as $leave) {
+                        // dd($leave->toArray());
+                        $approvedLeave=$leave->day+  $approvedLeave;                     
+                    }
+                @endphp
 
-                        </h6>
-                    </div>
-                </div>
-                <div class="col-md-2">
+                <div class="col-md">
                     <div class="stats-info">
-                        <h6>Remaining Leave</h6>
-                        <h6></h6>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="stats-info">
-                        <h6>Next A/M Leave</h6>
-                        <h6></h6>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="stats-info">
-                        <h6>Total Leave</h6>
-
-                        <h6></h6>
+                        <h6>Total Leave</h6>                
+                <h6>{{$approvedLeave}}</h6>
                     </div>
                 </div>
             </div>
@@ -103,8 +88,16 @@
                                         @endphp
                                         <td>{{ $item->leaveType->type }}</td>
                                         <td> {{ $start->format('d-m-Y') }}</td>
+                                        @php
+                                            $day = 0;
+                                            foreach ($item->leaverecord as $leaver) {
+                                                    $day = $day + $leaver->day;
+                                                
+                                            }
+                                        @endphp
+
                                         <td> {{ $end->format('d-m-Y') }}</td>
-                                        <td>{{ $start->diff($end)->format('%a') + 1 }}</td>
+                                        <td> {{ $day }}</td>
                                         <td><a href="#"
                                                 data-bs-toggle="modal"data-bs-target="#add_department{{ $item->id }}">{{ \Illuminate\Support\Str::limit($item->reason, 20, '..') }}</a>
                                         </td>
@@ -122,24 +115,25 @@
                                                 @endif
                                             </div>
                                         </td>
-                                        @if ($item->status ==2 || $item->status==0 )                                            
-                                        <td class="text-end">
-                                                <div class="dropdown dropdown-action">
-                                                <a href="#" class="action-icon dropdown-toggle"
-                                                data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                class="material-icons">more_vert</i></a>
-                                                <div class="dropdown-menu dropdown-menu-right">                                                  
-                                                        <a class="dropdown-item" href="{{route('employees.leave.delete',$item->id)}}" ><i
-                                                            class="fa fa-trash-o m-r-5"></i> Delete</a>
-                                                        </div>
-                                                    </div>
-                                            </td>
-                                            @else
+                                        @if ($item->status == 2 || $item->status == 0)
                                             <td class="text-end">
-                                                <div class="dropdown dropdown-action">                                               
+                                                <div class="dropdown dropdown-action">
+                                                    <a href="#" class="action-icon dropdown-toggle"
+                                                        data-bs-toggle="dropdown" aria-expanded="false"><i
+                                                            class="material-icons">more_vert</i></a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('employees.leave.delete', $item->id) }}"><i
+                                                                class="fa fa-trash-o m-r-5"></i> Delete</a>
                                                     </div>
+                                                </div>
                                             </td>
-                                    @endif
+                                        @else
+                                            <td class="text-end">
+                                                <div class="dropdown dropdown-action">
+                                                </div>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -148,7 +142,7 @@
                 </div>
             </div>
         </div>
-        @foreach ($data as $item)
+        {{-- @foreach ($data as $item)
             <div id="add_department{{ $item->id }}" class="modal custom-modal fade" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
@@ -168,7 +162,7 @@
                     </div>
                 </div>
             </div>
-        @endforeach
+        @endforeach --}}
     @endsection
     @push('plugin-js')
         <script src="{{ asset('assets/js/select2.min.js') }}"></script>

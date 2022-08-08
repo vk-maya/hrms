@@ -155,7 +155,8 @@
                                                     <table class="table table-bordered">
                                                         <tbody>
                                                             <tr>                                                   
-                                                                <td>Net Salary</td>
+                                                                <td>Basic Salary <span
+                                                                    class="float-end" id="basicSalary">0</span></td>
                                                             </tr>                                                          
                                                             <tr>
                                                                 <td><strong>House Rent Allowance (H.R.A.)</strong> <span
@@ -247,7 +248,7 @@
                                                 <div class="col-md-6">
 
                                                     <div class="col-sm-12">
-                                                        <p><strong>Pay In  Gross Salary: <span id="paysalary">0</span> </strong></p>
+                                                        <p><strong>Pay Gross Salary: <span class="float-end" id="paysalary">0</span> </strong></p>
                                                     </div>
                                                 </div>
 
@@ -325,6 +326,7 @@
                             $("#payslipnumber").html(res.slip.payslip_number);
                             $("#netsalary").html(res.slip.basic_salary);
                             $("#paysalary").html(res.slip.paysalary);
+                            $("#basicSalary").html(res.slip.basic_salary);
                             $("#salarySlip").modal('show');
                         }
     
