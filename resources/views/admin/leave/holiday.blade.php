@@ -7,12 +7,24 @@
     <link rel="stylesheet" href="{{ asset('assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css') }}">
 @endpush
 @section('content')
+@php
+    $month = date('m');
+    if($month > 3){
+        $min_date = date('Y').'-04-01';
+        $max_date = date('Y', strtotime('+1 year')).'-03-31';
+        $year = date('Y').' - '.date('Y', strtotime('+1 year'));
+    }else{
+        $min_date = date('Y', strtotime('-1 year')).'-04-01';
+        $max_date = date('Y').'-03-31';
+        $year = date('Y', strtotime('-1 year')).' - '.date('Y');
+    }
+@endphp
 <div class="page-wrapper">
     <div class="content container-fluid">
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col">
-                    <h3 class="page-title">Holidays 2019</h3>
+                    <h3 class="page-title">Holidays {{$year}}</h3>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
                         <li class="breadcrumb-item active">Holidays</li>
@@ -37,12 +49,12 @@
                                 <th class="text-end">Action</th>
                             </tr>
                         </thead>
-                        <tbody>                                
+                        <tbody>
                             @foreach ($data as $key=> $item)
-                            <tr class="holiday-completed">                                                      
+                            <tr class="holiday-completed">
                                 <tr class="holiday-upcoming">
                                     <td>{{$key+1}}</td>
-                                    <td>{{$item->holidayName}}</td>                                    
+                                    <td>{{$item->holidayName}}</td>
                                     <td>{{\Carbon\Carbon::parse($item->date)->format('d/m/Y') }}</td>
                                     <td>{{date("l",strtotime($item->date))}}</td>
                                     <td class="text-end">
@@ -61,7 +73,7 @@
                                 </tr>
                             </tr>
                             @endforeach
-                       
+
                         </tbody>
                     </table>
                 </div>
@@ -92,7 +104,7 @@
                         </div>
                         <div class="form-group">
                             <label>Holiday Date <span class="text-danger">*</span></label>
-                            <div><input class="form-control" type="date" name="date" value="@isset($holi){{$holi->date}}@endisset">
+                            <div><input class="form-control" type="date" name="date" value="@isset($holi){{$holi->date}}@endisset" min="{{$min_date}}" max="{{$max_date}}">
                                 @error('date')
                             <span class="text-danger">
                                 <strong>{{ $message }}</strong>
@@ -123,7 +135,7 @@
         $(document).ready(function() {
             @isset($holi)
                 new bootstrap.Modal(document.getElementById('add_holiday')).show();
-            @endisset           
+            @endisset
         });
         </script>
 @endpush

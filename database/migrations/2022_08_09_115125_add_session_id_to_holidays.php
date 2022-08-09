@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddUserLeaveIdToMonthleavesTable extends Migration
+class AddSessionIdToHolidays extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddUserLeaveIdToMonthleavesTable extends Migration
      */
     public function up()
     {
-        Schema::table('monthleaves', function (Blueprint $table) {
-            $table->integer('useryear_id')->after('user_id');
+        Schema::table('holidays', function (Blueprint $table) {
+            $table->integer('session_id')->after('id');
         });
     }
 
@@ -25,7 +25,7 @@ class AddUserLeaveIdToMonthleavesTable extends Migration
      */
     public function down()
     {
-        Schema::table('monthleaves', function (Blueprint $table) {
+        Schema::table('holidays', function (Blueprint $table) {
             //
         });
     }
