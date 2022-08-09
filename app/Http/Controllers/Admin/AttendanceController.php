@@ -15,7 +15,7 @@ class AttendanceController extends Controller
     public function attendance($date = ''){
         if(empty($date)){
             $date = now()->toDateString();
-        }  
+        }
         $attinfo= "";
         // $attendance = Attendance::with('userinfo')->get();
         $first_date = date('Y-m-d',strtotime('first day of this month'));
@@ -24,7 +24,7 @@ class AttendanceController extends Controller
             $query->whereBetween('date', [$first_date,$last_date]);
         }])->where('status', 1)->get();
         // dd($attendance->toArray());
-        $month = (new DateTime($date))->format('t');     
+        $month = (new DateTime($date))->format('t');
         return view('admin.attendance.attendance',compact('attendance','month'));
     }
     public function attinfo($id){
@@ -34,5 +34,5 @@ class AttendanceController extends Controller
         return response()->json(['attend' => $attendinfo]);
 
     }
-    
+
 }
