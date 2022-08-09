@@ -41,9 +41,9 @@ class HomeController extends Controller
 
     public function settings()
     {
-        // $setting = CompanyProfile::all();
+        $setting = CompanyProfile::first();
         $data = Countries::all();
-        return view('admin.payroll.setting',compact('data'));
+        return view('admin.payroll.setting',compact('data', 'setting'));
     }
     public function setting_store(Request $request){
         // dd($request->toArray());
@@ -64,6 +64,6 @@ class HomeController extends Controller
         $company->save();
         return redirect()->back();
     }
- 
+
 
 }
