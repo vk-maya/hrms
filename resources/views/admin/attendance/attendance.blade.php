@@ -81,7 +81,7 @@
                             <tbody>
                                 @foreach ($attendance as $item)
                                     <tr>
-                                        <td>
+                                        <td class="headcol">
                                             <h2 class="table-avatar">
                                                 <a class="avatar avatar-xs"
                                                     href="{{ route('admin.employees.profile', $item->id) }}"><img alt=""
