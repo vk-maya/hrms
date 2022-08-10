@@ -28,8 +28,8 @@ class Kernel extends ConsoleKernel
         $last_date = date('Y-m-d');
 
         if (!$holiday && !$sat1 && !$sat3) {
-            $schedule->command('attend:data')->everyFifteenMinutes()->weekdays()->between('09:00', '12:00');
-            $schedule->command('attend:data')->everyFifteenMinutes()->weekdays()->between('18:00', '23:59');
+            $schedule->command('attend:data')->everyFifteenMinutes()->between('09:00', '12:00');
+            $schedule->command('attend:data')->everyFifteenMinutes()->between('18:00', '23:59');
         }
 
         if ($last_date == date('Y-m-t')) {
