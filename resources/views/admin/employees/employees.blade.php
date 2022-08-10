@@ -77,25 +77,25 @@
                                             <td>
                                                 <h2 class="table-avatar">
                                                     <a href="{{route('admin.employees.profile',$item->id)}}" class="avatar"> <img
-                                                            src="@if($item->image != NULL){{ asset('storage/uploads/' . $item->image) }}@else{{ asset('assets/img/avtar.jpg')}}@endif" alt="Employees Image"></a>
-                                                    <a href="{{route('admin.employees.profile',$item->id)}}"><b>{{ $item->name }}</b>
-                                                        <span>{{ $item->designation->designation_name }}</span></a>
+                                                            src="@if($item->image != NULL){{asset('storage/uploads/' . $item->image)}}@else{{asset('assets/img/avtar.jpg')}}@endif"></a>
+                                                    <a href="{{route('admin.employees.profile',$item->id)}}"><b>{{$item->first_name.' '.$item->last_name}}</b>
+                                                        <span>{{$item->designation->designation_name}}</span></a>
                                                 </h2>
                                             </td>
-                                            <td>SDC-EMP-{{ $item->employeeID }}</td>
-                                            <td>{{ $item->email }}</td>
-                                            <td>{{ $item->phone }}</td>
+                                            <td>{{$item->employeeID}}</td>
+                                            <td>{{$item->email}}</td>
+                                            <td>{{$item->phone}}</td>
                                             <td> {{ \Carbon\Carbon::parse($item->joining_date)->format('d/m/Y') }}</td>
-                                            <td>{{ $item->designation->designation_name }}</td>
+                                            <td>{{$item->designation->designation_name}}</td>
                                             <td class="text-end">
                                                 <div class="dropdown dropdown-action">
                                                     <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
                                                         aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                                     <div class="dropdown-menu dropdown-menu-right">
                                                         <a class="dropdown-item"
-                                                            href="{{ route('admin.employees.edit', $item->id) }}"><i
+                                                            href="{{ route('admin.employees.edit',$item->id) }}"><i
                                                                 class="fa fa-pencil m-r-5"></i> Edit</a>
-                                                        <button class="dropdown-item delete" data-id="{{ $item->id }}"><i
+                                                        <button class="dropdown-item delete" data-id="{{$item->id}}"><i
                                                                 class="fa fa-trash-o m-r-5"></i> Delete</button>
                                                     </div>
                                                 </div>
@@ -136,7 +136,7 @@
                                                 <i class="fa fa-check m-r-5 text-success"></i> <span
                                                     class="yeh-data">Active</span>
                                             @endif
-                                        </a>                            
+                                        </a>
                                     </div>
                                 </div>
                                 <div>
@@ -155,8 +155,8 @@
                                     @endif
                                 </div>
                                 <div class="small text-muted">
-                                    <h4 class="user-name m-t-10 mb-0 text-ellipsis">{{ $item->first_name }}</h4>
-                                    {{ $item->designation->designation_name }}
+                                    <h4 class="user-name m-t-10 mb-0 text-ellipsis">{{$item->first_name.' '.$item->last_name}}</h4>
+                                    {{$item->designation->designation_name}}
                                 </div>
                             </div>
                         </div>
@@ -209,6 +209,6 @@
                         }
                     });
             })
-        });      
+        });
     </script>
 @endpush

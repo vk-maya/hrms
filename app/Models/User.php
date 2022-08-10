@@ -27,7 +27,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
         'country_id',
         'last_name',
         'email',
@@ -42,7 +42,6 @@ class User extends Authenticatable
         'state',
         'status',
         'workplace',
-        'image',
         'image',
     ];
     public function leave(){

@@ -56,11 +56,12 @@
                 <a class="dropdown-item" href="profile.html">My Profile</a>
                 <a class="dropdown-item" href="{{route('admin.settings')}}">Settings</a>
                 <a class="dropdown-item" href="{{route('admin.salary.settings')}}">Salary Settings</a>
-                <form method="POST" action="{{ route('admin.logout') }}">
+                <a class="dropdown-item" href="{{ route('admin.logout') }}" onclick="event.preventDefault();
+                    document.getElementById('logout-form').submit();">
+                    Log Out
+                </a>
+                <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
                     @csrf
-                    <button class="btn" type="submit">
-                        <i class="icon-logout"></i> Log Out
-                    </button>
                 </form>
             </div>
         </li>
