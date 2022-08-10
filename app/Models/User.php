@@ -33,7 +33,7 @@ class User extends Authenticatable
         'email',
         'password',
         'employee_id',
-        'joining_date',
+        'joiningDate',
         'phone',
         'department_id',
         'designation_id',

@@ -85,7 +85,7 @@
                                             <td>{{$item->employeeID}}</td>
                                             <td>{{$item->email}}</td>
                                             <td>{{$item->phone}}</td>
-                                            <td> {{ \Carbon\Carbon::parse($item->joining_date)->format('d/m/Y') }}</td>
+                                            <td> {{ \Carbon\Carbon::parse($item->joiningDate)->format('d/m/Y') }}</td>
                                             <td>{{$item->designation->designation_name}}</td>
                                             <td class="text-end">
                                                 <div class="dropdown dropdown-action">
