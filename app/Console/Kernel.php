@@ -26,8 +26,8 @@ class Kernel extends ConsoleKernel
         $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
 
         if (!$holiday && !$sat1 && !$sat3) {
-            $schedule->command('attend:data')->everyFifteenMinutes()->weekdays()->between('09:00', '11:00');
-            $schedule->command('attend:data')->everyFifteenMinutes()->weekdays()->between('18:00', '20:00');
+            $schedule->command('attend:data')->everyFifteenMinutes()->weekdays()->between('09:00', '12:00');
+            $schedule->command('attend:data')->everyFifteenMinutes()->weekdays()->between('18:00', '23:59');
         }
     }
 
