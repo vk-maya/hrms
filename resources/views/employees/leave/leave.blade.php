@@ -51,16 +51,26 @@
                 </div>
                 @php
                     $approvedLeave = 0;
-                    foreach ($totalLeave as $leave) {
-                        // dd($leave->toArray());
-                        $approvedLeave=$leave->day+  $approvedLeave;                     
+                    foreach ($totalMonthLeave as $leave) {
+                        $approvedLeave = $leave->day + $approvedLeave;
                     }
                 @endphp
-
+                @php
+                    $approvedLeaveTotal = 0;
+                    foreach ($totalLeave as $leave) {
+                        $approvedLeaveTotal = $leave->day + $approvedLeave;
+                    }
+                @endphp
                 <div class="col-md">
                     <div class="stats-info">
-                        <h6>Total Leave</h6>                
-                <h6>{{$approvedLeave}}</h6>
+                        <h6><strong>{{now()->format('M')}}</strong> Total Leave</h6>
+                        <h6>{{ $approvedLeaveTotal }}</h6>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="stats-info">
+                        <h6><b>{{ now()->format('M') }}</b> Approve Leave</h6>
+                        <h6>{{ $approvedLeave }}</h6>
                     </div>
                 </div>
             </div>
@@ -91,8 +101,7 @@
                                         @php
                                             $day = 0;
                                             foreach ($item->leaverecord as $leaver) {
-                                                    $day = $day + $leaver->day;
-                                                
+                                                $day = $day + $leaver->day;
                                             }
                                         @endphp
 
@@ -142,7 +151,7 @@
                 </div>
             </div>
         </div>
-        {{-- @foreach ($data as $item)
+        @foreach ($data as $item)
             <div id="add_department{{ $item->id }}" class="modal custom-modal fade" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
@@ -162,7 +171,7 @@
                     </div>
                 </div>
             </div>
-        @endforeach --}}
+        @endforeach
     @endsection
     @push('plugin-js')
         <script src="{{ asset('assets/js/select2.min.js') }}"></script>
