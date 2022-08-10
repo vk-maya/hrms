@@ -45,21 +45,32 @@
                 <div class="col-md">
                     <div class="stats-info">
                         <h6>Medical Remaining Leave</h6>
-                        <h6>{{$month->sickLeave}}</h6>
+                        <h6>{{ $month->sickLeave }}</h6>
 
                     </div>
                 </div>
                 @php
                     $approvedLeave = 0;
-                    foreach ($totalLeave as $leave) {
-                        $approvedLeave=$leave->day+  $approvedLeave;                     
+                    foreach ($totalMonthLeave as $leave) {
+                        $approvedLeave = $leave->day + $approvedLeave;
                     }
                 @endphp
-
+                @php
+                    $approvedLeaveTotal = 0;
+                    foreach ($totalLeave as $leave) {
+                        $approvedLeaveTotal = $leave->day + $approvedLeave;
+                    }
+                @endphp
                 <div class="col-md">
                     <div class="stats-info">
-                        <h6>Total Ap Leave</h6>                
-                <h6>{{$approvedLeave}}</h6>
+                        <h6><strong>{{now()->format('M')}}</strong> Total Leave</h6>
+                        <h6>{{ $approvedLeaveTotal }}</h6>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="stats-info">
+                        <h6><b>{{ now()->format('M') }}</b> Approve Leave</h6>
+                        <h6>{{ $approvedLeave }}</h6>
                     </div>
                 </div>
             </div>
@@ -90,8 +101,7 @@
                                         @php
                                             $day = 0;
                                             foreach ($item->leaverecord as $leaver) {
-                                                    $day = $day + $leaver->day;
-                                                
+                                                $day = $day + $leaver->day;
                                             }
                                         @endphp
 
