@@ -80,7 +80,6 @@
                             </thead>
                             <tbody>
                                 @foreach ($attendance as $item)
-                                {{$item->id}}
                                     <tr>
                                         <td>
                                             <h2 class="table-avatar">
@@ -97,9 +96,8 @@
                                             @if (in_array(date("Y-m-d",strtotime(now()->format("Y-m-").$i)),$item->attendence->pluck('date')->toArray()))
                                                 @if ($item->attendence[$count]->attendance == 'P')
                                                     <td>
-                                                        <button class="dropdown-item attend-info-show" data-id="{{ $item->attendence[$count]->id }}"><i class="fa fa-check text-success"></i></button>
+                                                        <i class="fa fa-check text-success attend-info-show" data-id="{{ $item->attendence[$count]->id }}"></i>
                                                     </td>
-                                                    {{-- <td><a href="{{route('admin.attendance.info',$item->id)}}"><i class="fa fa-check text-success"></i></td> --}}
                                                 @else
                                                     <td><i class="fa fa-close text-danger"></i> </td>
                                                 @endif
