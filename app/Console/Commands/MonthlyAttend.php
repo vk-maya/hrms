@@ -115,7 +115,7 @@ class MonthlyAttend extends Command
                     }
                 }
             }
-            $this->info('Attendence Update Successfully');
+            $this->info($new_date.' - Attendence Update Successfully');
             $new_date = date('Y-m-d', strtotime($new_date.'+1 day'));
         }
     }
