@@ -93,9 +93,9 @@
                     <div class="card-body">
                         <form action="{{ route('admin.storeemployees') }}" enctype="multipart/form-data" method="POST">
                             @csrf
-                            
+
                             <input type="text" hidden value="@if (isset($employees)){{ $employees->id }}@else @endif" name="id" >
-                            
+
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
@@ -202,7 +202,7 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Email <span class="text-danger">*</span></label>
                                         <input class="form-control" name="email" type="email" id="email"
-                                            value="@if(isset($employees)) {{ $employees->email }}@else{{ old('email') }}@endif"
+                                            value="@if(isset($employees)){{$employees->email}}@else{{ old('email') }}@endif"
                                             {{ old('email') }} onkeypress="emaill()">
                                         <span class="text-danger">
                                             @error('email')
@@ -322,7 +322,7 @@
                                                 class="text-danger">*</span></label>
                                         <div class="">
                                             <input name="joiningDate" class="form-control" type="date"
-                                                max="{{ \Carbon\Carbon::now()->toDateString() }}" 
+                                                max="{{ \Carbon\Carbon::now()->toDateString() }}"
                                                 value="@if(isset($employees)){{\Carbon\Carbon::parse($employees->joiningDate)->format('Y-m-d')}}@endif">
                                             <span class="text-danger">
                                                 @error('joiningDate')
@@ -467,7 +467,7 @@
                                         @foreach ($salared as $item)
                                             @if ($item->salarymanag->type == 'deduction')
                                                 <div>
-                                                    <label class="checkbox-inline"><input  @if(isset($salaryedit)&& in_array($item->id,$salaryedit->toArray())) 
+                                                    <label class="checkbox-inline"><input  @if(isset($salaryedit)&& in_array($item->id,$salaryedit->toArray()))
                                                         checked @endif type="checkbox"
                                                             value="{{$item->id}}" name="earning[]" class="days recurring"
                                                             ><span class="checkmark">{{ $item->salarymanag->title }}</span></label>
@@ -475,7 +475,7 @@
                                             @endif
                                         @endforeach
                                     </div>
-                                    
+
                                 </div>
                         </div>
                         <div class="submit-section">

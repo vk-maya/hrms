@@ -121,8 +121,6 @@ class UserController extends Controller
         $employees->last_name = $request->last_name;
         $employees->gender = $request->gender;
         $employees->dob = date('Y-m-d', strtotime($request->dob));
-        $employees->email = $request->email;
-        $employees->employeeID = $request->employeeID;
         $employees->phone = $request->phone;
         $employees->address = $request->address;
         $employees->country_id = $request->country_id;
@@ -157,5 +155,5 @@ class UserController extends Controller
         $files = Attach::where('user_id', $id)->get();
         return view('employees.Attach.attach-file', compact('files'));
     }
-     
+
 }
