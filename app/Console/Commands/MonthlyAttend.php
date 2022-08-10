@@ -58,9 +58,9 @@ class MonthlyAttend extends Command
             $sat1 = $sat1->format('Y-m-d');
             $sat3 = $sat3->format('Y-m-d');
 
-            $current = $new_date;
+            // $current = $new_date;
 
-            if (!$date->isSunday() && $sat1 != $current && $sat3 != $current) {
+            if (!$date->isSunday()) {
                 $client = new Client();
                 $response = $client->request('POST', 'http://hrmsapi.scrumdigital.in/api/getattendance', ['form_params' => ['date' => $date,]]);
                 $response = json_decode($response->getBody()
