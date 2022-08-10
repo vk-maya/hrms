@@ -58,7 +58,7 @@ class MonthlyAttend extends Command
             $sat1 = $sat1->format('Y-m-d');
             $sat3 = $sat3->format('Y-m-d');
 
-            $current = $date->format('Y-m-d');
+            $current = $new_date;
 
             if (!$date->isSunday() && $sat1 != $current && $sat3 != $current) {
                 $client = new Client();
