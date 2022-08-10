@@ -108,16 +108,12 @@
                                                     </a>
                                                         <div class="dropdown-menu dropdown-menu-right">
                                                             <a class="dropdown-item" href="#"><i
-                                                                    class="fa fa-dot-circle-o text-purple"></i> New</a>
+                                                                    class="fa fa-dot-circle-o text-purple"></i> Leave</a>
                                                             <a class="dropdown-item" href="#"><i
-                                                                    class="fa fa-dot-circle-o text-info"></i> Pending</a>
+                                                                    class="fa fa-dot-circle-o text-info"></i> WFH</a>
                                                             <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                                data-bs-target="#approve_leave"><i
-                                                                    class="fa fa-dot-circle-o text-success"></i>
-                                                                Approved</a>
-                                                            <a class="dropdown-item" href="#"><i
-                                                                    class="fa fa-dot-circle-o text-danger disabled"></i>
-                                                                Declined</a>
+                                                                data-bs-target="#approve_leave"><i class="fa fa-dot-circle-o text-success"></i> Leave In WFH</a>
+                                                     
                                                         </div>
                                                 </div>
                                             @endif

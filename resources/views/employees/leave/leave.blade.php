@@ -45,21 +45,20 @@
                 <div class="col-md">
                     <div class="stats-info">
                         <h6>Medical Remaining Leave</h6>
-                        <h6>{{ $month->sickLeave }}</h6>
+                        <h6>{{$month->sickLeave}}</h6>
 
                     </div>
                 </div>
                 @php
                     $approvedLeave = 0;
                     foreach ($totalLeave as $leave) {
-                        // dd($leave->toArray());
                         $approvedLeave=$leave->day+  $approvedLeave;                     
                     }
                 @endphp
 
                 <div class="col-md">
                     <div class="stats-info">
-                        <h6>Total Leave</h6>                
+                        <h6>Total Ap Leave</h6>                
                 <h6>{{$approvedLeave}}</h6>
                     </div>
                 </div>
@@ -142,7 +141,7 @@
                 </div>
             </div>
         </div>
-        {{-- @foreach ($data as $item)
+        @foreach ($data as $item)
             <div id="add_department{{ $item->id }}" class="modal custom-modal fade" role="dialog">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
@@ -162,7 +161,7 @@
                     </div>
                 </div>
             </div>
-        @endforeach --}}
+        @endforeach
     @endsection
     @push('plugin-js')
         <script src="{{ asset('assets/js/select2.min.js') }}"></script>
