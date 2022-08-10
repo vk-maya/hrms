@@ -50,7 +50,10 @@ class MonthlyAttend extends Command
         for ($i=1; $new_date <= date('Y-m-d'); $i++) {
             $date = date('Y-m-d', strtotime($new_date));
             $sunday = date('w', strtotime($new_date));
-            if ($sunday) {
+            $first_saturday = date('Y-m-d', strtotime('first saturday of '.date('Y-m', strtotime($new_date))));
+            $third_saturday = date('Y-m-d', strtotime('third saturday of '.date('Y-m', strtotime($new_date))));
+
+            if ($sunday && $first_saturday != $date && $third_saturday != $date) {
                 $client = new Client();
                 $response = $client->request('POST', 'http://hrmsapi.scrumdigital.in/api/getattendance', ['form_params' => ['date' => $date,]]);
                 $response = json_decode($response->getBody()
