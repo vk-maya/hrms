@@ -90,7 +90,7 @@ class EmployeesController extends Controller
     {
 
         $department = Designation::with('department')->get();
-        $employees = User::all();
+        $employees = User::orderBy('first_name')->get();
 
         return view('admin.employees.employees', compact('employees', 'department',));
     }
@@ -99,7 +99,7 @@ class EmployeesController extends Controller
     public function emplist()
     {
         $ldepartment = Designation::with('department')->get();
-        $lemployees = User::all();
+        $lemployees = User::orderBy('first_name')->get();
 
         return view('admin.employees.employees', compact('lemployees', 'ldepartment',));
     }
