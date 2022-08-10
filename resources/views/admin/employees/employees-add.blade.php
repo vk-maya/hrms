@@ -158,7 +158,7 @@
                                     <div class="input-group">
                                         <span class="input-group-text" id="inputGroupPrepend">SDPL-JAI-</span>
                                         <input type="text" readonly class="form-control" id="emp"
-                                            value="@if (isset($employees)) {{ $employees->employeeID }}@else{{ $empid }} @endif">
+                                            value="@if (isset($employees)){{$employees->employeeID}}@else{{$empid}} @endif">
                                     </div>
                                     <span class="text-danger">
                                         @error('employeeID')
@@ -174,7 +174,7 @@
                                     <div class="input-group">
                                         <span class="input-group-text" id="inputGroupPrepend">Mac-ID-</span>
                                         <input type="text" class="form-control" name="machineID" id="machine"
-                                            value="@if (isset($employees)) {{ $employees->machineID }} @endif"
+                                            value="@if (isset($employees)){{$employees->machineID}}@endif"
                                             placeholder="Enter Machine Id">
                                     </div>
                                     <span class="text-danger">
@@ -190,7 +190,7 @@
                                         <label class="col-form-label">Phone </label>
                                         <input class="form-control phone" name="phone" type="text" maxlength="10"
                                             pattern="[1-9]{1}[0-9]{9}"
-                                            value="@if(isset($employees)){{ $employees->phone }}@else{{old('phone')}}@endif">
+                                            value="@if(isset($employees)){{$employees->phone}}@else{{old('phone')}}@endif">
                                         <span class="text-danger">
                                             @error('phone')
                                                 <p>Phone field is required.</p>
@@ -241,7 +241,7 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Address</label>
                                         <input class="form-control"
-                                            value="@if(isset($employees)) {{ $employees->address }}@else{{ old('address') }}@endif"
+                                            value="@if(isset($employees)){{$employees->address}}@else{{old('address')}}@endif"
                                             name="address" type="text">
                                         <span class="text-danger">
                                             @error('address')
@@ -258,7 +258,7 @@
                                             <option value="">Select Country</option>
                                             @foreach ($count as $item)
                                                 <option @if(isset($employees) && $employees->country_id == $item->id) selected @endif
-                                                    value="{{ $item->id }}{{ old('country')}}">
+                                                    value="{{$item->id}}{{old('country')}}">
                                                     {{ $item->name }}
                                                 </option>
                                             @endforeach
@@ -283,7 +283,7 @@
                                             @enderror
                                         </span>
                                         @isset($employees)
-                                            <input type="hidden" value="{{ $employees->state_id }}" id="EditState">
+                                            <input type="hidden" value="{{$employees->state_id}}" id="EditState">
                                         @endisset
                                     </div>
                                 </div>
@@ -299,7 +299,7 @@
                                             @enderror
                                         </span>
                                         @isset($employees)
-                                            <input type="hidden" value="{{ $employees->city_id }}" id="Editcity">
+                                            <input type="hidden" value="{{$employees->city_id}}" id="Editcity">
                                         @endisset
                                     </div>
                                 </div>
@@ -307,7 +307,7 @@
                                     <div class="form-group">
                                         <label class="col-form-label">Pin Code</label>
                                         <input type="text" name="pincode" class="form-control"
-                                            value="@if(isset($employees)) {{ $employees->pinCode }}@else{{ old('pincode') }}@endif">
+                                            value="@if(isset($employees)){{$employees->pinCode}}@else{{old('pincode')}}@endif">
                                         <span class="text-danger">
                                             @error('pincode')
                                                 <p>Pin Code field is required.</p>
@@ -341,8 +341,8 @@
                                             <option value="" disabled selected> Select Department </option>
                                             @foreach ($department as $item)
                                                 <option @if(isset($employees) && $employees->department_id == $item->id) selected @endif
-                                                    value="{{ $item->id }}">
-                                                    {{ $item->department_name }}
+                                                    value="{{$item->id}}">
+                                                    {{$item->department_name}}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -352,7 +352,7 @@
                                             @enderror
                                         </span>
                                         @isset($employees)
-                                            <input type="hidden" value="{{ $employees->designation_id }}"
+                                            <input type="hidden" value="{{$employees->designation_id}}"
                                                 id="editdesignation">
                                         @endisset
                                     </div>
@@ -376,8 +376,8 @@
                                     <div class="col-md-12">
                                         <div class="form-check form-switch">
                                             <input class='input-switch' type="checkbox"
-                                                value="@if(isset($employees)) {{ $employees->status }}@endif 1"
-                                                @if (isset($employees)) @if ($employees->status == 0) @else checked @endif
+                                                value="@if(isset($employees)){{$employees->status}}@endif 1"
+                                                @if (isset($employees)) @if($employees->status == 0) @else checked @endif
                                                 @endif checked
                                             name="status" id="demo" />
                                             <label class="label-switch" for="demo"></label>
@@ -392,7 +392,7 @@
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" title="Work From Office"
                                                     checked
-                                                    @if (isset($employees)) @if ($employees->workplace == 'wfo')checked @endif
+                                                    @if (isset($employees)) @if($employees->workplace == 'wfo')checked @endif
                                                     @endif
                                                 name="workplace" id="wfo" value="wfo">
                                                 <label class="form-check-label" title="Work From Office"
@@ -401,7 +401,7 @@
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" title="Work From House" type="radio"
                                                     name="workplace" id="wfh"
-                                                    @if (isset($employees)) @if ($employees->workplace == 'wfh') checked @endif
+                                                    @if (isset($employees)) @if($employees->workplace == 'wfh') checked @endif
                                                     @endif
                                                 value="wfh">
                                                 <label class="form-check-label" title="Work From House"
@@ -410,7 +410,7 @@
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" title="Work From House" type="radio"
                                                     name="workplace" id="both"
-                                                    @if (isset($employees)) @if ($employees->workplace == 'both') checked @endif
+                                                    @if (isset($employees)) @if($employees->workplace == 'both') checked @endif
                                                     @endif
                                                 value=" both">
                                                 <label class="form-check-label" title="Both"
@@ -423,7 +423,7 @@
                                 @if (isset($employees) && $employees->image != '')
                                     <div class="profile-img">
                                         <a href="" class="avatar">
-                                            <img src="{{ asset('storage/uploads/' . $employees->image) }}"
+                                            <img src="{{asset('storage/uploads/' . $employees->image)}}"
                                                 alt=""></a>
                                     </div>
                                 @endisset
@@ -457,7 +457,7 @@
                                                 <div>
                                                     <label class="checkbox-inline"><input @if(isset($salaryedit) && in_array($item->id,$salaryedit->toArray())) checked @endif type="checkbox" value="{{$item->id}}" name="earning[]" class="days recurring"
                                                             ></label><span
-                                                            class="checkmark">{{ $item->salarymanag->title }}</span>
+                                                            class="checkmark">{{$item->salarymanag->title}}</span>
                                                 </div>
                                             @endif
                                         @endforeach
@@ -470,7 +470,7 @@
                                                     <label class="checkbox-inline"><input  @if(isset($salaryedit)&& in_array($item->id,$salaryedit->toArray()))
                                                         checked @endif type="checkbox"
                                                             value="{{$item->id}}" name="earning[]" class="days recurring"
-                                                            ><span class="checkmark">{{ $item->salarymanag->title }}</span></label>
+                                                            ><span class="checkmark">{{$item->salarymanag->title}}</span></label>
                                                 </div>
                                             @endif
                                         @endforeach
