@@ -71,10 +71,9 @@ class Attendence extends Command
                     $attend->status = $key->Status == 'P' ? 1 : 0;
                     $attend->save();
                 } else {
-                    Attendance::create(['user_id' => $user->id, 'in_time' => $key->INTime == '--:--' ? '00:00' : $key->INTime, 'out_time' => $key->OUTTime == '--:--' ? '00:00' : $key->OUTTime, 'work_time' => $key->WorkTime, 'date' => date('Y-m-d'), 'day' => date('d'), 'month' => date('m'), 'year' => date('Y'), 'attendance' => $key->Status, 'status' => $key->Status == 'P' ? 1 : 0,]);
+                    Attendance::create(['user_id' => $user->id, 'in_time' => $key->INTime == '--:--' ? '00:00' : $key->INTime, 'out_time' => $key->OUTTime == '--:--' ? '00:00' : $key->OUTTime, 'work_time' => $key->WorkTime, 'date' => date('Y-m-d', strtotime($date)), 'day' => date('d', strtotime($date)), 'month' => date('m', strtotime($date)), 'year' => date('Y', strtotime($date)), 'attendance' => $key->Status, 'status' => $key->Status == 'P' ? 1 : 0,]);
                 }
                 //leave vs attandance function
-                $date = now();
                 $date = date('Y-m-d', strtotime($date));
                 $id = Attendance::where('user_id', $user->id)->where('status', 1)->where('date', $date)->latest()->first();
                 if (isset($id)) {
