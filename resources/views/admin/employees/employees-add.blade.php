@@ -144,7 +144,7 @@
                                         <div class="">
                                             <input type="date" class="form-control" name="dob" mini
                                                 max="{{ \Carbon\Carbon::now()->subMonths(216)->toDateString() }}"
-                                                value="@if(isset($employees)){{$employees->dob}} @endif">
+                                                value="@if(isset($employees)){{$employees->dob}}@endif">
                                             <span class="text-danger">
                                                 @error('dob')
                                                     <p>Employee Birth Date field is required.</p>
