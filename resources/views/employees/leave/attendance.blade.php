@@ -78,34 +78,50 @@
                                     <th>Punch In</th>
                                     <th>Punch Out</th>
                                     <th>Work Hour</th>
-                                    <th>Atten</th>
+                                    <th>Action</th>
 
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($attendance as $key => $item)
-                                    @php
-                                        $in_time = \Carbon\Carbon::parse($item->in_time)->format('H:i A');
-                                        if( $item->in_time ==null){
-                                            $in_time = '00:00:00';
-                                        }
-                                        if ($item->out_time ==null ) {
-                                            $out_time = '00:00:00';
-                                            $work_time ='00:00:00';                                           
-                                        }else{
-                                            $out_time = \Carbon\Carbon::parse($item->out_time)->format('H:i A');
-                                            $work_time = \Carbon\Carbon::parse($item->in_time)->diff(\Carbon\Carbon::parse($item->out_time))->format('%H:%I:%S');
-                                            $work_time = \Carbon\Carbon::parse($work_time."- 1 hour")->toTimeString();
-                                            }
-                                    @endphp
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->date)->format('d-m-Y') }} </td>
-                                        <td>{{ $in_time }}</td>
-                                        <td>{{ $out_time }}</td>
-                                        <td>{{ $work_time }}</td>
-                                        <td><a class="btn btn-succress" href="{{route('admin.attan.hit',$item->user_id)}}">Atte</a></td>
+                                        <td>{{ $item->in_time }}</td>
+                                        <td>{{ $item->out_time }}</td>
+                                        <td>{{ $item->work_time }}</td>
+                                        {{-- <td><a class="btn btn-succress" href="{{route('admin.attan.hit',$item->user_id)}}">Atte</a></td> --}}
+                                        <td class="text-center">
 
+                                            @if ($item->attendance == 'P')
+                                                <div class="dropdown action-label">
+                                                    <a class="btn btn-white btn-sm btn-rounded  disabled"
+                                                        href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="fa fa-check text-success"></i> P - Present
+                                                    </a>
+                                                </div>
+                                            @else
+                                                <div class="dropdown action-label">
+                                                    <a class="btn btn-white btn-sm btn-rounded dropdown-toggle"
+                                                        href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="fa fa-close text-danger"></i> A - Absent
+                                                    </a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            <a class="dropdown-item" href="#"><i
+                                                                    class="fa fa-dot-circle-o text-purple"></i> New</a>
+                                                            <a class="dropdown-item" href="#"><i
+                                                                    class="fa fa-dot-circle-o text-info"></i> Pending</a>
+                                                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                                                data-bs-target="#approve_leave"><i
+                                                                    class="fa fa-dot-circle-o text-success"></i>
+                                                                Approved</a>
+                                                            <a class="dropdown-item" href="#"><i
+                                                                    class="fa fa-dot-circle-o text-danger disabled"></i>
+                                                                Declined</a>
+                                                        </div>
+                                                </div>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -114,7 +130,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 @endsection
 @push('plugin-js')

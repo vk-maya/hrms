@@ -29,8 +29,9 @@ class AttendanceController extends Controller
     }
     public function attinfo($id){
         $attendinfo = Attendance::find($id);
-        $work_time =Carbon::parse($attendinfo->in_time)->diff(\Carbon\Carbon::parse($attendinfo->out_time))->format('%H:%I:%S');
-        $attendinfo->working_time =Carbon::parse($work_time."- 1 hour")->toTimeString();
+        // dd($attendinfo);
+        // $work_time =Carbon::parse($attendinfo->in_time)->diff(\Carbon\Carbon::parse($attendinfo->out_time))->format('%H:%I:%S');
+        // $attendinfo->working_time =Carbon::parse($work_time."- 1 hour")->toTimeString();
         return response()->json(['attend' => $attendinfo]);
 
     }

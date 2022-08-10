@@ -80,6 +80,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($attendance as $item)
+                                {{$item->id}}
                                     <tr>
                                         <td>
                                             <h2 class="table-avatar">
@@ -98,7 +99,7 @@
                                                     <td>
                                                         <button class="dropdown-item attend-info-show" data-id="{{ $item->attendence[$count]->id }}"><i class="fa fa-check text-success"></i></button>
                                                     </td>
-                                                    {{-- <td><a href="{{route('admin.attendance.info',$attend->id)}}"><i class="fa fa-check text-success"></i></td> --}}
+                                                    {{-- <td><a href="{{route('admin.attendance.info',$item->id)}}"><i class="fa fa-check text-success"></i></td> --}}
                                                 @else
                                                     <td><i class="fa fa-close text-danger"></i> </td>
                                                 @endif
@@ -187,7 +188,7 @@
                         } else {
                             $('#outtime').text('00:00:00');
                         }
-                        $('#totalhour').text(res.attend.working_time);
+                        $('#totalhour').text(res.attend.work_time);
                         $("#attendance_info").modal('show');
                     }
                 });
