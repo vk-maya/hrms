@@ -138,7 +138,7 @@ class EmployeesController extends Controller
             {
                 $empid = "SDPL-JAI-0001";
             }
-        
+
             return view('admin.employees.employees-add', compact('department', 'count', 'empid', 'salared'));
         }
     }
@@ -150,6 +150,11 @@ class EmployeesController extends Controller
         if ($request->id == "")
         {
             $rules = ['first_name' => ['required', 'string', 'max:255'], 'password' => ['required', 'confirmed', Rules\Password::defaults() ], 'joiningDate' => ['string', 'required'], 'department_id' => ['required', 'string', ], 'designation_id' => ['required', 'string', 'numeric', 'max:255'], ];
+        }
+
+        if ($request->pincode != null) {
+            $rules['pincode'] = ['required', 'integer', 'digits:6'];
+            $request->validate($rules);
         }
 
         if ($request->id == !null)

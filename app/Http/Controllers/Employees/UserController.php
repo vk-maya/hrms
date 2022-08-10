@@ -111,7 +111,7 @@ class UserController extends Controller
             'country_id' => ['required', 'integer'],
             'state_id' => ['required', 'integer'],
             'city_id' => ['required', 'integer'],
-            'pincode' => ['required', 'integer'],
+            'pincode' => ['required', 'integer', 'digits:6'],
 
         ];
         $request->validate($rules);
