@@ -97,6 +97,10 @@ class AdminLeaveController extends Controller
             $data = new Holiday();
         }
         $request->validate($rules);
+
+        $session = Session::where('status', 1)->first();
+
+        $data->session_id = $session->id;
         $data->holidayName = $request->name;
         $data->date = $request->date;
         $data->status = 1;
@@ -143,10 +147,10 @@ class AdminLeaveController extends Controller
         // dd($request->toArray());
         $data = Leave::find($request->id);
         //   dd($data->status);
-       
+
         $leaverall = Leaverecord::where("leave_id", $request->id)->get();
-     
-        
+
+
         if ($request->status == 1 && $data->status != $request->status ) {
             // dd("appr");
             foreach ($leaverall as $value) {
@@ -188,20 +192,20 @@ class AdminLeaveController extends Controller
             foreach ($leaverall as $key => $value) {
                 $setl = settingleave::find($value->type_id);
                 $totaleave = UserleaveYear::where('user_id',$data->user_id)->first();
-                if ($setl->id == $value->type_id && $setl->type == 'Annual') {                  
+                if ($setl->id == $value->type_id && $setl->type == 'Annual') {
                         $tt = $totaleave->netAnual;
-                        $totaleave->netAnual = $tt - $value->day;                 
+                        $totaleave->netAnual = $tt - $value->day;
                 } elseif ($setl->id == $value->type_id && $setl->type == 'Sick') {
-                  
+
                         $tt = $totaleave->netSick;
                         $totaleave->netSick = $tt - $value->day;
-                   
-                
+
+
                 } elseif ($setl->id == $value->type_id && $setl->type == 'Other') {
-                  
+
                         $tt = $totaleave->other;
                         $totaleave->other = $tt - $value->day;
-                   
+
                 }
                   $totaleave->save();
             }
@@ -211,17 +215,17 @@ class AdminLeaveController extends Controller
                 foreach ($leaverecord as $key => $record) {
                     $record->status= $request->status;
                     $record->save();
-                }     
+                }
             }else{
-                
+
                 $data->status = $request->status;
                 $data->update();
                 $leaverecord = Leaverecord::where('leave_id',$request->id)->get();
                     foreach ($leaverecord as $key => $record) {
                         $record->status= $request->status;
                         $record->save();
-                    }    
-            }        
+                    }
+            }
         return redirect()->back();
 
 
@@ -246,11 +250,11 @@ class AdminLeaveController extends Controller
                 if ($jd<$strr){
                     $jd=date('Y-m',strtotime($jd));
                     $jd= $jd."-01";
-                    dd($jd);                    
+                    dd($jd);
                 }else{
                 $jd=Carbon::parse($jd)->addMonths();
                 $jd=date('Y-m',strtotime($jd));
-                $jd = $jd."-01";         
+                $jd = $jd."-01";
                     }
             $end = now();
             $end=date('Y-m',strtotime($end));
@@ -264,14 +268,14 @@ class AdminLeaveController extends Controller
                         $to =date('Y-m-d',strtotime($end));
             $data->from= $from;
             $data->to=$to;
-                        $anual=$diffr*$anual;         
+                        $anual=$diffr*$anual;
                         $sick=$diffr*$sickl;
             $data->anualLeave=$anual;
             $data->sickLeave=$sick;
             $data->status=1;
             $data->save();
-            
-            
+
+
         }
         return redirect()->back();
     }*/

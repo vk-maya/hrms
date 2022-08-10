@@ -25,13 +25,13 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Company Name <span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" name="name" value="">
+                                    <input class="form-control" type="text" name="name" value="{{isset($setting)?$setting->name:''}}">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Contact Person</label>
-                                    <input class="form-control" name="co_name" value=" @if(isset($setting[1]->description)) {{$setting[1]->description}} @endif" type="text">
+                                    <input class="form-control" name="co_name" value="{{isset($setting)?$setting->co_name:''}}" type="text">
                                 </div>
                             </div>
                         </div>
@@ -39,14 +39,14 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>Permanent Address</label>
-                                    <input class="form-control" name="p_address" value=""
+                                    <input class="form-control" name="p_address" value="{{isset($setting)?$setting->p_address:''}}"
                                         type="text">
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>Curent Address</label>
-                                    <input class="form-control" name="c_address" value=""
+                                    <input class="form-control" name="c_address" value="{{isset($setting)?$setting->c_address:''}}"
                                         type="text">
                                 </div>
                             </div>
@@ -56,7 +56,7 @@
                                     <select class="select" name="country" id="inputcountry"  onkeypress="country()">
                                         <option value="">Select Country</option>
                                         @foreach ($data as $item)
-                                        <option  @if(isset($setting[3]->description) && $setting[3]->description == $item->id) selected @endif
+                                        <option  {{(isset($setting) && $setting->country_id == $item->id)?'selected':''}}
                                             value="{{ $item->id }} {{ old('country') }}">
                                             {{ $item->name }}
                                         </option>
@@ -71,7 +71,7 @@
                                         <option value="" >Select State</option>
                                     </select>
                                     @isset($setting)
-                                    <input type="hidden" value=" @if(isset($setting[4]->description)){{ $setting[4]->description }}@endif" id="EditState">
+                                    <input type="hidden" value="{{isset($setting)?$setting->state_id:''}}" id="EditState">
                                 @endisset
                                 </div>
                             </div>
@@ -82,34 +82,34 @@
                                         <option value="">Select City</option>
                                     </select>
                                     @isset($setting)
-                                    <input type="hidden" value="@if(isset($setting[5]->description)){{ $setting[5]->description }}@endif" id="Editcity">
+                                    <input type="hidden" value="{{isset($setting)?$setting->city_id:''}}" id="Editcity">
                                 @endisset
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Postal Code</label>
-                                    <input class="form-control" name="postal" value="@if(isset($setting[6]->description)) {{$setting[6]->description}} @endif" type="text">
+                                    <input class="form-control" name="postal" value="{{isset($setting)?$setting->postl:''}}" type="text">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Email</label>
-                                    <input class="form-control" name="email" value="@if (isset($setting[7]->description)){{$setting[7]->description}} @endif" type="email">
+                                    <input class="form-control" name="email" value="{{isset($setting)?$setting->email:''}}" type="email">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Phone Number</label>
-                                    <input class="form-control" name="number" value=" @if(isset($setting[8]->description)){{$setting[8]->description}} @endif" type="text">
+                                    <input class="form-control" name="number" value="{{isset($setting)?$setting->phone:''}}" type="text">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label>Other Number</label>
-                                    <input class="form-control" name="other_number" value=" @if(isset($setting[8]->description)){{$setting[8]->description}} @endif" type="text">
+                                    <input class="form-control" name="other_number" value="{{isset($setting)?$setting->other_phone:''}}" type="text">
                                 </div>
                             </div>
                         </div>
@@ -117,7 +117,7 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>Website Url</label>
-                                    <input class="form-control" name="web" value="" type="text">
+                                    <input class="form-control" name="web" value="{{isset($setting)?$setting->web:''}}" type="text">
                                 </div>
                             </div>
                         </div>
