@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Admin\LeaveMonthAttandance;
 use App\Models\Attendance;
+use App\Models\Holiday;
 use App\Models\Leave\Leaverecord;
 use App\Models\Leave\settingleave;
 use App\Models\User;
@@ -52,8 +53,9 @@ class MonthlyAttend extends Command
             $sunday = date('w', strtotime($new_date));
             $first_saturday = date('Y-m-d', strtotime('first saturday of '.date('Y-m', strtotime($new_date))));
             $third_saturday = date('Y-m-d', strtotime('third saturday of '.date('Y-m', strtotime($new_date))));
+            $holiday = Holiday::where('date', date('Y-m-d', strtotime($date)))->where('status', 1)->first();
 
-            if ($sunday && $first_saturday != $date && $third_saturday != $date) {
+            if ($sunday && $first_saturday != $date && $third_saturday != $date && !$holiday) {
                 $client = new Client();
                 $response = $client->request('POST', 'http://hrmsapi.scrumdigital.in/api/getattendance', ['form_params' => ['date' => $date,]]);
                 $response = json_decode($response->getBody()
