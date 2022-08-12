@@ -57,20 +57,21 @@
                 @endphp
                 @php
                     $approvedLeaveTotal = 0;
-                    foreach ($totalLeave as $leave) {
-                        $approvedLeaveTotal = $leave->day + $approvedLeave;
+                    foreach ($totalLeave as $leaves) {
+                        $approvedLeaveTotal = $leaves->day + $approvedLeaveTotal;
                     }
                 @endphp
+               
                 <div class="col-md">
                     <div class="stats-info">
-                        <h6><strong>{{now()->format('M')}}</strong> Total Leave</h6>
-                        <h6>{{ $approvedLeaveTotal }}</h6>
+                        <h6><b class="text-danger" >{{ now()->format('M') }}</b> Approve Leave</h6>
+                        <h6>{{ $approvedLeave }}</h6>
                     </div>
                 </div>
                 <div class="col-md">
                     <div class="stats-info">
-                        <h6><b>{{ now()->format('M') }}</b> Approve Leave</h6>
-                        <h6>{{ $approvedLeave }}</h6>
+                        <h6><strong></strong> Total Approve Leave</h6>
+                        <h6>{{ $approvedLeaveTotal }}</h6>
                     </div>
                 </div>
             </div>
