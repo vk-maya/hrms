@@ -104,8 +104,6 @@
                                                 @php
                                                     $count++;
                                                 @endphp
-                                            @elseif($i <= date('d'))
-                                                <td>WO</td>
                                             @else
                                                 <td>-</td>
                                             @endif
