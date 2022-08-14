@@ -300,7 +300,7 @@
                             const monthNames = ["January", "February", "March", "April", "May", "June",
                             "July", "August", "September", "October", "November", "December"
                             ];
-                            var formattedDate = new Date(res.slip.slip_month);
+                            var formattedDate = new Date(res.slip.salary_month);
                             $("#slip").html(monthNames[formattedDate.getMonth()]+" - "+ formattedDate.getFullYear());
                             $("#empid").html(res.slip.user.employeeID);
                             $("#jd").html(res.slip.user.joiningDate);

@@ -159,21 +159,28 @@ class EmployeesController extends Controller
             return back()->withErrors(["dob" => "Min. 18 years be employed or permitted to work"])->withInput();
         }
         $employees->email = $request->email;
-        $id = User::latest()->first();
-        if ($id == !null) {
-            $emp = explode('-',$id->employeeID);
-            // dd($emp);
-            $empid = 1 + $emp[2];
-        } else {
-            $empid = "SDPL-JAI-0001";
-        }
-        if($empid <= 9){
-
-            $employees->employeeID ='SDPL-JAI-000'. $empid;
-        }else{
-            $employees->employeeID ='SDPL-JAI-00'. $empid;
-        }
+            $id = User::latest()->first();
+            if ($request->id == null) {
+                // dd("ddd");
+                $emp = explode('-',$id->employeeID);
+                $empid = 1 + $emp[2];
+                if ($request->id == null) {
+                    if($empid < 9){
+                        $empid='SDPL-JAI-000'. $empid;
+                    }elseif($empid < 99){
+                        $empid ='SDPL-JAI-00'. $empid;
+                    }elseif($empid < 100){
+                        $empid ='SDPL-JAI-0'. $empid;    
+                    }else{
+                        $empid ='SDPL-JAI-'. $empid;  
+                    }
+                }
+            } else{
+                $empid = "SDPL-JAI-0001";
+            }     
+        $employees->employeeID =  $empid;
         $employees->machineID = $request->machineID;
+
         if($request->password != ''){
 
             $employees->password = Hash::make($request->password);
@@ -203,21 +210,20 @@ class EmployeesController extends Controller
             $file = $request->file('image')->storeAs('public/uploads', $filename);
             $employees->image = $filename;
         }
-            $employees->save();
+        $employees->save();
+        // dd($employees->toArray());
 // -------------------------yearleave function------------------------
 
-$sess = Session::where('status',1)->latest()->first();    
-if ($request->id == null) {
-            $employeesId= User::latest()->first();
-            $leaveyear= new UserleaveYear();    
-            $leaveyear->user_id= $employeesId->id;
-            $leaveyear->session_id =$sess->id;
-
-        }else{
-            $leaveyear= UserleaveYear::where('user_id',$request->id)->where('status',1)->latest()->first();
-        }
+    $sess = Session::where('status',1)->latest()->first();
+            if ($request->id == null) {
+                $employeesId = User::latest()->first();
+                $leaveyear = new UserleaveYear();
+                $leaveyear->user_id = $employeesId->id;
+                $leaveyear->session_id = $sess->id;
+            } else {
+                $leaveyear = UserleaveYear::where('user_id', $request->id)->where('status', 1)->latest()->first();
+            }
         $allleave = settingleave::where('status',1)->get();
-        // dd($allleave->toArray());
         $jd =$request->joiningDate;
                 if ($jd >= $sess->from) {
                     $jd =$request->joiningDate;
@@ -238,9 +244,9 @@ if ($request->id == null) {
                     $leaveyear->other=$day;
             }
             $leaveyear->status=1;
-        // dd($leaveyear->toArray());
             $leaveyear->save();
         }
+        // dd($leaveyear->toArray());
     
         // ----------------------------monthleave function--------------------
         
@@ -287,50 +293,7 @@ if ($request->id == null) {
                         $data->status=1;
                         $data->save();
         }
-        //curent month leave update
-        if ($request->id == null) {
-            $leaveyear = UserleaveYear::latest()->first();
-                $yearleave=settingleave::where('status',1)->get();
-                foreach ($yearleave as $key => $value) {
-                    if ($value->type=="Annual") {
-                    $anual =$value->day/12;
-                    }elseif($value->type=="Sick"){
-                    $sickl = $value->day/12;
-                }
-            }
-            $sess= Session::where('status',1)->first();
-                $data= UserleaveYear::where('user_id',$id)->where('status',1)->where('session_id',$sess->id)->first();
-               
-                $jd =$employeesId->joiningDate;
-                $str = date('Y-m',strtotime($jd));
-                $strr = $str."-15";
-                if ($jd>$sess->from) {
-                    if ($jd<$strr){
-                        $jd=date('Y-m',strtotime($jd));
-                        $jd= $jd."-01";
-                        // dd($jd);
-                    }else{
-                        $jd=Carbon::parse($jd)->addMonths();
-                        $jd=date('Y-m',strtotime($jd));
-                        $jd = $jd."-01";
-                        }
-                }            
-                    $end = now();
-                    $end=date('Y-m',strtotime($end));
-                    $end=Carbon::parse($end)->endOfMonth();
-                    $end=date('Y-m-d',strtotime($end));
-                    $diffr = round(Carbon::parse($jd)->floatDiffInMonths($end));                       
-                            $from=date('Y-m-d',strtotime($jd));
-                            $to =date('Y-m-d',strtotime($end));
-                        $data->from= $from;
-                        $data->to=$to;
-                            $anual=$diffr*$anual;         
-                            $sick=$diffr*$sickl;
-                        $data->anualLeave=$anual;
-                        $data->sickLeave=$sick;
-                        $data->status=1;
-                        $data->save();
-        }
+       
         // -----------------------file save function------------------------
 
         if ($request->hasFile('files')) {
@@ -354,7 +317,7 @@ if ($request->id == null) {
         // -------------------------earning and deducation code -----------------------
 
         // dd($request->toArray());
-        if ($request->id !='') {
+        if ($request->id != null) {
             $user= $request->id;
         }else{
 

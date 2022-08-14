@@ -19,8 +19,7 @@ use App\Models\monthleave;
 
 class AdminLeaveController extends Controller
 {
-    public function edit($id)
-    {
+    public function edit($id){
         $data = Leave::find($id);
         $type = settingleave::all();
 
@@ -60,8 +59,7 @@ class AdminLeaveController extends Controller
         $data->save();
         return redirect()->route('admin.leave.list');
     }
-    public function holidays(Request $request)
-    {
+    public function holidays(Request $request){
         if ($request->id != ''){
             $holi = Holiday::find($request->id);
             $data = Holiday::all();
@@ -136,11 +134,13 @@ class AdminLeaveController extends Controller
         $data->save();
         return redirect()->back();
     }
+
+    //leave report by admin status update
     public function leavereport(Request $request)
     {
         // dd($request->toArray());
         $data = Leave::find($request->id);
-    //   dd($data->status);
+        //   dd($data->status);
        
         $leaverall = Leaverecord::where("leave_id", $request->id)->get();
      

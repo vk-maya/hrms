@@ -101,7 +101,7 @@
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Employee</h5>
+                    <h5 class="modal-title">Add Earning deduction </h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -116,7 +116,9 @@
                                     @if ($item->type == 'earning')
                                         <div class="form-group">
                                             <label>{{ $item->title }} %</label>
-                                            <input class="form-control" name="ids[{{ $item->id }}]" type="text">
+                                            <input class="form-control" name="ids[{{$item->id}}]" type="text">
+                                            {{-- <input class="form-control" name="ids[{{strtolower(str_replace(" ","_", $item->title))}}]" type="text"value=""> --}}
+
                                         </div>
                                     @endif
                                 @endforeach
@@ -127,7 +129,8 @@
                                     @if ($item->type == 'deduction')
                                         <div class="form-group">
                                             <label>{{ $item->title }} %</label>
-                                            <input class="form-control" name="ids[{{ $item->id }}]"
+                                            <input class="form-control" name="ids[{{$item->id}}]"
+                                            {{-- <input class="form-control" name="ids[{{strtolower(str_replace(" ","_", $item->title))}}]" --}}
                                                 type="text"value="">
                                         </div>
                                     @endif

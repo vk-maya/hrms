@@ -54,7 +54,7 @@ class SalaryManagement extends Seeder
                 'type'=>'deduction'
             ],
             [
-                'title'=>"Prof. Tax",
+                'title'=>"Prof Tax",
                 'type'=>'deduction'
             ],
             [

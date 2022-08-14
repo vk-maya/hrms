@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserEarndeducationsTable extends Migration
+class CreateMonthDayLeavesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateUserEarndeducationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_earndeducations', function (Blueprint $table) {
+        Schema::create('month_day_leaves', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
-            $table->integer('salary_earndeductionID');
-            $table->integer('status')->default(1);
+            $table->integer('session_id');
+            $table->string('title');
+            $table->integer('value');
+            $table->integer('status');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateUserEarndeducationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_earndeducations');
+        Schema::dropIfExists('month_day_leaves');
     }
 }
