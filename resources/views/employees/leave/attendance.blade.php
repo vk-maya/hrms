@@ -86,13 +86,17 @@
                                 @foreach ($attendance as $key => $item)
                                     @php
                                         $in_time = \Carbon\Carbon::parse($item->in_time)->format('H:i A');
-                                        if ($item->out_time == '00:00:00') {
+                                        if( $item->in_time ==null){
+                                            $in_time = '00:00:00';
+                                        }
+                                        if ($item->out_time ==null ) {
                                             $out_time = '00:00:00';
-                                            $work_time = '00:00:00';
+                                            $work_time ='00:00:00';                                           
                                         }else{
                                             $out_time = \Carbon\Carbon::parse($item->out_time)->format('H:i A');
-                                            $work_time = \Carbon\Carbon::parse($item->in_time)->diff(\Carbon\Carbon::parse($item->out_time))->format('%H:%I');
-                                        }
+                                            $work_time = \Carbon\Carbon::parse($item->in_time)->diff(\Carbon\Carbon::parse($item->out_time))->format('%H:%I:%S');
+                                            $work_time = \Carbon\Carbon::parse($work_time."- 1 hour")->toTimeString();
+                                            }
                                     @endphp
                                     <tr>
                                         <td>{{ $key + 1 }}</td>

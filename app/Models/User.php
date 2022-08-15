@@ -72,8 +72,16 @@ class User extends Authenticatable
         return $this->hasOne(userinfo::class,'user_id');
     }
 
+  
+// })->count();
+    //  $attendance= Attendance::where('user_id',Auth::guard('web')->user()->machineID)->where(function($query)use($first_date,$last_date){
+    // $query->whereBetween('date',[$first_date,$last_date]);})->get();
+
+
+
     public function attendence()
     {
+        
         return $this->hasMany(Attendance::class, 'user_id', 'machineID');
     }
     public function attendance(){

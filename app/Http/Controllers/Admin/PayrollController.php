@@ -350,7 +350,6 @@ class PayrollController extends Controller
             $leavetype = settingleave::find($leave->type_id);
             $monthleave = monthleave::where('user_id', $leave->user_id)->where('status', 1)->where('to', $lastMonthofDay)->first();
             // dd($monthleave->toArray());
-
             if ($leavetype->type == "Annual") {
                 if ($monthleave->apprAnual != null) {
                     $monthleave->apprAnual = $monthleave->apprAnual + $leave->day;

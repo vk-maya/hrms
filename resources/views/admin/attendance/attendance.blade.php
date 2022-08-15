@@ -80,7 +80,6 @@
                             </thead>
                             <tbody>
                                 @foreach ($attendance as $item)
-                                    {{-- {{$item}} --}}
                                     <tr>
                                         <td>
                                             <h2 class="table-avatar">
@@ -90,24 +89,22 @@
                                                 <a href="{{ route('admin.employees.profile', $item->id) }}">{{ $item->first_name }}</a>
                                             </h2>
                                         </td>
+                                        @php
+                                            $count = 0;
+                                        @endphp
                                         @for ($i = 1; $i <= $month; $i++)
-                                            @php
-                                                $attend = \App\Models\Attendance::where('day', $i)
-                                                    ->where('user_id', $item->machineID)
-                                                    ->first();
-                                            @endphp
-
-                                            @if (!empty($attend))
-                                                @if ($attend->attendance == 'P')
+                                            @if (in_array(date("Y-m-d",strtotime(now()->format("Y-m-").$i)),$item->attendence->pluck('date')->toArray()))
+                                                @if ($item->attendence[$count]->attendance == 'P')
                                                     <td>
-                                                        <button class="dropdown-item attend-info-show"
-                                                            data-id="{{ $attend->id }}"><i
-                                                                class="fa fa-check text-success"></i></button>
+                                                        <button class="dropdown-item attend-info-show" data-id="{{ $item->attendence[$count]->id }}"><i class="fa fa-check text-success"></i></button>
                                                     </td>
                                                     {{-- <td><a href="{{route('admin.attendance.info',$attend->id)}}"><i class="fa fa-check text-success"></i></td> --}}
                                                 @else
                                                     <td><i class="fa fa-close text-danger"></i> </td>
                                                 @endif
+                                                @php
+                                                    $count++;
+                                                @endphp
                                             @else
                                                 <td>-</td>
                                             @endif
