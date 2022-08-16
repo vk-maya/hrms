@@ -54,13 +54,13 @@
                                     <img alt=""
                                         src="@if (Auth::guard('web')->user()->image != null) {{ asset('storage/uploads/' . Auth::guard('web')->user()->image) }}@else{{ asset('assets/img/avtar.jpg') }} @endif">
                                 </a>
-                                {{ Auth::guard('web')->user()->first_name }}
+                                {{Auth::guard('web')->user()->first_name.' '.Auth::guard('web')->user()->last_name}}
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="stats-box text-center">
-                                <p>Date</p>
-                                {{ \Carbon\Carbon::now()->format('d-m-Y') }}
+                                <p>Today Date</p>
+                                {{ \Carbon\Carbon::now()->format('d-m-Y (l)') }}
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -151,8 +151,7 @@
                                             <i class="fa fa-sun-o" aria-hidden="true"></i>
                                         </div>
                                         <div class="dash-card-content">
-                                            <p> {{ date('l', strtotime($holi->date)) }}
-                                                {{ \Carbon\Carbon::parse($holi->date)->format('d-m-Y') }}
+                                            <p> {{ \Carbon\Carbon::parse($holi->date)->format('d M Y (l)') }} -
                                                 {{ $holi->holidayName }}</p>
                                         </div>
                                     </div>

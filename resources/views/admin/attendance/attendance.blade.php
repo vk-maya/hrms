@@ -93,7 +93,7 @@
                                             $count = 0;
                                         @endphp
                                         @for ($i = 1; $i <= $month; $i++)
-                                            @if (in_array(date("Y-m-d",strtotime(now()->format("Y-m-").$i)),$item->attendence->pluck('date')->toArray()))
+                                            @if (in_array(date("Y-m-d (l)",strtotime(now()->format("Y-m-").$i)),$item->attendence->pluck('date')->toArray()))
                                                 @if ($item->attendence[$count]->attendance == 'P')
                                                     <td>
                                                         <i class="fa fa-check text-success attend-info-show" data-id="{{ $item->attendence[$count]->id }}"></i>

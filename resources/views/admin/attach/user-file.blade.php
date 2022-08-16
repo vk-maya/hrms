@@ -30,7 +30,7 @@
                                                 <div class="dropdown-file">
                                                     <a href="#" class="dropdown-link" data-bs-toggle="dropdown"><i
                                                             class="fa fa-ellipsis-v"></i></a>
-                                                    <div class="dropdown-menu dropdown-menu-right">                                                                                                            
+                                                    <div class="dropdown-menu dropdown-menu-right">
                                                         <a href="#" class="download dropdown-item"
                                                         data-download="{{ asset('storage/file/' . $file->fileName) }}">
                                                         Download</a>
@@ -70,11 +70,10 @@
                         @csrf
                         <div class="form-group">
                             @if (isset($user))
-                                
-                        
-                            <input type="hidden" name="user_id" value="{{ $user->id }}">    @endif
+                                <input type="hidden" name="user_id" value="{{$user->id}}">
+                            @endif
                             <label>Document Employees Name <span class="text-danger">*</span></label>
-                            <input class="form-control" name="first_name" type="text" value=" @if (isset($user)){{ $user->first_name }} @endif">
+                            <input class="form-control" name="first_name" type="text" value="@if(isset($user)){{$user->first_name}}@endif">
                         </div>
                         <div class="form-group">
                             <label>Upload Document <span class="text-danger">*</span></label>
