@@ -25,7 +25,7 @@ class CreateAttendancesTable extends Migration
             $table->integer('year')->nullable();
             $table->string('attendance');
             $table->integer('status')->default(0);
-            $table->date('passdate')->default('00-00-00');
+            // $table->date('passdate')->default('00-00-00');
             $table->timestamps();
         });
     }
