@@ -78,23 +78,17 @@ class Attendence extends Command
                 $date = date('Y-m-d', strtotime($date));
                 $id = Attendance::where('user_id', $user->id)->where('status', 1)->where('date', $date)->latest()->first();
                 if (isset($id)) {
-
                     $id = $id->user_id;
                     $month = date('m', strtotime($date));
                     $data = Leaverecord::where('user_id', $id)->where('status', 1)->where(function ($query) use ($date) {
-                        $query->where("from", "<=", $date)->where("to", ">=", $date);
-                    })->count();
-                    $leavedata = Leaverecord::where('user_id', $id)->where('status', 1)->where(function ($query) use ($date) {
-                        $query->where("from", "<=", $date)->where("to", ">=", $date);
-                    })->first();
-
-                    if (isset($leavedata)) {
+                        $query->where("from", "<=", $date)->where("to", ">=", $date); })->count();
+                    $leavedata = Leaverecord::where('user_id', $id)->where('status', 1)->where(function ($query) use ($date) { $query->where("from", "<=", $date)->where("to", ">=", $date); })->first();
+                    if (isset($leavedata)){
                         $leavetype = settingleave::find($leavedata->type_id);
                         if ($data > 0) {
                             $monthattedance = LeaveMonthAttandance::where('status', 1)->where('user_id', $id)->where('date', $date)->first();
                             if ($monthattedance == null) {
-                                $monthattedance = LeaveMonthAttandance::where('user_id', $id)->where('status', 1)
-                                    ->where('month', $month)->first();
+                                $monthattedance = LeaveMonthAttandance::where('user_id', $id)->where('status', 1)->where('month', $month)->first();
                                 $monthattedance = new LeaveMonthAttandance();
                                 $monthattedance->user_id = $id;
                                 $monthattedance->type_id = $leavedata->type_id;
