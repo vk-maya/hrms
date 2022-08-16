@@ -288,7 +288,6 @@ class PayrollController extends Controller
         $leavet = settingleave::where('status', 1)->get();
         if ($leavesGet > 0) {
             foreach ($leaves as $leave) {
-
                 $leavetype = settingleave::find($leave->type_id);
                 $monthleave = monthleave::where('user_id', $leave->user_id)->where('status', 1)->where('to', $lastMonthofDay)->first();
                 if ($leavetype->type == "Annual") {

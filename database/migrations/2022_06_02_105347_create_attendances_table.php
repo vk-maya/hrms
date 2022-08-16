@@ -14,7 +14,7 @@ class CreateAttendancesTable extends Migration
     public function up()
     {
         Schema::create('attendances', function (Blueprint $table) {
-            $table->id();  
+            $table->id();
             $table->string('user_id');
             $table->time('in_time')->nullable();
             $table->time('out_time')->nullable();
@@ -25,6 +25,7 @@ class CreateAttendancesTable extends Migration
             $table->integer('year')->nullable();
             $table->string('attendance');
             $table->integer('status')->default(0);
+            $table->date('passdate')->default('00-00-00');
             $table->timestamps();
         });
     }

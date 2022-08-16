@@ -1,504 +1,1054 @@
-public function storeleave(Request $request){  
-    $rules = [
-        'type_id' => ['required', 'integer'],
-        'from' => ['required', 'date'],
-        'to' => ['required', 'date'],
-        'reason' => ['required', 'string'],
-    ];
-    $date = date('Y-m-d', strtotime($request->from));
-    $nowdate =date('Y-m-d', strtotime(now()));
-    if($date<=$nowdate){
-        return back()->withErrors(["from" => "Please Select From date"])->withInput();
+<?php
+
+namespace App\Http\Controllers;
+
+use DateTime;
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Leave\Leave;
+use Illuminate\Http\Request;
+use App\Models\Admin\Session;
+use App\Models\Leave\settingleave;
+use App\Models\Admin\UserleaveYear;
+use App\Models\Attendance;
+use App\Models\Holiday;
+use App\Models\Leave\Leaverecord;
+use App\Models\monthleave;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Events\Validated;
+
+
+class LeaveController extends Controller
+{
+    //    ------------------------employees function ----------------------
+
+    public function leave()
+    {
+        $session=Session::where('status',1)->first();
+        $firstDayofMonth = Carbon::now()->startOfMonth()->toDateString();
+        $lastDayofMonth = Carbon::now()->endOfMonth()->toDateString();
+        $month= monthleave::where('user_id',Auth::guard('web')->user()->id)->where('status',1)->first();
+        $data = Leave::with('leaverecordEmp','leaveType')->where('user_id',Auth::guard('web')->user()->id)->where(function ($query) use ($firstDayofMonth,$lastDayofMonth)
+        {
+            $query->where("form", ">=",$firstDayofMonth)->where("to", "<=", $lastDayofMonth);
+        })->get();
+        $totalMonthLeave = Leaverecord::where('user_id',Auth::guard('web')->user()->id)->where('status',1)->where(function ($query) use ($firstDayofMonth,$lastDayofMonth)
+        {
+            $query->where("from", ">=",$firstDayofMonth)->where("to", "<=", $lastDayofMonth);
+        })->with('leavetype')->get();      
+        $ptotalMonthLeave = Leaverecord::where('user_id',Auth::guard('web')->user()->id)->where('status',2)->where(function ($query) use ($firstDayofMonth,$lastDayofMonth)
+        {
+            $query->where("from", ">=",$firstDayofMonth)->where("to", "<=", $lastDayofMonth);
+        })->with('leavetype')->get();      
+        return view('employees.leave.leave', compact('data','month','totalMonthLeave','ptotalMonthLeave'));
     }
-    if( date('Y-m-d', strtotime($request->to)) < $date){
-        return back()->withErrors(["to" => "Please Select to date"])->withInput();
+    public function leaveadd()
+    {
+        $data = settingleave::all();
+        return view('employees.leave.add-leave', compact('data'));
     }
-    $request->validate($rules);
-    $data = new Leave();
-    $data->user_id =Auth::guard('web')->user()->id;
-    $leavetype = settingleave::where('id',$request->type_id)->count();
-        if($leavetype>0){
-                // dd($leavetyp);
-                $data->leaves_id =$request->type_id;
-            }else{
-                return back()->withErrors(["type_id" => "Please Select Leave Type"])->withInput(); 
-            }
-    $date = now();
-        $fromdate=date( "Y-m-d",strtotime("$date + 30 day"));
-        if($request->from <=$fromdate){
+    public function storeleave(Request $request)
+    {
+        $first_date = date('Y-m-d',strtotime('first day of this month'));
+        $last_date = date('Y-m-d',strtotime('last day of this month'));
+        $rules = [
+            'type_id' => ['required', 'integer'],
+            'from' => ['required', 'date'],
+            'to' => ['required', 'date'],
+            'reason' => ['required', 'string'],
+        ];
+        $date = date('Y-m-d', strtotime($request->from));
+        $nowdate = date('Y-m-d', strtotime(now()));
+        if ($date <= $nowdate) {
+            return back()->withErrors(["from" => "Please Select From date"])->withInput();
+        }
+        if (date('Y-m-d', strtotime($request->to)) < $date) {
+            return back()->withErrors(["to" => "Please Select to date"])->withInput();
+        }
+        $request->validate($rules);
+        $data = new Leave();
+        $data->user_id = Auth::guard('web')->user()->id;
+        $leavetype = settingleave::where('id', $request->type_id)->count();
+        if ($leavetype > 0) {
+            // dd($leavetyp);
+            $data->leaves_id = $request->type_id;
+        } else {
+            return back()->withErrors(["type_id" => "Please Select Leave Type"])->withInput();
+        }
+        $date = now();
+        $fromdate = date("Y-m-d", strtotime("$date + 30 day"));
+        if ($request->from <= $fromdate) {
             $data->form = date('Y-m-d', strtotime($request->from));
-            $todate = date( "Y-m-d",strtotime("$request->from + 30 day"));
-            if($request->to <=$todate){
+            $todate = date("Y-m-d", strtotime("$request->from + 30 day"));
+            if ($request->to <= $todate) {
                 $data->to = date('Y-m-d', strtotime($request->to));
-            }else{
+            } else {
                 return redirect()->back();
-            }          
-        }else{
+            }
+        } else {
             return redirect()->back();
-        }      
-    $leave = Leave::where('user_id',Auth::guard('web')->user()->id)->where(function($query) use($request){
-        $query->whereBetween('form',[$request->from,$request->to])
-        ->orWhereBetween('to',[$request->from,$request->to]);
-    })->count();
-    if($leave > 0){
-        return back()->withErrors(["from" => "Please Select another From date"])->withInput();
-    }
-    $data->reason = $request->reason;
-    $datetime1 = new DateTime($request->from);
-    $datetime2 = new DateTime($request->to);
-    $interval = $datetime1->diff($datetime2);
-    $da = $interval->format('%a');
-    $days = $da+1;
-    $data->day =$days;
-    $leavemonth = Leave::where('leaves_id',$request->type_id)->where('user_id',Auth::guard('web')->user()->id)->whereMonth('form', date('m'))->whereYear('form', date('Y'))->get();
-    $start = date('Y-m-d', strtotime(Auth::guard('web')->user()->joiningDate));
-    $end = date('Y-m-d');
-    $interval = Carbon::parse($start)->DiffInMonths($end);
-    $data->status =2;
-    $data->save();
-    
-    $leavetable= Leave::where('user_id',Auth::guard('web')->user()->id)->latest()->first();
-
-    $end=Carbon::parse($end)->endOfMonth(); ///curent month last date
-    $end=date('Y-m-d',strtotime($end));
-    
-    $endn=Carbon::now()->addMonth(1);
-    $endn=Carbon::parse($endn)->endOfMonth(); ///next month last date
-    $endn=date('Y-m-d',strtotime($endn));
-    
-    $endnn=Carbon::now()->addMonth(2);
-    $endnn=Carbon::parse($endnn)->endOfMonth(); ///next to next month last date
-    $endnn=date('Y-m-d',strtotime($endnn));
-            /*
-            if ($request->to <= $end) {
-                $leaverecord = new Leaverecord();
-                $from=new DateTime($request->from);
-                $endd=new DateTime($request->to);
-                $daydiffer =$from->diff($endd);
-                $daydiffer = $daydiffer->format('%a');
-                $totalday = $daydiffer+1;     
-                $leaverecord->from =$request->from;
-                $leaverecord->to = $request->to;
-                $leaverecord->day = $totalday;
-                $leaverecord->reason = $leavetable->reason;
-                $leaverecord->type_id = $leavetable->leaves_id;
-                $leaverecord->user_id =Auth::guard('web')->user()->id;
-                $leaverecord->status =2;
-                $leaverecord->leave_id =$leavetable->id;
-                $leaverecord->save();
-            }elseif($request->from > $end && $request->to < $endn){
-                $leaverecord = new Leaverecord();
-                $from=new DateTime($request->from);
-                $endd=new DateTime($request->to);
-                $daydiffer =$from->diff($endd);
-                $daydiffer = $daydiffer->format('%a');
-                $totalday = $daydiffer+1;
-                $leaverecord->from =$request->from;
-                $leaverecord->to = $request->to;
-                $leaverecord->day = $totalday;
-                $leaverecord->reason = $leavetable->reason;
-                $leaverecord->type_id = $leavetable->leaves_id;
-                $leaverecord->user_id =Auth::guard('web')->user()->id;
-                $leaverecord->status =2;
-                $leaverecord->leave_id =$leavetable->id;
-                $leaverecord->save();
-            }elseif($request->from < $end && $request->to > $end){            
-                $end=date('Y-m-d',strtotime($end));
-                $endn=new DateTime($end);
-                $froom=new DateTime($request->from);
-                $daydiffer =$froom->diff($endn);
-                $daydiffer = $daydiffer->format('%a');
-                $totalday = $daydiffer+1;
-                $nfrom =Carbon::parse($request->from)->addDays($daydiffer);
-                $to = date('Y-m-d',strtotime($nfrom));
-                $leaverecord = new Leaverecord();
-                $leaverecord->from =$request->from;
-                $leaverecord->to = $to;
-                $leaverecord->day = $totalday;
-                $leaverecord->reason = $leavetable->reason;
-                $leaverecord->type_id = $leavetable->leaves_id;
-                $leaverecord->user_id =Auth::guard('web')->user()->id;
-                $leaverecord->status =2;
-                $leaverecord->leave_id =$leavetable->id;
-                $leaverecord->save();
-                $day =$leavetable->day-$totalday;
-                if ($day>1){
-                    $from =Carbon::parse($request->from)->addDays($totalday);
-                    $to =Carbon::parse($to)->addDays($day);
-                    $leaverecord= new Leaverecord();
-                    $leaverecord->from=$from;
-                    $leaverecord->to=$to;
-                    $leaverecord->day=$day;
-                    $leaverecord->reason = $leavetable->reason;
-                    $leaverecord->type_id = $leavetable->leaves_id;
-                    $leaverecord->user_id =Auth::guard('web')->user()->id;
-                    $leaverecord->status =2;
-                    $leaverecord->leave_id =$leavetable->id;
-                    $leaverecord->save();
-                }   
-            }elseif($request->from < $endn && $request->to > $endn){   
-                $end=date('Y-m-d',strtotime($endn));
-                $endn=new DateTime($end);
-                $froom=new DateTime($request->from);
-                $daydiffer =$froom->diff($endn);
-                $daydiffer = $daydiffer->format('%a');
-                $totalday = $daydiffer+1;
-                $nfrom =Carbon::parse($request->from)->addDays($daydiffer);
-                // dd($totalday,$nfrom);
-                $to = date('Y-m-d',strtotime($nfrom));
-                $leaverecord = new Leaverecord();
-                $leaverecord->from =$request->from;
-                $leaverecord->to = $to;
-                $leaverecord->day = $totalday;
-                $leaverecord->reason = $leavetable->reason;
-                $leaverecord->type_id = $leavetable->leaves_id;
-                $leaverecord->user_id =Auth::guard('web')->user()->id;
-                $leaverecord->status =2;
-                $leaverecord->leave_id =$leavetable->id;
-                $leaverecord->save();
-                $day =$leavetable->day-$totalday;
-                if ($day>1){
-                    $from =Carbon::parse($request->from)->addDays($totalday);
-                    $to =Carbon::parse($to)->addDays($day);
-                    $leaverecord= new Leaverecord();
-                    $leaverecord->from=$from;
-                    $leaverecord->to=$to;
-                    $leaverecord->day=$day;
-                    $leaverecord->reason = $leavetable->reason;
-                    $leaverecord->type_id = $leavetable->leaves_id;
-                    $leaverecord->user_id =Auth::guard('web')->user()->id;
-                    $leaverecord->status =2;
-                    $leaverecord->leave_id =$leavetable->id;
-                    $leaverecord->save();
-                }   
-            }else{
-                $leaverecord= new Leaverecord();
-                $leaverecord->from=$leavetable->form;
-                $leaverecord->to=$leavetable->to;
-                $leaverecord->day=$leavetable->day;
-                $leaverecord->reason = $leavetable->reason;
-                $leaverecord->type_id = $leavetable->leaves_id;
-                $leaverecord->user_id =Auth::guard('web')->user()->id;
-                $leaverecord->status =2;
-                $leaverecord->leave_id =$leavetable->id;
-                $leaverecord->save();
-            }*/
-   
-
-        $leave= Leave::latest()->first();
-    
-        $ltype = UserleaveYear::where('user_id',Auth::guard('web')->user()->id)->first();
-        $jd =Auth::guard('web')->user()->joiningDate;
-        $sess = Session::where('status',1)->latest()->first();    
-        if ($jd >= $sess->from) {
-            $jd =date('Y-m-d', strtotime(Auth::guard('web')->user()->joiningDate));
-        }else{
-            $jd =$sess->from;
-            $jd =date('Y-m-d', strtotime($jd));
         }
-        $nowdate =date('Y-m-d', strtotime(now()));
-        $nextdate =date('Y-m-d', strtotime(now()->addMonth()));
-        $remleave = UserleaveYear::where('user_id',Auth::guard('web')->user()->id)->first();
-        $ltypeId = settingleave::find($leave->leaves_id);
-        if ($ltypeId->type == "Annual") {
-                    $diffr = round(Carbon::parse($jd)->floatDiffInMonths($nowdate));
-                    $netl = $diffr-$remleave->netAnual;   
-                    $nextdiffr = round(Carbon::parse($jd)->floatDiffInMonths($nextdate));
-                    $netln = $nextdiffr-$remleave->netAnual;                
-                    $dayss =$date->modify('last day of this month')->format('Y-m-d');
-                    
-                    if ($leave->day <= $netl && $netl >=1 ) {
-                        $leavedata = new Leaverecord();
-                        $leavedata->leave_id = $leave->id;
-                        $leavedata->user_id =Auth::guard('web')->user()->id;
-                        $leavedata->reason = $request->reason;
-                        $leavedata->status =2;
-                        $leavedata->type_id = $leave->leaves_id;
-                        $leavedata->from = $leave->form;
-                        $leavedata->to = $leave->to;
-                        $leavedata->day = $leave->day;
-                        $leavedata->save();
-                    }elseif($request->to <= $dayss){
-                        $data = $leave->day-$netl;                    
-                        if ($netl>0){
-                            $leavedata = new Leaverecord();
-                            $leavedata->leave_id = $leave->id;
-                            $leavedata->user_id =Auth::guard('web')->user()->id;
-                            $leavedata->reason = $request->reason;
-                            $leavedata->status =2;
-                            $newDate = Carbon::parse($leave->form)->addDay($netl-1)->format('Y-m-d');
-                            $leavedata->type_id = $leave->leaves_id;
-                            $leavedata->from = $leave->form;
-                            $leavedata->to = $newDate;
-                            $leavedata->day = $netl;
-                            $leavedata->save();
-                        }
-                        if ($data>=1){
-                            // dd("222"); 
-                            $leaver= Leaverecord::latest()->first();
-                            if ($leave->id==$leaver->leave_id){                            
-                                $leaver= Leaverecord::latest()->first();
-                            }else{
-                                $leaver= Leave::latest()->first();
-                            }
-                            $type = settingleave::where('type','Other')->first();
-                            $leavedata = new Leaverecord();
-                            $leavedata->leave_id = $leave->id;
-                            $leavedata->user_id =Auth::guard('web')->user()->id;
-                            $leavedata->status =2;
-                            $leavedata->reason = $request->reason;
-                            if ($leave->id==$leaver->leave_id){                            
-                                $newDatefrom = Carbon::parse($leaver->to)->addDay(1)->format('Y-m-d');
-                                $newDateto = Carbon::parse($leaver->to)->addDay($data)->format('Y-m-d');
-                            }else{
-                                $newDatefrom =$leaver->form;
-                                $newDateto =$leaver->to;
-                            }
-                            $leavedata->type_id =$type->id;
-                            $leavedata->from = $newDatefrom;
-                            $leavedata->to = $newDateto;
-                            $leavedata->day = $data;
-                            $leavedata->save();
-                                }
-                    }elseif($leave->form < $dayss && $leave->to > $dayss){
-
-                    }elseif($leave->form > $dayss && $leave->to>$dayss){
-                        $datetime1 = new DateTime($request->from);
-                        $datetime2 = new DateTime($request->to);
-                        $interval = $datetime1->diff($datetime2);
-                        $da = $interval->format('%a');
-                        $days = $da+1;        
-                        $data->day =$days;
-                        dd($interval);
-                        // $nextleave = 1/
-                        $data =$leave->day-$netln;
-                            if ($data>0){                            
-                                    $leaver= Leave::latest()->first();
-                                    $type = settingleave::where('type','Other')->first();                            
-                                $leavedata = new Leaverecord();
-                                $leavedata->leave_id = $leave->id;
-                                $leavedata->user_id =Auth::guard('web')->user()->id;  
-                                $leavedata->reason = $request->reason;      
-                                $leavedata->status =2;
-                                $newDate = Carbon::parse($leaver->form)->addDay($data)->format('Y-m-d');
-                                $newDate = Carbon::parse($newDate)->addDay(-1)->format('Y-m-d');
-                                $leavedata->type_id =$type->id;
-                                $leavedata->from = $leaver->form;
-                                $leavedata->to = $newDate;
-                                $leavedata->day = $data ;
-                                $leavedata->save();
-                                
-                            }
-                            if ($netln>0){
-                                $leaver= Leaverecord::latest()->first();
-                                if ($leave->id==$leaver->leave_id){                            
-                                    $leaver= Leaverecord::latest()->first();
-                                }else{
-                                    $leaver= Leave::latest()->first();
-                                }
-                                $leavedata = new Leaverecord();
-                                $leavedata->leave_id = $leave->id;
-                                $leavedata->user_id =Auth::guard('web')->user()->id;        
-                                $leavedata->status =2;
-                                $leavedata->reason = $request->reason;
-                                if ($leave->id==$leaver->leave_id){                            
-                                    $newDatefrom = Carbon::parse($leaver->to)->addDay(1)->format('Y-m-d');
-                                    $newDateto = Carbon::parse($leaver->to)->addDay($netln)->format('Y-m-d');
-                                }else{
-                                    $newDatefrom =$leaver->form;
-                                    $newDateto =$leaver->to;
-                                }
-                                $leavedata->type_id = $leave->leaves_id;
-                                $leavedata->from = $newDatefrom;
-                                $leavedata->to = $newDateto;
-                                $leavedata->day = $netln;                    
-                                $leavedata->save();
-                                    }
-                    }else{
-                        $leaver= Leaverecord::latest()->first();
-                            if ($leave->id==$leaver->leave_id){                            
-                                $leaver= Leaverecord::latest()->first();
-                            }else{
-                                $leaver= Leave::latest()->first();
-                            }
-                            $type = settingleave::where('type','Other')->first();
-                            $leavedata = new Leaverecord();
-                            $leavedata->leave_id = $leave->id;
-                            $leavedata->user_id =Auth::guard('web')->user()->id;        
-                            $leavedata->status =2;
-                            $leavedata->reason = $request->reason;
-                            $leavedata->type_id = $leave->leaves_id;
-                            $leavedata->from = $leave->form;
-                            $leavedata->to = $leave->to;
-                            $leavedata->day = $leave->day;
-                            $leavedata->save();
-                        }
-        }elseif($ltypeId->type == "Sick"){
-                $diffr = round(Carbon::parse($jd)->floatDiffInMonths($nowdate));            
-                $sickd =$remleave->basicSick/12;
-                $netsick=$diffr*$sickd;
-                $netl = $netsick-$remleave->netSick;    
-                $dayss =$date->modify('last day of this month')->format('Y-m-d');
-                if ($leave->day <= $netl && $netl >=1 ) {
-                    $leavedata = new Leaverecord();
-                    $leavedata->leave_id = $leave->id;
-                    $leavedata->user_id =Auth::guard('web')->user()->id;
-                    $leavedata->status =2;
-                    $leavedata->reason = $request->reason;
-                    $leavedata->type_id = $leave->leaves_id;
-                    $leavedata->from = $leave->form;
-                    $leavedata->to = $leave->to;
-                    $leavedata->day = $leave->day;
-                    // dd($leavedata);
-                    $leavedata->save();
-                }elseif($request->to <= $dayss){
-                    $data = $leave->day-$netl;            
-                    if ($netl>0){
-                        $leavedata = new Leaverecord();
-                        $leavedata->leave_id = $leave->id;
-                        $leavedata->user_id =Auth::guard('web')->user()->id;
-                        $leavedata->reason = $request->reason;
-                        $leavedata->status =2;
-                        $newDate = Carbon::parse($leave->form)->addDay(round($netl-1))->format('Y-m-d');
-                        $leavedata->type_id = $leave->leaves_id;
-                        $leavedata->from = $leave->form;
-                        $leavedata->to = $newDate;
-                        $leavedata->day = $netl;
-                        $leavedata->save();
-                    }
-                    if ($data>=1){
-                        $cc= Leaverecord::count();
-                        if ($cc>0) {
-                            $leaver= Leaverecord::latest()->first();
-                            if ($leave->id==$leaver->leave_id){                            
-                                $leaver= Leaverecord::latest()->first();
-                            }else{
-                                $leaver= Leave::latest()->first();
-                            }
-                        }else{
-                            $leaver= Leave::latest()->first();
-                        }
-                        $type = settingleave::where('type','Other')->first();
-                        $leavedata = new Leaverecord();
-                        $leavedata->leave_id = $leave->id;
-                        $leavedata->user_id =Auth::guard('web')->user()->id;
-                        $leavedata->reason = $request->reason;
-                        $leavedata->status =2;
-                        if ($leave->id==$leaver->leave_id){ 
-                            if (is_int($data)){
-                                $newDatefrom = Carbon::parse($leaver->to)->addDay(1)->format('Y-m-d');
-                            }else{
-                                $newDatefrom =$leaver->to;
-                            }
-                            $newDateto = Carbon::parse($leaver->to)->addDay($data)->format('Y-m-d');
-                        }else{
-                            $newDatefrom =$leaver->form;
-                            $newDateto =$leaver->to;
-                        }
-                        $leavedata->type_id =$type->id;
-                        $leavedata->from = $newDatefrom;
-                        $leavedata->to = $newDateto;
-                        $leavedata->day = $data;
-                        $leavedata->save();
-                            }
-                }elseif($leave->form>$dayss && $leave->to>$dayss){
-                    // $leaveNmonth =
-
-
-                }elseif($leave->form<$dayss && $leave->to>$dayss){
-                    $nextdiffr = round(Carbon::parse($jd)->floatDiffInMonths($nextdate));
-                    $sickd =$remleave->basicSick/12;
-                    $netsick=$nextdiffr*$sickd;
-                    $netln = $netsick-$remleave->netSick;
-                    $data =$leave->day-$netln;
-                        if ($data>0){
-                                $leaver= Leave::latest()->first();
-                                $type = settingleave::where('type','Other')->first();                            
-                            $leavedata = new Leaverecord();
-                            $leavedata->leave_id = $leave->id;
-                            $leavedata->user_id =Auth::guard('web')->user()->id;
-                            $leavedata->reason = $request->reason;
-                            $leavedata->status =2;
-                            $newDate = Carbon::parse($leaver->form)->addDay($data)->format('Y-m-d');
-                            $newDate = Carbon::parse($newDate)->addDay(-1)->format('Y-m-d');
-                            $leavedata->type_id =$type->id;
-                            $leavedata->from = $leave->form;
-                            $leavedata->to = $leave;
-                            $leavedata->day = $data ;
-                            $leavedata->save();
-                        }
-                        if ($netln>0){
-                            $cc= Leaverecord::count();
-                        if ($cc>0) {
-                            $leaver= Leaverecord::latest()->first();
-                            if ($leave->id==$leaver->leave_id){                            
-                                $leaver= Leaverecord::latest()->first();
-                            }else{
-                                $leaver= Leave::latest()->first();
-                            }
-                        }else{
-                            $leaver= Leave::latest()->first();
-                        }
-                            $leavedata = new Leaverecord();
-                            $leavedata->leave_id = $leave->id;
-                            $leavedata->user_id =Auth::guard('web')->user()->id;        
-                            $leavedata->status =2;
-                            if ($leave->id==$leaver->leave_id){
-                                $newDatefrom = Carbon::parse($leaver->to)->addDay(1)->format('Y-m-d');
-                                $newDateto = Carbon::parse($leaver->to)->addDay($netln)->format('Y-m-d');
-                            }else{
-                                $newDatefrom =$leaver->form;
-                                $newDateto =$leaver->to;
-                            }
-                            $leavedata->type_id = $leave->leaves_id;
-                            $leavedata->from = $newDatefrom;
-                            $leavedata->to = $newDateto;
-                            $day=floor($netln * 2)/ 2;
-                            $leavedata->day = $day;
-                            $leavedata->save();
-                        }
-                }else{
-                    $leaver= Leaverecord::latest()->first();
-                        if ($leave->id==$leaver->leave_id){                            
-                            $leaver= Leaverecord::latest()->first();
-                        }else{
-                            $leaver= Leave::latest()->first();
-                        }
-                        $type = settingleave::where('type','Other')->first();
-                        $leavedata = new Leaverecord();
-                        $leavedata->leave_id = $leave->id;
-                        $leavedata->user_id =Auth::guard('web')->user()->id;
-                        $leavedata->reason = $request->reason;
-                        $leavedata->status =2;
-                        $leavedata->type_id = $leave->leaves_id;
-                        $leavedata->from = $leave->form;
-                        $leavedata->to = $leave->to;
-                        $leavedata->day = $leave->day;
-                        $leavedata->save();
-                    }
-        }elseif($ltypeId->type == "Other"){
-                $leavedata = new Leaverecord();
-                $leavedata->leave_id = $leave->id;
-                $leavedata->user_id =Auth::guard('web')->user()->id;
-                $leavedata->reason = $request->reason;
-                $leavedata->status =2;
-                $leavedata->type_id = $leave->leaves_id;
-                $leavedata->from = $leave->form;
-                $leavedata->to = $leave->to;
-                $leavedata->day = $leave->day;
-                $leavedata->save();
-        }else{
-                $leavedata = new Leaverecord();
-                $leavedata->leave_id = $leave->id;
-                $leavedata->user_id =Auth::guard('web')->user()->id;
-                $leavedata->reason = $request->reason;
-                $leavedata->status =2;
-                $leavedata->type_id = $leave->leaves_id;
-                $leavedata->from = $leave->form;
-                $leavedata->to = $leave->to;
-                $leavedata->day = $leave->day;
-                $leavedata->save();
+        // $leave = Leave::where('user_id', Auth::guard('web')->user()->id)->where(function ($query) use ($request) {
+        //     $query->whereBetween('form', [$request->from, $request->to])
+        //         ->orWhereBetween('to', [$request->from, $request->to]);
+        // })->count();
+        $leave="";
+        if ($leave > 0) {
+            return back()->withErrors(["from" => "Please Select another From date"])->withInput();
         }
+        $data->reason = $request->reason;
+        $dateFrom = new DateTime($request->from);
+        $dateTo = new DateTime($request->to);
+        $interval = $dateFrom->diff($dateTo);
+        $da = $interval->format('%a');
+        $days = $da + 1;
+        $data->day = $days;
+        $leavemonth = Leave::where('leaves_id', $request->type_id)->where('user_id', Auth::guard('web')->user()->id)->whereMonth('form', date('m'))->whereYear('form', date('Y'))->get();
+        $start = date('Y-m-d', strtotime(Auth::guard('web')->user()->joiningDate));
+        $end = date('Y-m-d');
+        $interval = Carbon::parse($start)->DiffInMonths($end);
+        $data->status = 2;
+        $data->save();
+
+        //leave record save datatable
+        $dateFrom = new DateTime($request->from);
+        $dateTo = new DateTime($request->to);
+        $interval = $dateFrom->diff($dateTo);
+        $da = $interval->format('%a');
+        $days = $da + 1;
+        $firstMonthofDay =  Carbon::now()->startOfMonth()->toDateString(); //Current month Range
+        $nextMonthFirstfDay =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(1)->toDateString(); //second month Range
+        $nextToNextMonthFirstfDay =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(2)->toDateString(); //last and 3 range month
+        $lastMonthofDay = Carbon::now()->endOfMonth()->toDateString();        
+        $userLeave = Leave::where('user_id', Auth::guard('web')->user()->id)->latest()->first();
+        $leaveOfMOnth = monthleave::where('user_id', Auth::guard('web')->user()->id)->where('status', 1)->first();
+        $leaveType = settingleave::find($request->type_id);
+        $from=$request->from;
+        $to =$request->to;
+        // $holiday= Holiday::where('status',1)->where(function($query) use ($from,$to){
+        //     $query->whereBetween('date',[$from,$to]);})->count();
+        //     dd($holiday);
+        // $leavesOfAttendance = Attendance::where('user_id', $id)->where('attendance',"A")->where('status',0)->where(function ($query) use ($firstDayofPreviousMonth, $LastDayOfPreviousmonth) {
+        //     $query->whereBetween('date', [$firstDayofPreviousMonth, $LastDayOfPreviousmonth]);
+        // })->count();
+        
+        if ($leaveType->type == "Sick") {
+            if ($userLeave->day <= $leaveOfMOnth->sickLeave) {  
+                if ($request->from >= $firstMonthofDay && $request->to <= $lastMonthofDay) {
+                    $leaveRecord = new Leaverecord();
+                    $leaveRecord->user_id = $userLeave->user_id;
+                    $leaveRecord->type_id = $userLeave->leaves_id;
+                    $leaveRecord->leave_id = $userLeave->id;
+                    $leaveRecord->from = $request->from;
+                    $leaveRecord->to = $request->to;
+                    $leaveRecord->day = $days;
+                    $leaveRecord->reason = $request->reason;
+                    $leaveRecord->status = 2;
+                    $leaveRecord->save();
+                } elseif ($request->from <= $lastMonthofDay && $request->to >= $lastMonthofDay) {
+                    $lastMonthofDayD = Carbon::now()->endOfMonth();
+                    $diffDay = $dateFrom->diff($lastMonthofDayD);
+                    $diffDay = $diffDay->format('%a');
+                    $daysn = $diffDay + 1;
+                    $leaveRecord = new Leaverecord();
+                    $leaveRecord->user_id = $userLeave->user_id;
+                    $leaveRecord->leave_id = $userLeave->id;
+                    $leaveRecord->type_id = $userLeave->leaves_id;
+                    $leaveRecord->from = $request->from;
+                    $leaveRecord->to = $lastMonthofDay;
+                    $leaveRecord->day = $daysn;
+                    $leaveRecord->reason = $request->reason;
+                    $leaveRecord->status = 2;
+                    $leaveRecord->save();
+                    $NewRecord = $days - $daysn;
+                    if ($NewRecord > 0) {
+                        $lastMonthofDays = Carbon::now()->endOfMonth();
+                        $fromNewDate = $lastMonthofDays->addDay(1);
+                        $leaveRecord = new Leaverecord();
+                        $leaveRecord->user_id = $userLeave->user_id;
+                        $leaveRecord->leave_id = $userLeave->id;
+                        $leaveRecord->type_id = $userLeave->leaves_id;
+                        $leaveRecord->from = $fromNewDate;
+                        $leaveRecord->to = $request->to;
+                        $leaveRecord->day = $NewRecord;
+                        $leaveRecord->reason = $request->reason;
+                        $leaveRecord->status = 2;
+                        $leaveRecord->save();
+                    }
+                } elseif ($request->from > $lastMonthofDay && $request->to < $nextToNextMonthFirstfDay) {
+                    $leaveRecord = new Leaverecord();
+                    $leaveRecord->user_id = $userLeave->user_id;
+                    $leaveRecord->leave_id = $userLeave->id;
+                    $leaveRecord->type_id = $userLeave->leaves_id;
+                    $leaveRecord->from = $request->from;
+                    $leaveRecord->to = $request->to;
+                    $leaveRecord->day = $days;
+                    $leaveRecord->reason = $request->reason;
+                    $leaveRecord->status = 2;
+                    $leaveRecord->save();
+                } elseif ($request->from >= $nextMonthFirstfDay && $request->to >= $nextToNextMonthFirstfDay) {
+                    $nextToMonthLastDayD =  Carbon::now()->endOfMonth()->addMonthsNoOverflow(1); //last and 3 range month
+                    $diffDay = $dateFrom->diff($nextToMonthLastDayD);
+                    $diffDay = $diffDay->format('%a');
+                    $daysn = $diffDay + 1;
+                    $leaveRecord = new Leaverecord();
+                    $leaveRecord->user_id = $userLeave->user_id;
+                    $leaveRecord->type_id = $userLeave->leaves_id;
+                    $leaveRecord->leave_id = $userLeave->id;
+                    $leaveRecord->from = $request->from;
+                    $leaveRecord->to = $nextToMonthLastDayD;
+                    $leaveRecord->day = $daysn;
+                    $leaveRecord->reason = $request->reason;
+                    $leaveRecord->status = 2;
+                    $leaveRecord->save();
+                    $NewRecord = $days - $daysn;
+                    if ($NewRecord > 0) {
+                        // dd("3 Month Record ");
+                        $lastMonthofDays = $nextToNextMonthFirstfDayD =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(2); //last and 3 range month
+                        $leaveRecord = new Leaverecord();
+                        $leaveRecord->user_id = $userLeave->user_id;
+                        $leaveRecord->type_id = $userLeave->leaves_id;
+                        $leaveRecord->leave_id = $userLeave->id;
+                        $leaveRecord->from = $lastMonthofDays;
+                        $leaveRecord->to = $request->to;
+                        $leaveRecord->day = $NewRecord;
+                        $leaveRecord->reason = $request->reason;
+                        $leaveRecord->status = 2;
+                        $leaveRecord->save();
+                    }
+                }
+            } else { //sick over day
+                $newSickVsOther = $days- $leaveOfMOnth->sickLeave;
+                $leaveMontDay= round( $leaveOfMOnth->sickLeave);
+                $leaveMontDayother= round( $leaveOfMOnth->sickLeave);
+                $leaveMontDay=$leaveMontDay-1;
+                $newDayDeffOther= round($newSickVsOther);
+                $newToDate = Carbon::createFromDate($request->from)->addDay($leaveMontDay)->toDateString();           
+                $newFromDateOther = Carbon::createFromDate($request->from)->addDay($leaveMontDayother)->toDateString();     
+                $newFromDateOtherNo = Carbon::createFromDate($request->from)->addDay($leaveMontDayother);     
+             
+            if ($leaveMontDayother>0) {               
+                if ($request->from >= $firstMonthofDay && $newToDate <= $lastMonthofDay) {
+                    $leaveRecord = new Leaverecord();
+                    $leaveRecord->user_id = $userLeave->user_id;
+                    $leaveRecord->type_id = $userLeave->leaves_id;
+                    $leaveRecord->leave_id = $userLeave->id;
+                    $leaveRecord->from = $request->from;
+                    $leaveRecord->to = $newToDate;
+                    $leaveRecord->day = $leaveMontDay+1;
+                    $leaveRecord->reason = $request->reason;
+                    $leaveRecord->status = 2;
+                    $leaveRecord->save();
+                } elseif ($request->from <= $lastMonthofDay && $newToDate >= $lastMonthofDay) {
+                    $lastMonthofDayD = Carbon::now()->endOfMonth();
+                    $diffDay = $dateFrom->diff($lastMonthofDayD);
+                    $diffDay = $diffDay->format('%a');
+                    $daysn = $diffDay + 1;
+                    $leaveRecord = new Leaverecord();
+                    $leaveRecord->user_id = $userLeave->user_id;
+                    $leaveRecord->leave_id = $userLeave->id;
+                    $leaveRecord->type_id = $userLeave->leaves_id;
+                    $leaveRecord->from = $request->from;
+                    $leaveRecord->to = $lastMonthofDay;
+                    $leaveRecord->day = $daysn;
+                    $leaveRecord->reason = $request->reason;
+                    $leaveRecord->status = 2;
+                    $leaveRecord->save();
+                    $NewRecord = $days - $daysn;
+                    if ($NewRecord > 0) {
+                        $lastMonthofDays = Carbon::now()->endOfMonth();
+                        $fromNewDate = $lastMonthofDays->addDay(1);
+                        $leaveRecord = new Leaverecord();
+                        $leaveRecord->user_id = $userLeave->user_id;
+                        $leaveRecord->leave_id = $userLeave->id;
+                        $leaveRecord->type_id = $userLeave->leaves_id;
+                        $leaveRecord->from = $fromNewDate;
+                        $leaveRecord->to = $newToDate;
+                        $leaveRecord->day = $NewRecord;
+                        $leaveRecord->reason = $request->reason;
+                        $leaveRecord->status = 2;
+                        $leaveRecord->save();
+                    }
+                } elseif ($request->from > $lastMonthofDay && $newToDate < $nextToNextMonthFirstfDay) {
+                    $leaveRecord = new Leaverecord();
+                    $leaveRecord->user_id = $userLeave->user_id;
+                    $leaveRecord->leave_id = $userLeave->id;
+                    $leaveRecord->type_id = $userLeave->leaves_id;
+                    $leaveRecord->from = $request->from;
+                    $leaveRecord->to = $newToDate;
+                    $leaveRecord->day = $days;
+                    $leaveRecord->reason = $request->reason;
+                    $leaveRecord->status = 2;
+                    $leaveRecord->save();
+                } elseif ($request->from >= $nextMonthFirstfDay && $newToDate >= $nextToNextMonthFirstfDay) {
+                    $nextToMonthLastDayD =  Carbon::now()->endOfMonth()->addMonthsNoOverflow(1); //last and 3 range month
+                    $diffDay = $dateFrom->diff($nextToMonthLastDayD);
+                    $diffDay = $diffDay->format('%a');
+                    $daysn = $diffDay + 1;
+                    $leaveRecord = new Leaverecord();
+                    $leaveRecord->user_id = $userLeave->user_id;
+                    $leaveRecord->type_id = $userLeave->leaves_id;
+                    $leaveRecord->leave_id = $userLeave->id;
+                    $leaveRecord->from = $request->from;
+                    $leaveRecord->to = $nextToMonthLastDayD;
+                    $leaveRecord->day = $daysn;
+                    $leaveRecord->reason = $request->reason;
+                    $leaveRecord->status = 2;
+                    $leaveRecord->save();
+                    $NewRecord = $days - $daysn;
+                    if ($NewRecord > 0) {
+                        // dd("3 Month Record ");
+                        $lastMonthofDays = $nextToNextMonthFirstfDayD =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(2); //last and 3 range month
+                        $leaveRecord = new Leaverecord();
+                        $leaveRecord->user_id = $userLeave->user_id;
+                        $leaveRecord->type_id = $userLeave->leaves_id;
+                        $leaveRecord->leave_id = $userLeave->id;
+                        $leaveRecord->from = $lastMonthofDays;
+                        $leaveRecord->to = $newToDate;
+                        $leaveRecord->day = $NewRecord;
+                        $leaveRecord->reason = $request->reason;
+                        $leaveRecord->status = 2;
+                        $leaveRecord->save();
+                    }
+                }
+            }
+            if ($newSickVsOther>0){
+                $sess= Session::where('status',1)->first();
+                $otherIdType= settingleave::where('type','Other')->where('status',1)->first('id');
+                // dd($otherIdType->id);
+                    if ($newFromDateOther >= $firstMonthofDay && $request->to <= $lastMonthofDay) {
+                        $lastMonthofDayD = Carbon::now()->endOfMonth();
+                        $diffDay = $newFromDateOtherNo->diff($lastMonthofDayD);
+                        $diffDay = $diffDay->format('%a');
+                        $daysn = $diffDay + 1;
+                        $leaveRecord = new Leaverecord();
+                        $leaveRecord->user_id = $userLeave->user_id;
+                        $leaveRecord->type_id = $otherIdType->id;
+                        $leaveRecord->leave_id = $userLeave->id;
+                        $leaveRecord->from = $newFromDateOther;
+                        $leaveRecord->to = $request->to;
+                        $leaveRecord->day = $newSickVsOther;
+                        $leaveRecord->reason = $request->reason;
+                        $leaveRecord->status = 2;
+                        $leaveRecord->save();
+                    } elseif ($newFromDateOther <= $lastMonthofDay && $request->to >= $lastMonthofDay) {
+                        $lastMonthofDayD = Carbon::now()->endOfMonth();
+                        $diffDay = $newFromDateOtherNo->diff($lastMonthofDayD);
+                        $diffDay = $diffDay->format('%a');
+                        $daysn = $diffDay + 1;
+                        $leaveRecord = new Leaverecord();
+                        $leaveRecord->user_id = $userLeave->user_id;
+                        $leaveRecord->leave_id = $userLeave->id;
+                        $leaveRecord->type_id = $otherIdType->id;
+                        $leaveRecord->from = $newFromDateOther;
+                        $leaveRecord->to = $lastMonthofDay;
+                        $leaveRecord->day = $daysn;
+                        $leaveRecord->reason = $request->reason;
+                        $leaveRecord->status = 2;
+                        $leaveRecord->save();
+                        $NewRecord = $newSickVsOther - $daysn;
+                        if ($NewRecord > 0) {
+                            $lastMonthofDays = Carbon::now()->endOfMonth();
+                            $fromNewDate = $lastMonthofDays->addDay(1);
+                            $leaveRecord = new Leaverecord();
+                            $leaveRecord->user_id = $userLeave->user_id;
+                            $leaveRecord->leave_id = $userLeave->id;
+                            $leaveRecord->type_id = $otherIdType->id;
+                            $leaveRecord->from = $fromNewDate;
+                            $leaveRecord->to = $request->to;
+                            $leaveRecord->day = $NewRecord;
+                            $leaveRecord->reason = $request->reason;
+                            $leaveRecord->status = 2;
+                            $leaveRecord->save();
+                        }
+                    } elseif ($newFromDateOther > $lastMonthofDay && $request->to < $nextToNextMonthFirstfDay) {
+                        $leaveRecord = new Leaverecord();
+                        $leaveRecord->user_id = $userLeave->user_id;
+                        $leaveRecord->leave_id = $userLeave->id;
+                        $leaveRecord->type_id = $otherIdType->id;
+                        $leaveRecord->from = $newFromDateOther;
+                        $leaveRecord->to = $request->to;
+                        $leaveRecord->day = $days;
+                        $leaveRecord->reason = $request->reason;
+                        $leaveRecord->status = 2;
+                        $leaveRecord->save();
+                    } elseif ($newFromDateOther >= $nextMonthFirstfDay && $request->to >= $nextToNextMonthFirstfDay) {
+                        $nextToMonthLastDayD =  Carbon::now()->endOfMonth()->addMonthsNoOverflow(1); //last and 3 range month
+                        $diffDay = $newFromDateOtherNo->diff($nextToMonthLastDayD);
+                        $diffDay = $diffDay->format('%a');
+                        $daysn = $diffDay + 1;
+                        $leaveRecord = new Leaverecord();
+                        $leaveRecord->user_id = $userLeave->user_id;
+                        $leaveRecord->type_id = $otherIdType->id;
+                        $leaveRecord->leave_id = $userLeave->id;
+                        $leaveRecord->from = $newFromDateOther;
+                        $leaveRecord->to = $nextToMonthLastDayD;
+                        $leaveRecord->day = $daysn;
+                        $leaveRecord->reason = $request->reason;
+                        $leaveRecord->status = 2;
+                        $leaveRecord->save();
+                        $NewRecord = $newSickVsOther - $daysn;
+                        if ($NewRecord > 0) {
+                            // dd("3 Month Record ");
+                            $lastMonthofDays = $nextToNextMonthFirstfDayD =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(2); //last and 3 range month
+                            $leaveRecord = new Leaverecord();
+                            $leaveRecord->user_id = $userLeave->user_id;
+                            $leaveRecord->type_id = $otherIdType->id;
+                            $leaveRecord->leave_id = $userLeave->id;
+                            $leaveRecord->from = $lastMonthofDays;
+                            $leaveRecord->to = $request->to;
+                            $leaveRecord->day = $NewRecord;
+                            $leaveRecord->reason = $request->reason;
+                            $leaveRecord->status = 2;
+                            $leaveRecord->save();
+                        }
+                    }
+                }
+            }               
+            
+        } elseif ($leaveType->type == "Annual") {
+            if ($userLeave->day <= $leaveOfMOnth->anualLeave) {  
+                if ($request->from >= $firstMonthofDay && $request->to <= $lastMonthofDay) {
+                    $leaveRecord = new Leaverecord();
+                    $leaveRecord->user_id = $userLeave->user_id;
+                    $leaveRecord->type_id = $userLeave->leaves_id;
+                    $leaveRecord->leave_id = $userLeave->id;
+                    $leaveRecord->from = $request->from;
+                    $leaveRecord->to = $request->to;
+                    $leaveRecord->day = $days;
+                    $leaveRecord->reason = $request->reason;
+                    $leaveRecord->status = 2;
+                    $leaveRecord->save();
+                } elseif ($request->from <= $lastMonthofDay && $request->to >= $lastMonthofDay) {
+                    $lastMonthofDayD = Carbon::now()->endOfMonth();
+                    $diffDay = $dateFrom->diff($lastMonthofDayD);
+                    $diffDay = $diffDay->format('%a');
+                    $daysn = $diffDay + 1;
+                    $leaveRecord = new Leaverecord();
+                    $leaveRecord->user_id = $userLeave->user_id;
+                    $leaveRecord->leave_id = $userLeave->id;
+                    $leaveRecord->type_id = $userLeave->leaves_id;
+                    $leaveRecord->from = $request->from;
+                    $leaveRecord->to = $lastMonthofDay;
+                    $leaveRecord->day = $daysn;
+                    $leaveRecord->reason = $request->reason;
+                    $leaveRecord->status = 2;
+                    $leaveRecord->save();
+                    $NewRecord = $days - $daysn;
+                    if ($NewRecord > 0) {
+                        $lastMonthofDays = Carbon::now()->endOfMonth();
+                        $fromNewDate = $lastMonthofDays->addDay(1);
+                        $leaveRecord = new Leaverecord();
+                        $leaveRecord->user_id = $userLeave->user_id;
+                        $leaveRecord->leave_id = $userLeave->id;
+                        $leaveRecord->type_id = $userLeave->leaves_id;
+                        $leaveRecord->from = $fromNewDate;
+                        $leaveRecord->to = $request->to;
+                        $leaveRecord->day = $NewRecord;
+                        $leaveRecord->reason = $request->reason;
+                        $leaveRecord->status = 2;
+                        $leaveRecord->save();
+                    }
+                } elseif ($request->from > $lastMonthofDay && $request->to < $nextToNextMonthFirstfDay) {
+                    $leaveRecord = new Leaverecord();
+                    $leaveRecord->user_id = $userLeave->user_id;
+                    $leaveRecord->leave_id = $userLeave->id;
+                    $leaveRecord->type_id = $userLeave->leaves_id;
+                    $leaveRecord->from = $request->from;
+                    $leaveRecord->to = $request->to;
+                    $leaveRecord->day = $days;
+                    $leaveRecord->reason = $request->reason;
+                    $leaveRecord->status = 2;
+                    $leaveRecord->save();
+                } elseif ($request->from >= $nextMonthFirstfDay && $request->to >= $nextToNextMonthFirstfDay) {
+                    $nextToMonthLastDayD =  Carbon::now()->endOfMonth()->addMonthsNoOverflow(1); //last and 3 range month
+                    $diffDay = $dateFrom->diff($nextToMonthLastDayD);
+                    $diffDay = $diffDay->format('%a');
+                    $daysn = $diffDay + 1;
+                    $leaveRecord = new Leaverecord();
+                    $leaveRecord->user_id = $userLeave->user_id;
+                    $leaveRecord->type_id = $userLeave->leaves_id;
+                    $leaveRecord->leave_id = $userLeave->id;
+                    $leaveRecord->from = $request->from;
+                    $leaveRecord->to = $nextToMonthLastDayD;
+                    $leaveRecord->day = $daysn;
+                    $leaveRecord->reason = $request->reason;
+                    $leaveRecord->status = 2;
+                    $leaveRecord->save();
+                    $NewRecord = $days - $daysn;
+                    if ($NewRecord > 0) {
+                        // dd("3 Month Record ");
+                        $lastMonthofDays = $nextToNextMonthFirstfDayD =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(2); //last and 3 range month
+                        $leaveRecord = new Leaverecord();
+                        $leaveRecord->user_id = $userLeave->user_id;
+                        $leaveRecord->type_id = $userLeave->leaves_id;
+                        $leaveRecord->leave_id = $userLeave->id;
+                        $leaveRecord->from = $lastMonthofDays;
+                        $leaveRecord->to = $request->to;
+                        $leaveRecord->day = $NewRecord;
+                        $leaveRecord->reason = $request->reason;
+                        $leaveRecord->status = 2;
+                        $leaveRecord->save();
+                    }
+                }
+            } else { //sick over day
+                $newSickVsOther = $days- $leaveOfMOnth->anualLeave;
+                $leaveMontDay= round( $leaveOfMOnth->anualLeave);
+                $leaveMontDayother= round( $leaveOfMOnth->anualLeave);
+                $leaveMontDay=$leaveMontDay-1;
+                $newDayDeffOther= round($newSickVsOther);
+                $newToDate = Carbon::createFromDate($request->from)->addDay($leaveMontDay)->toDateString();           
+                $newFromDateOther = Carbon::createFromDate($request->from)->addDay($leaveMontDayother)->toDateString();     
+                $newFromDateOtherNo = Carbon::createFromDate($request->from)->addDay($leaveMontDayother);     
+              
+            if ($leaveMontDayother>0) {               
+                if ($request->from >= $firstMonthofDay && $newToDate <= $lastMonthofDay) {
+                    $leaveRecord = new Leaverecord();
+                    $leaveRecord->user_id = $userLeave->user_id;
+                    $leaveRecord->type_id = $userLeave->leaves_id;
+                    $leaveRecord->leave_id = $userLeave->id;
+                    $leaveRecord->from = $request->from;
+                    $leaveRecord->to = $newToDate;
+                    $leaveRecord->day = $leaveMontDay+1;
+                    $leaveRecord->reason = $request->reason;
+                    $leaveRecord->status = 2;
+                    $leaveRecord->save();
+                } elseif ($request->from <= $lastMonthofDay && $newToDate >= $lastMonthofDay) {
+                    $lastMonthofDayD = Carbon::now()->endOfMonth();
+                    $diffDay = $dateFrom->diff($lastMonthofDayD);
+                    $diffDay = $diffDay->format('%a');
+                    $daysn = $diffDay + 1;
+                    $leaveRecord = new Leaverecord();
+                    $leaveRecord->user_id = $userLeave->user_id;
+                    $leaveRecord->leave_id = $userLeave->id;
+                    $leaveRecord->type_id = $userLeave->leaves_id;
+                    $leaveRecord->from = $request->from;
+                    $leaveRecord->to = $lastMonthofDay;
+                    $leaveRecord->day = $daysn;
+                    $leaveRecord->reason = $request->reason;
+                    $leaveRecord->status = 2;
+                    $leaveRecord->save();
+                    $NewRecord = $days - $daysn;
+                    if ($NewRecord > 0) {
+                        $lastMonthofDays = Carbon::now()->endOfMonth();
+                        $fromNewDate = $lastMonthofDays->addDay(1);
+                        $leaveRecord = new Leaverecord();
+                        $leaveRecord->user_id = $userLeave->user_id;
+                        $leaveRecord->leave_id = $userLeave->id;
+                        $leaveRecord->type_id = $userLeave->leaves_id;
+                        $leaveRecord->from = $fromNewDate;
+                        $leaveRecord->to = $newToDate;
+                        $leaveRecord->day = $NewRecord;
+                        $leaveRecord->reason = $request->reason;
+                        $leaveRecord->status = 2;
+                        $leaveRecord->save();
+                    }
+                } elseif ($request->from > $lastMonthofDay && $newToDate < $nextToNextMonthFirstfDay) {
+                    $leaveRecord = new Leaverecord();
+                    $leaveRecord->user_id = $userLeave->user_id;
+                    $leaveRecord->leave_id = $userLeave->id;
+                    $leaveRecord->type_id = $userLeave->leaves_id;
+                    $leaveRecord->from = $request->from;
+                    $leaveRecord->to = $newToDate;
+                    $leaveRecord->day = $days;
+                    $leaveRecord->reason = $request->reason;
+                    $leaveRecord->status = 2;
+                    $leaveRecord->save();
+                } elseif ($request->from >= $nextMonthFirstfDay && $newToDate >= $nextToNextMonthFirstfDay) {
+                    $nextToMonthLastDayD =  Carbon::now()->endOfMonth()->addMonthsNoOverflow(1); //last and 3 range month
+                    $diffDay = $dateFrom->diff($nextToMonthLastDayD);
+                    $diffDay = $diffDay->format('%a');
+                    $daysn = $diffDay + 1;
+                    $leaveRecord = new Leaverecord();
+                    $leaveRecord->user_id = $userLeave->user_id;
+                    $leaveRecord->type_id = $userLeave->leaves_id;
+                    $leaveRecord->leave_id = $userLeave->id;
+                    $leaveRecord->from = $request->from;
+                    $leaveRecord->to = $nextToMonthLastDayD;
+                    $leaveRecord->day = $daysn;
+                    $leaveRecord->reason = $request->reason;
+                    $leaveRecord->status = 2;
+                    $leaveRecord->save();
+                    $NewRecord = $days - $daysn;
+                    if ($NewRecord > 0) {
+                        // dd("3 Month Record ");
+                        $lastMonthofDays = $nextToNextMonthFirstfDayD =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(2); //last and 3 range month
+                        $leaveRecord = new Leaverecord();
+                        $leaveRecord->user_id = $userLeave->user_id;
+                        $leaveRecord->type_id = $userLeave->leaves_id;
+                        $leaveRecord->leave_id = $userLeave->id;
+                        $leaveRecord->from = $lastMonthofDays;
+                        $leaveRecord->to = $newToDate;
+                        $leaveRecord->day = $NewRecord;
+                        $leaveRecord->reason = $request->reason;
+                        $leaveRecord->status = 2;
+                        $leaveRecord->save();
+                    }
+                }
+            }
+            if ($newSickVsOther>0){
+                $sess= Session::where('status',1)->first();
+                $otherIdType= settingleave::where('type','Other')->where('status',1)->first('id');
+                // dd($otherIdType->id);
+                    if ($newFromDateOther >= $firstMonthofDay && $request->to <= $lastMonthofDay) {
+                        $lastMonthofDayD = Carbon::now()->endOfMonth();
+                        $diffDay = $newFromDateOtherNo->diff($lastMonthofDayD);
+                        $diffDay = $diffDay->format('%a');
+                        $daysn = $diffDay + 1;
+                        $leaveRecord = new Leaverecord();
+                        $leaveRecord->user_id = $userLeave->user_id;
+                        $leaveRecord->type_id = $otherIdType->id;
+                        $leaveRecord->leave_id = $userLeave->id;
+                        $leaveRecord->from = $newFromDateOther;
+                        $leaveRecord->to = $request->to;
+                        $leaveRecord->day = $newSickVsOther;
+                        $leaveRecord->reason = $request->reason;
+                        $leaveRecord->status = 2;
+                        $leaveRecord->save();
+                    } elseif ($newFromDateOther <= $lastMonthofDay && $request->to >= $lastMonthofDay) {
+                        $lastMonthofDayD = Carbon::now()->endOfMonth();
+                        $diffDay = $newFromDateOtherNo->diff($lastMonthofDayD);
+                        $diffDay = $diffDay->format('%a');
+                        $daysn = $diffDay + 1;
+                        $leaveRecord = new Leaverecord();
+                        $leaveRecord->user_id = $userLeave->user_id;
+                        $leaveRecord->leave_id = $userLeave->id;
+                        $leaveRecord->type_id = $otherIdType->id;
+                        $leaveRecord->from = $newFromDateOther;
+                        $leaveRecord->to = $lastMonthofDay;
+                        $leaveRecord->day = $daysn;
+                        $leaveRecord->reason = $request->reason;
+                        $leaveRecord->status = 2;
+                        $leaveRecord->save();
+                        $NewRecord = $newSickVsOther - $daysn;
+                        if ($NewRecord > 0) {
+                            $lastMonthofDays = Carbon::now()->endOfMonth();
+                            $fromNewDate = $lastMonthofDays->addDay(1);
+                            $leaveRecord = new Leaverecord();
+                            $leaveRecord->user_id = $userLeave->user_id;
+                            $leaveRecord->leave_id = $userLeave->id;
+                            $leaveRecord->type_id = $otherIdType->id;
+                            $leaveRecord->from = $fromNewDate;
+                            $leaveRecord->to = $request->to;
+                            $leaveRecord->day = $NewRecord;
+                            $leaveRecord->reason = $request->reason;
+                            $leaveRecord->status = 2;
+                            $leaveRecord->save();
+                        }
+                    } elseif ($newFromDateOther > $lastMonthofDay && $request->to < $nextToNextMonthFirstfDay) {
+                        $leaveRecord = new Leaverecord();
+                        $leaveRecord->user_id = $userLeave->user_id;
+                        $leaveRecord->leave_id = $userLeave->id;
+                        $leaveRecord->type_id = $otherIdType->id;
+                        $leaveRecord->from = $newFromDateOther;
+                        $leaveRecord->to = $request->to;
+                        $leaveRecord->day = $days;
+                        $leaveRecord->reason = $request->reason;
+                        $leaveRecord->status = 2;
+                        $leaveRecord->save();
+                    } elseif ($newFromDateOther >= $nextMonthFirstfDay && $request->to >= $nextToNextMonthFirstfDay) {
+                        $nextToMonthLastDayD =  Carbon::now()->endOfMonth()->addMonthsNoOverflow(1); //last and 3 range month
+                        $diffDay = $newFromDateOtherNo->diff($nextToMonthLastDayD);
+                        $diffDay = $diffDay->format('%a');
+                        $daysn = $diffDay + 1;
+                        $leaveRecord = new Leaverecord();
+                        $leaveRecord->user_id = $userLeave->user_id;
+                        $leaveRecord->type_id = $otherIdType->id;
+                        $leaveRecord->leave_id = $userLeave->id;
+                        $leaveRecord->from = $newFromDateOther;
+                        $leaveRecord->to = $nextToMonthLastDayD;
+                        $leaveRecord->day = $daysn;
+                        $leaveRecord->reason = $request->reason;
+                        $leaveRecord->status = 2;
+                        $leaveRecord->save();
+                        $NewRecord = $newSickVsOther - $daysn;
+                        if ($NewRecord > 0) {
+                            // dd("3 Month Record ");
+                            $lastMonthofDays = $nextToNextMonthFirstfDayD =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(2); //last and 3 range month
+                            $leaveRecord = new Leaverecord();
+                            $leaveRecord->user_id = $userLeave->user_id;
+                            $leaveRecord->type_id = $otherIdType->id;
+                            $leaveRecord->leave_id = $userLeave->id;
+                            $leaveRecord->from = $lastMonthofDays;
+                            $leaveRecord->to = $request->to;
+                            $leaveRecord->day = $NewRecord;
+                            $leaveRecord->reason = $request->reason;
+                            $leaveRecord->status = 2;
+                            $leaveRecord->save();
+                        }
+                    }
+                }
+            }        
+        }else{//other Date And Month Wise Save            
+                if ($request->from >= $firstMonthofDay && $request->to <= $lastMonthofDay) {
+                    $leaveRecord = new Leaverecord();
+                    $leaveRecord->user_id = $userLeave->user_id;
+                    $leaveRecord->type_id = $userLeave->leaves_id;
+                    $leaveRecord->leave_id = $userLeave->id;
+                    $leaveRecord->from = $request->from;
+                    $leaveRecord->to = $request->to;
+                    $leaveRecord->day = $days;
+                    $leaveRecord->reason = $request->reason;
+                    $leaveRecord->status = 2;
+                    $leaveRecord->save();
+                } elseif ($request->from <= $lastMonthofDay && $request->to >= $lastMonthofDay) {
+                    $lastMonthofDayD = Carbon::now()->endOfMonth();
+                    $diffDay = $dateFrom->diff($lastMonthofDayD);
+                    $diffDay = $diffDay->format('%a');
+                    $daysn = $diffDay + 1;
+                    $leaveRecord = new Leaverecord();
+                    $leaveRecord->user_id = $userLeave->user_id;
+                    $leaveRecord->leave_id = $userLeave->id;
+                    $leaveRecord->type_id = $userLeave->leaves_id;
+                    $leaveRecord->from = $request->from;
+                    $leaveRecord->to = $lastMonthofDay;
+                    $leaveRecord->day = $daysn;
+                    $leaveRecord->reason = $request->reason;
+                    $leaveRecord->status = 2;
+                    $leaveRecord->save();
+                    $NewRecord = $days - $daysn;
+                    if ($NewRecord > 0) {
+                        $lastMonthofDays = Carbon::now()->endOfMonth();
+                        $fromNewDate = $lastMonthofDays->addDay(1);
+                        $leaveRecord = new Leaverecord();
+                        $leaveRecord->user_id = $userLeave->user_id;
+                        $leaveRecord->leave_id = $userLeave->id;
+                        $leaveRecord->type_id = $userLeave->leaves_id;
+                        $leaveRecord->from = $fromNewDate;
+                        $leaveRecord->to = $request->to;
+                        $leaveRecord->day = $NewRecord;
+                        $leaveRecord->reason = $request->reason;
+                        $leaveRecord->status = 2;
+                        $leaveRecord->save();
+                    }
+                } elseif ($request->from > $lastMonthofDay && $request->to < $nextToNextMonthFirstfDay) {
+                    $leaveRecord = new Leaverecord();
+                    $leaveRecord->user_id = $userLeave->user_id;
+                    $leaveRecord->leave_id = $userLeave->id;
+                    $leaveRecord->type_id = $userLeave->leaves_id;
+                    $leaveRecord->from = $request->from;
+                    $leaveRecord->to = $request->to;
+                    $leaveRecord->day = $days;
+                    $leaveRecord->reason = $request->reason;
+                    $leaveRecord->status = 2;
+                    $leaveRecord->save();
+                } elseif ($request->from >= $nextMonthFirstfDay && $request->to >= $nextToNextMonthFirstfDay) {
+                    $nextToMonthLastDayD =  Carbon::now()->endOfMonth()->addMonthsNoOverflow(1); //last and 3 range month
+                    $diffDay = $dateFrom->diff($nextToMonthLastDayD);
+                    $diffDay = $diffDay->format('%a');
+                    $daysn = $diffDay + 1;
+                    $leaveRecord = new Leaverecord();
+                    $leaveRecord->user_id = $userLeave->user_id;
+                    $leaveRecord->type_id = $userLeave->leaves_id;
+                    $leaveRecord->leave_id = $userLeave->id;
+                    $leaveRecord->from = $request->from;
+                    $leaveRecord->to = $nextToMonthLastDayD;
+                    $leaveRecord->day = $daysn;
+                    $leaveRecord->reason = $request->reason;
+                    $leaveRecord->status = 2;
+                    $leaveRecord->save();
+                    $NewRecord = $days - $daysn;
+                    if ($NewRecord > 0) {
+                        $lastMonthofDays = $nextToNextMonthFirstfDayD =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(2); //last and 3 range month
+                        $leaveRecord = new Leaverecord();
+                        $leaveRecord->user_id = $userLeave->user_id;
+                        $leaveRecord->type_id = $userLeave->leaves_id;
+                        $leaveRecord->leave_id = $userLeave->id;
+                        $leaveRecord->from = $lastMonthofDays;
+                        $leaveRecord->to = $request->to;
+                        $leaveRecord->day = $NewRecord;
+                        $leaveRecord->reason = $request->reason;
+                        $leaveRecord->status = 2;
+                        $leaveRecord->save();
+                    }
+                }
+        }
+        
+        
+
+
+
+
+        
+        if ($request->from >= $firstMonthofDay && $request->to <= $lastMonthofDay) {
+            $leaveRecord = new Leaverecord();
+            $leaveRecord->user_id = $userLeave->user_id;
+            $leaveRecord->type_id = $userLeave->leaves_id;
+            $leaveRecord->leave_id = $userLeave->id;
+            $leaveRecord->from = $request->from;
+            $leaveRecord->to = $request->to;
+             //sunday and saturday count in request->from to request->to
+             $day = Carbon::createFromFormat('Y-m-d', $request->from);
+             $ssfrom = date('d',strtotime($day));
+             $ssto = date('d',strtotime($request->to));
+             $sunday = 0;
+             $saturday = 0;          
+             foreach(range($ssfrom,$ssto) as $key => $next) {
+                 if (strtolower($day->format('l')) == 'sunday') {
+                     $sunday++;
+                    }
+                    //saturday Count first And third
+                    $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
+                    $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
+                    if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d"))) {
+                        $saturday++;
+                    }
+                    $day = $day->addDays();
+             }
+             $days=$days-$sunday;
+             $days=$days-$saturday;
+             $hfrom=$request->from;
+             $hto =$request->to;
+             $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
+             $days=$days-$holiday;
+            $leaveRecord->day =$days;
+            $leaveRecord->reason = $request->reason;
+            $leaveRecord->status = 2;
+            $leaveRecord->save();
+        } elseif ($request->from <= $lastMonthofDay && $request->to >= $lastMonthofDay) {
+            $lastMonthofDayD = Carbon::now()->endOfMonth();
+            $diffDay = $dateFrom->diff($lastMonthofDayD);
+            $diffDay = $diffDay->format('%a');
+            $daysn = $diffDay + 1;
+            $daysnl = $diffDay + 1;
+            $leaveRecord = new Leaverecord();
+            $leaveRecord->user_id = $userLeave->user_id;
+            $leaveRecord->leave_id = $userLeave->id;
+            $leaveRecord->type_id = $userLeave->leaves_id;
+            $leaveRecord->from = $request->from;
+            $leaveRecord->to = $lastMonthofDay;
+            //sunday and saturady count function 
+            $day = Carbon::createFromFormat('Y-m-d', $request->from);
+            $ssfrom = date('d',strtotime($day));
+            $ssto = date('d',strtotime($lastMonthofDay));
+            $sunday = 0;
+            $saturday = 0;
+            foreach(range($ssfrom,$ssto) as $key => $next) {
+                if (strtolower($day->format('l')) == 'sunday') {
+                    $sunday++;
+                }
+                //saturday Count first And third
+                $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
+                $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
+                if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d"))) {
+                    $saturday++;
+                }
+                $day = $day->addDays();
+            }
+             $hfrom=$request->from;
+             $hto=$lastMonthofDay;
+             $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
+             $daysn=$daysn-$sunday;
+             $daysn=$daysn-$saturday;
+             $daysn=$daysn-$holiday;
+            $leaveRecord->day = $daysn;
+            $leaveRecord->reason = $request->reason;
+            $leaveRecord->status = 2;
+            $leaveRecord->save();
+            $NewRecord = $days - $daysnl;
+            if ($NewRecord > 0) {
+                $lastMonthofDays = Carbon::now()->endOfMonth();
+                $fromNewDate = $lastMonthofDays->addDay(1)->toDateString();
+                $newTodate= $request->to;              
+                $leaveRecord = new Leaverecord();
+                $leaveRecord->user_id = $userLeave->user_id;
+                $leaveRecord->leave_id = $userLeave->id;
+                $leaveRecord->type_id = $userLeave->leaves_id;
+                $leaveRecord->from = $fromNewDate;
+                $leaveRecord->to = $request->to;
+                   //sunday and saturady count function 
+                   $day = Carbon::createFromFormat('Y-m-d', $fromNewDate);
+                   $dayss = Carbon::createFromFormat('Y-m-d', $fromNewDate);
+                   $ssfrom = date('d',strtotime($day));
+                   $ssto = date('d',strtotime($request->to));
+                   $smonth = date('Y-m',strtotime($day));
+                   $sunday = 0;
+                   $saturday = 0;
+                   foreach(range($ssfrom,$ssto) as $key => $next) {
+                       if (strtolower($day->format('l')) == 'sunday') {
+                           $sunday++;
+                        }
+                        //saturday Count first And third
+                        $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
+                        $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
+                        $satn1 = Carbon::parse('first saturday of next month')->format('Y-m-d');
+                        $satn3 = Carbon::parse('third saturday of next month')->format('Y-m-d');
+                        if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d") || $satn3 == $day->format("Y-m-d") || $satn1 == $day->format("Y-m-d"))) {
+                            $saturday++;
+                        }
+                        $day = $day->addDays();
+                    }
+                $hfrom=$fromNewDate;
+                $hto=$request->to;
+                $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
+                $NewRecord=$NewRecord-$sunday;
+                $NewRecord=$NewRecord-$saturday;
+                $NewRecord=$NewRecord-$holiday;
+                $leaveRecord->day = $NewRecord;
+                $leaveRecord->reason = $request->reason;
+                $leaveRecord->status = 2;
+                $leaveRecord->save();
+            }
+        } elseif ($request->from > $lastMonthofDay && $request->to < $nextToNextMonthFirstfDay) {
+        
+            $leaveRecord = new Leaverecord();
+            $leaveRecord->user_id = $userLeave->user_id;
+            $leaveRecord->leave_id = $userLeave->id;
+            $leaveRecord->type_id = $userLeave->leaves_id;
+            $leaveRecord->from = $request->from;
+            $leaveRecord->to = $request->to;
+                   //sunday and saturady count function 
+                   $day = Carbon::createFromFormat('Y-m-d', $request->from);
+                   $ssfrom = date('d',strtotime($day));
+                   $ssto = date('d',strtotime($request->to));
+                   $smonth = date('Y-m',strtotime($day));
+                   $sunday = 0;
+                   $saturday = 0;
+                   foreach(range($ssfrom,$ssto) as $key => $next) {
+                       if (strtolower($day->format('l')) == 'sunday') {
+                           $sunday++;
+                        }
+                        //saturday Count first And third
+                        $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
+                        $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
+                        $satn1 = Carbon::parse('first saturday of next month')->format('Y-m-d');
+                        $satn3 = Carbon::parse('third saturday of next month')->format('Y-m-d');
+                        if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d") || $satn3 == $day->format("Y-m-d") || $satn1 == $day->format("Y-m-d"))) {
+                            $saturday++;
+                        }
+                        $day = $day->addDays();
+                    }
+                //  dd($sunday,$saturday);
+            $hfrom=$request->from;
+            $hto=$request->to;
+            $holiday= Holiday::where('status',1)->where(function($query)use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
+            $days=$days-$sunday;
+            $days=$days-$saturday;
+            $days=$days-$holiday;
+            $leaveRecord->day = $days;
+            $leaveRecord->reason = $request->reason;
+            $leaveRecord->status = 2;
+            $leaveRecord->save();
+        } elseif ($request->from >= $nextMonthFirstfDay && $request->to >= $nextToNextMonthFirstfDay) {
+            $nextToMonthLastDayD =  Carbon::now()->endOfMonth()->addMonthsNoOverflow(1); //last and 3 range month
+            $diffDay = $dateFrom->diff($nextToMonthLastDayD);
+            $diffDay = $diffDay->format('%a');
+            $daysn = $diffDay + 1;
+            // dd($daysn);
+            $daysl = $diffDay + 1;
+            $leaveRecord = new Leaverecord();
+            $leaveRecord->user_id = $userLeave->user_id;
+            $leaveRecord->type_id = $userLeave->leaves_id;
+            $leaveRecord->leave_id = $userLeave->id;
+            $leaveRecord->from = $request->from;
+            $leaveRecord->to = $nextToMonthLastDayD;
+              //sunday and saturady count function 
+              $day = Carbon::createFromFormat('Y-m-d', $request->from);
+              $ssfrom = date('d',strtotime($request->from));
+              $ssto = date('d',strtotime($nextToMonthLastDayD));
+              $smonth = date('Y-m',strtotime($day));
+              $sunday = 0;
+              $saturday = 0;
+            //   dd($ssfrom,$ssto);
+              foreach(range($ssfrom,$ssto) as $key => $next) {
+                  if (strtolower($day->format('l')) == 'sunday') {
+                      $sunday++;
+                   }
+                   $day = $day->addDays();
+                   //saturday Count first And third
+                   $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
+                   $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
+                   $satn1 = Carbon::parse('first saturday of next month')->format('Y-m-d');
+                   $satn3 = Carbon::parse('third saturday of next month')->format('Y-m-d');
+                   if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d") || $satn3 == $day->format("Y-m-d") || $satn1 == $day->format("Y-m-d"))) {
+                       $saturday++;
+                   }
+               }
+            //    dd($sunday,$saturday);
+            $hfrom=$request->from;
+            $hto=$nextToMonthLastDayD;
+            $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
+            $daysn=$daysn-$sunday;
+            $daysn=$daysn-$saturday;
+            $daysn=$daysn-$holiday;
+            $leaveRecord->day = $daysn;
+            $leaveRecord->reason = $request->reason;
+            $leaveRecord->status = 2;
+            $leaveRecord->save();
+            $NewRecord = $days - $daysl;
+            if ($NewRecord > 0) {
+                $lastMonthofDays = $nextToNextMonthFirstfDayD =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(2)->toDateString(); //last and 3 range month
+                $leaveRecord = new Leaverecord();
+                $leaveRecord->user_id = $userLeave->user_id;
+                $leaveRecord->type_id = $userLeave->leaves_id;
+                $leaveRecord->leave_id = $userLeave->id;
+                $leaveRecord->from = $lastMonthofDays;
+                $leaveRecord->to = $request->to;
+                //sunday and saturady count function 
+                $day = Carbon::createFromFormat('Y-m-d',$lastMonthofDays);
+                $ssfrom = date('d',strtotime($day));
+                $ssto = date('d',strtotime($request->to));
+                $smonth = date('Y-m',strtotime($day));
+                $sunday = 0;
+                $saturday = 0;
+                foreach(range($ssfrom,$ssto) as $key => $next) {
+                    if (strtolower($day->format('l')) == 'sunday') {
+                        $sunday++;
+                     }
+                     //saturday Count first And third
+                     $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
+                     $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
+                     $satn1 =Carbon::parse('first saturday of next month')->format('Y-m-d');
+                     $satn3 = Carbon::parse('third saturday of next month')->format('Y-m-d');
+                     $satn4 = Carbon::parse("first saturday of second month")->format("Y-m-d");
+                     $satn5 = Carbon::parse("third saturday of second month")->format("Y-m-d");
+                         if (strtolower($day->format('l')) == 'saturday' && ($satn4 == $day->format("Y-m-d") || $satn5 == $day->format("Y-m-d"))) {
+                             $saturday++;
+                            }
+                            $day = $day->addDays();
+                 }
+                $hfrom=$lastMonthofDays;
+                $hto=$request->to;
+                $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();               
+                $NewRecord=$NewRecord-$sunday;
+                $NewRecord=$NewRecord-$saturday;
+                $NewRecord=$NewRecord-$holiday;
+                $leaveRecord->day = $NewRecord;
+                $leaveRecord->reason = $request->reason;
+                $leaveRecord->status = 2;
+                $leaveRecord->save();
+            }
+        }
+        
         return redirect()->route('employees.leave');
     }
- 
+
+
+    // --------------delete function-----------------------
+    public function delete($id)
+    {
+        // dd("dele");
+        $data = Leave::find($id);
+        if ($data->status == 1) {
+            return back()->with(["unsuccess" => "Don't Delete This Record"])->withInput();
+        } else {
+            $leaverecord = Leaverecord::where('leave_id', $id)->get();
+            foreach ($leaverecord as $record) {
+                $record->delete();
+            }
+            $data->delete();
+            return back()->with(["success" => "Success Delete This Record"])->withInput();
+        }
+    }
+    public function attendance($id){
+        $attendance = Attendance::find($id);
+        dd($attendance->toArray());
+
+
+    }
+    public function attendanceLeave($id){
+        dd($id);
+    }
+    // ----------------------------admin leave function-----------------------------
+
+}
