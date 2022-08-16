@@ -52,10 +52,10 @@ class PayrollController extends Controller
         $user = User::find($id);
         return response()->json(['salary' => $salary, 'user' => $user]);
     }
-    //employees salary add & salary list show 
+    //employees salary add & salary list show
     public function payroll(Request $request)
     {
-        $employees = User::where('status', 1)->with('salary')->get();
+        $employees = User::where('status', 1)->with('salary')->orderBy('first_name')->get();
         return view('admin.payroll.payroll-list', compact('employees'));
     }
     //salary management module
@@ -75,7 +75,7 @@ class PayrollController extends Controller
         $slip = UserSlip::with(['user.userDesignation'])->find($id);
         return response()->json(compact('company', 'slip'));
     }
-    //Earning And Deduction  Value Save in fnction 
+    //Earning And Deduction  Value Save in fnction
     public function salary_store(Request $request)
     {
         foreach ($request->ids as $key => $title) {
@@ -136,7 +136,7 @@ class PayrollController extends Controller
         $employeeslip = UserSlip::where('user_id', $id)->with('user')->orderBy('id', 'DESC')->get();
         return view('admin.payroll.view-slip', compact('employeeslip', 'id'));
     }
-    //salary blade redricet 
+    //salary blade redricet
     public function genrateslip($id)
     {
         $id = $id;
@@ -220,7 +220,7 @@ class PayrollController extends Controller
             $salarygenerate->user_id = $request->user_id;
             $month = $salary->net_salary / 12;
             $netMonthSalary = $salary->net_salary / 12;
-            //net 
+            //net
             $dd = date('d', strtotime($salarymonthLastDate));
             $NetDay = $salarymonthDay; //total working day in month
             $monthLeaveCalculate = monthleave::where('user_id', $request->user_id)->where('status', 3)->where('to', $salarymonthLastDate)->latest()->first();
@@ -354,7 +354,7 @@ class PayrollController extends Controller
             if ($monthFingerAbsunt > 0) {
                 $monthleave = monthleave::where('user_id', $id)->where('status', 1)->where('to', $lastMonthofDay)->first();
                 // dd($monthleave);
-                $totalLeave = $monthleave->apprAnual+$monthleave->apprSick + $monthleave->other; //total leave add 
+                $totalLeave = $monthleave->apprAnual+$monthleave->apprSick + $monthleave->other; //total leave add
                 // dd($monthFingerAbsunt,$totalLeave);
             if ($monthFingerAbsunt > $totalLeave) {
                 // dd("kkkkk");
@@ -368,9 +368,9 @@ class PayrollController extends Controller
             $monthleave->status = 3;
             $monthleave->save();
         }
-        //monthLeave In status 0 Update Function   
+        //monthLeave In status 0 Update Function
 
-        // ----------------------------other leave shift function ------------------------------------ 
+        // ----------------------------other leave shift function ------------------------------------
         $monthleave = monthleave::where('user_id', $id)->where('to', $lastMonthofDay)->where('status', 3)->first();
         // dd($monthleave->toArray());
         if ($monthleave->apprAnual > $monthleave->anualLeave) {

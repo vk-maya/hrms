@@ -55,7 +55,7 @@
                                 <tr class="holiday-upcoming">
                                     <td>{{$key+1}}</td>
                                     <td>{{$item->holidayName}}</td>
-                                    <td>{{\Carbon\Carbon::parse($item->date)->format('d/m/Y') }}</td>
+                                    <td>{{\Carbon\Carbon::parse($item->date)->format('d M Y') }}</td>
                                     <td>{{date("l",strtotime($item->date))}}</td>
                                     <td class="text-end">
                                         <div class="dropdown dropdown-action">
