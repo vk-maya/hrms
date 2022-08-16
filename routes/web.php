@@ -54,6 +54,8 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
 
     // ------------------------------attendance route--------------------------
     Route::get('employees/attendance',[EmpAttendanceController::class,'get'])->name('attendance');
+    Route::get('attendance/leave/{id}',[LeaveController::class,'attendance'])->name('attendance.leave');
+
     // --------------------------Profile route ---------------------------
     Route::get('profiles',[UserController::class,'profile'])->name('profile');
     Route::get('profiles/show',[UserController::class,'profileinfo'])->name('add.moreinfo');
@@ -76,6 +78,7 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
     Route::get('emp/show/task/{id}',[DailyTask::class,'showtaskk'])->name('show-taskk');
     Route::get('emp/task/list',[DailyTask::class,'tasklist'])->name('show-list');
     Route::post('emp/daliy/task',[DailyTask::class,'dailystore'])->name('daily.task.store');
+
 });
 
 // ------------------------------admin Route----------------------------------//////////
@@ -205,7 +208,6 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
 
     //...................PDF..................//
     Route::get('export-pdf/{id}', [PayrollController::class, 'downloadPdf'])->name('export-pdf');
-    Route::get('atten/{id}',[PayrollController::class,'handle'])->name('attan.hit');
 
    
 

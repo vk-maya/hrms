@@ -19,24 +19,26 @@ use App\Models\monthleave;
 
 class AdminLeaveController extends Controller
 {
-    public function edit($id){
+    public function edit($id)
+    {
         $data = Leave::find($id);
         $type = settingleave::all();
 
         return view('admin.leave.edit-leave', compact('data', 'type'));
     }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
         $data = Leave::find($request->id);
         $leavetype = settingleave::where('id', $request->type)->count();
-        if ($leavetype > 0){
+        if ($leavetype > 0) {
             $data->leaves_id = $request->type;
-        } else{
+        } else {
             return back()->withErrors(["type_id" => "Please Select Leave Type"])->withInput();
         }
         $date = now();
         $fromdate = date("Y-m-d", strtotime("$date + 30 day"));
-        if ($request->from <= $fromdate){
+        if ($request->from <= $fromdate) {
             $data->form = date('Y-m-d', strtotime($request->from));
             $todate = date("Y-m-d", strtotime("$request->from + 30 day"));
             if ($request->to <= $todate) {
@@ -44,7 +46,7 @@ class AdminLeaveController extends Controller
             } else {
                 return redirect()->back()->withErrors(["to" => "Please Select to Date Type"])->withInput();;
             }
-        }else{
+        } else {
             return redirect()->back()->withErrors(["from" => "Please Select Leave Type"])->withInput();;
         }
         $leave = Leave::where('user_id', $request->user_id)->where(function ($query) use ($request) {
@@ -52,15 +54,16 @@ class AdminLeaveController extends Controller
         })->orWhere(function ($query) use ($request) {
             $query->where('form', '<=', $request->to)->where('to', '>=', $request->to);
         })->where('id', "!=", $request->id)->count();
-        if ($leave > 0){
+        if ($leave > 0) {
             return back()->withErrors(["from" => "Please Select another From date"])->withInput();
         }
         $data->reason = $request->reason;
         $data->save();
         return redirect()->route('admin.leave.list');
     }
-    public function holidays(Request $request){
-        if ($request->id != ''){
+    public function holidays(Request $request)
+    {
+        if ($request->id != '') {
             $holi = Holiday::find($request->id);
             $data = Holiday::all();
             return view('admin.leave.holiday', compact('holi', 'data'));
@@ -69,20 +72,23 @@ class AdminLeaveController extends Controller
             return view('admin.leave.holiday', compact('data'));
         }
     }
-    public function delete($id){
+    public function delete($id)
+    {
         // dd("dele");
         $data = Leave::find($id);
         if ($data->status == 1) {
             return back()->with(["unsuccess" => "Don't Delete This Record"])->withInput();
         } else {
-            $leaverecord = Leaverecord::where('leave_id',$id)->get();
+            $leaverecord = Leaverecord::where('leave_id', $id)->get();
             foreach ($leaverecord as $record) {
-               $record->delete();
+                $record->delete();
             }
             $data->delete();
             return back()->with(["success" => "Success Delete This Record"])->withInput();
         }
     }
+
+    //holiday store function
     public function holidayStore(Request $request)
     {
         $rules = [
@@ -107,20 +113,22 @@ class AdminLeaveController extends Controller
         $data->save();
         return redirect()->route('admin.holidays');
     }
+    //holiday delete Function
     public function holidaydistroy($id)
     {
         $data = Holiday::find($id)->delete();
         return redirect()->back();
     }
-
+    //leave Setting Function
     public function leavesetting()
     {
         return view('admin.leave.leave-setting');
     }
+    //leave List 
     public function leavelist()
     {
-        $data = Leave::with(['user'=>function($query){
-            $query->where('status',1);
+        $data = Leave::with(['user' => function ($query) {
+            $query->where('status', 1);
         }])->with('leaverecord')->latest()->get();
         return view('admin.leave.leave', compact('data'));
     }
@@ -142,147 +150,391 @@ class AdminLeaveController extends Controller
     }
 
     //leave report by admin status update
-    public function leavereport(Request $request)
-    {
-        // dd($request->toArray());
+    public function leavereport(Request $request) {
         $data = Leave::find($request->id);
-        //   dd($data->status);
-
-        $leaverall = Leaverecord::where("leave_id", $request->id)->get();
-
-
-        if ($request->status == 1 && $data->status != $request->status ) {
-            // dd("appr");
-            foreach ($leaverall as $value) {
-                $setl = settingleave::find($value->type_id);
-                $totaleave = UserleaveYear::where('user_id',$data->user_id)->first();
-                // dd($totaleave);
-                if ($setl->id == $value->type_id && $setl->type == 'Annual') {
-                    if ($totaleave->netAnual != null) {
-                        $tt = $totaleave->netAnual;
-                        $totaleave->netAnual = $tt + $value->day;
-                    } else {
-                        $totaleave->netAnual = $value->day;
+        //leave record save datatable
+        $userLeave = Leave::find($request->id);
+        $dateFrom = new DateTime($userLeave->form);
+        $dateTo = new DateTime($userLeave->to);
+        $interval = $dateFrom->diff($dateTo);
+        $da = $interval->format('%a');
+        $days = $da + 1;
+        $firstMonthofDay =  Carbon::now()->startOfMonth()->toDateString(); //Current month Range
+        $nextMonthFirstfDay =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(1)->toDateString(); //second month Range
+        $nextToNextMonthFirstfDay =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(2)->toDateString(); //last and 3 range month
+        $lastMonthofDay = Carbon::now()->endOfMonth()->toDateString();        
+        $request->reason=$userLeave->reason;
+        $request->from=$userLeave->form;
+        $request->to=$userLeave->to;
+        $request->type_id=$userLeave->leaves_id;
+        $leaveOfMOnth = monthleave::where('user_id',$userLeave->user_id)->where('status', 1)->first();
+        $leaveType = settingleave::find($request->type_id);
+        $from=$request->from;
+        $to =$request->to;
+        if ($request->from >= $firstMonthofDay && $request->to <= $lastMonthofDay) {
+            $leaveRecord = new Leaverecord();
+            $leaveRecord->user_id = $userLeave->user_id;
+            $leaveRecord->type_id = $userLeave->leaves_id;
+            $leaveRecord->leave_id = $userLeave->id;
+            $leaveRecord->from = $request->from;
+            $leaveRecord->to = $request->to;
+             //sunday and saturday count in request->from to request->to
+             $day = Carbon::createFromFormat('Y-m-d', $request->from);
+             $ssfrom = date('d',strtotime($day));
+             $ssto = date('d',strtotime($request->to));
+             $sunday = 0;
+             $saturday = 0;          
+             foreach(range($ssfrom,$ssto) as $key => $next) {
+                 if (strtolower($day->format('l')) == 'sunday') {
+                     $sunday++;
                     }
-                } elseif ($setl->id == $value->type_id && $setl->type == 'Sick') {
-                    if ($totaleave->netSick != null) {
-                        $tt = $totaleave->netSick;
-                        $totaleave->netSick = $tt + $value->day;
-                    } else {
-                        $totaleave->netSick =  $value->day;
+                    //saturday Count first And third
+                    $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
+                    $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
+                    if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d"))) {
+                        $saturday++;
                     }
-                } elseif ($setl->id == $value->type_id && $setl->type == 'Other') {
-                    if ($totaleave->other != null) {
-                        $tt = $totaleave->other;
-                        $totaleave->other = $tt + $value->day;
-                    } else {
-                        $totaleave->other = $value->day;
-                    }
+                    $day = $day->addDays();
+             }
+             $days=$days-$sunday;
+             $days=$days-$saturday;
+             $hfrom=$request->from;
+             $hto =$request->to;
+             $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
+             $days=$days-$holiday;
+            $leaveRecord->day =$days;
+            $leaveRecord->reason = $request->reason;
+            $leaveRecord->status =1;
+            $leaveRecord->save();
+        } elseif ($request->from <= $lastMonthofDay && $request->to >= $lastMonthofDay) {
+            $lastMonthofDayD = Carbon::now()->endOfMonth();
+            $diffDay = $dateFrom->diff($lastMonthofDayD);
+            $diffDay = $diffDay->format('%a');
+            $daysn = $diffDay + 1;
+            $daysnl = $diffDay + 1;
+            $leaveRecord = new Leaverecord();
+            $leaveRecord->user_id = $userLeave->user_id;
+            $leaveRecord->leave_id = $userLeave->id;
+            $leaveRecord->type_id = $userLeave->leaves_id;
+            $leaveRecord->from = $request->from;
+            $leaveRecord->to = $lastMonthofDay;
+            //sunday and saturady count function 
+            $day = Carbon::createFromFormat('Y-m-d', $request->from);
+            $ssfrom = date('d',strtotime($day));
+            $ssto = date('d',strtotime($lastMonthofDay));
+            $sunday = 0;
+            $saturday = 0;
+            foreach(range($ssfrom,$ssto) as $key => $next) {
+                if (strtolower($day->format('l')) == 'sunday') {
+                    $sunday++;
                 }
-                $totaleave->save();
-            }
-            $data->status = $request->status;
-            $data->update();
-                $leaverecord = Leaverecord::where('leave_id',$request->id)->get();
-                    foreach ($leaverecord as $key => $record) {
-                        $record->status= $request->status;
-                        $record->save();
-                    }
-        }elseif($data->status == 1 && ($request->status == 0 || $request->status == 2)){
-            foreach ($leaverall as $key => $value) {
-                $setl = settingleave::find($value->type_id);
-                $totaleave = UserleaveYear::where('user_id',$data->user_id)->first();
-                if ($setl->id == $value->type_id && $setl->type == 'Annual') {
-                        $tt = $totaleave->netAnual;
-                        $totaleave->netAnual = $tt - $value->day;
-                } elseif ($setl->id == $value->type_id && $setl->type == 'Sick') {
-
-                        $tt = $totaleave->netSick;
-                        $totaleave->netSick = $tt - $value->day;
-
-
-                } elseif ($setl->id == $value->type_id && $setl->type == 'Other') {
-
-                        $tt = $totaleave->other;
-                        $totaleave->other = $tt - $value->day;
-
+                //saturday Count first And third
+                $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
+                $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
+                if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d"))) {
+                    $saturday++;
                 }
-                  $totaleave->save();
+                $day = $day->addDays();
             }
-            $data->status = $request->status;
-                $data->update();
-            $leaverecord = Leaverecord::where('leave_id',$request->id)->get();
-                foreach ($leaverecord as $key => $record) {
-                    $record->status= $request->status;
-                    $record->save();
-                }
-            }else{
-
-                $data->status = $request->status;
-                $data->update();
-                $leaverecord = Leaverecord::where('leave_id',$request->id)->get();
-                    foreach ($leaverecord as $key => $record) {
-                        $record->status= $request->status;
-                        $record->save();
+             $hfrom=$request->from;
+             $hto=$lastMonthofDay;
+             $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
+             $daysn=$daysn-$sunday;
+             $daysn=$daysn-$saturday;
+             $daysn=$daysn-$holiday;
+            $leaveRecord->day = $daysn;
+            $leaveRecord->reason = $request->reason;
+            $leaveRecord->status =1;
+            $leaveRecord->save();
+            $NewRecord = $days - $daysnl;
+            if ($NewRecord > 0) {
+                $lastMonthofDays = Carbon::now()->endOfMonth();
+                $fromNewDate = $lastMonthofDays->addDay(1)->toDateString();
+                $newTodate= $request->to;              
+                $leaveRecord = new Leaverecord();
+                $leaveRecord->user_id = $userLeave->user_id;
+                $leaveRecord->leave_id = $userLeave->id;
+                $leaveRecord->type_id = $userLeave->leaves_id;
+                $leaveRecord->from = $fromNewDate;
+                $leaveRecord->to = $request->to;
+                   //sunday and saturady count function 
+                   $day = Carbon::createFromFormat('Y-m-d', $fromNewDate);
+                   $dayss = Carbon::createFromFormat('Y-m-d', $fromNewDate);
+                   $ssfrom = date('d',strtotime($day));
+                   $ssto = date('d',strtotime($request->to));
+                   $smonth = date('Y-m',strtotime($day));
+                   $sunday = 0;
+                   $saturday = 0;
+                   foreach(range($ssfrom,$ssto) as $key => $next) {
+                       if (strtolower($day->format('l')) == 'sunday') {
+                           $sunday++;
+                        }
+                        //saturday Count first And third
+                        $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
+                        $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
+                        $satn1 = Carbon::parse('first saturday of next month')->format('Y-m-d');
+                        $satn3 = Carbon::parse('third saturday of next month')->format('Y-m-d');
+                        if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d") || $satn3 == $day->format("Y-m-d") || $satn1 == $day->format("Y-m-d"))) {
+                            $saturday++;
+                        }
+                        $day = $day->addDays();
                     }
+                $hfrom=$fromNewDate;
+                $hto=$request->to;
+                $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
+                $NewRecord=$NewRecord-$sunday;
+                $NewRecord=$NewRecord-$saturday;
+                $NewRecord=$NewRecord-$holiday;
+                $leaveRecord->day = $NewRecord;
+                $leaveRecord->reason = $request->reason;
+                $leaveRecord->status =1;
+                $leaveRecord->save();
             }
-        return redirect()->back();
-
-
-
-
-    /*public function monthleave(){
-        $session= Session::where('status',1)->latest()->first();
-        $users = User::where('status', 1)->get();
-        $yearleave=settingleave::where('status',1)->get();
-        foreach ($yearleave as $key => $value) {
-           if ($value->type=="Annual") {
-            $anual =$value->day/12;
-           }elseif($value->type=="Sick"){
-            $sickl = $value->day/12;
+        } elseif ($request->from > $lastMonthofDay && $request->to < $nextToNextMonthFirstfDay) {
+        
+            $leaveRecord = new Leaverecord();
+            $leaveRecord->user_id = $userLeave->user_id;
+            $leaveRecord->leave_id = $userLeave->id;
+            $leaveRecord->type_id = $userLeave->leaves_id;
+            $leaveRecord->from = $request->from;
+            $leaveRecord->to = $request->to;
+                   //sunday and saturady count function 
+                   $day = Carbon::createFromFormat('Y-m-d', $request->from);
+                   $ssfrom = date('d',strtotime($day));
+                   $ssto = date('d',strtotime($request->to));
+                   $smonth = date('Y-m',strtotime($day));
+                   $sunday = 0;
+                   $saturday = 0;
+                   foreach(range($ssfrom,$ssto) as $key => $next) {
+                       if (strtolower($day->format('l')) == 'sunday') {
+                           $sunday++;
+                        }
+                        //saturday Count first And third
+                        $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
+                        $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
+                        $satn1 = Carbon::parse('first saturday of next month')->format('Y-m-d');
+                        $satn3 = Carbon::parse('third saturday of next month')->format('Y-m-d');
+                        if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d") || $satn3 == $day->format("Y-m-d") || $satn1 == $day->format("Y-m-d"))) {
+                            $saturday++;
+                        }
+                        $day = $day->addDays();
+                    }
+                //  dd($sunday,$saturday);
+            $hfrom=$request->from;
+            $hto=$request->to;
+            $holiday= Holiday::where('status',1)->where(function($query)use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
+            $days=$days-$sunday;
+            $days=$days-$saturday;
+            $days=$days-$holiday;
+            $leaveRecord->day = $days;
+            $leaveRecord->reason = $request->reason;
+            $leaveRecord->status =1;
+            $leaveRecord->save();
+        } elseif ($request->from >= $nextMonthFirstfDay && $request->to >= $nextToNextMonthFirstfDay) {
+            $nextToMonthLastDayD =  Carbon::now()->endOfMonth()->addMonthsNoOverflow(1); //last and 3 range month
+            $diffDay = $dateFrom->diff($nextToMonthLastDayD);
+            $diffDay = $diffDay->format('%a');
+            $daysn = $diffDay + 1;
+            // dd($daysn);
+            $daysl = $diffDay + 1;
+            $leaveRecord = new Leaverecord();
+            $leaveRecord->user_id = $userLeave->user_id;
+            $leaveRecord->type_id = $userLeave->leaves_id;
+            $leaveRecord->leave_id = $userLeave->id;
+            $leaveRecord->from = $request->from;
+            $leaveRecord->to = $nextToMonthLastDayD;
+              //sunday and saturady count function 
+              $day = Carbon::createFromFormat('Y-m-d', $request->from);
+              $ssfrom = date('d',strtotime($request->from));
+              $ssto = date('d',strtotime($nextToMonthLastDayD));
+              $smonth = date('Y-m',strtotime($day));
+              $sunday = 0;
+              $saturday = 0;
+            //   dd($ssfrom,$ssto);
+              foreach(range($ssfrom,$ssto) as $key => $next) {
+                  if (strtolower($day->format('l')) == 'sunday') {
+                      $sunday++;
+                   }
+                   $day = $day->addDays();
+                   //saturday Count first And third
+                   $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
+                   $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
+                   $satn1 = Carbon::parse('first saturday of next month')->format('Y-m-d');
+                   $satn3 = Carbon::parse('third saturday of next month')->format('Y-m-d');
+                   if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d") || $satn3 == $day->format("Y-m-d") || $satn1 == $day->format("Y-m-d"))) {
+                       $saturday++;
+                   }
+               }
+            //    dd($sunday,$saturday);
+            $hfrom=$request->from;
+            $hto=$nextToMonthLastDayD;
+            $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
+            $daysn=$daysn-$sunday;
+            $daysn=$daysn-$saturday;
+            $daysn=$daysn-$holiday;
+            $leaveRecord->day = $daysn;
+            $leaveRecord->reason = $request->reason;
+            $leaveRecord->status =1;
+            $leaveRecord->save();
+            $NewRecord = $days - $daysl;
+            if ($NewRecord > 0) {
+                $lastMonthofDays = $nextToNextMonthFirstfDayD =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(2)->toDateString(); //last and 3 range month
+                $leaveRecord = new Leaverecord();
+                $leaveRecord->user_id = $userLeave->user_id;
+                $leaveRecord->type_id = $userLeave->leaves_id;
+                $leaveRecord->leave_id = $userLeave->id;
+                $leaveRecord->from = $lastMonthofDays;
+                $leaveRecord->to = $request->to;
+                //sunday and saturady count function 
+                $day = Carbon::createFromFormat('Y-m-d',$lastMonthofDays);
+                $ssfrom = date('d',strtotime($day));
+                $ssto = date('d',strtotime($request->to));
+                $smonth = date('Y-m',strtotime($day));
+                $sunday = 0;
+                $saturday = 0;
+                foreach(range($ssfrom,$ssto) as $key => $next) {
+                    if (strtolower($day->format('l')) == 'sunday') {
+                        $sunday++;
+                     }
+                     //saturday Count first And third
+                     $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
+                     $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
+                     $satn1 =Carbon::parse('first saturday of next month')->format('Y-m-d');
+                     $satn3 = Carbon::parse('third saturday of next month')->format('Y-m-d');
+                     $satn4 = Carbon::parse("first saturday of second month")->format("Y-m-d");
+                     $satn5 = Carbon::parse("third saturday of second month")->format("Y-m-d");
+                         if (strtolower($day->format('l')) == 'saturday' && ($satn4 == $day->format("Y-m-d") || $satn5 == $day->format("Y-m-d"))) {
+                             $saturday++;
+                            }
+                            $day = $day->addDays();
+                 }
+                $hfrom=$lastMonthofDays;
+                $hto=$request->to;
+                $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();               
+                $NewRecord=$NewRecord-$sunday;
+                $NewRecord=$NewRecord-$saturday;
+                $NewRecord=$NewRecord-$holiday;
+                $leaveRecord->day = $NewRecord;
+                $leaveRecord->reason = $request->reason;
+                $leaveRecord->status =1;
+                $leaveRecord->save();
+            }
         }
-    }
-        foreach ($users as $key => $user) {
-            $jd = $user->joiningDate;
-            $str = date('Y-m',strtotime($jd));
-            $strr = $str."-15";
-            if ($jd>$session->from) {
-                if ($jd<$strr){
-                    $jd=date('Y-m',strtotime($jd));
-                    $jd= $jd."-01";
-                    dd($jd);
-                }else{
-                $jd=Carbon::parse($jd)->addMonths();
-                $jd=date('Y-m',strtotime($jd));
-                $jd = $jd."-01";
-                    }
-            $end = now();
-            $end=date('Y-m',strtotime($end));
-            $end=Carbon::parse($end)->endOfMonth();
-            $end=date('Y-m-d',strtotime($end));
-                $diffr = round(Carbon::parse($jd)->floatDiffInMonths($end));
-            }
-            $data= new monthleave();
-            $data->user_id=$user->id;
-                        $from=date('Y-m-d',strtotime($jd));
-                        $to =date('Y-m-d',strtotime($end));
-            $data->from= $from;
-            $data->to=$to;
-                        $anual=$diffr*$anual;
-                        $sick=$diffr*$sickl;
-            $data->anualLeave=$anual;
-            $data->sickLeave=$sick;
-            $data->status=1;
-            $data->save();
-
-
+        $totaldayUpdate=Leaverecord::where('leave_id',$userLeave->id)->get();
+        $totalLeaveDay=0;
+        foreach ($totaldayUpdate as $value) {
+            $totalLeaveDay=$totalLeaveDay+$value->day;
         }
+        $userLeave->day=$totalLeaveDay;
+        $userLeave->status=1;
+        $userLeave->save();
+        $blanceLeav=0;
+        $userLeave=Leave::where('user_id',Auth::guard('web')->user()->id)->latest()->first();
+        $leaveType = settingleave::find($userLeave->leaves_id);
+        $monthLeaveRecord= monthleave::where('user_id',Auth::guard('web')->user()->id)->where('status',1)->first();
+        $netLeaveAnuApp=$monthLeaveRecord->anualLeave-$monthLeaveRecord->apprAnual;
+        $netLeaveSickApp=$monthLeaveRecord->sickLeave-$monthLeaveRecord->apprSick;
+        if ($leaveType->type=="Annual") {
+           if ($netLeaveAnuApp>=$userLeave->day){
+            $monthLeaveRecord->apprAnual=$userLeave->day;
+           }else{
+           $monthLeaveRecord->apprAnual= $monthLeaveRecord->apprAnual+$netLeaveAnuApp;
+           $leaveAnual = $userLeave->day-$netLeaveAnuApp;
+           $monthLeaveRecord->other=$monthLeaveRecord->other+$leaveAnual;
+           }
+        }elseif($leaveType->type=="Sick"){
+            if ($netLeaveSickApp>=$userLeave->day){
+                $monthLeaveRecord->apprSick=$userLeave->day;
+               }else{
+               $monthLeaveRecord->apprSick= $monthLeaveRecord->apprSick+$netLeaveSickApp;
+               $leaveAnual = $userLeave->day-$netLeaveSickApp;
+               $monthLeaveRecord->other=$monthLeaveRecord->other+$leaveAnual;
+               }
+        }else{
+            $monthLeaveRecord->other=$monthLeaveRecord->other+$userLeave->day;
+        }
+        $monthLeaveRecord->save();
         return redirect()->back();
-    }*/
     }
-    public function moreleave($id){
-        $data = Leaverecord::where('leave_id',$id)->with('leavetype')->get();
+    // public function leavereport(Request $request) {
+    //     $data = Leave::find($request->id);
+    //     $leaverall = Leaverecord::where("leave_id", $request->id)->get();
+    //     if ($request->status == 1 && $data->status != $request->status) {
+    //         foreach ($leaverall as $value) {
+    //             $setl = settingleave::find($value->type_id);
+    //             $totaleave = UserleaveYear::where('user_id', $data->user_id)->first();
+    //             if ($setl->id == $value->type_id && $setl->type == 'Annual') {
+    //                 if ($totaleave->netAnual != null) {
+    //                     $tt = $totaleave->netAnual;
+    //                     $totaleave->netAnual = $tt + $value->day;
+    //                 } else {
+    //                     $totaleave->netAnual = $value->day;
+    //                 }
+    //             } elseif ($setl->id == $value->type_id && $setl->type == 'Sick') {
+    //                 if ($totaleave->netSick != null) {
+    //                     $tt = $totaleave->netSick;
+    //                     $totaleave->netSick = $tt + $value->day;
+    //                 } else {
+    //                     $totaleave->netSick =  $value->day;
+    //                 }
+    //             } elseif ($setl->id == $value->type_id && $setl->type == 'Other') {
+    //                 if ($totaleave->other != null) {
+    //                     $tt = $totaleave->other;
+    //                     $totaleave->other = $tt + $value->day;
+    //                 } else {
+    //                     $totaleave->other = $value->day;
+    //                 }
+    //             }
+    //             $totaleave->save();
+    //         }
+    //         $data->status = $request->status;
+    //         $data->update();
+    //         $leaverecord = Leaverecord::where('leave_id', $request->id)->get();
+    //         foreach ($leaverecord as $key => $record) {
+    //             $record->status = $request->status;
+    //             $record->save();
+    //         }
+    //     } elseif ($data->status == 1 && ($request->status == 0 || $request->status == 2)) {
+    //         foreach ($leaverall as $key => $value) {
+    //             $setl = settingleave::find($value->type_id);
+    //             $totaleave = UserleaveYear::where('user_id', $data->user_id)->first();
+    //             if ($setl->id == $value->type_id && $setl->type == 'Annual') {
+    //                 $tt = $totaleave->netAnual;
+    //                 $totaleave->netAnual = $tt - $value->day;
+    //             } elseif ($setl->id == $value->type_id && $setl->type == 'Sick') {
+
+    //                 $tt = $totaleave->netSick;
+    //                 $totaleave->netSick = $tt - $value->day;
+    //             } elseif ($setl->id == $value->type_id && $setl->type == 'Other') {
+
+    //                 $tt = $totaleave->other;
+    //                 $totaleave->other = $tt - $value->day;
+    //             }
+    //             $totaleave->save();
+    //         }
+    //         $data->status = $request->status;
+    //         $data->update();
+    //         $leaverecord = Leaverecord::where('leave_id', $request->id)->get();
+    //         foreach ($leaverecord as $key => $record) {
+    //             $record->status = $request->status;
+    //             $record->save();
+    //         }
+    //     } else {
+
+    //         $data->status = $request->status;
+    //         $data->update();
+    //         $leaverecord = Leaverecord::where('leave_id', $request->id)->get();
+    //         foreach ($leaverecord as $key => $record) {
+    //             $record->status = $request->status;
+    //             $record->save();
+    //         }
+    //     }
+    //     return redirect()->back();
+    // }
+    public function moreleave($id)
+    {
+        $data = Leaverecord::where('leave_id', $id)->with('leavetype')->get();
         // dd($data->toArray());
-        return view('admin.leave.leaverecord',compact('data'));
+        return view('admin.leave.leaverecord', compact('data'));
     }
 }
