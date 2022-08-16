@@ -54,7 +54,8 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
 
     // ------------------------------attendance route--------------------------
     Route::get('employees/attendance',[EmpAttendanceController::class,'get'])->name('attendance');
-    Route::get('attendance/leave/{id}',[LeaveController::class,'attendance'])->name('attendance.leave');
+    Route::get('attendance/leave/{id}',[LeaveController::class,'attendanceLeave'])->name('attendance.get.leave');
+    Route::post('attendance/leave',[LeaveController::class,'attendance'])->name('attendance.leave');
 
     // --------------------------Profile route ---------------------------
     Route::get('profiles',[UserController::class,'profile'])->name('profile');
@@ -65,9 +66,7 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
     // -------------------------------------document Attach-----------------------
     Route::get('file/attach/{id}',[UserController::class,'getdocument'])->name('employees.document');
     Route::get('get/file/{id}',[UserController::class,'download'])->name('employees.download');
-    // Route::get('get/file', function(){
-    //     return Storage::download('path to file');
-    // })
+    
 
     // ----------------task route employees---------------------------
     route::get('task',[Task::class,'task'])->name('task');
