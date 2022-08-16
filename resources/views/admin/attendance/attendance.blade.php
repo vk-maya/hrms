@@ -131,7 +131,7 @@
                         <div class="col">
                             <div class="card punch-status">
                                 <div class="card-body">
-                                    <h5 class="card-title">Timesheet <small class="text-muted">
+                                    <h5 class="card-title">Timesheet <small class="text-muted" id="clickdate">
                                             {{ \Carbon\Carbon::now()->format('d-m-Y') }}</small></h5>
                                     <div class="punch-det">
                                         <h6>Punch In at</h6>
@@ -180,6 +180,7 @@
                     type: "GET",
                     cache: false,
                     success: function(res) {
+                        $('#clickdate').text(res.attend.date);
                         $('#intime').text(res.attend.in_time);
                         if (res.attend.out_time != "00:00:00") {
                             $('#outtime').text(res.attend.out_time);
