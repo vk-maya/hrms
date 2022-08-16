@@ -106,8 +106,8 @@
                                                         href="#" data-bs-toggle="dropdown" aria-expanded="false">
                                                         <i class="fa fa-close text-danger"></i> A - Absent
                                                     </a>
-                                                        <div class="dropdown-menu dropdown-menu-right">
-                                                            <a class="dropdown-item" href="#"><i
+                                                        <div class="dropdown-menu dropdown-menu-right">                                                            
+                                                            <a class="dropdown-item" href="{{route('employees.attendance.leave',$item->id)}}"><i
                                                                     class="fa fa-dot-circle-o text-purple"></i> Leave</a>
                                                             <a class="dropdown-item" href="#"><i
                                                                     class="fa fa-dot-circle-o text-info"></i> WFH</a>

@@ -38,40 +38,164 @@
             <div class="row">
                 <div class="col-md">
                     <div class="stats-info">
-                        <h6>Annual Remaining Leave</h6>
-                        <h6>{{ $month->anualLeave }}</h6>
-                    </div>
-                </div>
-                <div class="col-md">
-                    <div class="stats-info">
-                        <h6>Medical Remaining Leave</h6>
-                        <h6>{{ $month->sickLeave }}</h6>
+                        <h6>Leave </h6>
+                        <div class="row">
+                            <div class="col-md">
+                                <div class="">  <strong>Accrued </strong> Paid
+                                    <div class="row">
+                                        <div class="col-md">
+                                            <div class="">{{ $month->anualLeave }}
+                                            </div>
+                                        </div>
 
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md">
+                                <div class=""> <strong> Accrued </strong>Sick
+                                    <div class="row">
+                                        <div class="col-md">
+                                            <div class="">{{ $month->sickLeave }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 @php
-                    $approvedLeave = 0;
-                    foreach ($totalMonthLeave as $leave) {
-                        $approvedLeave = $leave->day + $approvedLeave;
+                    $plp = 0;
+                    $psick = 0;
+                    $pother = 0;
+                    $sother = 0;
+                    $other = 0;
+                    foreach ($ptotalMonthLeave as $leavep) {
+                        if ($leavep->leaveType->type == 'Annual') {
+                            $plp = $month->anualLeave - $month->apprAnual;
+                            $pother = $leavep->day - $plp;
+                        } elseif ($leavep->leaveType->type == 'Sick') {
+                            $psick = $month->sickLeave - $month->apprSick;
+                            $sother = $leavep->day - $psick;
+                        } else {
+                            $other = $leavep->day;
+                        }
                     }
+                    $allOtherPending = $pother + $other + $sother;
+                    $currentMonthLeave= $month->apprAnual+$month->apprSick+$month->other;
                 @endphp
-                @php
-                    $approvedLeaveTotal = 0;
-                    foreach ($totalLeave as $leaves) {
-                        $approvedLeaveTotal = $leaves->day + $approvedLeaveTotal;
-                    }
-                @endphp
-               
                 <div class="col-md">
                     <div class="stats-info">
-                        <h6><b class="text-danger" >{{ now()->format('M') }}</b> Approve Leave</h6>
-                        <h6>{{ $approvedLeave }}</h6>
+                        <h6>Utilized leave </h6>
+                        <div class="row">
+                            <div class="col-md">
+                                <div class=""><strong> leave </strong>
+                                    <div class="row">
+                                        <div class="col-md">
+                                            <div class="">Paid
+                                                <div class="">
+                                                    @if ($month->apprAnual != null)
+                                                        {{ $month->apprAnual }}
+                                                    @else
+                                                        0
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md">
+                                            <div class="">sick
+                                                <div class="">
+                                                    @if ($month->apprSick != null)
+                                                        {{ $month->apprSick }}
+                                                    @else
+                                                        0
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md">
+                                            <div class="">other
+                                                <div class="">
+                                                    @if ($month->other != null)
+                                                        {{ $month->other }}
+                                                    @else
+                                                        0
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                      
+                        </div>
                     </div>
                 </div>
                 <div class="col-md">
                     <div class="stats-info">
-                        <h6><strong></strong> Total Approve Leave</h6>
-                        <h6>{{ $approvedLeaveTotal }}</h6>
+                        <h6>Utilized Pending</h6>
+                        <div class="row">
+                            <div class="col-md">
+                                <div class="">
+                                    <div class=""><strong>  Leave</strong>
+                                        <div class="row">
+                                            <div class="col-md">
+                                                <div class="">PL
+                                                    <div class="">{{ $plp }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md">
+                                                <div class="">Sick
+                                                    <div class="">{{ $psick }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md">
+                                                <div class="">other
+                                                    <div class="">{{ $allOtherPending }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="stats-info">
+                        <h6>Balance Leave</h6>
+                        <div class="row">
+                            <div class="col-md">
+                                <div class=""> <strong> Paid </strong> Leave
+                                    <div class="">
+                                        {{ $anual = $month->anualLeave - $month->apprAnual }}</div>
+                                </div>
+                            </div>
+                            <div class="col-md">
+                                <div class=""> <strong> Sick</strong> Leave
+                                    <div class="">{{ $sick = $month->sickLeave - $month->apprSick }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="stats-info">
+                        <h6>Total Leave</h6>
+                        <div class="row">
+                            <div class="col-md">
+                                <div class=""><strong> Curr. Month </strong>Leave
+                                    <div class="">
+                                        {{$currentMonthLeave }}</div>
+                                </div>
+                            </div>
+                            <div class="col-md">
+                                <div class=""> <strong> All Month </strong>Leave
+                                    <div class="">{{$allDay}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -115,13 +239,16 @@
                                             <div class="">
                                                 @if ($item->status == 2)
                                                     <span class="item  btn-white btn-sm btn-rounded "><i
-                                                            class="fa fa-dot-circle-o text-purple"></i> New</span>
+                                                            class="fa fa-dot-circle-o text-purple"></i>
+                                                        New</span>
                                                 @elseif($item->status == 0)
                                                     <span class="item  btn-white btn-sm btn-rounded"><i
-                                                            class="fa fa-dot-circle-o text-danger"></i> Declined</span>
+                                                            class="fa fa-dot-circle-o text-danger"></i>
+                                                        Declined</span>
                                                 @else
                                                     <span class="item  btn-white btn-sm btn-rounded"><i
-                                                            class="fa fa-dot-circle-o text-success"></i> Approved</span>
+                                                            class="fa fa-dot-circle-o text-success"></i>
+                                                        Approved</span>
                                                 @endif
                                             </div>
                                         </td>
@@ -139,8 +266,8 @@
                                                 </div>
                                             </td>
                                         @else
-                                            <td class="text-end">
-                                                <div class="dropdown dropdown-action">
+                                            <td class="text-center">
+                                                <div><i class="fa fa-dot-circle-o text-info"></i>
                                                 </div>
                                             </td>
                                         @endif
