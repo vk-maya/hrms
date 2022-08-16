@@ -59,7 +59,8 @@ class PayrollController extends Controller
         return view('admin.payroll.payroll-list', compact('employees'));
     }
     //salary management module
-    public function parolljs($id){
+    public function parolljs($id)
+    {
         $salary = User::with(['userSalarySystem' => function ($query) {
             $session = Session::where('status', 1)->first();
             $query->where('salary_earen_deductions.session_id', $session->id);
@@ -68,21 +69,22 @@ class PayrollController extends Controller
     }
 
     //userslipmodules js
-    public function viewSlip($id){
+    public function viewSlip($id)
+    {
         $company = CompanyProfile::where('status', 1)->first();
         $slip = UserSlip::with(['user.userDesignation'])->find($id);
         return response()->json(compact('company', 'slip'));
-       
     }
     //Earning And Deduction  Value Save in fnction 
-    public function salary_store(Request $request){
-        foreach ($request->ids as $key=> $title){         
-            $sess= Session::where('status',1)->first();
+    public function salary_store(Request $request)
+    {
+        foreach ($request->ids as $key => $title) {
+            $sess = Session::where('status', 1)->first();
             $data = new SalaryEarenDeduction();
             $data->salaryM_id = $key;
             $data->session_id = $sess->id;
             $data->value = $title;
-            $data->status=1; 
+            $data->status = 1;
             $data->save();
         }
         // dd($data->toArray());
@@ -176,7 +178,8 @@ class PayrollController extends Controller
     }
 
     //monthly salary Generate
-    public function salaryGenerate(Request $request){
+    public function salaryGenerate(Request $request)
+    {
         $salary = UserSalary::where('user_id', $request->user_id)->where('status', 1)->select('net_salary', 'id')->first();
         $userearndedu = UserEarndeducation::with('salaryEarningDeduction')->where('user_id', $request->user_id)->get();
         $salarymonth = Carbon::now()->startOfMonth($request->month)->subMonth(1);
@@ -184,30 +187,30 @@ class PayrollController extends Controller
         $salarym = UserSlip::where('salary_month', $salarymonth)->where('user_id', $request->user_id)->count();
         $monthOfStartDate = Carbon::now()->startOfMonth()->toDateString();
         $monthOfEndDate = Carbon::now()->endOfMonth()->toDateString();
-        $joinDateOfMonth = User::where('status',1)->where('id',$request->user_id)->first('joiningDate');
-        $joinDateOfMonth=$joinDateOfMonth->joiningDate;
+        $joinDateOfMonth = User::where('status', 1)->where('id', $request->user_id)->first('joiningDate');
+        $joinDateOfMonth = $joinDateOfMonth->joiningDate;
         $firstDayofPreviousMonth = Carbon::now()->startOfMonth()->subMonth()->toDateString();
         $salarymonthLastDate = Carbon::now()->subMonthsNoOverflow()->endOfMonth()->toDateString();
 
-        if ($joinDateOfMonth < $firstDayofPreviousMonth){
+        if ($joinDateOfMonth < $firstDayofPreviousMonth) {
             $firstDayofPreviousMonth = Carbon::now()->startOfMonth()->subMonth()->toDateString();
             $dateFrom = new DateTime($firstDayofPreviousMonth);
             $dateTo = new DateTime($salarymonthLastDate);
             $interval = $dateFrom->diff($dateTo);
             $da = $interval->format('%a');
             $days = $da + 1;
-            $salarymonthDay=$days;
-        }else{
-            $firstDayofPreviousMonth =$joinDateOfMonth;
+            $salarymonthDay = $days;
+        } else {
+            $firstDayofPreviousMonth = $joinDateOfMonth;
             $dateFrom = new DateTime($firstDayofPreviousMonth);
             $dateTo = new DateTime($salarymonthLastDate);
             $interval = $dateFrom->diff($dateTo);
             $da = $interval->format('%a');
             $days = $da + 1;
-            $salarymonthDay=$days;            
+            $salarymonthDay = $days;
         }
-        if ($salarym < 1 && $salarymonthLastDate >= $joinDateOfMonth ) {
-            
+        if ($salarym < 1 && $salarymonthLastDate >= $joinDateOfMonth) {
+
             if ($request->id > 0) {
                 $salarygenerate = UserSlip::find($request->id);
             } else {
@@ -236,13 +239,13 @@ class PayrollController extends Controller
             }
             $salarygenerate->tDeducation = $total_deduct;
             $salarygenerate->tEarning = $total_earn;
-            $totaled = $month - $total_deduct;         
+            $totaled = $month - $total_deduct;
             $dd = date('d', strtotime($salarymonthLastDate));
-            $NetDay =$salarymonthDay;
-            $monthFingerApproved = LeaveMonthAttandance::where('user_id', $request->user_id)->where('date', $firstDayofPreviousMonth)->first();          
+            $NetDay = $salarymonthDay;
+            $monthFingerApproved = LeaveMonthAttandance::where('user_id', $request->user_id)->where('date', $firstDayofPreviousMonth)->first();
             $monthLeaveCalculate = monthleave::where('user_id', $request->user_id)->where('to', $salarymonthLastDate)->latest()->first();
             $daySalary = $month / $dd; //pr day salary calculate
-            if(isset($monthLeaveCalculate->other) && $monthLeaveCalculate->other != null) {
+            if (isset($monthLeaveCalculate->other) && $monthLeaveCalculate->other != null) {
                 # code...
                 $dd = $dd - $monthLeaveCalculate->other; //net day working in month
             }
@@ -250,15 +253,14 @@ class PayrollController extends Controller
             // dd($paysalary);
             $grossMonthSalary = $paysalary - $total_deduct;
             $salarygenerate->basic_salary = $totaled;
-            if(isset($monthLeaveCalculate->other) && $monthLeaveCalculate->other != null) {
-                $salarygenerate->leave_deduction =round($monthLeaveCalculate->other * $daySalary);
+            if (isset($monthLeaveCalculate->other) && $monthLeaveCalculate->other != null) {
+                $salarygenerate->leave_deduction = round($monthLeaveCalculate->other * $daySalary);
                 $grossMonthSalary = $grossMonthSalary - $salarygenerate->leave_deduction;
-            }else{
+            } else {
                 $salarygenerate->leave_deduction = 0 * $daySalary;
                 $grossMonthSalary = $grossMonthSalary - $salarygenerate->leave_deduction;
-
             }
-            $salarygenerate->paysalary =round($grossMonthSalary);
+            $salarygenerate->paysalary = round($grossMonthSalary);
             // dd($salarygenerate->toArray());
             $salarygenerate->save();
         }
@@ -267,76 +269,9 @@ class PayrollController extends Controller
 
 
 
-
+    /*
     public function handle($id){
-    //Sunady Get In Month       
-     /*   $LastDayOfPreviousmonth = Carbon::now()->subMonthsNoOverflow()->endOfMonth()->toDateString();       
-        $joinDateOfMonth = User::where('status',1)->where('id',$id)->first('joiningDate');
-        $joinDateOfMonth=$joinDateOfMonth->joiningDate;
-        $firstDayofPreviousMonth = Carbon::now()->startOfMonth()->subMonth()->toDateString();
-        $salarymonthLastDate = Carbon::now()->subMonthsNoOverflow()->endOfMonth()->toDateString();
-        if ($joinDateOfMonth < $firstDayofPreviousMonth){
-            $firstDayofPreviousMonth = Carbon::now()->startOfMonth()->subMonth()->toDateString();
-            $dateFrom = new DateTime($firstDayofPreviousMonth);
-            $dateTo = new DateTime($salarymonthLastDate);
-            $interval = $dateFrom->diff($dateTo);
-            $da = $interval->format('%a');
-            $days = $da + 1;
-            $salarymonthDay=$days;
-        }else{
-            $firstDayofPreviousMonth =$joinDateOfMonth;
-            $dateFrom = new DateTime($firstDayofPreviousMonth);
-            $dateTo = new DateTime($salarymonthLastDate);
-            $interval = $dateFrom->diff($dateTo);
-            $da = $interval->format('%a');
-            $days = $da + 1;
-            $salarymonthDay=$days;            
-        }
-        $leavesOfAttendance = Attendance::where('user_id', $id)->where('attendance',"A")->where('status',0)->where(function ($query) use ($firstDayofPreviousMonth, $LastDayOfPreviousmonth) {
-            $query->whereBetween('date', [$firstDayofPreviousMonth, $LastDayOfPreviousmonth]);
-        })->count();
-        $holiDay = Holiday::where('status',1)->where(function ($query) use ($firstDayofPreviousMonth, $LastDayOfPreviousmonth) {
-            $query->whereBetween('date', [$firstDayofPreviousMonth, $LastDayOfPreviousmonth]);
-        })->count();
-        $day = Carbon::createFromFormat('Y-m-d', $firstDayofPreviousMonth);
-        $sunday = 0;
-        $saturday=0;
-        $dateSunday=collect();
-        $dateSaturday=collect();
-        foreach(range(1,$salarymonthDay) as $key => $next) {
-            $day = $day->addDays();
-            if (strtolower($day->format('l')) == 'sunday') {
-                $sunday++;
-                $dateSunday->push($day->format('Y-m-d'));
-                                // dd($day);
-
-            }
-            if(strtolower($day->format('l')) == 'saturday'){
-                $saturday++;
-                if ($saturday==1){
-                    $dateSaturday->push($day->format('Y-m-d'));
-                }
-                if($saturday==3){
-                    $dateSaturday->push($day->format('Y-m-d'));                 
-
-                }
-            }
-        }
-        $dateSunday->all();
-        dd($dateSaturday->toArray(),$dateSunday->toArray(),$saturday);
-        //saturday manual leave Save With Admin Sat Etc....
-        $sess= Session::where('status',1)->first();
-        $dayLeave=0;
-        $leaveOfSaturdayInMonth=MonthDayLeave::where('status',1)->where('session_id',$sess->id)->get('value');
-        foreach ($leaveOfSaturdayInMonth as $value) {
-            $dayLeave=$dayLeave+$value->value;
-        }
-        // dd("Atte", $leavesOfAttendance,"Admin Holiday",$holiDay, "Admin Saturday",$dayLeave,"In Sunday Leave",$sunday);
-        $otherTotalCompanyLeave=$holiDay+$dayLeave+$sunday;  */
         
-        
-        //Approved Leave vs Attdance According Difference
-
         $today = \Carbon\Carbon::now();
         $fristMonthofDay =  Carbon::now()->startOfMonth()->subMonthsNoOverflow()->toDateString();
         $lastMonthofDay = Carbon::now()->subMonthsNoOverflow()->endOfMonth()->toDateString();
@@ -419,11 +354,11 @@ class PayrollController extends Controller
             $monthLeaveCalculate->other=$other;
         }
         $monthLeaveCalculate->save();   
-        // dd($monthLeaveCalculate);
         //monthLeave In status 0 Update Function
         $monthleave = monthleave::where('user_id', $id)->where('status', 1)->where('to', $lastMonthofDay)->first();
         $monthleave->status = 0;
         $monthleave->save();
+
         //get a new entery month in user 
         $monthdata = $monthleave;
         $session = Session::where('status', 1)->first();
@@ -469,8 +404,9 @@ class PayrollController extends Controller
         $monthleave->status = 1;
         $monthleave->save();
         
+    } */
+    public function handle($id)
+    {
+       dd("test route");
     }
-
-
-  
 }

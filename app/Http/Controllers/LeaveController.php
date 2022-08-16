@@ -767,16 +767,16 @@ class LeaveController extends Controller
              $sunday = 0;
              $saturday = 0;          
              foreach(range($ssfrom,$ssto) as $key => $next) {
-                 $day = $day->addDays();
                  if (strtolower($day->format('l')) == 'sunday') {
                      $sunday++;
-                 }
-                 //saturday Count first And third
-                 $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
-                 $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
-                 if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d"))) {
-                     $saturday++;
-                 }
+                    }
+                    //saturday Count first And third
+                    $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
+                    $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
+                    if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d"))) {
+                        $saturday++;
+                    }
+                    $day = $day->addDays();
              }
              $days=$days-$sunday;
              $days=$days-$saturday;
@@ -793,6 +793,7 @@ class LeaveController extends Controller
             $diffDay = $dateFrom->diff($lastMonthofDayD);
             $diffDay = $diffDay->format('%a');
             $daysn = $diffDay + 1;
+            $daysnl = $diffDay + 1;
             $leaveRecord = new Leaverecord();
             $leaveRecord->user_id = $userLeave->user_id;
             $leaveRecord->leave_id = $userLeave->id;
@@ -806,7 +807,6 @@ class LeaveController extends Controller
             $sunday = 0;
             $saturday = 0;
             foreach(range($ssfrom,$ssto) as $key => $next) {
-                $day = $day->addDays();
                 if (strtolower($day->format('l')) == 'sunday') {
                     $sunday++;
                 }
@@ -816,6 +816,7 @@ class LeaveController extends Controller
                 if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d"))) {
                     $saturday++;
                 }
+                $day = $day->addDays();
             }
              $hfrom=$request->from;
              $hto=$lastMonthofDay;
@@ -827,8 +828,8 @@ class LeaveController extends Controller
             $leaveRecord->reason = $request->reason;
             $leaveRecord->status = 2;
             $leaveRecord->save();
-            $NewRecord = $days - $daysn;
-            if ($NewRecord > 0) {                
+            $NewRecord = $days - $daysnl;
+            if ($NewRecord > 0) {
                 $lastMonthofDays = Carbon::now()->endOfMonth();
                 $fromNewDate = $lastMonthofDays->addDay(1)->toDateString();
                 $newTodate= $request->to;              
@@ -847,7 +848,6 @@ class LeaveController extends Controller
                    $sunday = 0;
                    $saturday = 0;
                    foreach(range($ssfrom,$ssto) as $key => $next) {
-                       $day = $day->addDays();
                        if (strtolower($day->format('l')) == 'sunday') {
                            $sunday++;
                         }
@@ -859,6 +859,7 @@ class LeaveController extends Controller
                         if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d") || $satn3 == $day->format("Y-m-d") || $satn1 == $day->format("Y-m-d"))) {
                             $saturday++;
                         }
+                        $day = $day->addDays();
                     }
                 $hfrom=$fromNewDate;
                 $hto=$request->to;
@@ -890,7 +891,6 @@ class LeaveController extends Controller
                        if (strtolower($day->format('l')) == 'sunday') {
                            $sunday++;
                         }
-                        $day = $day->addDays();
                         //saturday Count first And third
                         $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
                         $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
@@ -899,6 +899,7 @@ class LeaveController extends Controller
                         if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d") || $satn3 == $day->format("Y-m-d") || $satn1 == $day->format("Y-m-d"))) {
                             $saturday++;
                         }
+                        $day = $day->addDays();
                     }
                 //  dd($sunday,$saturday);
             $hfrom=$request->from;
@@ -916,6 +917,8 @@ class LeaveController extends Controller
             $diffDay = $dateFrom->diff($nextToMonthLastDayD);
             $diffDay = $diffDay->format('%a');
             $daysn = $diffDay + 1;
+            // dd($daysn);
+            $daysl = $diffDay + 1;
             $leaveRecord = new Leaverecord();
             $leaveRecord->user_id = $userLeave->user_id;
             $leaveRecord->type_id = $userLeave->leaves_id;
@@ -924,11 +927,12 @@ class LeaveController extends Controller
             $leaveRecord->to = $nextToMonthLastDayD;
               //sunday and saturady count function 
               $day = Carbon::createFromFormat('Y-m-d', $request->from);
-              $ssfrom = date('d',strtotime($day));
-              $ssto = date('d',strtotime($request->to));
+              $ssfrom = date('d',strtotime($request->from));
+              $ssto = date('d',strtotime($nextToMonthLastDayD));
               $smonth = date('Y-m',strtotime($day));
               $sunday = 0;
               $saturday = 0;
+            //   dd($ssfrom,$ssto);
               foreach(range($ssfrom,$ssto) as $key => $next) {
                   if (strtolower($day->format('l')) == 'sunday') {
                       $sunday++;
@@ -943,6 +947,7 @@ class LeaveController extends Controller
                        $saturday++;
                    }
                }
+            //    dd($sunday,$saturday);
             $hfrom=$request->from;
             $hto=$nextToMonthLastDayD;
             $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
@@ -953,7 +958,7 @@ class LeaveController extends Controller
             $leaveRecord->reason = $request->reason;
             $leaveRecord->status = 2;
             $leaveRecord->save();
-            $NewRecord = $days - $daysn;
+            $NewRecord = $days - $daysl;
             if ($NewRecord > 0) {
                 $lastMonthofDays = $nextToNextMonthFirstfDayD =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(2)->toDateString(); //last and 3 range month
                 $leaveRecord = new Leaverecord();
@@ -963,7 +968,7 @@ class LeaveController extends Controller
                 $leaveRecord->from = $lastMonthofDays;
                 $leaveRecord->to = $request->to;
                 //sunday and saturady count function 
-                $day = Carbon::createFromFormat('Y-m-d', $request->from);
+                $day = Carbon::createFromFormat('Y-m-d',$lastMonthofDays);
                 $ssfrom = date('d',strtotime($day));
                 $ssto = date('d',strtotime($request->to));
                 $smonth = date('Y-m',strtotime($day));
@@ -973,17 +978,18 @@ class LeaveController extends Controller
                     if (strtolower($day->format('l')) == 'sunday') {
                         $sunday++;
                      }
-                     $day = $day->addDays();
                      //saturday Count first And third
                      $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
                      $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
-                     $satn1 = Carbon::parse('first saturday of next month')->format('Y-m-d');
+                     $satn1 =Carbon::parse('first saturday of next month')->format('Y-m-d');
                      $satn3 = Carbon::parse('third saturday of next month')->format('Y-m-d');
-                     if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d") || $satn3 == $day->format("Y-m-d") || $satn1 == $day->format("Y-m-d"))) {
-                         $saturday++;
-                     }
+                     $satn4 = Carbon::parse("first saturday of second month")->format("Y-m-d");
+                     $satn5 = Carbon::parse("third saturday of second month")->format("Y-m-d");
+                         if (strtolower($day->format('l')) == 'saturday' && ($satn4 == $day->format("Y-m-d") || $satn5 == $day->format("Y-m-d"))) {
+                             $saturday++;
+                            }
+                            $day = $day->addDays();
                  }
-
                 $hfrom=$lastMonthofDays;
                 $hto=$request->to;
                 $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();               

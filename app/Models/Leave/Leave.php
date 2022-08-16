@@ -13,8 +13,11 @@ class Leave extends Model
     public function leaveType(){
         return $this->hasOne(settingleave::class,'id','leaves_id');
     }
-public function user(){
+    public function user(){
         return $this->hasOne(User::class,'id','user_id');
+    }
+    public function leaverecord(){
+        return $this->hasMany(Leaverecord::class,'leave_id','id');
     }
     public function leaveyear(){
         return $this->hasOne(UserleaveYear::class,'id','user_id');

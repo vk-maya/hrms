@@ -8,6 +8,7 @@ use App\Models\Admin\Session;
 use App\Models\Admin\UserEarndeducation;
 use App\Models\Admin\UserSalary;
 use App\Models\Designation;
+use App\Models\Leave\Leave;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -44,6 +45,9 @@ class User extends Authenticatable
         'image',
         'image',
     ];
+    public function leave(){
+        return $this->hasMany(Leave::class,'user_id','id');
+    }
     public function designation()    {
         return $this->belongsTo(Designation::class);
     }

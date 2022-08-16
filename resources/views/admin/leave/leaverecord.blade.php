@@ -41,14 +41,8 @@
                                         </td>
                                         <td>{{ $item->leavetype->type }}</td>
                                         <td> {{ $start->format('d-M-Y') }}</td>
-                                        <td> {{ $end->format('d-M-Y') }}</td>
-                                        @php
-                                            
-                                            $interval = $start->diff($end);
-                                            $da = $interval->format('%a');
-                                            $days = $da + 1;
-                                        @endphp
-                                        <td>{{ $days }}</td>
+                                        <td> {{ $end->format('d-M-Y') }}</td>                                        
+                                        <td>{{$item->day}}</td>
                                         <td class="text-center">
                                             @if ($item->status == 2)
                                                 <span class="btn btn-white btn-sm btn-rounded dropdown-toggle">

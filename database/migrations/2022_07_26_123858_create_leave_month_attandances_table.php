@@ -16,6 +16,7 @@ class CreateLeaveMonthAttandancesTable extends Migration
         Schema::create('leave_month_attandances', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
+            $table->integer('type_id');
             $table->date('date');
             $table->integer('month');
             $table->float('anual')->default(0);

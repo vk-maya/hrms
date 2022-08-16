@@ -115,7 +115,9 @@ class AdminLeaveController extends Controller
     }
     public function leavelist()
     {
-        $data = Leave::with('user')->latest()->get();
+        $data = Leave::with(['user'=>function($query){
+            $query->where('status',1);
+        }])->with('leaverecord')->latest()->get();
         return view('admin.leave.leave', compact('data'));
     }
 

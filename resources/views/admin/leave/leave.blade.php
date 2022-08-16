@@ -46,6 +46,7 @@
                                     <th>From</th>
                                     <th>To</th>
                                     <th>Days</th>
+                                    <th>Leave Days</th>
                                     <th>Reason</th>
                                     <th>More...</th>
                                     <th class="text-center">Status</th>
@@ -61,14 +62,16 @@
                                         @endphp                                     
                                         <td><a href="{{route('admin.leave.view',$item->id)}}">{{ $item->user->first_name }}</a></td>
                                         <td>{{ $item->leaveType->type }}</td>
-                                        <td> {{ $start->format('Y-m-d') }}</td>
-                                        <td> {{ $end->format('Y-m-d') }}</td>
-                                        @php                                           
-                                            $interval = $start->diff($end);
-                                            $da = $interval->format('%a');
-                                            $days = $da+1;
-                                        @endphp                                        
-                                        <td>{{ $days}}</td>
+                                        <td> {{ $start->format('d-M-Y') }}</td>
+                                        <td> {{ $end->format('d-M-Y') }}</td>  
+                                        @php
+                                        $lr=0;
+                                            foreach($item->leaverecord as $leaver){
+                                                $lr= $lr+$leaver->day;
+                                            }
+                                        @endphp  
+                                        <td>{{ $item->day}}</td>
+                                        <td>{{ $lr}}</td>
                                         <td><a href="#" data-bs-toggle="modal"data-bs-target="#add_department{{ $item->id }}">{{ \Illuminate\Support\Str::limit($item->reason, 20, '..') }}</a></td>
                                         <td><a href="{{route('admin.leave.view',$item->id)}}">More View</a></td>                                      
                                         <td class="text-center">

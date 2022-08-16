@@ -83,46 +83,36 @@ class Attendence extends Command
                 }
             }
         //leave vs attandance function 
-
         $date = now();
         $date = date('Y-m-d', strtotime($date));
-        $id = Attendance::where('user_id', $user->machineID)->where('status',1)->where('date',$date)->latest()->first();        
-        $id= $id->user_id;
+        $id = Attendance::where('user_id', $user->machineID)->where('status', 1)->where('date', $date)->latest()->first();
+        $id = $id->user_id;
         $month = date('m', strtotime($date));
-            $data = Leaverecord::where('user_id', $id)->where('status', 1)->where(function ($query) use ($date) {
-                $query->where("from", "<=",  $date)->where("to", ">=", $date);
-            })->count();
-            $leavedata = Leaverecord::where('user_id', $id)->where('status', 1)->where(function ($query) use ($date) {
-                $query->where("from", "<=",  $date)->where("to", ">=", $date);
-            })->first();
+        $data = Leaverecord::where('user_id', $id)->where('status', 1)->where(function ($query) use ($date) {
+            $query->where("from", "<=",  $date)->where("to", ">=", $date);
+        })->count();
+        $leavedata = Leaverecord::where('user_id', $id)->where('status', 1)->where(function ($query) use ($date) {
+            $query->where("from", "<=",  $date)->where("to", ">=", $date);
+        })->first();
+        
         $leavetype = settingleave::find($leavedata->type_id);
         if ($data > 0) {
-            $monthattedance = LeaveMonthAttandance::where('status', 1)->where('user_id', $id)->where('month', $month)->first();
-            $update = date('Y-m-d', strtotime($monthattedance->updated_at));
-            if ($update != $date) {
-                if ($monthattedance != null) {
+            $monthattedance = LeaveMonthAttandance::where('status', 1)->where('user_id', $id)->where('date', $date)->first();
+            if ($monthattedance == null) {                
+                if ($monthattedance == null) {
                     $monthattedance = LeaveMonthAttandance::where('user_id', $id)->where('status', 1)->where('month', $month)->first();
-                        if ($leavetype->type == "Annual") {
-                            $monthattedance->anual = $monthattedance->anual + 1;
-                        } elseif ($leavetype->type == "Sick") {
-                            $monthattedance->sick = $monthattedance->sick + 1;
-                        } else {
-                            $monthattedance->other = $monthattedance->other + 1;
-                        }
-                    $monthattedance->date= Carbon::now()->startOfMonth()->toDateString('Y-m-d');
-                    $monthattedance->save();
-                } else {
                     $monthattedance = new LeaveMonthAttandance();
                     $monthattedance->user_id = $id;
+                    $monthattedance->type_id = $leavedata->type_id;
+                    $monthattedance->date = $date;
                     $monthattedance->month = $month;
-                        if ($leavetype->type == "Annual") {
-                            $monthattedance->anual = 1;
-                        } elseif ($leavetype->type == "Sick") {
-                            $monthattedance->sick = 1;
-                        } else {
-                            $monthattedance->other = 1;
-                        }
-                    $monthattedance->date= Carbon::now()->startOfMonth()->toDateString('Y-m-d');
+                    if ($leavetype->type == "Annual") {
+                        $monthattedance->anual = 1;
+                    } elseif ($leavetype->type == "Sick") {
+                        $monthattedance->sick = 1;
+                    } else {
+                        $monthattedance->other = 1;
+                    }
                     $monthattedance->save();
                 }
             }
@@ -133,24 +123,18 @@ class Attendence extends Command
 
 
     public function handlem($id){
-        // dd($id);
-      
-
         $today = \Carbon\Carbon::now();
         $fristMonthofDay =  Carbon::now()->startOfMonth()->subMonthsNoOverflow()->toDateString();
         $lastMonthofDay = Carbon::now()->subMonthsNoOverflow()->endOfMonth()->toDateString();
         $leaves = Leaverecord::where('user_id', $id)->where(function ($query) use ($fristMonthofDay, $lastMonthofDay) {
             $query->whereBetween('from', [$fristMonthofDay, $lastMonthofDay]);
         })->get();
-      
-       
 
         $leavet = settingleave::where('status', 1)->get();
         foreach ($leaves as $leave) {
+
             $leavetype = settingleave::find($leave->type_id);
             $monthleave = monthleave::where('user_id', $leave->user_id)->where('status', 1)->where('to', $lastMonthofDay)->first();
-            // dd($monthleave->toArray(),$leave->user_id);
-
             if ($leavetype->type == "Annual") {
                 if ($monthleave != null) {
                     $monthleave->apprAnual = $monthleave->apprAnual + $leave->day;
@@ -173,30 +157,39 @@ class Attendence extends Command
             $monthleave->status = 1;
             $monthleave->save();
         }
-          //Attendance Vs Month Leave Table 
-        $salarymonthLastDate=Carbon::now()->subMonthsNoOverflow()->endOfMonth()->toDateString();
+        //Attendance Vs Month Leave Table 
+        $salarymonthLastDate = Carbon::now()->subMonthsNoOverflow()->endOfMonth()->toDateString();
         $firstDayofPreviousMonth = Carbon::now()->startOfMonth()->subMonth()->toDateString();
         $dd = date('d', strtotime($salarymonthLastDate));
-        $monthFingerApproved= LeaveMonthAttandance::where('user_id',$id)->where('date',$firstDayofPreviousMonth)->first();
-        $monthLeaveCalculate=monthleave::where('status',1)->where('user_id',$id)->where('to',$salarymonthLastDate)->first();
-        //month Vs Attendance Calculate day
-        if (isset($monthFingerApproved->anual)&&$monthFingerApproved->anual != null) {
+        $monthFingerApproved = LeaveMonthAttandance::where('user_id', $id)->where(function ($query) use ($fristMonthofDay, $lastMonthofDay) {
+            $query->whereBetween('date', [$fristMonthofDay, $lastMonthofDay]);
+        })->count();
+        if ($monthFingerApproved != null) {
             # code...
-            $anual=$monthLeaveCalculate->apprAnual-$monthFingerApproved->anual;
-            $monthLeaveCalculate->apprAnual=$anual;
+            $monthFingerApproved = LeaveMonthAttandance::where('user_id', $id)->where(function ($query) use ($fristMonthofDay, $lastMonthofDay) {
+                $query->whereBetween('date', [$fristMonthofDay, $lastMonthofDay]);
+            })->get();
+            foreach ($monthFingerApproved as $key => $aLeave) {
+                $monthleave = monthleave::where('user_id', $leave->user_id)->where('status', 1)->where('to', $lastMonthofDay)->first();
+                $leavetype = settingleave::find($aLeave->type_id);
+                // dd($aLeave->toArray(),$leavetype->toArray());
+                if ($leavetype->type == "Annual") {
+                    if ($monthleave->apprAnual > 0) {
+                        $monthleave->apprAnual = $monthleave->apprAnual - $aLeave->anual;
+                    }
+                } elseif ($leavetype->type == "Sick") {
+                    if ($monthleave->apprSick > 0) {
+                        $monthleave->apprSick = $monthleave->apprSick - $aLeave->sick;
+                    }
+                } else {
+                    if ($monthleave->other > 0) {
+                        $monthleave->other = $monthleave->other - $aLeave->other;
+                    }
+                }
+                $monthleave->save();
+            }
         }
-        if (isset($monthFingerApproved->anual)&&$monthFingerApproved->sick != null) {
-            # code...
-            $sick=$monthLeaveCalculate->apprSick-$monthFingerApproved->sick;
-            $monthLeaveCalculate->apprSick=$sick;
-        }
-        if (isset($monthFingerApproved->anual)&&$monthFingerApproved->other) {
-            # code...
-            $other=$monthLeaveCalculate->other-$monthFingerApproved->other;
-            $monthLeaveCalculate->other=$other;
-        }
-        $monthLeaveCalculate->save();   
-        // dd($monthLeaveCalculate);
+        
         //monthLeave In status 0 Update Function
         $monthleave = monthleave::where('user_id', $id)->where('status', 1)->where('to', $lastMonthofDay)->first();
         $monthleave->status = 0;
@@ -245,6 +238,5 @@ class Attendence extends Command
         }
         $monthleave->status = 1;
         $monthleave->save();
-        
     }
 }
