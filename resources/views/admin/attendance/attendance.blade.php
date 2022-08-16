@@ -180,7 +180,10 @@
                     type: "GET",
                     cache: false,
                     success: function(res) {
-                        $('#clickdate').text(res.attend.date);
+                        var mydate = new Date(res.attend.date);
+                        var str = mydate.toString("DD MM yy");
+
+                        $('#clickdate').text(str);
                         $('#intime').text(res.attend.in_time);
                         if (res.attend.out_time != "00:00:00") {
                             $('#outtime').text(res.attend.out_time);
