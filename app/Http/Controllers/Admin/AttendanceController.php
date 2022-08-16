@@ -22,7 +22,7 @@ class AttendanceController extends Controller
         $last_date = date('Y-m-d',strtotime('last day of this month'));
         $attendance = User::with(['attendence' => function($query)use($first_date,$last_date){
             $query->whereBetween('date', [$first_date,$last_date]);
-        }])->where('status', 1)->get();
+        }])->where('status', 1)->orderBy('first_name')->get();
         // dd($attendance->toArray());
         $month = (new DateTime($date))->format('t');
         return view('admin.attendance.attendance',compact('attendance','month'));
