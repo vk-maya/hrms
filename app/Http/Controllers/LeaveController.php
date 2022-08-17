@@ -14,6 +14,8 @@ use App\Models\Attendance;
 use App\Models\Holiday;
 use App\Models\Leave\Leaverecord;
 use App\Models\monthleave;
+use App\Models\WorkFromHome;
+use Facade\FlareClient\Glows\Recorder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Validated;
 
@@ -24,28 +26,27 @@ class LeaveController extends Controller
 
     public function leave()
     {
-        $session=Session::where('status',1)->first();
-        $allfrom= $session->from;
-        $allto= $session->to;
+        $session = Session::where('status', 1)->first();
+        $allfrom = $session->from;
+        $allto = $session->to;
         $firstDayofMonth = Carbon::now()->startOfMonth()->toDateString();
         $lastDayofMonth = Carbon::now()->endOfMonth()->toDateString();
-        $month= monthleave::where('user_id',Auth::guard('web')->user()->id)->where('status',1)->first();
-        $data = Leave::with('leaverecordEmp','leaveType')->where('user_id',Auth::guard('web')->user()->id)->where(function ($query) use ($firstDayofMonth,$lastDayofMonth)
-        {
-            $query->where("form", ">=",$firstDayofMonth)->where("to", "<=", $lastDayofMonth);
+        $month = monthleave::where('user_id', Auth::guard('web')->user()->id)->where('status', 1)->first();
+        $data = Leave::with('leaverecordEmp', 'leaveType')->where('user_id', Auth::guard('web')->user()->id)->where(function ($query) use ($firstDayofMonth, $lastDayofMonth) {
+            $query->where("form", ">=", $firstDayofMonth)->where("to", "<=", $lastDayofMonth);
         })->latest()->get();
-        $ptotalMonthLeave = Leave::where('user_id',Auth::guard('web')->user()->id)->where('status',2)->with('leaveType')->where(function ($query) use ($firstDayofMonth,$lastDayofMonth)
-        { $query->where("form", ">=",$firstDayofMonth)->where("to", "<=", $lastDayofMonth);
+        $ptotalMonthLeave = Leave::where('user_id', Auth::guard('web')->user()->id)->where('status', 2)->with('leaveType')->where(function ($query) use ($firstDayofMonth, $lastDayofMonth) {
+            $query->where("form", ">=", $firstDayofMonth)->where("to", "<=", $lastDayofMonth);
         })->get();
-        $totalLeave=Leaverecord::where('user_id',Auth::guard('web')->user()->id)->where('status',1)->where(function ($query) use ($allfrom,$allto)
-        { $query->where("from", ">=",$allfrom)->where("to", "<=", $allto);
+        $totalLeave = Leaverecord::where('user_id', Auth::guard('web')->user()->id)->where('status', 1)->where(function ($query) use ($allfrom, $allto) {
+            $query->where("from", ">=", $allfrom)->where("to", "<=", $allto);
         })->with('leavetype')->get();
-        $allDay= 0;
+        $allDay = 0;
         foreach ($totalLeave as $key => $days) {
-            $allDay=$allDay+$days->day;
+            $allDay = $allDay + $days->day;
         }
-// dd($ptotalMonthLeave);
-        return view('employees.leave.leave', compact('data','month','ptotalMonthLeave','allDay'));
+        // dd($ptotalMonthLeave);
+        return view('employees.leave.leave', compact('data', 'month', 'ptotalMonthLeave', 'allDay'));
     }
     public function leaveadd()
     {
@@ -55,8 +56,8 @@ class LeaveController extends Controller
     //leave store Function 
     public function storeleave(Request $request)
     {
-        $first_date = date('Y-m-d',strtotime('first day of this month'));
-        $last_date = date('Y-m-d',strtotime('last day of this month'));
+        $first_date = date('Y-m-d', strtotime('first day of this month'));
+        $last_date = date('Y-m-d', strtotime('last day of this month'));
         $rules = [
             'type_id' => ['required', 'integer'],
             'from' => ['required', 'date'],
@@ -92,9 +93,8 @@ class LeaveController extends Controller
             }
         } else {
             return redirect()->back();
-        }
-      ;
-        $leave="";
+        };
+        $leave = "";
         if ($leave > 0) {
             return back()->withErrors(["from" => "Please Select another From date"])->withInput();
         }
@@ -110,7 +110,7 @@ class LeaveController extends Controller
         $end = date('Y-m-d');
         $interval = Carbon::parse($start)->DiffInMonths($end);
         $data->status = 2;
-        $data->save();       
+        $data->save();
         return redirect()->route('employees.leave');
     }
 
@@ -131,33 +131,122 @@ class LeaveController extends Controller
             return back()->with(["success" => "Success Delete This Record"])->withInput();
         }
     }
-    public function attendance(Request $request){
-        // dd($request->toArray());
-        $attendance = Attendance::find($request->id)->where('user_id',Auth::guard('web')->user()->id)->first();
-        $leaveApproved= $attendance->date;
-        $leavePending=Leave::where('user_id',Auth::guard('web')->user()->id)->where(function ($query) use ($leaveApproved)
-        { $query->where("form", ">=",$leaveApproved)->where("to", "<=", $leaveApproved);
-        })->count();       
+    //leave fnction Store
+    public function attendance(Request $request){  
+        $rules = [
+            'id' => ['required', 'integer'],
+            'day' => ['required', 'integer'],
+            'leaveType' => ['required', 'integer'],
+            'reson' => ['required', 'max:250'],
+            'from' => ['required', 'date'],
+            'to' => ['required', 'date'],
+        ];
+        $request->validate($rules);
+        $attendance = Attendance::find($request->id);
+        $leaveApproved = $attendance->date;
+        $leavePending = Leave::where('user_id', Auth::guard('web')->user()->id)->where("form", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->count();
+        // dd($leavePending);
         if ($leavePending == 0) {
-            $data= new Leave();
-            $data->user_id= Auth::guard('web')->user()->id;
-            $data->leaves_id=$request->leaveType;
-            $data->form=$attendance->date;
-            $data->to=$attendance->date;
-            $data->reason=$request->reson;
-            $data->day=1;
-            $data->status=2;
+            $data = new Leave();
+            $data->user_id = Auth::guard('web')->user()->id;
+            $data->leaves_id = $request->leaveType;
+            $data->form = $attendance->date;
+            $data->to = $attendance->date;
+            $data->reason = $request->reson;
+            $data->day = 1;
+            $data->status = 2;
+            $data->save();          
+        }
+        $attendance->action = 3;
+        $attendance->save();
+        return redirect()->back();
+    }
+    //wfh Request Store Function 
+    public function attendanceWfhStore(Request $request)
+    {
+        $rules = [
+            'id' => ['required', 'integer'],
+            'day' => ['required', 'integer'],
+            'task' => ['required', 'max:250'],
+            'wdate' => ['required', 'date'],
+        ];
+        $attendance = Attendance::find($request->id);
+        $leaveApproved = $attendance->date;
+        $leavePending = Leave::where('user_id', Auth::guard('web')->user()->id)->where(function ($query) use ($leaveApproved) {
+            $query->where("form", ">=", $leaveApproved)->where("to", "<=", $leaveApproved);
+        })->count();
+        $request->validate($rules);
+        $wfh = WorkFromHome::where('user_id', Auth::guard('web')->user()->id)->where('date', $leaveApproved)->count();
+        if ($leavePending == 0 && $wfh == 0) {
+            $data = new WorkFromHome();
+            $data->user_id = Auth::guard('web')->user()->id;
+            $data->date = $attendance->date;
+            $date = $attendance->date;
+            $data->day = date('d', strtotime($date));
+            $data->month = date('m', strtotime($date));
+            $data->day = 1;
+            $data->task = $request->task;
+            $data->status = 2;
             $data->save();
+            $attendance->action = 4;
+            $attendance->save();
         }
         return redirect()->back();
-
-
     }
-    public function attendanceLeave($id){
-       $leaveApply = Attendance::find($id);
-       return response()->json(['attendleave' => $leaveApply]);
+    //Leave With WFH Request Function 
+    public function attendanceLeaveWfhStore(Request $request)
+    {       
+        $rules = [
+            'id' => ['required', 'integer'],
+            'day' => ['required', 'integer'],
+            'task' => ['required', 'max:250'],
+            'wdate' => ['required', 'date'],
+        ];
+        $attendance = Attendance::find($request->id);
+        $leaveApproved = $attendance->date;
+        $leavePending = Leave::where('user_id', Auth::guard('web')->user()->id)->where("form", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->first();
+        $leaveApprovedRecord=Leaverecord::where('user_id', Auth::guard('web')->user()->id)->where("from", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->first();
+        $request->validate($rules);
+        if ($leavePending != null) {  
+            $days=1;
+                $leaveType = settingleave::find($leaveApprovedRecord->type_id);
+                $monthLeave = monthleave::where('status', 1)->where('user_id', Auth::guard('web')->user()->id)->latest()->first();
+                if ($leaveType->type == "Annual") {
+                    $monthLeave->apprAnual = $monthLeave->apprAnual -$days;
+                } elseif ($leaveType->type == "Annual") {
+                    $monthLeave->apprSick = $monthLeave->apprSick -$days;
+                } else {
+                    $monthLeave->other = $monthLeave->other - $days;
+                }
+                $monthLeave->save();
+            $leaveApprovedRecord->day = $leaveApprovedRecord->day-$days;
+            $leaveApprovedRecord->save();
+            $leavePending->day=$leavePending->day-$days;
+            $leavePending->save();
+        }
+        $wfh = WorkFromHome::where('user_id', Auth::guard('web')->user()->id)->where('date', $leaveApproved)->count();
+        if ($leavePending != null && $wfh == 0) {
+            $data = new WorkFromHome();
+            $data->user_id = Auth::guard('web')->user()->id;
+            $data->date = $attendance->date;
+            $date = $attendance->date;
+            $data->day = date('d', strtotime($date));
+            $data->month = date('m', strtotime($date));
+            $data->day =1;
+            $data->task = $request->task;
+            $data->status =2;
+            $data->save();           
+            $attendance->action = 5;
+            $attendance->save();
+        }
+        return redirect()->back();
+    }
 
 
+    public function attendanceLeave($id)
+    {
+        $leaveApply = Attendance::find($id);
+        return response()->json(['attendleave' => $leaveApply]);
     }
     // ----------------------------admin leave function-----------------------------
 

@@ -17,7 +17,6 @@ class CreateWorkFromHomesTable extends Migration
             $table->id();
             $table->integer('user_id');
             $table->date('date');
-            $table->date('passDate');
             $table->integer('month');
             $table->float('day')->default(0);
             $table->string('task')->nullable();
