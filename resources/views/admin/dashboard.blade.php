@@ -215,9 +215,9 @@
                                         <thead>
                                             <tr>
                                                 <th>Name</th>
-                                                <th>In_Time</th>
-                                                <th>Out_Time</th>
-                                                <th>Work_Time</th>
+                                                <th>In Time</th>
+                                                <th>Out Time</th>
+                                                <th>Work Time</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -287,7 +287,7 @@
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <a href="">View all clients</a>
+                                <a href="{{route('admin.employees')}}">View All Employees</a>
                             </div>
                         </div>
                     </div>
