@@ -56,6 +56,8 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
     Route::get('employees/attendance',[EmpAttendanceController::class,'get'])->name('attendance');
     Route::get('attendance/leave/{id}',[LeaveController::class,'attendanceLeave'])->name('attendance.get.leave');
     Route::post('attendance/leave',[LeaveController::class,'attendance'])->name('attendance.leave');
+    Route::post('attendance/wfh',[LeaveController::class,'attendanceWfhStore'])->name('attendance.wfh');
+    Route::post('attendance/leave/wfh',[LeaveController::class,'attendanceLeaveWfhStore'])->name('attendance.leave.wfh');
 
     // --------------------------Profile route ---------------------------
     Route::get('profiles',[UserController::class,'profile'])->name('profile');

@@ -104,22 +104,23 @@
                                             $todayDate=\Carbon\Carbon::parse($todayDate)->format('d-m-Y');
                                             $attendanceDate=\Carbon\Carbon::parse($item->date)->format('d-m-Y');
                                             @endphp
-                                                <div class="dropdown action-label">
+                                            <div class="dropdown action-label">
+                                            @if ($item->action==2)
                                                     <a class="btn btn-white btn-sm btn-rounded dropdown-toggle"
                                                     href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    <i class="fa fa-close text-danger"></i> A - Absent
-                                                </a>
+                                                    <i class="fa fa-close text-danger"></i> A - Absent</a>
+                                            @elseif($item->action==3)
+                                            <a class="dropdown-item disabled" > <i class="fa fa-dot-circle-o text-danger"></i> Leave</a>
+                                            @elseif($item->action==4)
+                                            <a class="dropdown-item  disabled"><i class="fa fa-dot-circle-o text-info"></i> WFH</a>
+                                            @elseif($item->action==5)
+                                            <a class="dropdown-item disabled"><i class="fa fa-dot-circle-o text-success"></i> Leave In WFH</a>
+                                            @endif
                                                 @if ($todayDate>=$attendanceDate)
                                                     <div class="dropdown-menu dropdown-menu-right">
-                                                        <a href="#" class="dropdown-item attend-leave-show"
-                                                            data-bs-toggle="modal" data-id="{{ $item->id }}"><i
-                                                                class="fa fa-dot-circle-o text-info"></i>Leave</a>
-                                                        <a class="dropdown-item" href="#"><i
-                                                                class="fa fa-dot-circle-o text-info"></i> WFH</a>
-                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                            data-bs-target="#approve_leave"><i
-                                                                class="fa fa-dot-circle-o text-success"></i> Leave In
-                                                            WFH</a>
+                                                        <a class="dropdown-item attend-leave-show" data-id="{{ $item->id}}"> <i class="fa fa-dot-circle-o text-info"></i> Leave</a>
+                                                        <a class="dropdown-item wfh" data-id="{{ $item->id}}"><i class="fa fa-dot-circle-o text-info"></i> WFH</a>
+                                                        <a class="dropdown-item lwfh"data-id="{{ $item->id }}"><i class="fa fa-dot-circle-o text-success"></i> Leave In WFH</a>
                                                     @endif
                                                     </div>
                                                 </div>
@@ -150,7 +151,7 @@
                         <div class="form-group">
                             <label>Leave Type <span class="text-danger">*</span></label>
                             <select class="select" name="leaveType">
-                                <option>Select Leave Type</option>
+                                <option value="">Select Leave Type</option>
                                 @foreach ($leaveType as $item)
                                     <option value="{{$item->id}}">{{ $item->type }}</option>
                                 @endforeach
@@ -194,28 +195,13 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('employees.attendance.leave') }}" method="POST">
+                    <form action="{{ route('employees.attendance.wfh') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="id" id="id">
+                        <input type="hidden" name="id" id="wid">                     
                         <div class="form-group">
-                            <label>Leave Type <span class="text-danger">*</span></label>
-                            <select class="select" name="leaveType">
-                                <option>Select Leave Type</option>
-                                @foreach ($leaveType as $item)
-                                    <option value="{{$item->id}}">{{ $item->type }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>From <span class="text-danger">*</span></label>
+                            <label>Date <span class="text-danger">*</span></label>
                             <div class="cal-icon">
-                                <input class="form-control" name="from" readonly type="text" id="date">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>To <span class="text-danger">*</span></label>
-                            <div class="cal-icon">
-                                <input class="form-control" name="to" readonly id="dateto" type="text">
+                                <input class="form-control" name="wdate" readonly id="wdate" type="text">
                             </div>
                         </div>
                         <div class="form-group">
@@ -223,8 +209,43 @@
                             <input class="form-control" name="day" readonly type="text" value="1">
                         </div>
                         <div class="form-group">
-                            <label>Leave Reason <span class="text-danger">*</span></label>
-                            <textarea rows="4" class="form-control" name="reson"></textarea>
+                            <label>Task<span class="text-danger">*</span></label>
+                            <textarea rows="4" class="form-control" name="task"></textarea>
+                        </div>
+                        <div class="submit-section">
+                            <button class="btn btn-primary submit-btn">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="lwfh" class="modal custom-modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Leave</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('employees.attendance.leave.wfh') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="id" id="lwid">                     
+                        <div class="form-group">
+                            <label>Date <span class="text-danger">*</span></label>
+                            <div class="cal-icon">
+                                <input class="form-control" name="wdate" readonly id="lwdate" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Number of days <span class="text-danger">*</span></label>
+                            <input class="form-control" name="day" readonly type="text" value="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Task<span class="text-danger">*</span></label>
+                            <textarea rows="4" class="form-control" name="task"></textarea>
                         </div>
                         <div class="submit-section">
                             <button class="btn btn-primary submit-btn">Submit</button>
@@ -252,7 +273,8 @@
                     type: "GET",
                     cache: false,
                     success: function(res) {
-                        $('#date').val(res.attendleave.date);                    
+                        console.log(res);
+                        $('#date').val(res.attendleave.date);
                         $('#dateto').val(res.attendleave.date);
                         $('#id').val(res.attendleave.id);
                         $("#add_leave").modal('show');
@@ -261,4 +283,47 @@
             });
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            $(document).on("click", ".wfh", function() {
+                var id = $(this).data('id');
+                console.log(id);
+                var url = "{{ route('employees.attendance.get.leave', ':id') }}";
+                url = url.replace(':id', id);
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    cache: false,
+                    success: function(res) {
+                        console.log(res);
+                        $('#wdate').val(res.attendleave.date);
+                        $('#wid').val(res.attendleave.id);
+                        $("#wfh").modal('show');
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $(document).on("click", ".lwfh", function() {
+                var id = $(this).data('id');
+                console.log(id);
+                var url = "{{ route('employees.attendance.get.leave', ':id') }}";
+                url = url.replace(':id', id);
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    cache: false,
+                    success: function(res) {
+                        console.log(res);
+                        $('#lwdate').val(res.attendleave.date);
+                        $('#lwid').val(res.attendleave.id);
+                        $("#lwfh").modal('show');
+                    }
+                });
+            });
+        });
+    </script>
+  
 @endpush
