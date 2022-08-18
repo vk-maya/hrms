@@ -306,7 +306,7 @@ class EmployeesController extends Controller
         $diffr = round(Carbon::parse($jd)->floatDiffInMonths($sess->to));
         foreach ($allleave as $value)
         {
-            if ($value->type == 'Annual')
+            if ($value->type == 'PL')
             {
                 $day = $diffr *= $value->day / 12;
                 $leaveyear->basicAnual = $day;
@@ -334,7 +334,7 @@ class EmployeesController extends Controller
             $yearleave = settingleave::where('status', 1)->get();
             foreach ($yearleave as $key => $value)
             {
-                if ($value->type == "Annual")
+                if ($value->type == "PL")
                 {
                     $anual = $value->day / 12;
                 }

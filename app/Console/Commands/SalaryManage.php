@@ -65,7 +65,7 @@ class SalaryManage extends Command
                 foreach ($leaves as $leave) {
                     $leavetype = settingleave::find($leave->type_id);
                     $monthleave = monthleave::where('user_id', $leave->user_id)->where('status', 1)->where('to', $lastMonthofDay)->first();
-                    if ($leavetype->type == "Annual") {
+                    if ($leavetype->type == "PL") {
                         if ($monthleave != null) {
                             $monthleave->apprAnual = $monthleave->apprAnual + $leave->day;
                         } else {
@@ -109,7 +109,7 @@ class SalaryManage extends Command
                 foreach ($monthFingerApproved as $key => $aLeave) {
                     $monthleave = monthleave::where('user_id', $leave->user_id)->where('status', 1)->where('to', $lastMonthofDay)->first();
                     $leavetype = settingleave::find($aLeave->type_id);
-                    if ($leavetype->type == "Annual") {
+                    if ($leavetype->type == "PL") {
                         if ($monthleave->apprAnual > 0) {
                             $monthleave->apprAnual = $monthleave->apprAnual - $aLeave->anual;
                         }
@@ -183,14 +183,14 @@ class SalaryManage extends Command
             $anual = $monthdata->anualLeave - $monthdata->apprAnual;
             if ($anual > 0) {
                 foreach ($leavet as $leave) {
-                    if ($leave->type == "Annual") {
+                    if ($leave->type == "PL") {
                         $day = $leave->day / 12;
                         $monthleave->anualLeave = $anual + $day;
                     }
                 }
             } else {
                 foreach ($leavet as $leave) {
-                    if ($leave->type == "Annual") {
+                    if ($leave->type == "PL") {
                         $day = $leave->day / 12;
                         $monthleave->anualLeave = $day;
                     }

@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LeaveController;
 use App\Models\Leave\Leaverecord;
 use App\Models\monthleave;
+use App\Models\WorkFromHome;
 
 class AdminLeaveController extends Controller
 {
@@ -61,6 +62,7 @@ class AdminLeaveController extends Controller
         $data->save();
         return redirect()->route('admin.leave.list');
     }
+    //holiday Function
     public function holidays(Request $request)
     {
         if ($request->id != '') {
@@ -72,9 +74,9 @@ class AdminLeaveController extends Controller
             return view('admin.leave.holiday', compact('data'));
         }
     }
+    //leave delete Function
     public function delete($id)
     {
-        // dd("dele");
         $data = Leave::find($id);
         if ($data->status == 1) {
             return back()->with(["unsuccess" => "Don't Delete This Record"])->withInput();
@@ -127,10 +129,11 @@ class AdminLeaveController extends Controller
     //leave List 
     public function leavelist()
     {
-        $data = Leave::with(['user' => function ($query) {
-            $query->where('status', 1);
-        }])->with('leaverecord')->latest()->get();
-        return view('admin.leave.leave', compact('data'));
+        $data = Leave::with(['user' => function ($query) {$query->where('status', 1);}])->with('leaverecord')->latest()->get();
+        $leaveCount = Leave::with(['user' => function ($query) {$query->where('status', 1);}])->where('status',2)->count();
+        $wfhData = WorkFromHome::with(['user' => function ($query) {$query->where('status', 1);}])->orderBy('id', 'DESC')->get();
+        $wfhcount = WorkFromHome::with(['user' => function ($query) {$query->where('status',1);}])->where('status',2)->count();
+        return view('admin.leave.leave', compact('data','wfhData','wfhcount','leaveCount'));
     }
 
     public function leavetype(Request $request)
@@ -434,7 +437,7 @@ class AdminLeaveController extends Controller
         $monthLeaveRecord= monthleave::where('user_id',Auth::guard('web')->user()->id)->where('status',1)->first();
         $netLeaveAnuApp=$monthLeaveRecord->anualLeave-$monthLeaveRecord->apprAnual;
         $netLeaveSickApp=$monthLeaveRecord->sickLeave-$monthLeaveRecord->apprSick;
-        if ($leaveType->type=="Annual") {
+        if ($leaveType->type=="PL") {
            if ($netLeaveAnuApp>=$userLeave->day){
             $monthLeaveRecord->apprAnual=$userLeave->day;
            }else{
@@ -463,7 +466,7 @@ class AdminLeaveController extends Controller
     //         foreach ($leaverall as $value) {
     //             $setl = settingleave::find($value->type_id);
     //             $totaleave = UserleaveYear::where('user_id', $data->user_id)->first();
-    //             if ($setl->id == $value->type_id && $setl->type == 'Annual') {
+    //             if ($setl->id == $value->type_id && $setl->type == 'PL') {
     //                 if ($totaleave->netAnual != null) {
     //                     $tt = $totaleave->netAnual;
     //                     $totaleave->netAnual = $tt + $value->day;
@@ -498,7 +501,7 @@ class AdminLeaveController extends Controller
     //         foreach ($leaverall as $key => $value) {
     //             $setl = settingleave::find($value->type_id);
     //             $totaleave = UserleaveYear::where('user_id', $data->user_id)->first();
-    //             if ($setl->id == $value->type_id && $setl->type == 'Annual') {
+    //             if ($setl->id == $value->type_id && $setl->type == 'PL') {
     //                 $tt = $totaleave->netAnual;
     //                 $totaleave->netAnual = $tt - $value->day;
     //             } elseif ($setl->id == $value->type_id && $setl->type == 'Sick') {

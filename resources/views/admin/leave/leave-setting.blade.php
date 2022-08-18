@@ -25,7 +25,7 @@
                     <div class="card leave-box" id="leave_annual">
                         <div class="card-body">
                             <div class="h3 card-title with-switch">
-                                Annual
+                                PL
                                 <div class="onoffswitch">
                                     <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
                                         id="switch_annual" checked>
@@ -42,7 +42,7 @@
                                         <div class="leave-left">
                                             <div class="input-box">
                                                 <div class="form-group">
-                                                    <input type="hidden" name="type" value="Annual">
+                                                    <input type="hidden" name="type" value="PL">
                                                     <label>Days</label>
                                                     <input type="number" required name="day" class="form-control" disabled>
                                                     @error('day')
@@ -78,7 +78,7 @@
                                                         <label class="form-check-label" for="carry_yes">Yes</label>
                                                     </div>
                                                     <div class="input-group">
-                                                        <input type="hidden" readonly name="type" required value="Annual">
+                                                        <input type="hidden" readonly name="type" required value="PL">
                                                         <span class="input-group-text">Max</span>
                                                         <input type="type" name="carryforward" required class="form-control">
                                                         @error('carryforward')

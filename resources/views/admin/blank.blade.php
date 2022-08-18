@@ -406,7 +406,7 @@ class LeaveController extends Controller
                 }
             }               
             
-        } elseif ($leaveType->type == "Annual") {
+        } elseif ($leaveType->type == "PL") {
             if ($userLeave->day <= $leaveOfMOnth->anualLeave) {  
                 if ($request->from >= $firstMonthofDay && $request->to <= $lastMonthofDay) {
                     $leaveRecord = new Leaverecord();

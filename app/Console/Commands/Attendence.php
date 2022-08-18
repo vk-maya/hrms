@@ -94,7 +94,7 @@ class Attendence extends Command
                                 $monthattedance->type_id = $leavedata->type_id;
                                 $monthattedance->date = $date;
                                 $monthattedance->month = $month;
-                                if ($leavetype->type == "Annual") {
+                                if ($leavetype->type == "PL") {
                                     $monthattedance->anual = 1;
                                 } elseif ($leavetype->type == "Sick") {
                                     $monthattedance->sick = 1;
