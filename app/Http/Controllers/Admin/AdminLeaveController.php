@@ -459,81 +459,12 @@ class AdminLeaveController extends Controller
         $monthLeaveRecord->save();
         return redirect()->back();
     }
-    // public function leavereport(Request $request) {
-    //     $data = Leave::find($request->id);
-    //     $leaverall = Leaverecord::where("leave_id", $request->id)->get();
-    //     if ($request->status == 1 && $data->status != $request->status) {
-    //         foreach ($leaverall as $value) {
-    //             $setl = settingleave::find($value->type_id);
-    //             $totaleave = UserleaveYear::where('user_id', $data->user_id)->first();
-    //             if ($setl->id == $value->type_id && $setl->type == 'PL') {
-    //                 if ($totaleave->netAnual != null) {
-    //                     $tt = $totaleave->netAnual;
-    //                     $totaleave->netAnual = $tt + $value->day;
-    //                 } else {
-    //                     $totaleave->netAnual = $value->day;
-    //                 }
-    //             } elseif ($setl->id == $value->type_id && $setl->type == 'Sick') {
-    //                 if ($totaleave->netSick != null) {
-    //                     $tt = $totaleave->netSick;
-    //                     $totaleave->netSick = $tt + $value->day;
-    //                 } else {
-    //                     $totaleave->netSick =  $value->day;
-    //                 }
-    //             } elseif ($setl->id == $value->type_id && $setl->type == 'Other') {
-    //                 if ($totaleave->other != null) {
-    //                     $tt = $totaleave->other;
-    //                     $totaleave->other = $tt + $value->day;
-    //                 } else {
-    //                     $totaleave->other = $value->day;
-    //                 }
-    //             }
-    //             $totaleave->save();
-    //         }
-    //         $data->status = $request->status;
-    //         $data->update();
-    //         $leaverecord = Leaverecord::where('leave_id', $request->id)->get();
-    //         foreach ($leaverecord as $key => $record) {
-    //             $record->status = $request->status;
-    //             $record->save();
-    //         }
-    //     } elseif ($data->status == 1 && ($request->status == 0 || $request->status == 2)) {
-    //         foreach ($leaverall as $key => $value) {
-    //             $setl = settingleave::find($value->type_id);
-    //             $totaleave = UserleaveYear::where('user_id', $data->user_id)->first();
-    //             if ($setl->id == $value->type_id && $setl->type == 'PL') {
-    //                 $tt = $totaleave->netAnual;
-    //                 $totaleave->netAnual = $tt - $value->day;
-    //             } elseif ($setl->id == $value->type_id && $setl->type == 'Sick') {
-
-    //                 $tt = $totaleave->netSick;
-    //                 $totaleave->netSick = $tt - $value->day;
-    //             } elseif ($setl->id == $value->type_id && $setl->type == 'Other') {
-
-    //                 $tt = $totaleave->other;
-    //                 $totaleave->other = $tt - $value->day;
-    //             }
-    //             $totaleave->save();
-    //         }
-    //         $data->status = $request->status;
-    //         $data->update();
-    //         $leaverecord = Leaverecord::where('leave_id', $request->id)->get();
-    //         foreach ($leaverecord as $key => $record) {
-    //             $record->status = $request->status;
-    //             $record->save();
-    //         }
-    //     } else {
-
-    //         $data->status = $request->status;
-    //         $data->update();
-    //         $leaverecord = Leaverecord::where('leave_id', $request->id)->get();
-    //         foreach ($leaverecord as $key => $record) {
-    //             $record->status = $request->status;
-    //             $record->save();
-    //         }
-    //     }
-    //     return redirect()->back();
-    // }
+    public function wfhReport(Request $request) {
+        $data = WorkFromHome::where('user_id',$request->user_id)->where('id',$request->id)->first();
+        $data->status=$request->status;
+        $data->save();
+        return redirect()->back();
+    }
     public function moreleave($id)
     {
         $data = Leaverecord::where('leave_id', $id)->with('leavetype')->get();

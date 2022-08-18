@@ -194,7 +194,7 @@
                                             <th>Days</th>
                                             <th>Task</th>
                                             <th class="text-center">Status</th>
-                                            <th>Action</th>
+                                            <th class="text-center">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -203,11 +203,11 @@
                                                 @php
                                                     $start = new DateTime($item->date);
                                                 @endphp
-                                                <td><a href="{{ route('admin.leave.view', $item->id) }}">{{ $item->user->first_name }}</a> </td>
+                                                <td><a class="disabled" href="">{{ $item->user->first_name }}</a> </td>
                                                 <td> {{ $start->format('d-M-Y') }}</td>                                      
                                                 <td>{{ $item->day }}</td>
                                                 <td><a href="#"
-                                                        data-bs-toggle="modal"data-bs-target="#add_department{{ $item->id }}">{{ \Illuminate\Support\Str::limit($item->task, 20, '..') }}</a>
+                                                        data-bs-toggle="modal"data-bs-target="#task{{ $item->id }}">{{ \Illuminate\Support\Str::limit($item->task, 20, '..') }}</a>
                                                 </td>                                             
                                                 <td class="text-center">
                                                     <div class="dropdown action-label">
@@ -229,22 +229,23 @@
                                                                     class="fa fa-dot-circle-o text-success"></i>
                                                                 Approved</a>
                                                         @endif
-
                                                         <div class="dropdown-menu dropdown-menu-right">
-                                                            <form action="{{ route('admin.leave.report') }}"
+                                                            <form action="{{ route('admin.wfh.report') }}"
                                                                 method="POST">
                                                                 @csrf
                                                                 <input type="hidden" name="status" value="2">
+                                                                <input type="hidden" name="user_id" value="{{ $item->user->id}}">
                                                                 <input type="hidden" name="id"
                                                                     value="{{ $item->id }}">
                                                                 <button type="submit" class="dropdown-item">
                                                                     <i class="fa fa-dot-circle-o text-purple"></i>
                                                                     New</button>
                                                             </form>
-                                                            <form action="{{ route('admin.leave.report') }}"
+                                                            <form action="{{ route('admin.wfh.report') }}"
                                                                 method="POST">
                                                                 @csrf
                                                                 <input type="hidden" name="status" value="1">
+                                                                <input type="hidden" name="user_id" value="{{ $item->user->id}}">
                                                                 <input type="hidden" name="id"
                                                                     value="{{ $item->id }}">
                                                                 <input type="hidden" name="type_id"
@@ -253,12 +254,12 @@
                                                                     <i class="fa fa-dot-circle-o text-success"></i>
                                                                     Approved</button>
                                                             </form>
-                                                            <form action="{{ route('admin.leave.report') }}"
+                                                            <form action="{{ route('admin.wfh.report') }}"
                                                                 method="POST">
                                                                 @csrf
                                                                 <input type="hidden" name="status" value=0>
-                                                                <input type="hidden" name="id"
-                                                                    value="{{ $item->id }}">
+                                                                <input type="hidden" name="user_id" value="{{ $item->user->id}}">
+                                                                <input type="hidden" name="id" value="{{ $item->id }}">
                                                                 <button type="submit" class="dropdown-item">
                                                                     <i class="fa fa-dot-circle-o text-danger"></i>
                                                                     Declined</button>
@@ -268,7 +269,7 @@
                                                 </td>
                                                 {{-- {{$item}} --}}
                                                 @if ($item->status == 2 || $item->status == 0)
-                                                    <td class="text-end">
+                                                    <td class="text-center">
                                                         <div class="dropdown dropdown-action">
                                                             <a href="#" class="action-icon dropdown-toggle"
                                                                 data-bs-toggle="dropdown" aria-expanded="false"><i
@@ -311,6 +312,27 @@
                             <form>
                                 <div class="form-group">
                                     {{ $item->reason }}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+        @foreach ($wfhData as $item)
+            <div id="task{{$item->id}}" class="modal custom-modal fade" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">View Reason</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <p>{{ $item->task }}</p>
                                 </div>
                             </form>
                         </div>

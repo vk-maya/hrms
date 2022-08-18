@@ -18,8 +18,6 @@ use App\Models\WorkFromHome;
 use Facade\FlareClient\Glows\Recorder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Validated;
-
-
 class LeaveController extends Controller
 {
     //    ------------------------employees function ----------------------
@@ -41,11 +39,53 @@ class LeaveController extends Controller
         $totalLeave = Leaverecord::where('user_id', Auth::guard('web')->user()->id)->where('status', 1)->where(function ($query) use ($allfrom, $allto) {
             $query->where("from", ">=", $allfrom)->where("to", "<=", $allto);
         })->with('leavetype')->get();
+        $wfh =WorkFromHome::where('user_id',Auth::guard('web')->user()->id)->orderBy('id','DESC')->get();
+        // dd($wfh->toArray());
         $allDay = 0;
         foreach ($totalLeave as $key => $days) {
             $allDay = $allDay + $days->day;
         }
-        return view('employees.leave.leave', compact('data', 'month', 'ptotalMonthLeave', 'allDay'));
+        return view('employees.leave.leave', compact('data', 'month', 'ptotalMonthLeave', 'allDay','wfh'));
+    }
+    public function wfhcreate(){
+        return view('employees.leave.add-wfh');
+    }
+    public function wfhstore(Request $request){
+        dd($request->toArray());
+        $leaveRecord = new Leaverecord();
+            $leaveRecord->user_id = $userLeave->user_id;
+            $leaveRecord->type_id = $userLeave->leaves_id;
+            $leaveRecord->leave_id = $userLeave->id;
+            $leaveRecord->from = $request->from;
+            $leaveRecord->to = $request->to;
+             //sunday and saturday count in request->from to request->to
+             $day = Carbon::createFromFormat('Y-m-d', $request->from);
+             $ssfrom = date('d',strtotime($day));
+             $ssto = date('d',strtotime($request->to));
+             $sunday = 0;
+             $saturday = 0;          
+             foreach(range($ssfrom,$ssto) as $key => $next) {
+                 if (strtolower($day->format('l')) == 'sunday') {
+                     $sunday++;
+                    }
+                    //saturday Count first And third
+                    $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
+                    $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
+                    if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d"))) {
+                        $saturday++;
+                    }
+                    $day = $day->addDays();
+             }
+             $days=$days-$sunday;
+             $days=$days-$saturday;
+             $hfrom=$request->from;
+             $hto =$request->to;
+             $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
+             $days=$days-$holiday;
+            $leaveRecord->day =$days;
+            $leaveRecord->reason = $request->reason;
+            $leaveRecord->status =1;
+            $leaveRecord->save();
     }
     public function leaveadd()
     {
@@ -152,7 +192,7 @@ class LeaveController extends Controller
             $data->to = $attendance->date;
             $data->reason = $request->reson;
             $data->day = 1;
-            $data->status = 2;
+            $data->status = 1;
             $data->save();          
         }
         $attendance->action = 3;

@@ -79,6 +79,9 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
     Route::get('emp/show/task/{id}',[DailyTask::class,'showtaskk'])->name('show-taskk');
     Route::get('emp/task/list',[DailyTask::class,'tasklist'])->name('show-list');
     Route::post('emp/daliy/task',[DailyTask::class,'dailystore'])->name('daily.task.store');
+    ///Work From Home 
+    Route::get('work/from/home',[LeaveController::class,'wfhcreate'])->name('wfh.create');
+    Route::Post('work/from/home',[LeaveController::class,'wfhstore'])->name('store.wfh');
 
 });
 
@@ -210,6 +213,9 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     //...................PDF..................//
     Route::get('export-pdf/{id}', [PayrollController::class, 'downloadPdf'])->name('export-pdf');
 
+    // WFH Route 
+  Route::post('workfrom/home/report',[AdminLeaveController::class,'wfhReport'])->name('wfh.report');
+ 
    
 
 
