@@ -72,7 +72,7 @@ class Attendence extends Command
                     $attend->passdate = ($key->Status == 'P') ? $key->date : '00-00-00';
                     $attend->save();
                 } else {
-                    Attendance::create(['user_id' => $user->id, 'in_time' => $key->INTime == '--:--' ? '00:00' : $key->INTime, 'out_time' => $key->OUTTime == '--:--' ? '00:00' : $key->OUTTime, 'work_time' => $key->WorkTime, 'date' => date('Y-m-d', strtotime($date)), 'day' => date('d', strtotime($date)), 'month' => date('m', strtotime($date)), 'year' => date('Y', strtotime($date)), 'attendance' => $key->Status, 'status' => $key->Status == 'P' ? 1 : 0, $key->passdate == 'P' ? date('Y-m-d', strtotime($date)) : '00-00-00',]);
+                    Attendance::create(['user_id' => $user->id, 'in_time' => $key->INTime == '--:--' ? '00:00' : $key->INTime, 'out_time' => $key->OUTTime == '--:--' ? '00:00' : $key->OUTTime, 'work_time' => $key->WorkTime, 'date' => date('Y-m-d', strtotime($date)), 'day' => date('d', strtotime($date)), 'month' => date('m', strtotime($date)), 'year' => date('Y', strtotime($date)), 'attendance' => $key->Status, 'status' => ($key->Status == 'P') ? 1 : 0, ($key->passdate == 'P') ? date('Y-m-d', strtotime($date)) : '00-00-00']);
                 }
                 //leave vs attandance function
                 $date = date('Y-m-d', strtotime($date));
