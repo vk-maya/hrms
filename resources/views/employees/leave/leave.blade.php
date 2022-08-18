@@ -71,7 +71,7 @@
                     $sother = 0;
                     $other = 0;
                     foreach ($ptotalMonthLeave as $leavep) {
-                        if ($leavep->leaveType->type == 'Annual') {
+                        if ($leavep->leaveType->type == 'PL') {
                             $plp = $month->anualLeave - $month->apprAnual;
                             $pother = $leavep->day - $plp;
                         } elseif ($leavep->leaveType->type == 'Sick') {

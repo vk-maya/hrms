@@ -45,7 +45,6 @@ class LeaveController extends Controller
         foreach ($totalLeave as $key => $days) {
             $allDay = $allDay + $days->day;
         }
-        // dd($ptotalMonthLeave);
         return view('employees.leave.leave', compact('data', 'month', 'ptotalMonthLeave', 'allDay'));
     }
     public function leaveadd()
@@ -118,7 +117,6 @@ class LeaveController extends Controller
     // --------------delete function-----------------------
     public function delete($id)
     {
-        // dd("dele");
         $data = Leave::find($id);
         if ($data->status == 1) {
             return back()->with(["unsuccess" => "Don't Delete This Record"])->withInput();
@@ -211,9 +209,9 @@ class LeaveController extends Controller
             $days=1;
                 $leaveType = settingleave::find($leaveApprovedRecord->type_id);
                 $monthLeave = monthleave::where('status', 1)->where('user_id', Auth::guard('web')->user()->id)->latest()->first();
-                if ($leaveType->type == "Annual") {
+                if ($leaveType->type == "PL") {
                     $monthLeave->apprAnual = $monthLeave->apprAnual -$days;
-                } elseif ($leaveType->type == "Annual") {
+                } elseif ($leaveType->type == "PL") {
                     $monthLeave->apprSick = $monthLeave->apprSick -$days;
                 } else {
                     $monthLeave->other = $monthLeave->other - $days;

@@ -23,11 +23,7 @@ class Leave extends Model
     public function leaverecordEmp(){
         return $this->hasMany(Leaverecord::class,'leave_id')->where('status',1);
         
-    } 
-    // public function leaverecordEmpApproved(){
-    //     return $this->hasMany(Leaverecord::class,'leave_id')->where('status',1);
-        
-    // } 
+    }   
     public function leaveyear(){
         return $this->hasOne(UserleaveYear::class,'id','user_id');
     }
