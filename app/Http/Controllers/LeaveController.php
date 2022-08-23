@@ -40,7 +40,6 @@ class LeaveController extends Controller
             $query->where("from", ">=", $allfrom)->where("to", "<=", $allto);
         })->with('leavetype')->get();
         $wfh =WorkFromHome::where('user_id',Auth::guard('web')->user()->id)->orderBy('id','DESC')->get();
-        // dd($wfh->toArray());
         $allDay = 0;
         foreach ($totalLeave as $key => $days) {
             $allDay = $allDay + $days->day;
@@ -51,13 +50,17 @@ class LeaveController extends Controller
         return view('employees.leave.add-wfh');
     }
     public function wfhstore(Request $request){
-        dd($request->toArray());
-        $leaveRecord = new Leaverecord();
-            $leaveRecord->user_id = $userLeave->user_id;
-            $leaveRecord->type_id = $userLeave->leaves_id;
-            $leaveRecord->leave_id = $userLeave->id;
-            $leaveRecord->from = $request->from;
-            $leaveRecord->to = $request->to;
+        $dateFrom = new DateTime($request->form);
+        $dateTo = new DateTime($request->to);
+        $interval = $dateFrom->diff($dateTo);
+        $da = $interval->format('%a');
+        $days = $da + 1;
+
+        $workfrom = new WorkFromHome();
+            $workfrom->user_id = $request->user_id;
+            $workfrom->from = $request->from;
+            $workfrom->to = $request->to;
+
              //sunday and saturday count in request->from to request->to
              $day = Carbon::createFromFormat('Y-m-d', $request->from);
              $ssfrom = date('d',strtotime($day));
@@ -81,11 +84,12 @@ class LeaveController extends Controller
              $hfrom=$request->from;
              $hto =$request->to;
              $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
-             $days=$days-$holiday;
-            $leaveRecord->day =$days;
-            $leaveRecord->reason = $request->reason;
-            $leaveRecord->status =1;
-            $leaveRecord->save();
+             $days=$days-$holiday;           
+            $workfrom->day =$days;
+            $workfrom->task = $request->task;
+            $workfrom->status =2;
+            $workfrom->save();
+            return redirect()->back();
     }
     public function leaveadd()
     {
@@ -192,7 +196,7 @@ class LeaveController extends Controller
             $data->to = $attendance->date;
             $data->reason = $request->reson;
             $data->day = 1;
-            $data->status = 1;
+            $data->status = 2;
             $data->save();          
         }
         $attendance->action = 3;
@@ -202,6 +206,7 @@ class LeaveController extends Controller
     //wfh Request Store Function 
     public function attendanceWfhStore(Request $request)
     {
+        dd($request->toArray());
         $rules = [
             'id' => ['required', 'integer'],
             'day' => ['required', 'integer'],
@@ -214,14 +219,12 @@ class LeaveController extends Controller
             $query->where("form", ">=", $leaveApproved)->where("to", "<=", $leaveApproved);
         })->count();
         $request->validate($rules);
-        $wfh = WorkFromHome::where('user_id', Auth::guard('web')->user()->id)->where('date', $leaveApproved)->count();
+        $wfh = WorkFromHome::where('user_id', Auth::guard('web')->user()->id)->where('from','>=',$leaveApproved)->where('to','<=',$leaveApproved)->count();
         if ($leavePending == 0 && $wfh == 0) {
             $data = new WorkFromHome();
             $data->user_id = Auth::guard('web')->user()->id;
-            $data->date = $attendance->date;
-            $date = $attendance->date;
-            $data->day = date('d', strtotime($date));
-            $data->month = date('m', strtotime($date));
+            $data->from = $attendance->date;
+            $data->to =  $attendance->date;     
             $data->day = 1;
             $data->task = $request->task;
             $data->status = 2;
@@ -266,10 +269,8 @@ class LeaveController extends Controller
         if ($leavePending != null && $wfh == 0) {
             $data = new WorkFromHome();
             $data->user_id = Auth::guard('web')->user()->id;
-            $data->date = $attendance->date;
-            $date = $attendance->date;
-            $data->day = date('d', strtotime($date));
-            $data->month = date('m', strtotime($date));
+            $data->from = $attendance->date;
+            $data->to = $attendance->date;           
             $data->day =1;
             $data->task = $request->task;
             $data->status =2;
