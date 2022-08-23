@@ -14,8 +14,7 @@ class AddRoleToLeavesTable extends Migration
     public function up()
     {
         Schema::table('leaves', function (Blueprint $table) {
-            //
-            $table->integer('role')->after('user_id')->default(0);
+            $table->integer('admin_id')->after('id')->default(0);
         });
     }
 
