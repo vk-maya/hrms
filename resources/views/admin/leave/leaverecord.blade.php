@@ -45,14 +45,14 @@
                                         <td>{{$item->day}}</td>
                                         <td class="text-center">
                                             @if ($item->status == 2)
-                                                <span class="btn btn-white btn-sm btn-rounded dropdown-toggle">
+                                                <span>
                                                     <i class="fa fa-dot-circle-o text-purple"></i> New
                                                 </span>
                                             @elseif($item->status == 0)
-                                                <span class="btn btn-white btn-sm btn-rounded dropdown-toggle"><i
+                                                <span   ><i
                                                         class="fa fa-dot-circle-o text-danger"></i> Declined</span>
                                             @else
-                                                <span class="btn btn-white btn-sm btn-rounded dropdown-toggle"><i
+                                                <span><i
                                                         class="fa fa-dot-circle-o text-success"></i> Approved</span>
                                             @endif
                                         </td>

@@ -24,7 +24,6 @@ class AdminLeaveController extends Controller
     {
         $data = Leave::find($id);
         $type = settingleave::all();
-
         return view('admin.leave.edit-leave', compact('data', 'type'));
     }
 
@@ -42,13 +41,16 @@ class AdminLeaveController extends Controller
         if ($request->from <= $fromdate) {
             $data->form = date('Y-m-d', strtotime($request->from));
             $todate = date("Y-m-d", strtotime("$request->from + 30 day"));
-            if ($request->to <= $todate) {
+            if ($request->to <= $todate){
                 $data->to = date('Y-m-d', strtotime($request->to));
-            } else {
-                return redirect()->back()->withErrors(["to" => "Please Select to Date Type"])->withInput();;
+            }else{
+
+                return redirect()->back()->withErrors(["to" => "Please Select to Date Type"])->withInput();
+
             }
-        } else {
-            return redirect()->back()->withErrors(["from" => "Please Select Leave Type"])->withInput();;
+        }else{
+
+            return redirect()->back()->withErrors(["from" => "Please Select Leave Type"])->withInput();
         }
         $leave = Leave::where('user_id', $request->user_id)->where(function ($query) use ($request) {
             $query->where('form', '<=', $request->from)->where('to', '>=', $request->from);
@@ -157,6 +159,7 @@ class AdminLeaveController extends Controller
         $data = Leave::find($request->id);
         //leave record save datatable
         $userLeave = Leave::find($request->id);
+        $userLeave->role =Auth::guard('admin')->user()->id;;
         $dateFrom = new DateTime($userLeave->form);
         $dateTo = new DateTime($userLeave->to);
         $interval = $dateFrom->diff($dateTo);
@@ -208,6 +211,8 @@ class AdminLeaveController extends Controller
             $leaveRecord->day =$days;
             $leaveRecord->reason = $request->reason;
             $leaveRecord->status =1;
+            $leaveRecord->role =Auth::guard('admin')->user()->id;
+
             $leaveRecord->save();
         } elseif ($request->from <= $lastMonthofDay && $request->to >= $lastMonthofDay) {
             $lastMonthofDayD = Carbon::now()->endOfMonth();
@@ -248,6 +253,7 @@ class AdminLeaveController extends Controller
             $leaveRecord->day = $daysn;
             $leaveRecord->reason = $request->reason;
             $leaveRecord->status =1;
+            $leaveRecord->role =Auth::guard('admin')->user()->id;
             $leaveRecord->save();
             $NewRecord = $days - $daysnl;
             if ($NewRecord > 0) {
@@ -291,6 +297,7 @@ class AdminLeaveController extends Controller
                 $leaveRecord->day = $NewRecord;
                 $leaveRecord->reason = $request->reason;
                 $leaveRecord->status =1;
+                $leaveRecord->role =Auth::guard('admin')->user()->id;
                 $leaveRecord->save();
             }
         } elseif ($request->from > $lastMonthofDay && $request->to < $nextToNextMonthFirstfDay) {
@@ -329,9 +336,10 @@ class AdminLeaveController extends Controller
             $days=$days-$sunday;
             $days=$days-$saturday;
             $days=$days-$holiday;
-            $leaveRecord->day = $days;
+            $leaveRecord->day =$days;
             $leaveRecord->reason = $request->reason;
             $leaveRecord->status =1;
+            $leaveRecord->role =Auth::guard('admin')->user()->id;
             $leaveRecord->save();
         } elseif ($request->from >= $nextMonthFirstfDay && $request->to >= $nextToNextMonthFirstfDay) {
             $nextToMonthLastDayD =  Carbon::now()->endOfMonth()->addMonthsNoOverflow(1); //last and 3 range month
@@ -378,6 +386,7 @@ class AdminLeaveController extends Controller
             $leaveRecord->day = $daysn;
             $leaveRecord->reason = $request->reason;
             $leaveRecord->status =1;
+            $leaveRecord->role =Auth::guard('admin')->user()->id;
             $leaveRecord->save();
             $NewRecord = $days - $daysl;
             if ($NewRecord > 0) {
@@ -420,6 +429,7 @@ class AdminLeaveController extends Controller
                 $leaveRecord->day = $NewRecord;
                 $leaveRecord->reason = $request->reason;
                 $leaveRecord->status =1;
+                $leaveRecord->role =Auth::guard('admin')->user()->id;
                 $leaveRecord->save();
             }
         }
@@ -430,6 +440,7 @@ class AdminLeaveController extends Controller
         }
         $userLeave->day=$totalLeaveDay;
         $userLeave->status=1;
+        $leaveRecord->role =Auth::guard('admin')->user()->id;
         $userLeave->save();
         $blanceLeav=0;
         $userLeave=Leave::where('user_id',Auth::guard('web')->user()->id)->latest()->first();
@@ -461,6 +472,7 @@ class AdminLeaveController extends Controller
     }
     public function wfhReport(Request $request) {
         $data = WorkFromHome::where('user_id',$request->user_id)->where('id',$request->id)->first();
+        $data->role =Auth::guard('admin')->user()->id;
         $data->status=$request->status;
         $data->save();
         return redirect()->back();

@@ -183,13 +183,14 @@
                                 <h6>Balance Leave</h6>
                                 <div class="row">
                                     <div class="col-md">
-                                        <div class=""> <strong> Paid </strong> Leave
+                                        <div class=""> <strong> PL </strong> 
                                             <div class="">
                                                 {{ $anual = $month->anualLeave - $month->apprAnual }}</div>
                                         </div>
                                     </div>
+                                   
                                     <div class="col-md">
-                                        <div class=""> <strong> Sick</strong> Leave
+                                        <div class=""> <strong> Sick</strong> 
                                             <div class="">{{ $sick = $month->sickLeave - $month->apprSick }}
                                             </div>
                                         </div>
@@ -285,7 +286,7 @@
                                                     </td>
                                                 @else
                                                     <td class="text-center">
-                                                        <div><i class="fa fa-dot-circle-o text-info"></i>
+                                                        <div><i class="fa fa-ban text-danger" ></i>
                                                         </div>
                                                     </td>
                                                 @endif
