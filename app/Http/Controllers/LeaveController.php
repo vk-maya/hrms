@@ -201,7 +201,7 @@ class LeaveController extends Controller
         }
         $attendance->action = 3;
         $attendance->save();
-        return redirect()->back();
+        return redirect()->route('employees.leave');
     }
     //wfh Request Store Function 
     public function attendanceWfhStore(Request $request)
@@ -232,7 +232,7 @@ class LeaveController extends Controller
             $attendance->action = 4;
             $attendance->save();
         }
-        return redirect()->back();
+        return redirect()->route('employees.leave');
     }
     //Leave With WFH Request Function 
     public function attendanceLeaveWfhStore(Request $request)
