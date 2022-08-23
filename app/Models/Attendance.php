@@ -16,9 +16,10 @@ class Attendance extends Model
         return $this->hasOne(User::class);
     }
     public function wfh(){
-        return $this->hasOne(WorkFromHome::class,'date','date');
+        return $this->hasOne(WorkFromHome::class,'user_id','user_id');
     }
-    public function leaveStatus(){
-        return $this->hasOne(Leave::class,'form','date');
+  
+    public function leavestatus(){
+        return $this->hasOne(Leave::class,'user_id','user_id');
     }
 }

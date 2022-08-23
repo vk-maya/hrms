@@ -15,9 +15,7 @@ class CreateWorkFromHomesTable extends Migration
     {
         Schema::create('work_from_homes', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
-            $table->date('date');
-            $table->integer('month');
+            $table->integer('user_id');  
             $table->float('day')->default(0);
             $table->string('task')->nullable();
             $table->integer('status')->default(0);

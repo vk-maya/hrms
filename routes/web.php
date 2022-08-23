@@ -81,7 +81,7 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
     Route::post('emp/daliy/task',[DailyTask::class,'dailystore'])->name('daily.task.store');
     ///Work From Home 
     Route::get('work/from/home',[LeaveController::class,'wfhcreate'])->name('wfh.create');
-    Route::Post('work/from/home',[LeaveController::class,'wfhstore'])->name('store.wfh');
+    Route::Post('work/from/home/save',[LeaveController::class,'wfhstore'])->name('store.wfh');
 
 });
 

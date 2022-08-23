@@ -190,7 +190,8 @@
                                     <thead>
                                         <tr>
                                             <th>Employee</th>                                            
-                                            <th>Date</th>
+                                            <th>From</th>
+                                            <th>To</th>
                                             <th>Days</th>
                                             <th>Task</th>
                                             <th class="text-center">Status</th>
@@ -201,10 +202,12 @@
                                         @foreach ($wfhData as $item)
                                             <tr>
                                                 @php
-                                                    $start = new DateTime($item->date);
+                                                    $start = new DateTime($item->from);
+                                                    $end = new DateTime($item->to);
                                                 @endphp
                                                 <td><a class="disabled" href="">{{ $item->user->first_name }}</a> </td>
                                                 <td> {{ $start->format('d-M-Y') }}</td>                                      
+                                                <td> {{ $end->format('d-M-Y') }}</td>                                      
                                                 <td>{{ $item->day }}</td>
                                                 <td><a href="#"
                                                         data-bs-toggle="modal"data-bs-target="#task{{ $item->id }}">{{ \Illuminate\Support\Str::limit($item->task, 20, '..') }}</a>
@@ -282,9 +285,10 @@
                                                         </div>
                                                     </td>
                                                 @else
-                                                    <td class="text-end">
+                                                    <td class="text-center">
                                                         <div class="dropdown dropdown-action">
-
+                                                            <i
+                                                                    class="fa fa-ban text-danger" ></i>
                                                         </div>
                                                     </td>
                                                 @endif

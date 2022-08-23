@@ -304,7 +304,8 @@
                                 <table class="table table-striped custom-table mb-0 datatable">
                                     <thead>
                                         <tr>                                           
-                                            <th>Date</th>
+                                            <th>From</th>
+                                            <th>To</th>
                                             <th>Day</th>                                            
                                             <th>Task</th>
                                             <th class="text-center">Status</th>
@@ -314,8 +315,11 @@
                                     <tbody>
                                         @foreach ($wfh as $item)
                                             <tr>
-                                                @php $start = new DateTime($item->date); @endphp                                                
+                                                @php $start = new DateTime($item->from);
+                                                $to = new DateTime($item->to);
+                                                 @endphp                                                
                                                 <td> {{ $start->format('d-m-Y') }}</td>                             
+                                                <td> {{ $to->format('d-m-Y') }}</td>                             
                                                 <td> {{ $item->day }}</td>
                                                 <td><a href="#" data-bs-toggle="modal"data-bs-target="#task{{ $item->id }}">{{ \Illuminate\Support\Str::limit($item->task, 20, '..') }}</a></td>
                                                 <td class="text-center">
@@ -350,7 +354,8 @@
                                                     </td>
                                                 @else
                                                     <td class="text-center">
-                                                        <div><i class="fa fa-dot-circle-o text-info"></i>
+                                                        <div>
+                                                            <i class="fa fa-ban text-danger" ></i>
                                                         </div>
                                                     </td>
                                                 @endif
