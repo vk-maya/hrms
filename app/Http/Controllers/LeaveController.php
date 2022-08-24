@@ -31,7 +31,7 @@ class LeaveController extends Controller
         $lastDayofMonth = Carbon::now()->endOfMonth()->toDateString();
         $month = monthleave::where('user_id', Auth::guard('web')->user()->id)->where('status', 1)->first();
         $data = Leave::with('leaverecordEmp', 'leaveType')->where('user_id', Auth::guard('web')->user()->id)->where(function ($query) use ($firstDayofMonth, $lastDayofMonth) {
-            $query->where("form", ">=", $firstDayofMonth)->where("to", "<=", $lastDayofMonth);
+            $query->where("form", ">=", $firstDayofMonth);
         })->latest()->get();
         $ptotalMonthLeave = Leave::where('user_id', Auth::guard('web')->user()->id)->where('status', 2)->with('leaveType')->where(function ($query) use ($firstDayofMonth, $lastDayofMonth) {
             $query->where("form", ">=", $firstDayofMonth)->where("to", "<=", $lastDayofMonth);
@@ -44,6 +44,7 @@ class LeaveController extends Controller
         foreach ($totalLeave as $key => $days) {
             $allDay = $allDay + $days->day;
         }
+        // dd($data->toArray());
         return view('employees.leave.leave', compact('data', 'month', 'ptotalMonthLeave', 'allDay','wfh'));
     }
     public function wfhcreate(){
