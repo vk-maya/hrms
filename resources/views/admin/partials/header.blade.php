@@ -48,7 +48,7 @@
         <li class="nav-item dropdown has-arrow main-drop">
             <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
                 <span class="user-img"><img
-                        src="{{ asset('storage/uploads/' . Auth::guard('admin')->user()->img) }}" alt="">
+                        src="{{ asset('assets/img/avtar.jpg') }}" alt="">
                 </span>
                 <span> {{ Auth::guard('admin')->user()->name }}</span>
             </a>

@@ -132,11 +132,11 @@ class EmployeesController extends Controller
             if ($id == !null)
             {
                 $emp = explode('-', $id->employeeID);
-                $empid = 1 + $emp[2];
+                $empid = '00'.(1 + $emp[2]);
             }
             else
             {
-                $empid = "SDPL-JAI-0001";
+                $empid = "0001";
             }
 
             return view('admin.employees.employees-add', compact('department', 'count', 'empid', 'salared'));

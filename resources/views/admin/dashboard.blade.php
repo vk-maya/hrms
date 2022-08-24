@@ -163,7 +163,7 @@
                                 <div class="leave-info-box">
                                     <div class="media d-flex align-items-center">
                                         <a href="profile.html" class="avatar"><img alt=""
-                                                src="assets/img/user.jpg"></a>
+                                                src="{{ asset('assets/img/user.jpg') }}"></a>
                                         <div class="media-body flex-grow-1">
                                             <div class="text-sm my-0">Martin Lewis</div>
                                         </div>
@@ -181,7 +181,7 @@
                                 <div class="leave-info-box">
                                     <div class="media d-flex align-items-center">
                                         <a href="profile.html" class="avatar"><img alt=""
-                                                src="assets/img/user.jpg"></a>
+                                                src="{{ asset('assets/img/user.jpg') }}"></a>
                                         <div class="media-body flex-grow-1">
                                             <div class="text-sm my-0">Martin Lewis</div>
                                         </div>

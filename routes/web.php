@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -68,7 +69,7 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
     // -------------------------------------document Attach-----------------------
     Route::get('file/attach/{id}',[UserController::class,'getdocument'])->name('employees.document');
     Route::get('get/file/{id}',[UserController::class,'download'])->name('employees.download');
-    
+
 
     // ----------------task route employees---------------------------
     route::get('task',[Task::class,'task'])->name('task');
@@ -79,7 +80,7 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
     Route::get('emp/show/task/{id}',[DailyTask::class,'showtaskk'])->name('show-taskk');
     Route::get('emp/task/list',[DailyTask::class,'tasklist'])->name('show-list');
     Route::post('emp/daliy/task',[DailyTask::class,'dailystore'])->name('daily.task.store');
-    ///Work From Home 
+    ///Work From Home
     Route::get('work/from/home',[LeaveController::class,'wfhcreate'])->name('wfh.create');
     Route::Post('work/from/home/save',[LeaveController::class,'wfhstore'])->name('store.wfh');
 
@@ -191,8 +192,8 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
        // setings-
     Route::get('salary/earndeduction/{id}',[PayrollController::class,'salaryEarnDeducation'])->name('salary.earn.deducation');
     Route::post('salary/earndeduction/edit',[PayrollController::class,'salarymanagementedit'])->name('salary.earn.deducation.edit');
-    
-    //company setting route 
+
+    //company setting route
     Route::get('settings',[HomeController::class,'settings'])->name('settings');
     Route::post('settings-store',[HomeController::class,'setting_store'])->name('settings-store');
 
@@ -213,11 +214,26 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     //...................PDF..................//
     Route::get('export-pdf/{id}', [PayrollController::class, 'downloadPdf'])->name('export-pdf');
 
-    // WFH Route 
+    // WFH Route
   Route::post('workfrom/home/report',[AdminLeaveController::class,'wfhReport'])->name('wfh.report');
- 
-   
 
+
+    // Shobhit Routes
+
+    // Leaves Type
+        Route::get('leave-setting', [AdminController::class, 'leaveSetting'])->name('leave-setting');
+        Route::get('add-leave-type', [AdminController::class, 'addLeaveType'])->name('add-leave-type');
+        Route::get('edit-leave-type/{id}', [AdminController::class, 'addLeaveType'])->name('edit-leave-type');
+        Route::post('store-leave-type', [AdminController::class, 'storeLeaveType'])->name('store-leave-type');
+    // End Leaves Type
+
+    // Employees
+        Route::get('add-employee', [AdminController::class, 'addEmployee'])->name('add-employee');
+        Route::get('edit-employee/{id}', [AdminController::class, 'addEmployee'])->name('edit-employee');
+        Route::post('store-employee', [AdminController::class, 'storeEmployee'])->name('store.employee');
+    // End Employees
+
+    // End Shobhit Routes
 
 
 });
