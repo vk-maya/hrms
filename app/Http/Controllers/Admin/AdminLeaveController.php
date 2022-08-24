@@ -101,7 +101,6 @@ class AdminLeaveController extends Controller
 
         ];
         if ($request->id != "") {
-            // dd($request->toArray());
             $data = Holiday::find($request->id);
         } else {
             $data = new Holiday();
@@ -156,7 +155,6 @@ class AdminLeaveController extends Controller
 
     //leave report by admin status update
     public function leavereport(Request $request) {
-        // dd($request->toArray());
         $data = Leave::find($request->id);
         //leave record save datatable
         $userLeave = Leave::find($request->id);
@@ -167,9 +165,9 @@ class AdminLeaveController extends Controller
         $da = $interval->format('%a');
         $days = $da + 1;
         $firstMonthofDay =  Carbon::now()->startOfMonth()->toDateString(); //Current month Range
+        $lastMonthofDay = Carbon::now()->endOfMonth()->toDateString();
         $nextMonthFirstfDay =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(1)->toDateString(); //second month Range
         $nextToNextMonthFirstfDay =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(2)->toDateString(); //last and 3 range month
-        $lastMonthofDay = Carbon::now()->endOfMonth()->toDateString();
         $request->reason=$userLeave->reason;
         $request->from=$userLeave->form;
         $request->to=$userLeave->to;
@@ -178,8 +176,9 @@ class AdminLeaveController extends Controller
         $leaveType = settingleave::find($request->type_id);
         $from=$request->from;
         $to =$request->to;
-        $leaverecord = Leaverecord::where('user_id',$data->user_id);
-        if ($request->status == 1 && $leaverecord == null) {
+        $leaverecord = Leaverecord::where('user_id',$data->user_id)->get();
+        $leaverecordCount = Leaverecord::where('leave_id',$request->id)->count();
+            if ($request->status ==1 && $leaverecordCount == 0) {
                     if ($request->from >= $firstMonthofDay && $request->to <= $lastMonthofDay) {
                         $leaveRecord = new Leaverecord();
                         $leaveRecord->user_id = $userLeave->user_id;
@@ -332,7 +331,6 @@ class AdminLeaveController extends Controller
                                     }
                                     $day = $day->addDays();
                                 }
-                            //  dd($sunday,$saturday);
                         $hfrom=$request->from;
                         $hto=$request->to;
                         $holiday= Holiday::where('status',1)->where(function($query)use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
@@ -349,7 +347,6 @@ class AdminLeaveController extends Controller
                         $diffDay = $dateFrom->diff($nextToMonthLastDayD);
                         $diffDay = $diffDay->format('%a');
                         $daysn = $diffDay + 1;
-                        // dd($daysn);
                         $daysl = $diffDay + 1;
                         $leaveRecord = new Leaverecord();
                         $leaveRecord->user_id = $userLeave->user_id;
@@ -364,7 +361,6 @@ class AdminLeaveController extends Controller
                         $smonth = date('Y-m',strtotime($day));
                         $sunday = 0;
                         $saturday = 0;
-                        //   dd($ssfrom,$ssto);
                         foreach(range($ssfrom,$ssto) as $key => $next) {
                             if (strtolower($day->format('l')) == 'sunday') {
                                 $sunday++;
@@ -379,7 +375,6 @@ class AdminLeaveController extends Controller
                                 $saturday++;
                             }
                         }
-                        //    dd($sunday,$saturday);
                         $hfrom=$request->from;
                         $hto=$nextToMonthLastDayD;
                         $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
@@ -436,32 +431,72 @@ class AdminLeaveController extends Controller
                             $leaveRecord->save();
                         }
                     }
-                    $totaldayUpdate=Leaverecord::where('leave_id',$userLeave->id)->get();
-                    $totalLeaveDay=0;
-                    foreach ($totaldayUpdate as $value) {
-                        $totalLeaveDay=$totalLeaveDay+$value->day;
+                    $totaldayUpdate=Leaverecord::where('leave_id',$userLeave->id)->where('from',">=",$firstMonthofDay)->where('to',"<=",$lastMonthofDay)->get();
+                    if ($totaldayUpdate != null) {
+                        $totalLeaveDay=0;
+                        foreach ($totaldayUpdate as $value) {
+                            $totalLeaveDay=$totalLeaveDay+$value->day;
+                        }
+                        $userLeave->day=$totalLeaveDay;
+                        $userLeave->status=1;
+                        $leaveRecord->admin_id =Auth::guard('admin')->user()->id;
+                        $userLeave->save(); 
+                        $userLeave=Leave::where('id',$request->id)->first();
+                    
+                        $leaveType = settingleave::find($userLeave->leaves_id);
+                        $monthLeaveRecord= monthleave::where('user_id',$userLeave->user_id)->where('status',1)->first();
+                        $netLeaveAnuApp=$monthLeaveRecord->anualLeave-$monthLeaveRecord->apprAnual;
+                        $netLeaveSickApp=$monthLeaveRecord->sickLeave-$monthLeaveRecord->apprSick;
+                        if ($leaveType->type=="PL") {
+                        if ($netLeaveAnuApp>=$userLeave->day){
+                            $monthLeaveRecord->apprAnual=$monthLeaveRecord->apprAnual+$userLeave->day;
+                        }else{
+                        $monthLeaveRecord->apprAnual= $monthLeaveRecord->apprAnual+$netLeaveAnuApp;
+                        $leaveAnual = $userLeave->day-$netLeaveAnuApp;
+                        $monthLeaveRecord->other=$monthLeaveRecord->other+$leaveAnual;
+                        }
+                        }elseif($leaveType->type=="Sick"){
+                            if ($netLeaveSickApp>=$userLeave->day){
+                                $monthLeaveRecord->apprSick=$monthLeaveRecord->apprSick+$userLeave->day;
+                            }else{
+                            $monthLeaveRecord->apprSick= $monthLeaveRecord->apprSick+$netLeaveSickApp;
+                            $leaveAnual = $userLeave->day-$netLeaveSickApp;
+                            $monthLeaveRecord->other=$monthLeaveRecord->other+$leaveAnual;
+                            }
+                        }else{
+                            $monthLeaveRecord->other=$monthLeaveRecord->other+$userLeave->day;
+                        }
+                        $monthLeaveRecord->save();
+                    }else{
+                        $userLeave->status=1;
+                        $leaveRecord->admin_id =Auth::guard('admin')->user()->id;
+                        $userLeave->save();
                     }
-                    $userLeave->day=$totalLeaveDay;
-                    $userLeave->status=1;
-                    $leaveRecord->admin_id =Auth::guard('admin')->user()->id;
-                    $userLeave->save(); 
-                    $userLeave=Leave::where('id',$request->id)->first();
-                    // dd($userLeave->toArray());
+                    dd("new record update");
+            }elseif($request->status == 1 && $leaverecordCount > 0){
+                    $totaldayUpdate=Leaverecord::where('leave_id',$request->id)->where('from',">=",$firstMonthofDay)->where('to',"<=",$lastMonthofDay)->get();
+                if ($totaldayUpdate != null) { 
+                    foreach ($totaldayUpdate as $value) {
+                        $record =Leaverecord::find($value->id);
+                        $record->status=1;
+                        $record->admin_id =Auth::guard('admin')->user()->id;
+                        $record->save();
+                    }
                     $leaveType = settingleave::find($userLeave->leaves_id);
                     $monthLeaveRecord= monthleave::where('user_id',$userLeave->user_id)->where('status',1)->first();
                     $netLeaveAnuApp=$monthLeaveRecord->anualLeave-$monthLeaveRecord->apprAnual;
                     $netLeaveSickApp=$monthLeaveRecord->sickLeave-$monthLeaveRecord->apprSick;
                     if ($leaveType->type=="PL") {
-                    if ($netLeaveAnuApp>=$userLeave->day){
-                        $monthLeaveRecord->apprAnual=$userLeave->day;
-                    }else{
-                    $monthLeaveRecord->apprAnual= $monthLeaveRecord->apprAnual+$netLeaveAnuApp;
-                    $leaveAnual = $userLeave->day-$netLeaveAnuApp;
-                    $monthLeaveRecord->other=$monthLeaveRecord->other+$leaveAnual;
-                    }
+                        if ($netLeaveAnuApp>=$userLeave->day){
+                            $monthLeaveRecord->apprAnual=$monthLeaveRecord->apprAnual+$userLeave->day;
+                        }else{
+                        $monthLeaveRecord->apprAnual= $monthLeaveRecord->apprAnual+$netLeaveAnuApp;
+                        $leaveAnual = $userLeave->day-$netLeaveAnuApp;
+                        $monthLeaveRecord->other=$monthLeaveRecord->other+$leaveAnual;
+                        }
                     }elseif($leaveType->type=="Sick"){
                         if ($netLeaveSickApp>=$userLeave->day){
-                            $monthLeaveRecord->apprSick=$userLeave->day;
+                            $monthLeaveRecord->apprSick= $monthLeaveRecord->apprSick+$userLeave->day;
                         }else{
                         $monthLeaveRecord->apprSick= $monthLeaveRecord->apprSick+$netLeaveSickApp;
                         $leaveAnual = $userLeave->day-$netLeaveSickApp;
@@ -471,106 +506,116 @@ class AdminLeaveController extends Controller
                         $monthLeaveRecord->other=$monthLeaveRecord->other+$userLeave->day;
                     }
                     $monthLeaveRecord->save();
-
-    }elseif($request->status == 0 && $userLeave->status == 1){    
-        dd("0 1");
-                    $totaldayUpdate=Leaverecord::where('leave_id',$request->id)->get();                    
+                $userLeave->status=1;
+                $userLeave->save();
+                }else{
+                    $userLeave->status=1;
+                    $userLeave->save();
+                }
+            }elseif($request->status == 0 && $userLeave->status == 1){
+                    $totaldayUpdate=Leaverecord::where('leave_id',$request->id)->where('from',">=",$firstMonthofDay)->where('to',"<=",$lastMonthofDay)->get();
+                    if ($totaldayUpdate != null) { 
+                        foreach ($totaldayUpdate as $value) {
+                            $record =Leaverecord::find($value->id);
+                            $record->status=0;
+                            $record->admin_id =Auth::guard('admin')->user()->id;
+                            $record->save();
+                                }
+                            $userLeave=Leave::where('id',$request->id)->first();
+                            $leaveType = settingleave::find($userLeave->leaves_id);
+                            $monthLeaveRecord= monthleave::where('user_id',$userLeave->user_id)->where('status',1)->first();
+                            $netLeaveAnuApp=$monthLeaveRecord->apprAnual;
+                            $netLeaveSickApp=$monthLeaveRecord->apprSick;
+                    if ($leaveType->type=="PL") {
+                            if ($netLeaveAnuApp>=$userLeave->day){
+                                $monthLeaveRecord->apprAnual= $monthLeaveRecord->apprAnual-$userLeave->day;
+                            }else{
+                                $monthLeaveRecord->apprAnual=$netLeaveAnuApp;
+                                $leaveAnual = $userLeave->day-$netLeaveAnuApp;
+                                $monthLeaveRecord->other=$monthLeaveRecord->other-$leaveAnual;
+                            }
+                    }elseif($leaveType->type=="Sick"){
+                            if ($netLeaveSickApp>=$userLeave->day){
+                                $monthLeaveRecord->apprSick=$monthLeaveRecord->apprSick-$userLeave->day;
+                            }else{
+                            $monthLeaveRecord->apprSick=$netLeaveSickApp;
+                            $leaveAnual = $userLeave->day-$netLeaveSickApp;
+                            $monthLeaveRecord->other=$monthLeaveRecord->other-$leaveAnual;
+                            }
+                    }else{
+                        $monthLeaveRecord->other=$monthLeaveRecord->other-$userLeave->day;
+                    }
+                    $monthLeaveRecord->save();
+                    $userLeave->status=0;
+                    $userLeave->save();
+                }else{
+                    $userLeave->status=0;
+                    $userLeave->save();
+                }
+            }elseif($request->status == 2 && $userLeave->status == 1){
+                    $totaldayUpdate=Leaverecord::where('leave_id',$request->id)->where('from',">=",$firstMonthofDay)->where('to',"<=",$lastMonthofDay)->get();
+                        if ($totaldayUpdate != null) { 
+                        foreach ($totaldayUpdate as $value) {
+                            $record =Leaverecord::find($value->id);
+                            $record->status=0;
+                            $record->admin_id =Auth::guard('admin')->user()->id;
+                            $record->save();
+                        }
+                        $userLeave=Leave::where('id',$request->id)->first();
+                        $leaveType = settingleave::find($userLeave->leaves_id);
+                        $monthLeaveRecord= monthleave::where('user_id',$userLeave->user_id)->where('status',1)->first();
+                        $netLeaveAnuApp=$monthLeaveRecord->apprAnual;
+                        $netLeaveSickApp=$monthLeaveRecord->apprSick;
+                        if ($leaveType->type=="PL") {
+                            if ($netLeaveAnuApp>=$userLeave->day){
+                                $monthLeaveRecord->apprAnual= $monthLeaveRecord->apprAnual-$userLeave->day;
+                            }else{
+                                $monthLeaveRecord->apprAnual=$netLeaveAnuApp;
+                                $leaveAnual = $userLeave->day-$netLeaveAnuApp;
+                                $monthLeaveRecord->other=$monthLeaveRecord->other-$leaveAnual;
+                            }
+                        }elseif($leaveType->type=="Sick"){
+                            if ($netLeaveSickApp>=$userLeave->day){
+                                $monthLeaveRecord->apprSick=$monthLeaveRecord->apprSick-$userLeave->day;
+                            }else{
+                            $monthLeaveRecord->apprSick=$netLeaveSickApp;
+                            $leaveAnual = $userLeave->day-$netLeaveSickApp;
+                            $monthLeaveRecord->other=$monthLeaveRecord->other-$leaveAnual;
+                            }
+                        }else{
+                            $monthLeaveRecord->other=$monthLeaveRecord->other-$userLeave->day;
+                        }
+                        $monthLeaveRecord->save();
+                        $userLeave->status=2;
+                        $userLeave->save();
+                    }else{
+                        $userLeave->status=2;
+                        $userLeave->save();
+                    }
+            }elseif($request->status == 0 && $userLeave->status == 2 && $leaverecordCount != null){
+                    $totaldayUpdate=Leaverecord::where('leave_id',$request->id)->get();
                     foreach ($totaldayUpdate as $value) {
-                        // dd($value->toArray());
                         $record =Leaverecord::find($value->id);
                         $record->status=0;
                         $record->admin_id =Auth::guard('admin')->user()->id;
                         $record->save();     
                     }
                     $userLeave=Leave::where('id',$request->id)->first();
-                    $leaveType = settingleave::find($userLeave->leaves_id);
-                    $monthLeaveRecord= monthleave::where('user_id',$userLeave->user_id)->where('status',1)->first();
-                    $netLeaveAnuApp=$monthLeaveRecord->apprAnual;
-                    $netLeaveSickApp=$monthLeaveRecord->apprSick;
-                    if ($leaveType->type=="PL") {
-                    if ($netLeaveAnuApp<=$userLeave->day){
-                        $monthLeaveRecord->apprAnual= $monthLeaveRecord->apprAnual-$userLeave->day;
-                    }else{
-                    $monthLeaveRecord->apprAnual=$netLeaveAnuApp;
-                    $leaveAnual = $userLeave->day-$netLeaveAnuApp;
-                    $monthLeaveRecord->other=$monthLeaveRecord->other-$leaveAnual;
-                    }
-                    }elseif($leaveType->type=="Sick"){
-                        if ($netLeaveSickApp<=$userLeave->day){
-                            $monthLeaveRecord->apprSick=$monthLeaveRecord->apprSick-$userLeave->day;
-                        }else{
-                        $monthLeaveRecord->apprSick=$netLeaveSickApp;
-                        $leaveAnual = $userLeave->day-$netLeaveSickApp;
-                        $monthLeaveRecord->other=$monthLeaveRecord->other-$leaveAnual;
-                        }
-                    }else{
-                        $monthLeaveRecord->other=$monthLeaveRecord->other-$userLeave->day;
-                    }
-                    $monthLeaveRecord->save();
                     $userLeave->status=0;
                     $userLeave->save();
-
-            }elseif($request->status == 2 && $userLeave->status == 1){
-        dd("2 1");
-    
-                    $totaldayUpdate=Leaverecord::where('leave_id',$request->id)->get();
-                    
-                    foreach ($totaldayUpdate as $value) {
-                        // dd($value->toArray());
-                        $record =Leaverecord::find($value->id);
-                        $record->status=2;
-                        $record->admin_id =Auth::guard('admin')->user()->id;
-                        $record->save();     
-                    }
-                    $userLeave=Leave::where('id',$request->id)->first();
-                    $leaveType = settingleave::find($userLeave->leaves_id);
-                    $monthLeaveRecord= monthleave::where('user_id',$userLeave->user_id)->where('status',1)->first();
-                    $netLeaveAnuApp=$monthLeaveRecord->apprAnual;
-                    $netLeaveSickApp=$monthLeaveRecord->apprSick;
-                    if ($leaveType->type=="PL") {
-                    if ($netLeaveAnuApp<=$userLeave->day){
-                        $monthLeaveRecord->apprAnual= $monthLeaveRecord->apprAnual-$userLeave->day;
-                    }else{
-                    $monthLeaveRecord->apprAnual=$netLeaveAnuApp;
-                    $leaveAnual = $userLeave->day-$netLeaveAnuApp;
-                    $monthLeaveRecord->other=$monthLeaveRecord->other-$leaveAnual;
-                    }
-                    }elseif($leaveType->type=="Sick"){
-                        if ($netLeaveSickApp<=$userLeave->day){
-                            $monthLeaveRecord->apprSick=$monthLeaveRecord->apprSick-$userLeave->day;
-                        }else{
-                        $monthLeaveRecord->apprSick=$netLeaveSickApp;
-                        $leaveAnual = $userLeave->day-$netLeaveSickApp;
-                        $monthLeaveRecord->other=$monthLeaveRecord->other-$leaveAnual;
-                        }
-                    }else{
-                        $monthLeaveRecord->other=$monthLeaveRecord->other-$userLeave->day;
-                    }
-                    $userLeave->status=2;
-                    $userLeave->save();
-                    $monthLeaveRecord->save();
-                }elseif($request->status == 2 && $userLeave->status == 0){
-                    dd("2,0");
-                    $totaldayUpdate=Leaverecord::where('leave_id',$request->id)->get();
-                    
-                    foreach ($totaldayUpdate as $value) {
-                        // dd($value->toArray());
-                        $record =Leaverecord::find($value->id);
-                        $record->status=2;
-                        $record->admin_id =Auth::guard('admin')->user()->id;
-                        $record->save();     
-                    }
-                    $userLeave=Leave::where('id',$request->id)->first();
-                    $userLeave->status=2;
-                    $userLeave->save();
-                }elseif($request->status == 2 && $userLeave->status == 2){
-                    dd("hello");
-
-                    $totaldayUpdate=Leaverecord::where('leave_id',$request->id)->get();                 
-                    $userLeave=Leave::where('id',$request->id)->first();
-                    $userLeave->status=0;
-                    $userLeave->save();
-                }
+            }elseif($request->status == 2 && $userLeave->status == 0 && $leaverecordCount != null){
+                $userLeave=Leave::where('id',$request->id)->first();
+                $userLeave->status=2;
+                $userLeave->save();
+            }elseif($request->status == 2 && $userLeave->status == 2 && $leaverecordCount ==0){
+                $userLeave=Leave::where('id',$request->id)->first();
+                $userLeave->status=2;
+                $userLeave->save();
+            }elseif($request->status == 0 && $userLeave->status == 2 && $leaverecordCount ==0){
+                $userLeave=Leave::where('id',$request->id)->first();
+                $userLeave->status=0;
+                $userLeave->save();
+            }
         return redirect()->back();
     }
     public function wfhReport(Request $request) {
@@ -583,7 +628,6 @@ class AdminLeaveController extends Controller
     public function moreleave($id)
     {
         $data = Leaverecord::where('leave_id', $id)->with('leavetype')->get();
-        // dd($data->toArray());
         return view('admin.leave.leaverecord', compact('data'));
     }
 }
