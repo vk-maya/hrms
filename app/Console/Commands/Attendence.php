@@ -72,8 +72,10 @@ class Attendence extends Command
                     $attend->passdate = ($key->Status == 'P') ? date('Y-m-d', strtotime($date)) : null;
                     $attend->save();
                 } else {
-                    if ($key->INTime != '00:00' && $key->OUTTime != '00:00') {
-                        $work_time = Carbon::parse($key->INTime)->diff(\Carbon\Carbon::parse($key->OUTTime))->format('%H:%I:%S');
+                    $in_time = $key->INTime == '--:--' ? '00:00' : $key->INTime;
+                    $out_time = $key->OUTTime == '--:--' ? '00:00' : $key->OUTTime;
+                    if ($in_time != '00:00' && $out_time != '00:00') {
+                        $work_time = Carbon::parse($in_time)->diff(\Carbon\Carbon::parse($out_time))->format('%H:%I:%S');
                         $work_time = Carbon::parse($work_time . "- 1 hour")->toTimeString();
                     } else {
                         $work_time = '00:00';
