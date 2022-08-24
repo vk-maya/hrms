@@ -10,6 +10,7 @@ use App\Models\Admin\UserleaveYear;
 use App\Models\Countries;
 use App\Models\Department;
 use App\Models\Leave\settingleave;
+use App\Models\monthleave;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -168,10 +169,98 @@ class AdminController extends Controller
             $employee->image = $filename;
         }
 
-        if ($employee->save()) {
-            $sess = Session::where('status', 1)->latest()->first();
+        // if ($employee->save()) {
+        if (true) {
+            $session = Session::where('status', 1)->latest()->first();
+            if (!$request->has('id')){
+                $user_yearleave = new UserleaveYear();
+                // $user_yearleave->user_id = $employee->id;
+                $user_yearleave->user_id = 1;
+                $user_yearleave->session_id = $session->id;
+
+                $allleave = settingleave::where('status', 1)->get();
+                $jd = $request->joiningDate;
+                if ($jd <= $session->from){
+                    $jd = $session->from;
+                }
+
+                $diffr = round(Carbon::parse($jd)->floatDiffInMonths($session->to));
+
+                foreach ($allleave as $value){
+                    if ($value->type == 'PL'){
+                        $day = $diffr *= $value->day / 12;
+                        $user_yearleave->basicAnual = $day;
+                    }elseif ($value->type == 'Sick'){
+                        $day = $diffr *= $value->day / 12;
+                        $user_yearleave->basicSick = $day;
+                    }elseif ($value->type == 'other'){
+                        $day = $diffr = $value->day;
+                        $user_yearleave->other = $day;
+                    }
+                }
+                $user_yearleave->status = 1;
+                // if ($user_yearleave->save()) {
+                if (true) {
+                    foreach ($allleave as $key => $value){
+                        if ($value->type == "PL"){
+                            $anual = $value->day / 12;
+                        }elseif ($value->type == "Sick"){
+                            $sickl = $value->day / 12;
+                        }
+                    }
+
+                    $data = new monthleave();
+                    // $data->user_id = $employee->id;
+                    // $data->useryear_id = $user_yearleave->id;
+                    $data->user_id = 1;
+                    $data->useryear_id = 1;
+                    // $jd = '2022-05-24';
+
+                    $diffr = round(Carbon::parse($jd)->floatDiffInMonths(Carbon::now()));
+                    // dd($diffr);
+
+                    // dd(Carbon::now()->daysInMonth);
+                    dd(Carbon::now()->subMonth($diffr));
+
+                    $str = date('Y-m', strtotime($jd));
+                    $strr = $str . "-15";
+
+                    if ($jd >= $session->from)
+                    {
+                        if ($jd < $strr)
+                        {
+                            $jd = date('Y-m', strtotime($jd));
+                            $jd = $jd . "-01";
+                        }
+                        else
+                        {
+                            $jd = Carbon::parse($jd)->addMonths();
+                            $jd = date('Y-m', strtotime($jd));
+                            $jd = $jd . "-01";
+                        }
+                    }else{
+                        $jd = $session->from;
+                    }
+                    $end = now();
+                    $end = date('Y-m', strtotime($end));
+                    $end = Carbon::parse($end)->endOfMonth(); //Last Date of Month
+                    $end = date('Y-m-d', strtotime($end));
+                    $diffr = round(Carbon::parse($jd)->floatDiffInMonths($end));
+                    $from = date('Y-m-d', strtotime($jd));
+                    $to = date('Y-m-d', strtotime($end));
+                    $data->from = $from;
+                    $data->to = $to;
+                    $anual = $diffr * $anual;
+                    $sick = $diffr * $sickl;
+                    $data->anualLeave = $anual;
+                    $data->sickLeave = $sick;
+                    $data->status = 1;
+                    $data->save();
+                }
+            }
         }
 
         dd($employee->toArray());
+        $employee->userSalaryData()->sync($request->earning);
     }
 }
