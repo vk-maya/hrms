@@ -472,7 +472,6 @@ class AdminLeaveController extends Controller
                         $leaveRecord->admin_id =Auth::guard('admin')->user()->id;
                         $userLeave->save();
                     }
-                    dd("new record update");
             }elseif($request->status == 1 && $leaverecordCount > 0){
                     $totaldayUpdate=Leaverecord::where('leave_id',$request->id)->where('from',">=",$firstMonthofDay)->where('to',"<=",$lastMonthofDay)->get();
                 if ($totaldayUpdate != null) { 
