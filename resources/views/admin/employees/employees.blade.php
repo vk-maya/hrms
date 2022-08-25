@@ -1,34 +1,33 @@
 @extends('admin.layouts.app')
 @push('css')
-<link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
 @endpush
 @section('content')
-<div class="page-wrapper">
-    <div class="content container-fluid">
-        <div class="page-header">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h3 class="page-title">Employee</h3>
-                    <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Employee</li>
-                    </ul>
-                </div>
-                <div class="col-auto ms-auto">                     
-                    <a href="{{ route('admin.employees') }}" class="grid-view btn btn-link active"><i
-                        class="fa fa-th"></i></a>
-                        <a href="{{ route('admin.employees.list') }}" class="list-view btn btn-link emplist"
-                        id="employeeslist"><i class="fa fa-bars"></i></a>
-                        <div class="view-icons">
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+            <div class="page-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h3 class="page-title">Employee</h3>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Employee</li>
+                        </ul>
+                    </div>
+                    <div class="col-auto float-end ms-auto">
                         <a href="{{ route('admin.add-employee') }}" class="btn add-btn"><i class="fa fa-plus"></i>
                             Add Employee</a>
                         <a href="{{ route('admin.add.employees.leavemonth') }}" class="btn add-btn"><i class="fa fa-plus"></i>
                             Add Leave</a>
-                       </div>
-                   </div>
-               </div>
-           </div>
-           <div class="row filter-row">
+                        <div class="view-icons">
+                            <a href="{{ route('admin.employees') }}" class="grid-view btn btn-link active"><i
+                                    class="fa fa-th"></i></a>
+                            <a href="{{ route('admin.employees.list') }}" class="list-view btn btn-link emplist"
+                                id="employeeslist"><i class="fa fa-bars"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row filter-row">
                 <div class="col-sm-6 col-md-3">
                     <div class="form-group form-focus">
@@ -109,10 +108,9 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -134,33 +132,42 @@
                                         <a class="dropdown-item" href="{{ route('admin.edit-employee', $item->id) }}"><i
                                                 class="fa fa-pencil text-warning m-r-5"></i> Edit</a>
                                         <button class="dropdown-item delete" data-id="{{ $item->id }}"><i
-                                            class="fa fa-trash-o me-3"></i> Delete</button>
-                                            <a class="dropdown-item more-add" href="{{route('admin.employees.information',$item->id)}}"><i class="fa fa-plus  me-3"></i>Add More</a>
-                                            <a class="dropdown-item status" href="{{route('admin.employees.status',$item->id)}}">
-                                                @if ($item->status == 1)
-                                                <i class="fa fa-times me-3"></i>
+                                                class="fa fa-trash-o text-danger m-r-5"></i> Delete</button>
+                                        <a class="dropdown-item more-add" href="{{route('admin.employees.information',$item->id)}}"><i class="fa fa-plus text-info  m-r-5"></i>Add More</a>
+                                        <a class="dropdown-item status" href="{{route('admin.employees.status',$item->id)}}">
+                                            @if ($item->status == 1)
+                                                 <i class="fa fa-times text-danger" aria-hidden="true"></i>
                                                 <span
-                                                class="yeh-data">Inactive</span>
-                                                @else
-                                                <i class="fa fa-check me-3 "></i> <span
-                                                class="yeh-data">Active</span>
-                                                @endif
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div>
-
-                                    </div>
-                                    <div class="small text-muted">
-                                        <h4 class="user-name m-t-10 mb-0 text-ellipsis">{{$item->first_name.' '.$item->last_name}}</h4>
-                                        {{$item->designation->designation_name}}
+                                                    class="yeh-data">Inactive</span>
+                                            @else
+                                                <i class="fa fa-check m-r-5 text-success"></i> <span
+                                                    class="yeh-data">Active</span>
+                                            @endif
+                                        </a>
                                     </div>
                                 </div>
+                                <div>
+                                    @if ($item->status == 0)
+                                        <span class="position-relative">
+                                            <span
+                                                class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
+                                            </span>
+                                        </span>
+                                    @else
+                                        <span class="position-relative">
+                                            <span
+                                                class="position-absolute top-0 start-100 translate-middle p-2 bg-success border border-light rounded-circle">
+                                            </span>
+                                        </span>
+                                    @endif
+                                </div>
+                                <div class="small text-muted">
+                                    <h4 class="user-name m-t-10 mb-0 text-ellipsis">{{$item->first_name.' '.$item->last_name}}</h4>
+                                    {{$item->designation->designation_name}}
+                                </div>
                             </div>
-                            @endforeach
                         </div>
-                        @endisset
-                    </div>
+                    @endforeach
                 </div>
             @endisset
         </div>
@@ -218,7 +225,7 @@
                 if (id != NULL || name != NULL designation != NULL) {
                     $.ajax({
                         type: "GET",
-                        url: '{{route('')}}',
+                        url: '',
                         cache: false,
                         success: function(res) {
 

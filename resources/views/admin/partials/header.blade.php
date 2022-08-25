@@ -14,8 +14,11 @@
         </span>
     </a>
 
+    @php
+        $session = \App\Models\Admin\Session::where('status', 1)->first();
+    @endphp
     <div class="page-title-box">
-        {{-- <h3>Scrum Digital Pvt Ltd</h3> --}}
+        <h3>Session - {{date('Y', strtotime($session->from)).'-'.date('Y', strtotime($session->to))}}</h3>
     </div>
 
     <a id="mobile_btn" class="mobile_btn" href="#sidebar"><i class="fa fa-bars"></i></a>
@@ -63,14 +66,13 @@
                 <a class="dropdown-item" href="{{ route('admin.logout') }}" onclick="event.preventDefault();
                 document.getElementById('logout-form').submit();"><i class="fa fa-sign-out me-3"></i>
                 Log Out
-            </a>
-            <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
-                @csrf
-            </form>
-
-        </div>
-    </li>
-</ul>
+                </a>
+                <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+            </div>
+        </li>
+    </ul>
 
 
 <div class="dropdown mobile-user-menu">

@@ -6,23 +6,23 @@
                 <li class="menu-title">
                     <span>Main</span>
                 </li>
-                <li class="@if(\Request::route()->getName() == 'dashboard' || \Request::route()->getName() == 'empdashboard') active @endif">
-                    <a href="{{ route('dashboard') }}"><i class="la la-dashboard"></i> <span> Dashboard</span> <span
+                <li class="@if(in_array(\Request::route()->getName(), ["empdashboard"])) active @endif">
+                    <a href="{{ route('empdashboard') }}"><i class="la la-dashboard"></i> <span> Dashboard</span> <span
                             class=""></span></a>
                 </li>
                 <li class="menu-title">
                     <span>Employees</span>
                 </li>
-                <li class="submenu">
+                <li class="submenu @if(in_array(\Request::route()->getName(), ["employees.attendance", "employees.leave"])) active @endif">
                     <a href="#"><i class="la la-user"></i> <span> Employees</span> <span
                             class="menu-arrow"></span></a>
                     <ul style="display: none;">
                         <li><a class="@if(\Request::route()->getName() == 'employees.attendance') active @endif" href="{{route('employees.attendance')}}">Attendance</a></li>
                         <li><a class="@if(\Request::route()->getName() == 'employees.leave') active @endif" href="{{route('employees.leave')}}">Leaves</a></li>
-                        
+
                     </ul>
                 </li>
-                <li class="submenu @if(\Request::route()->getName() == 'employees.daily.task' || \Request::route()->getName() == 'employees.show-list') active @endif">
+                <li class="submenu @if(in_array(\Request::route()->getName(), ["employees.daily.task", "employees.show-list"])) active @endif">
                     <a href="#"><i class="la la-rocket"></i> <span> Task</span> <span
                             class="menu-arrow"></span></a>
                     <ul style="display: none;">
@@ -35,12 +35,12 @@
                             <li><a class="@if(\Request::route()->getName() == 'employees.daily.task') active @endif" href="{{route('employees.daily.task')}}">Daily Task</a></li>
                         @else
                             <li><a disabled>Daily Task</a></li>
-                        @endif                    
+                        @endif
                         <li><a class="@if(\Request::route()->getName() == 'employees.show-list') active @endif" href="{{route('employees.show-list')}}">List Task</a></li>
                     </ul>
                 </li>
             </ul>
         </div>
     </div>
-</div> 
+</div>
 @endif

@@ -23,15 +23,21 @@ class AdminController extends Controller
 {
     public function leaveSetting()
     {
-        $data = settingleave::get();
+        $session = Session::where('status', 1)->first();
+        $data = settingleave::where('session_id', $session->id)->get();
         return view('admin.leave.setting', compact('data'));
     }
 
     public function addLeaveType($id = null)
     {
+        $session = Session::where('status', 1)->first();
         $leave = null;
         if ($id != NULL) {
             $leave = settingleave::find($id);
+
+            if ($leave->session_id != $session->id) {
+                return redirect()->route('admin.leave-setting')->with('error', 'Session Expired or Not Valid');
+            }
         }
 
         return view('admin.leave.add_leave_type', compact('leave'));
@@ -39,16 +45,21 @@ class AdminController extends Controller
 
     public function storeLeaveType(Request $request)
     {
-        $request->validate([
-            'type' => 'required',
-            'day' => 'required',
-        ]);
+        $session = Session::where('status', 1)->first();
         if ($request->has('id')) {
+            $request->validate([
+                'type' => 'required|unique:settingleaves,type,'.$request->id.',id,session_id,'.$session->id,
+                'day' => 'required',
+            ]);
             $leave = settingleave::find($request->id);
         } else {
+            $request->validate([
+                'type' => 'required|unique:settingleaves,type,'.$request->type.',id,session_id,'.$session->id,
+                'day' => 'required',
+            ]);
             $leave = new settingleave();
         }
-
+        $leave->session_id = $session->id;
         $leave->type = $request->type;
         $leave->day = $request->day;
         $leave->carryfordward = $request->carryfordward;

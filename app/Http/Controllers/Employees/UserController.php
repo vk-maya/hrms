@@ -112,7 +112,6 @@ class UserController extends Controller
             'state_id' => ['required', 'integer'],
             'city_id' => ['required', 'integer'],
             'pincode' => ['required', 'integer', 'digits:6'],
-
         ];
         $request->validate($rules);
         $employees = User::find($request->id);
@@ -127,7 +126,7 @@ class UserController extends Controller
         $employees->state_id = $request->state_id;
         $employees->city_id = $request->city_id;
         $employees->pinCode = $request->pincode;
-        if ($request->hasFile('image') == 1) {
+        if ($request->hasFile('image')) {
             storage::delete('public/uploads/' . $employees->image);
             $file = $request->file('image');
             $ext = $file->getClientOriginalExtension();
@@ -136,8 +135,9 @@ class UserController extends Controller
             $employees->image = $filename;
         }
         $employees->save();
-        return redirect('/');
+        return redirect()->route('empdashboard');
     }
+
     public function country(Request $request)
     {
         $state = State::where('country_id', $request->contid)->get();

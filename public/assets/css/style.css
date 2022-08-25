@@ -260,8 +260,8 @@ input:focus,select:focus,textarea:focus{
 
 @font-face {
     font-family: 'Mulish';
-    src: url('Mulish-ExtraLightItalic.woff2') format('woff2'),
-        url('Mulish-ExtraLightItalic.woff') format('woff');
+    src: url('../fonts/Mulish-ExtraLightItalic.woff2') format('woff2'),
+        url('../fonts/Mulish-ExtraLightItalic.woff') format('woff');
     font-weight: 200;
     font-style: italic;
     font-display: swap;
@@ -269,8 +269,8 @@ input:focus,select:focus,textarea:focus{
 
 @font-face {
     font-family: 'Mulish';
-    src: url('Mulish-LightItalic.woff2') format('woff2'),
-        url('Mulish-LightItalic.woff') format('woff');
+    src: url('../fonts/Mulish-LightItalic.woff2') format('woff2'),
+        url('../fonts/Mulish-LightItalic.woff') format('woff');
     font-weight: 300;
     font-style: italic;
     font-display: swap;
@@ -278,8 +278,8 @@ input:focus,select:focus,textarea:focus{
 
 @font-face {
     font-family: 'Mulish';
-    src: url('Mulish-Medium.woff2') format('woff2'),
-        url('Mulish-Medium.woff') format('woff');
+    src: url('../fonts/Mulish-Medium.woff2') format('woff2'),
+        url('../fonts/Mulish-Medium.woff') format('woff');
     font-weight: 500;
     font-style: normal;
     font-display: swap;
@@ -287,8 +287,8 @@ input:focus,select:focus,textarea:focus{
 
 @font-face {
     font-family: 'Mulish';
-    src: url('Mulish-MediumItalic.woff2') format('woff2'),
-        url('Mulish-MediumItalic.woff') format('woff');
+    src: url('../fonts/Mulish-MediumItalic.woff2') format('woff2'),
+        url('../fonts/Mulish-MediumItalic.woff') format('woff');
     font-weight: 500;
     font-style: italic;
     font-display: swap;
@@ -5065,7 +5065,7 @@ textarea.form-control{
 
 .profile-widget .dropdown.profile-action .dropdown-menu.show{
     padding: 0px;
-    border: none;    
+    border: none;
     box-shadow: 0px 0px 4px 0px #ccc;
     min-width: 120px!important;
     inset: 0px -12px auto auto!important;
@@ -6819,7 +6819,7 @@ button.close{
     background-color: #f7f7f7;
     border-radius: 50%;
 }
-.header .dropdown-menu .admin-heading h4{ 
+.header .dropdown-menu .admin-heading h4{
     margin-top: 10px;
     margin-bottom: 0;
     font-size: 20px;
@@ -6865,7 +6865,7 @@ button.close{
     margin:0;
     width:80px;
     border: 2px solid #ccc;
-     overflow: hidden;                                                                                       
+     overflow: hidden;
 }
 .header .user-menu.nav>li.flag-nav .dropdown-menu{
     max-height:100px;

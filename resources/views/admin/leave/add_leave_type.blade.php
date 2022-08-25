@@ -33,7 +33,7 @@
                                             class="form-control" type="text">
                                         <span class="text-danger">
                                             @error('type')
-                                                <p>The Title field is required</p>
+                                                <p>{{$message}}</p>
                                             @enderror
                                         </span>
                                     </div>

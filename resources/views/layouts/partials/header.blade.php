@@ -20,8 +20,11 @@
         </span>
     </a>
 
+    @php
+        $session = \App\Models\Admin\Session::where('status', 1)->first();
+    @endphp
     <div class="page-title-box">
-        {{-- <h3>Scrum Digital Pvt Ltd</h3> --}}
+        <h3>Session - {{date('Y', strtotime($session->from)).'-'.date('Y', strtotime($session->to))}}</h3>
     </div>
 
     <a id="mobile_btn" class="mobile_btn" href="#sidebar"><i class="fa fa-bars"></i></a>
@@ -61,8 +64,8 @@
                             <button class=" dropdown-item" type="submit">
                                 Log Out
                             </button>
-                        </form>              
+                        </form>
                     </div>
                 </li>
-            </ul>   
+            </ul>
         </div>
