@@ -207,7 +207,7 @@ class LeaveController extends Controller
     //wfh Request Store Function 
     public function attendanceWfhStore(Request $request)
     {
-        dd($request->toArray());
+        // dd($request->toArray());
         $rules = [
             'id' => ['required', 'integer'],
             'day' => ['required', 'integer'],
@@ -231,7 +231,7 @@ class LeaveController extends Controller
             $data->status = 2;
             $data->save();
             $attendance->action = 4;
-            $attendance->save();
+            $attendance->save(); 
         }
         return redirect()->route('employees.leave');
     }
