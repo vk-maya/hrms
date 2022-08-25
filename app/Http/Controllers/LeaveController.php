@@ -176,6 +176,7 @@ class LeaveController extends Controller
     }
     //leave fnction Store
     public function attendance(Request $request){  
+        // dd($request->toArray());
         $rules = [
             'id' => ['required', 'integer'],
             'day' => ['required', 'integer'],
@@ -200,6 +201,8 @@ class LeaveController extends Controller
             $data->status = 2;
             $data->save();          
         }
+        $attendance = Attendance::where('date',$request->from)->first();
+        // dd($attendance);
         $attendance->action = 3;
         $attendance->save();
         return redirect()->route('employees.leave');
@@ -207,7 +210,8 @@ class LeaveController extends Controller
     //wfh Request Store Function 
     public function attendanceWfhStore(Request $request)
     {
-        // dd($request->toArray());
+        $attendance = Attendance::where('date',$request->wdate)->first();
+        // dd($attendance  ->toArray());
         $rules = [
             'id' => ['required', 'integer'],
             'day' => ['required', 'integer'],
@@ -230,14 +234,15 @@ class LeaveController extends Controller
             $data->task = $request->task;
             $data->status = 2;
             $data->save();
-            $attendance->action = 4;
-            $attendance->save(); 
+            $attendance = Attendance::where('date',$request->wdate)->first();
+            $attendance->action = 3;
+            $attendance->save();
         }
         return redirect()->route('employees.leave');
     }
     //Leave With WFH Request Function 
     public function attendanceLeaveWfhStore(Request $request)
-    {       
+    {
         $rules = [
             'id' => ['required', 'integer'],
             'day' => ['required', 'integer'],
@@ -250,9 +255,10 @@ class LeaveController extends Controller
         $leaveApprovedRecord=Leaverecord::where('user_id', Auth::guard('web')->user()->id)->where("from", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->first();
         $request->validate($rules);
         if ($leavePending != null) {  
+            // dd($request->toArray());
             $days=1;
                 $leaveType = settingleave::find($leaveApprovedRecord->type_id);
-                $monthLeave = monthleave::where('status', 1)->where('user_id', Auth::guard('web')->user()->id)->latest()->first();
+                $monthLeave = monthleave::where('status',1)->where('user_id', Auth::guard('web')->user()->id)->latest()->first();
                 if ($leaveType->type == "PL") {
                     $monthLeave->apprAnual = $monthLeave->apprAnual -$days;
                 } elseif ($leaveType->type == "PL") {
@@ -266,7 +272,8 @@ class LeaveController extends Controller
             $leavePending->day=$leavePending->day-$days;
             $leavePending->save();
         }
-        $wfh = WorkFromHome::where('user_id', Auth::guard('web')->user()->id)->where('date', $leaveApproved)->count();
+        $wfh = WorkFromHome::where('user_id', Auth::guard('web')->user()->id)->where('from', $leaveApproved)->count();
+        // dd($wfh);
         if ($leavePending != null && $wfh == 0) {
             $data = new WorkFromHome();
             $data->user_id = Auth::guard('web')->user()->id;
@@ -276,9 +283,12 @@ class LeaveController extends Controller
             $data->task = $request->task;
             $data->status =2;
             $data->save();           
-            $attendance->action = 5;
+            $attendance = Attendance::where('date',$request->wdate)->first();
+            $attendance->action = 3;
+            // $attendance->mark="WFH";
             $attendance->save();
         }
+        dd("stop");
         return redirect()->back();
     }
 

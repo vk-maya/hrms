@@ -103,11 +103,32 @@
                                                     <i class="fa fa-check text-success"></i> P - Present
                                                     </a>
                                                 </div>
+                                            @elseif($item->action ==3)
+                                            <a class="dropdown-item disabled" > <i class="fa fa-hourglass-start text-info"></i></a>
+                                            @elseif($item->action ==1)
+                                            <a class="btn btn-white btn-sm btn-rounded  disabled" href="#"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa fa-check text-success"></i> A - accept
+                                                    </a>
+                                            {{-- <a class="dropdown-item disabled" href="#" aria-expanded="false"> <i class="fa fa-check-square-o text-success"></i> A -accept</a> --}}
+                                            @elseif($item->action ==0)
+                                            <a class="dropdown-item disabled" href="#" aria-expanded="false"> <i class="fa fa-close text-danger"></i> A - Absent</a>
                                             @else
                                             <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-close text-danger"></i> A - Absent</a>
                                             <div class="dropdown-menu dropdown-menu-right">
+                                                @if ($item->mark == "L")
+
+                                                <a class="dropdown-item attend-leave-show disabled" data-id="{{ $item->id}}"> <i class="fa fa-dot-circle-o text-danger"></i> Leave</a>                                                    
+                                                <a class="dropdown-item lwfh "  data-id="{{ $item->id}}"><i class="fa fa-dot-circle-o text-info"></i> Leave In WFH</a>
+
+                                                @elseif($item->mark == "WFH")
                                                 <a class="dropdown-item attend-leave-show" data-id="{{ $item->id}}"> <i class="fa fa-dot-circle-o text-danger"></i> Leave</a>                                                    
-                                                <a class="dropdown-item wfh" data-id="{{ $item->id}}"><i class="fa fa-dot-circle-o text-info"></i> WFH</a>
+                                                <a class="dropdown-item wfh disabled" data-id="{{ $item->id}}"><i class="fa fa-dot-circle-o text-info"></i> WFH</a>
+                                                @else
+                                                <a class="dropdown-item attend-leave-show" data-id="{{ $item->id}}"> <i class="fa fa-dot-circle-o text-danger"></i> Leave</a>                                                    
+                                                <a class="dropdown-item wfh " data-id="{{ $item->id}}"><i class="fa fa-dot-circle-o text-info"></i> WFH</a>
+
+                                                @endif
                                             </div>
                                             @endif
                                         </td>

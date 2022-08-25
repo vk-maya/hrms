@@ -245,7 +245,7 @@
                                                                 aria-expanded="false"><i
                                                                     class="fa fa-dot-circle-o text-danger"></i> Declined</a>
                                                         @else
-                                                            <a class="btn btn-white btn-sm btn-rounded dropdown-toggle disabled"
+                                                            <a class="btn btn-white btn-sm btn-rounded dropdown-toggle"
                                                                 href="" data-bs-toggle="dropdown"
                                                                 aria-expanded="false"><i
                                                                     class="fa fa-dot-circle-o text-success"></i>
