@@ -61,7 +61,7 @@
                     </div>
                 </div>
                 <div class="col-sm-6 col-md-3">
-                    <div class="d-grid">
+                    <div class="search-btn">
                         <a href="#" class="btn btn-success"> Search </a>
                     </div>
                 </div>

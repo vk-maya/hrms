@@ -1,8 +1,8 @@
 <style>
     a.disabled {
-  pointer-events: none;
-  cursor: default;
-}
+      pointer-events: none;
+      cursor: default;
+  }
 </style>
 <div class="header">
 
@@ -41,27 +41,28 @@
         </li>
 
 
-        <li class="nav-item dropdown flag-nav">
+        <li class="nav-item flag-nav">
             <a class="nav-link disabled">
                 <img src="{{ asset('assets/img/flags/us.png') }}" alt="" height="20"> <span>India</span>
             </a>
-            {{-- @if($employees->image != NULL){{ asset('storage/uploads/' . $employees->image) }}@else{{ asset('assets/img/avtar.jpg')}}@endif"        </li> --}}
-        <li class="nav-item dropdown has-arrow main-drop">
-            <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
-                <span class="user-img"><img src="@if(Auth::guard('web')->user()->image != NULL){{ asset('storage/uploads/' . Auth::guard('web')->user()->image) }}@else{{ asset('assets/img/avtar.jpg')}}@endif" alt="">
-                    <span class="status online"></span></span>
-                <span> {{ Auth::guard('web')->user()->name }}</span>
-            </a>
-            <div class="dropdown-menu">
-                <a class="dropdown-item" href="{{route('employees.profile')}}">Password</a>
-                <a class="dropdown-item" href="{{route('employees.add.moreinfo')}}">My Profile</a>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button class=" dropdown-item" type="submit">
-                            Log Out
-                        </button>
-                    </form>              
-            </div>
         </li>
-    </ul>   
-</div>
+            {{-- @if($employees->image != NULL){{ asset('storage/uploads/' . $employees->image) }}@else{{ asset('assets/img/avtar.jpg')}}@endif"        </li> --}}
+            <li class="nav-item dropdown has-arrow main-drop">
+                <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+                    <span class="user-img"><img src="@if(Auth::guard('web')->user()->image != NULL){{ asset('storage/uploads/' . Auth::guard('web')->user()->image) }}@else{{ asset('assets/img/avtar.jpg')}}@endif" alt="">
+                        <span class="status online"></span></span>
+                        <span> {{ Auth::guard('web')->user()->name }}</span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{route('employees.profile')}}">Password</a>
+                        <a class="dropdown-item" href="{{route('employees.add.moreinfo')}}">My Profile</a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button class=" dropdown-item" type="submit">
+                                Log Out
+                            </button>
+                        </form>              
+                    </div>
+                </li>
+            </ul>   
+        </div>

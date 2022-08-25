@@ -15,7 +15,7 @@
                             <li class="breadcrumb-item active">Profile</li>
                         </ul>
                     </div>
-                    <div class="col-auto float-end ms-auto">
+                    <div class="col-auto ms-auto">
                         <a href="{{ route('admin.employees.attach', $employees->id) }}" class="btn add-btn"><i class="fa fa-paperclip" aria-hidden="true"></i>Attach Document</a>
                         <a href="{{ route('admin.employees.edit', $employees->id) }}" class="btn add-btn"><i class="fa fa-plus"></i>Edit User</a>
                     </div> 
@@ -46,7 +46,7 @@
                                                 <div class="small doj text-muted">Date of Join :
                                                     {{ \Carbon\Carbon::parse($employees->joiningDate)->format('d/m/Y') }}
                                                 </div>
-                                                <div class="staff-msg"><a class="btn btn-custom"
+                                                <div class="staff-msg"><a class="btn add-btn"
                                                         href="{{ route('admin.emp.show-taskk', $employees->id) }}">Show-Task</a>
                                                 </div>
                                             </div>

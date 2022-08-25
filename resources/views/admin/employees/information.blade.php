@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
 @endpush
 @section('content')
-    <div class="page-wrapper">
+    <div class="page-wrapper admin-frm">
         <div class="content container-fluid">
             <div class="page-header">
                 <div class="row">
@@ -29,7 +29,7 @@
                                         @endisset
                                         <input type="hidden" name="user_id" value="{{ $id }}">
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>Nationality</label>
                                                     <select class="select form-control" name="nationality">
@@ -46,7 +46,7 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>Marital status <span class="text-danger">*</span></label>
                                                     <select class="select form-control" name="maritalstatus">
@@ -63,7 +63,7 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="form-group">
                                                     <label>No. of children</label>
                                                     <input class="form-control" name="children" type="number"

@@ -40,37 +40,42 @@
                 <img src="{{ asset('assets/img/flags/us.png') }}" alt="" height="20"> <span>India</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
-                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">
-                    <img src="{{ asset('assets/img/flags/us.png') }}" alt="" height="20"> <span>India</span>
+                <a class="dropdown-item" data-bs-toggle="dropdown" href="#" role="button">
+                    <img src="{{ asset('assets/img/flags/us.png') }}" alt="" height="20" class="me-3"> <span>India</span>
                 </a>
             </div>
         </li>
         <li class="nav-item dropdown has-arrow main-drop">
             <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
                 <span class="user-img"><img
-                        src="{{ asset('storage/uploads/' . Auth::guard('admin')->user()->img) }}" alt="">
+                    src="{{ asset('storage/uploads/' . Auth::guard('admin')->user()->img) }}" alt="">
                 </span>
                 <span> {{ Auth::guard('admin')->user()->name }}</span>
             </a>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="profile.html">My Profile</a>
-                <a class="dropdown-item" href="{{route('admin.settings')}}">Settings</a>
-                <a class="dropdown-item" href="{{route('admin.salary.settings')}}">Salary Settings</a>
+                <div class="admin-heading text-center">
+                    <h4>Admin</h4>
+                    <p>user</p>
+                </div>
+                <a class="dropdown-item" href="profile.html"><i class="fa fa-user-o me-3"></i>My Profile</a>
+                <a class="dropdown-item" href="{{route('admin.settings')}}"><i class="fa fa-cog me-3"></i>Settings</a>
+                <a class="dropdown-item" href="{{route('admin.salary.settings')}}"><i class="fa fa-money me-3"></i>Salary Settings</a>
                 <a class="dropdown-item" href="{{ route('admin.logout') }}" onclick="event.preventDefault();
-                    document.getElementById('logout-form').submit();">
-                    Log Out
-                </a>
-                <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
-            </div>
-        </li>
-    </ul>
+                document.getElementById('logout-form').submit();"><i class="fa fa-sign-out me-3"></i>
+                Log Out
+            </a>
+            <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
+
+        </div>
+    </li>
+</ul>
 
 
-    <div class="dropdown mobile-user-menu">
-        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i
-                class="fa fa-ellipsis-v"></i></a>
+<div class="dropdown mobile-user-menu">
+    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i
+        class="fa fa-ellipsis-v"></i></a>
         <div class="dropdown-menu dropdown-menu-right">
             <a class="dropdown-item" href="profile.html">My Profile</a>
             <a class="dropdown-item" href="settings.html">Settings</a>

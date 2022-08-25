@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<!-- Mirrored from smarthr.dreamguystech.com/blue/admin-dashboard.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 12 Apr 2022 10:27:09 GMT -->
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
     <meta name="description" content="Bootstrap Admin Template">
-    <meta name="keywords"
-        content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern, accounts, invoice, html5, responsive, CRM, Projects">
+    <meta name="keywords"  content="">
     <meta name="author" content="">
     <meta name="" content="">
     <title>Scrum Digital Employees Management</title>
@@ -18,6 +14,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/fontawsome.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/css/line-awesome.min.css') }}">
 
