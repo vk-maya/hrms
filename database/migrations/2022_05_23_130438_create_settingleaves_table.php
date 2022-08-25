@@ -15,7 +15,7 @@ class CreateSettingleavesTable extends Migration
     {
         Schema::create('settingleaves', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->nullable();
+            $table->integer('session_id');
             $table->string('type');
             $table->float('day');
             $table->string('status')->default(1);

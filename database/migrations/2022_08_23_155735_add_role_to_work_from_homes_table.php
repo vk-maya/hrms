@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddFromToWorkFromHomesTable extends Migration
+class AddRoleToWorkFromHomesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,7 @@ class AddFromToWorkFromHomesTable extends Migration
     public function up()
     {
         Schema::table('work_from_homes', function (Blueprint $table) {
-            //
-            $table->date('from')->after('user_id')->nullable();
-            $table->date('to')->after('from')->nullable();
+            $table->integer('admin_id')->after('id')->default(0);
         });
     }
 

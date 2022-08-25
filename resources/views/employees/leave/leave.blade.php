@@ -89,17 +89,15 @@
                             $sother = 0;
                             $other = 0;
                             foreach ($ptotalMonthLeave as $leavep) {
-                                if ($leavep->leaveType->type == 'PL') {
-                                    $plp = $month->anualLeave - $month->apprAnual;
-                                    $pother = $leavep->day - $plp;
-                                } elseif ($leavep->leaveType->type == 'Sick') {
-                                    $psick = $month->sickLeave - $month->apprSick;
-                                    $sother = $leavep->day - $psick;
+                                if ($leavep->leaveType->type == 'PL') {                                    
+                                        $pother =$pother+$leavep->day ;                                   
+                                } elseif ($leavep->leaveType->type == 'Sick') {                                   
+                                    $sother = $leavep->day +$sother;
                                 } else {
-                                    $other = $leavep->day;
+                                    $other = $other+$leavep->day;
                                 }
                             }
-                            $allOtherPending = $pother + $other + $sother;
+                           
                             $currentMonthLeave = $month->apprAnual + $month->apprSick + $month->other;
                         @endphp
                         <div class="col-md">
@@ -150,7 +148,7 @@
                         </div>
                         <div class="col-md">
                             <div class="stats-info">
-                                <h6>Utilized Pending</h6>
+                                <h6>Pending</h6>
                                 <div class="row">
                                     <div class="col-md">
                                         <div class="">
@@ -158,17 +156,17 @@
                                                 <div class="row">
                                                     <div class="col-md">
                                                         <div class="">PL
-                                                            <div class="">{{ $plp }}</div>
+                                                            <div class="">{{ $pother }}</div>
                                                         </div>
                                                     </div>
                                                     <div class="col-md">
                                                         <div class="">Sick
-                                                            <div class="">{{ $psick }}</div>
+                                                            <div class="">{{ $sother }}</div>
                                                         </div>
                                                     </div>
                                                     <div class="col-md">
                                                         <div class="">other
-                                                            <div class="">{{ $allOtherPending }}</div>
+                                                            <div class="">{{ $other }}</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -183,13 +181,14 @@
                                 <h6>Balance Leave</h6>
                                 <div class="row">
                                     <div class="col-md">
-                                        <div class=""> <strong> Paid </strong> Leave
+                                        <div class=""> <strong> PL </strong> 
                                             <div class="">
                                                 {{ $anual = $month->anualLeave - $month->apprAnual }}</div>
                                         </div>
                                     </div>
+                                   
                                     <div class="col-md">
-                                        <div class=""> <strong> Sick</strong> Leave
+                                        <div class=""> <strong> Sick</strong> 
                                             <div class="">{{ $sick = $month->sickLeave - $month->apprSick }}
                                             </div>
                                         </div>
@@ -202,13 +201,13 @@
                                 <h6>Total Leave</h6>
                                 <div class="row">
                                     <div class="col-md">
-                                        <div class=""><strong> Curr. Month </strong>Leave
+                                        <div class=""><strong> Month </strong>
                                             <div class="">
                                                 {{ $currentMonthLeave }}</div>
                                         </div>
                                     </div>
                                     <div class="col-md">
-                                        <div class=""> <strong> All Month </strong>Leave
+                                        <div class=""> <strong> All </strong>
                                             <div class="">{{ $allDay }}
                                             </div>
                                         </div>
@@ -240,16 +239,9 @@
                                                     $end = new DateTime($item->to);
                                                 @endphp
                                                 <td>{{ $item->leaveType->type }}</td>
-                                                <td> {{ $start->format('d-m-Y') }}</td>
-                                                @php
-                                                    $day = 0;
-                                                    foreach ($item->leaverecord as $leaver) {
-                                                        $day = $day + $leaver->day;
-                                                    }
-                                                @endphp
-
+                                                <td> {{ $start->format('d-m-Y') }}</td>                                              
                                                 <td> {{ $end->format('d-m-Y') }}</td>
-                                                <td> {{ $day }}</td>
+                                                <td> {{ $item->day }}</td>
                                                 <td><a href="#"
                                                         data-bs-toggle="modal"data-bs-target="#reson{{ $item->id }}">{{ \Illuminate\Support\Str::limit($item->reason, 20, '..') }}</a>
                                                 </td>
@@ -285,7 +277,7 @@
                                                     </td>
                                                 @else
                                                     <td class="text-center">
-                                                        <div><i class="fa fa-dot-circle-o text-info"></i>
+                                                        <div><i class="fa fa-ban text-danger" ></i>
                                                         </div>
                                                     </td>
                                                 @endif
@@ -304,7 +296,8 @@
                                 <table class="table table-striped custom-table mb-0 datatable">
                                     <thead>
                                         <tr>                                           
-                                            <th>Date</th>
+                                            <th>From</th>
+                                            <th>To</th>
                                             <th>Day</th>                                            
                                             <th>Task</th>
                                             <th class="text-center">Status</th>
@@ -314,8 +307,11 @@
                                     <tbody>
                                         @foreach ($wfh as $item)
                                             <tr>
-                                                @php $start = new DateTime($item->date); @endphp                                                
+                                                @php $start = new DateTime($item->from);
+                                                $to = new DateTime($item->to);
+                                                 @endphp                                                
                                                 <td> {{ $start->format('d-m-Y') }}</td>                             
+                                                <td> {{ $to->format('d-m-Y') }}</td>                             
                                                 <td> {{ $item->day }}</td>
                                                 <td><a href="#" data-bs-toggle="modal"data-bs-target="#task{{ $item->id }}">{{ \Illuminate\Support\Str::limit($item->task, 20, '..') }}</a></td>
                                                 <td class="text-center">
@@ -350,7 +346,8 @@
                                                     </td>
                                                 @else
                                                     <td class="text-center">
-                                                        <div><i class="fa fa-dot-circle-o text-info"></i>
+                                                        <div>
+                                                            <i class="fa fa-ban text-danger" ></i>
                                                         </div>
                                                     </td>
                                                 @endif

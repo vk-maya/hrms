@@ -34,10 +34,10 @@
                                                     <label>Nationality</label>
                                                     <select class="select form-control" name="nationality">
                                                         <option value="">Select-Nationality</option>
-                                                        <option @if (isset($data) && $data->nationality == 'indian') selected @endif
-                                                            value="indian">Indian</option>
-                                                        <option @if (isset($data) && $data->nationality == 'other') selected @endif
-                                                            value="other">Other</option>
+                                                        <option @if (isset($data) && $data->nationality == 'Indian') selected @endif
+                                                            value="Indian">Indian</option>
+                                                        <option @if (isset($data) && $data->nationality == 'Other') selected @endif
+                                                            value="Other">Other</option>
                                                     </select>
                                                     <span class="text-danger">
                                                         @error('nationality')
@@ -51,10 +51,10 @@
                                                     <label>Marital status <span class="text-danger">*</span></label>
                                                     <select class="select form-control" name="maritalstatus">
                                                         <option value="">-</option>
-                                                        <option @if (isset($data) && $data->maritalStatus == 'single') selected @endif
-                                                            value="single">Single</option>
-                                                        <option @if (isset($data) && $data->maritalStatus == 'married') selected @endif
-                                                            value="married">Married</option>
+                                                        <option @if (isset($data) && $data->maritalStatus == 'Single') selected @endif
+                                                            value="Single">Single</option>
+                                                        <option @if (isset($data) && $data->maritalStatus == 'Married') selected @endif
+                                                            value="Married">Married</option>
                                                     </select>
                                                     <span class="text-danger">
                                                         @error('maritalstatus')

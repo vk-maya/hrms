@@ -80,7 +80,15 @@ class MonthlyAttend extends Command
                             $attend->status = $key->Status == 'P' ? 1 : 0;
                             $attend->save();
                         } else {
-                            Attendance::create(['user_id' => $user->id, 'in_time' => $key->INTime == '--:--' ? '00:00' : $key->INTime, 'out_time' => $key->OUTTime == '--:--' ? '00:00' : $key->OUTTime, 'work_time' => $key->WorkTime, 'date' => date('Y-m-d', strtotime($date)), 'day' => date('d', strtotime($date)), 'month' => date('m', strtotime($date)), 'year' => date('Y', strtotime($date)), 'attendance' => $key->Status, 'status' => $key->Status == 'P' ? 1 : 0,]);
+                            $in_time = $key->INTime == '--:--' ? '00:00' : $key->INTime;
+                            $out_time = $key->OUTTime == '--:--' ? '00:00' : $key->OUTTime;
+                            if ($in_time != '00:00' && $out_time != '00:00') {
+                                $work_time = Carbon::parse($in_time)->diff(\Carbon\Carbon::parse($out_time))->format('%H:%I:%S');
+                                $work_time = Carbon::parse($work_time . "- 1 hour")->toTimeString();
+                            } else {
+                                $work_time = '00:00';
+                            }
+                            Attendance::create(['user_id' => $user->id, 'in_time' => $key->INTime == '--:--' ? '00:00' : $key->INTime, 'out_time' => $key->OUTTime == '--:--' ? '00:00' : $key->OUTTime, 'work_time' => $work_time, 'date' => date('Y-m-d', strtotime($date)), 'day' => date('d', strtotime($date)), 'month' => date('m', strtotime($date)), 'year' => date('Y', strtotime($date)), 'attendance' => $key->Status, 'status' => $key->Status == 'P' ? 1 : 0,]);
                         }
                         //leave vs attandance function
                         $date = date('Y-m-d', strtotime($date));

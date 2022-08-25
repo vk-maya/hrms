@@ -109,15 +109,15 @@
                                                                 href="" data-bs-toggle="dropdown"
                                                                 aria-expanded="false"><i
                                                                     class="fa fa-dot-circle-o text-danger"></i> Declined</a>
-                                                        @else
-                                                            <a class="btn btn-white btn-sm btn-rounded dropdown-toggle"
-                                                                href="" data-bs-toggle="dropdown"
-                                                                aria-expanded="false"><i
-                                                                    class="fa fa-dot-circle-o text-success"></i>
-                                                                Approved</a>
+                                                        @else                                                       
+                                                        <a class="btn btn-white btn-sm btn-rounded dropdown-toggle"
+                                                            href="" data-bs-toggle="dropdown"
+                                                            aria-expanded="false"><i class="fa fa-dot-circle-o text-success"></i>
+                                                            Approved</a>
                                                         @endif
 
                                                         <div class="dropdown-menu dropdown-menu-right">
+                                                            @if ($item->status ==1 || $item->status == 0 )  
                                                             <form action="{{ route('admin.leave.report') }}"
                                                                 method="POST">
                                                                 @csrf
@@ -128,6 +128,13 @@
                                                                     <i class="fa fa-dot-circle-o text-purple"></i>
                                                                     New</button>
                                                             </form>
+                                                            @else                                                                                         
+                                                                <span  class="dropdown-item disabled">
+                                                                    <i class="fa fa-dot-circle-o text-purple"></i>
+                                                                    New</span>                                                
+
+                                                            @endif
+                                                            @if ($item->status == 0 || $item->status == 2)                                                            
                                                             <form action="{{ route('admin.leave.report') }}"
                                                                 method="POST">
                                                                 @csrf
@@ -140,6 +147,13 @@
                                                                     <i class="fa fa-dot-circle-o text-success"></i>
                                                                     Approved</button>
                                                             </form>
+                                                            @else
+                                                            <span  class="dropdown-item disabled">
+                                                                <i class="fa fa-dot-circle-o text-success"></i>
+                                                                Approved</span>                                                
+
+                                                            @endif
+                                                            @if ($item->status == 1 || $item->status == 2)  
                                                             <form action="{{ route('admin.leave.report') }}"
                                                                 method="POST">
                                                                 @csrf
@@ -150,10 +164,15 @@
                                                                     <i class="fa fa-dot-circle-o text-danger"></i>
                                                                     Declined</button>
                                                             </form>
+                                                            @else
+                                                            <span  class="dropdown-item disabled">
+                                                                <i class="fa fa-dot-circle-o text-danger"></i>
+                                                                Declined</span>  
+                                                                @endif
                                                         </div>
                                                     </div>
                                                 </td>
-                                                {{-- {{$item}} --}}
+                                        
                                                 @if ($item->status == 2 || $item->status == 0)
                                                     <td class="text-end">
                                                         <div class="dropdown dropdown-action">
@@ -190,7 +209,8 @@
                                     <thead>
                                         <tr>
                                             <th>Employee</th>                                            
-                                            <th>Date</th>
+                                            <th>From</th>
+                                            <th>To</th>
                                             <th>Days</th>
                                             <th>Task</th>
                                             <th class="text-center">Status</th>
@@ -201,10 +221,12 @@
                                         @foreach ($wfhData as $item)
                                             <tr>
                                                 @php
-                                                    $start = new DateTime($item->date);
+                                                    $start = new DateTime($item->from);
+                                                    $end = new DateTime($item->to);
                                                 @endphp
                                                 <td><a class="disabled" href="">{{ $item->user->first_name }}</a> </td>
                                                 <td> {{ $start->format('d-M-Y') }}</td>                                      
+                                                <td> {{ $end->format('d-M-Y') }}</td>                                      
                                                 <td>{{ $item->day }}</td>
                                                 <td><a href="#"
                                                         data-bs-toggle="modal"data-bs-target="#task{{ $item->id }}">{{ \Illuminate\Support\Str::limit($item->task, 20, '..') }}</a>
@@ -223,7 +245,7 @@
                                                                 aria-expanded="false"><i
                                                                     class="fa fa-dot-circle-o text-danger"></i> Declined</a>
                                                         @else
-                                                            <a class="btn btn-white btn-sm btn-rounded dropdown-toggle"
+                                                            <a class="btn btn-white btn-sm btn-rounded dropdown-toggle disabled"
                                                                 href="" data-bs-toggle="dropdown"
                                                                 aria-expanded="false"><i
                                                                     class="fa fa-dot-circle-o text-success"></i>
@@ -282,9 +304,9 @@
                                                         </div>
                                                     </td>
                                                 @else
-                                                    <td class="text-end">
+                                                    <td class="text-center">
                                                         <div class="dropdown dropdown-action">
-
+                                                            <i class="fa fa-ban text-danger" ></i>
                                                         </div>
                                                     </td>
                                                 @endif

@@ -33,9 +33,7 @@
                                         <div class="form-group">
                                             <label>From <span class="text-danger">*</span></label>
                                             <div class="">
-                                                <input class="form-control" name="from" required type="date" value="{{old('from')}}"
-                                                    min="{{ date('Y-m-d') }}" id="fromdate"
-                                                    max="{{ \Carbon\Carbon::now()->addDays(30)->toDateString() }}">
+                                                <input class="form-control" name="from" required type="date" value="{{old('from')}}"min="{{ date('Y-m-d') }}" id="fromdate" max="{{ \Carbon\Carbon::now()->addDays(30)->toDateString()}}">
                                                 @error('from')
                                                     <span class="text-danger">
                                                         <strong>{{ $message }}</strong>
@@ -99,14 +97,7 @@
                 var myFutureDate = new Date(mindate);
                 console.log(myFutureDate.getDate());
                 myInput.setAttribute('max', myFutureDate.addDays(30).toISOString().split('T')[0]);
-                // var sDate = $(this).datepicker("getDate");
-                // var minDate = $(this).datepicker("getDate");
-                // sDate.setDate(sDate.getDate()+7);
-                // $('#todate').datepicker({
-                //     dateFormat: 'mm-dd-yy',
-                //     maxDate : sDate,
-                //     minDate : minDate,
-                // });
+             
             })
         });
     </script>

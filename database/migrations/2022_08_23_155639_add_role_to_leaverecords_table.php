@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddFromToWorkFromHomesTable extends Migration
+class AddRoleToLeaverecordsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class AddFromToWorkFromHomesTable extends Migration
      */
     public function up()
     {
-        Schema::table('work_from_homes', function (Blueprint $table) {
-            //
-            $table->date('from')->after('user_id')->nullable();
-            $table->date('to')->after('from')->nullable();
+        Schema::table('leaverecords', function (Blueprint $table) {
+            $table->integer('admin_id')->after('id')->default(0);
         });
     }
 
@@ -27,7 +25,7 @@ class AddFromToWorkFromHomesTable extends Migration
      */
     public function down()
     {
-        Schema::table('work_from_homes', function (Blueprint $table) {
+        Schema::table('leaverecords', function (Blueprint $table) {
             //
         });
     }

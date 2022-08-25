@@ -89,19 +89,19 @@ class EmployeesController extends Controller
     public function employeecreate()
     {
 
-        $department = Designation::with('department')->get();
+        $designation = Designation::with('department')->get();
         $employees = User::orderBy('first_name')->get();
 
-        return view('admin.employees.employees', compact('employees', 'department',));
+        return view('admin.employees.employees', compact('employees', 'designation'));
     }
 
     // ------------------employees list---------------------
     public function emplist()
     {
-        $ldepartment = Designation::with('department')->get();
+        $designation = Designation::with('department')->get();
         $lemployees = User::orderBy('first_name')->get();
 
-        return view('admin.employees.employees', compact('lemployees', 'ldepartment',));
+        return view('admin.employees.employees', compact('lemployees', 'designation'));
     }
     // -----------------------employees form create && edit From  ---------------------
     public function addemployeescreate(Request $request)
@@ -132,11 +132,11 @@ class EmployeesController extends Controller
             if ($id == !null)
             {
                 $emp = explode('-', $id->employeeID);
-                $empid = 1 + $emp[2];
+                $empid = '00'.(1 + $emp[2]);
             }
             else
             {
-                $empid = "SDPL-JAI-0001";
+                $empid = "0001";
             }
 
             return view('admin.employees.employees-add', compact('department', 'count', 'empid', 'salared'));
