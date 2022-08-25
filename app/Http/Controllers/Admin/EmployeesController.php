@@ -89,19 +89,19 @@ class EmployeesController extends Controller
     public function employeecreate()
     {
 
-        $department = Designation::with('department')->get();
+        $designation = Designation::with('department')->get();
         $employees = User::orderBy('first_name')->get();
 
-        return view('admin.employees.employees', compact('employees', 'department',));
+        return view('admin.employees.employees', compact('employees', 'designation'));
     }
 
     // ------------------employees list---------------------
     public function emplist()
     {
-        $ldepartment = Designation::with('department')->get();
+        $designation = Designation::with('department')->get();
         $lemployees = User::orderBy('first_name')->get();
 
-        return view('admin.employees.employees', compact('lemployees', 'ldepartment',));
+        return view('admin.employees.employees', compact('lemployees', 'designation'));
     }
     // -----------------------employees form create && edit From  ---------------------
     public function addemployeescreate(Request $request)

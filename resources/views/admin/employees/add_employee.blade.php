@@ -144,7 +144,7 @@
                                         <div class="">
                                             <input type="date" class="form-control" name="dob"
                                                 max="{{ \Carbon\Carbon::now()->subMonths(216)->toDateString() }}"
-                                                value="@if(isset($employee)){{$employee->dob}}@endif">
+                                                value="@if(isset($employee) && $employee->dob != NULL){{\Carbon\Carbon::parse($employee->dob)->format('Y-m-d')}}@endif">
                                                 <span class="text-danger">
                                                     @error('dob')
                                                         <p>Valid Employee Birth Date is required.</p>
@@ -156,7 +156,9 @@
                                 <div class="col-sm-6">
                                     <label class="col-form-label" for="emp">Employee ID</label>
                                     <div class="input-group">
-                                        <span class="input-group-text" id="inputGroupPrepend">SDPL-JAI-</span>
+                                        @if (!isset($employee))
+                                            <span class="input-group-text" id="inputGroupPrepend">SDPL-JAI-</span>
+                                        @endif
                                         <input type="text" readonly class="form-control" id="emp"
                                             value="@if (isset($employee)){{$employee->employeeID}}@else{{$empid}} @endif">
                                     </div>
@@ -313,9 +315,11 @@
                                         <label class="col-form-label">Joining Date <span
                                                 class="text-danger">*</span></label>
                                         <div class="">
-                                            <input name="joiningDate" class="form-control" type="date"
-                                                max="{{ \Carbon\Carbon::now()->toDateString() }}"
-                                                value="@if(isset($employee)){{\Carbon\Carbon::parse($employee->joiningDate)->format('Y-m-d')}}@endif">
+                                            @if (isset($employee))
+                                                <input type="text" readonly class="form-control" value="{{\Carbon\Carbon::parse($employee->joiningDate)->format('d-m-Y')}}">
+                                            @else
+                                                <input name="joiningDate" class="form-control" type="date" max="{{ \Carbon\Carbon::now()->toDateString() }}">
+                                            @endif
                                             <span class="text-danger">
                                                 @error('joiningDate')
                                                     <p>Joining Date is required.</p>
@@ -368,9 +372,9 @@
                                     <div class="col-md-12">
                                         <div class="form-check form-switch">
                                             <input class='input-switch' type="checkbox"
-                                                value="@if(isset($employee)){{$employee->status}}@endif 1"
+                                                value="1"
                                                 @if (isset($employee)) @if($employee->status == 0) @else checked @endif
-                                                @endif checked
+                                                @endif
                                             name="status" id="demo" />
                                             <label class="label-switch" for="demo"></label>
                                             <span class="info-text"></span>
@@ -447,7 +451,7 @@
                                         @foreach ($salared as $item)
                                             @if ($item->salarymanag->type == 'earning')
                                                 <div>
-                                                    <label class="checkbox-inline"><input @if(isset($salaryedit) && in_array($item->id,$salaryedit->toArray())) checked @endif type="checkbox" value="{{$item->id}}" name="earning[]" class="days recurring"
+                                                    <label class="checkbox-inline"><input @if(isset($user_salary) && in_array($item->id,$user_salary->toArray())) checked @endif type="checkbox" value="{{$item->id}}" name="earning[]" class="days recurring"
                                                             ></label><span
                                                             class="checkmark">{{$item->salarymanag->title}}</span>
                                                 </div>
@@ -459,7 +463,7 @@
                                         @foreach ($salared as $item)
                                             @if ($item->salarymanag->type == 'deduction')
                                                 <div>
-                                                    <label class="checkbox-inline"><input  @if(isset($salaryedit)&& in_array($item->id,$salaryedit->toArray()))
+                                                    <label class="checkbox-inline"><input  @if(isset($user_salary)&& in_array($item->id,$user_salary->toArray()))
                                                         checked @endif type="checkbox"
                                                             value="{{$item->id}}" name="earning[]" class="days recurring"
                                                             ><span class="checkmark">{{$item->salarymanag->title}}</span></label>

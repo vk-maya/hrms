@@ -91,13 +91,11 @@ class AdminController extends Controller
             $rules = [
                 'first_name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$request->id],
-                'joiningDate' => ['date', 'required', 'after:'.$company_start_date],
                 'department_id' => ['required', 'numeric', 'exists:departments,id'],
                 'designation_id' => ['required', 'numeric', 'exists:designations,id']
             ];
             $request->validate($rules);
             $employee = User::find($request->id);
-            $leaveyearr = UserleaveYear::where('user_id', $request->id)->where('status', 1)->first();
         }else{
             $rules = [
                 'first_name' => ['required', 'string', 'max:255'],
@@ -109,6 +107,7 @@ class AdminController extends Controller
             ];
             $request->validate($rules);
             $employee = new User();
+            $employee->joiningDate = $request->joiningDate;
         }
         if ($request->dob != null) {
             $rules['dob'] = ['required', 'date', 'before:'.$dobmax];
@@ -146,6 +145,8 @@ class AdminController extends Controller
 
         $employee->first_name = $request->first_name;
         $employee->last_name = $request->last_name;
+        $employee->email = $request->email;
+        $employee->dob = $request->dob;
         $employee->gender = $request->gender;
         $employee->machineID = $request->machineID;
         $employee->phone = $request->phone;
@@ -169,12 +170,12 @@ class AdminController extends Controller
             $employee->image = $filename;
         }
 
-        // if ($employee->save()) {
-        if (true) {
+        if ($employee->save()) {
+        // if (true) {
             $session = Session::where('status', 1)->latest()->first();
             if (!$request->has('id')){
                 $user_yearleave = new UserleaveYear();
-                // $user_yearleave->user_id = $employee->id;
+                $user_yearleave->user_id = $employee->id;
                 $user_yearleave->user_id = 1;
                 $user_yearleave->session_id = $session->id;
 
@@ -199,8 +200,8 @@ class AdminController extends Controller
                     }
                 }
                 $user_yearleave->status = 1;
-                // if ($user_yearleave->save()) {
-                if (true) {
+                if ($user_yearleave->save()) {
+                // if (true) {
                     foreach ($allleave as $key => $value){
                         if ($value->type == "PL"){
                             $anual = $value->day / 12;
@@ -209,31 +210,16 @@ class AdminController extends Controller
                         }
                     }
 
-                    $data = new monthleave();
-                    // $data->user_id = $employee->id;
-                    // $data->useryear_id = $user_yearleave->id;
-                    $data->user_id = 1;
-                    $data->useryear_id = 1;
-                    // $jd = '2022-05-24';
-
                     $diffr = round(Carbon::parse($jd)->floatDiffInMonths(Carbon::now()));
-                    // dd($diffr);
-
-                    // dd(Carbon::now()->daysInMonth);
-                    dd(Carbon::now()->subMonth($diffr));
+                    $month_date = Carbon::now()->subMonth($diffr)->format('Y-m-d');
 
                     $str = date('Y-m', strtotime($jd));
-                    $strr = $str . "-15";
 
-                    if ($jd >= $session->from)
-                    {
-                        if ($jd < $strr)
-                        {
+                    if ($jd >= $session->from){
+                        if ($jd < $month_date){
                             $jd = date('Y-m', strtotime($jd));
                             $jd = $jd . "-01";
-                        }
-                        else
-                        {
+                        }else{
                             $jd = Carbon::parse($jd)->addMonths();
                             $jd = date('Y-m', strtotime($jd));
                             $jd = $jd . "-01";
@@ -241,26 +227,43 @@ class AdminController extends Controller
                     }else{
                         $jd = $session->from;
                     }
-                    $end = now();
-                    $end = date('Y-m', strtotime($end));
-                    $end = Carbon::parse($end)->endOfMonth(); //Last Date of Month
-                    $end = date('Y-m-d', strtotime($end));
-                    $diffr = round(Carbon::parse($jd)->floatDiffInMonths($end));
-                    $from = date('Y-m-d', strtotime($jd));
-                    $to = date('Y-m-d', strtotime($end));
-                    $data->from = $from;
-                    $data->to = $to;
-                    $anual = $diffr * $anual;
-                    $sick = $diffr * $sickl;
-                    $data->anualLeave = $anual;
-                    $data->sickLeave = $sick;
-                    $data->status = 1;
-                    $data->save();
+                    $annualleave = 0;
+                    $sickleave = 0;
+                    for ($i=1; $i < $diffr; $i++) {
+                        $annualleave = $annualleave + $anual;
+                        $sickleave = $sickleave + $sickl;
+                        $data = new monthleave();
+                        $data->user_id = $employee->id;
+                        $data->useryear_id = $user_yearleave->id;
+                        // $data->user_id = 1;
+                        // $data->useryear_id = 1;
+
+                        $data->from = Carbon::parse($jd)->format('Y-m').'-01';
+                        $data->to = Carbon::parse($jd)->format('Y-m').'-'.Carbon::parse($jd)->daysInMonth;
+                        $data->anualLeave = $annualleave;
+                        $data->sickLeave = $sickleave;
+                        $data->status = 1;
+                        $data->save();
+                        $jd = Carbon::parse($jd)->addMonth();
+                    }
                 }
             }
+            $employee->userSalaryData()->sync($request->earning);
+            return redirect()->route('admin.employees');
         }
+        return redirect()->route('admin.employees')->with('error', 'Employee Not Added');
+    }
 
-        dd($employee->toArray());
-        $employee->userSalaryData()->sync($request->earning);
+    public function gridEmployeeList(Request $request)
+    {
+        $id = $request->id;
+        $name = $request->name;
+        $designation = $request->designation;
+
+        $employee = User::when($id, function($query) use ($id){
+            $query->where('employeeID', 'LIKE', '%' . $id . '%');
+        })->when($name, function($query) use ($name){
+            $query->where('first_name', $name);
+        })->get();
     }
 }
