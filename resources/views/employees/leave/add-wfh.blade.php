@@ -13,7 +13,7 @@
                         <h3 class="page-title">Work From Home</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Leaves</li>
+                            <li class="breadcrumb-item active">WFH</li>
                         </ul>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>Leave Reason <span class="text-danger">*</span></label>
+                                    <label>Task<span class="text-danger">*</span></label>
                                     <textarea name="reason" required rows="4" class="form-control">{{old('reason')}}</textarea>
                                     @error('reason')
                                         <span class="text-danger">
