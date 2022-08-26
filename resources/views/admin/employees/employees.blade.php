@@ -84,9 +84,27 @@
                                                 <div>
                                                     <a href="{{route('admin.employees.profile',$item->id)}}"><b>{{$item->first_name.' '.$item->last_name}}</b><br>
                                                         <span>{{$item->designation->designation_name}}</span></a>
+                                            </div>
+                                        </td>
+                                        <td>{{$item->employeeID}}</td>
+                                        <td>{{$item->email}}</td>
+                                        <td>{{$item->phone}}</td>
+                                        <td> {{ \Carbon\Carbon::parse($item->joiningDate)->format('d M Y') }}</td>
+                                        {{-- <td>{{$item->designation->designation_name}}</td> --}}
+                                        <td class="text-end">
+                                            <div class="dropdown dropdown-action">
+                                                <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
+                                                    aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('admin.edit-employee',$item->id) }}"><i
+                                                            class="fa fa-pencil m-r-5"></i> Edit</a>
+                                                    <button class="dropdown-item delete" data-id="{{$item->id}}"><i
+                                                            class="fa fa-trash-o m-r-5"></i> Delete</button>
                                                 </div>
-                                            </td>
-                                        </tr>
+                                            </div>
+                                        </td>
+                                    </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -151,62 +169,7 @@
             </div>
         </div>
         @endisset
-        @isset($employees)
-        <div class="row staff-grid-row" id="grid">
-            @foreach ($employees as $item)
-            <div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
-                <div class="profile-widget">
-                    <div class="profile-img">
-                        <a href="{{route('admin.employees.profile',$item->id)}}">
-                            <span class="avatar">
-                                <img src="@if($item->image != NULL){{ asset('storage/uploads/' . $item->image) }}@else{{ asset('assets/img/avtar.jpg')}}@endif">
-                            </span>
-                        </a>
-                    </div>
-                    <div>
-                        @if ($item->status == 0)
-                        <span class="user online">
-                        </span>
-                        @else
-                        <span class="user offline">
-                        </span>
-
-                        @endif
-                    </div>
-                    <div class="dropdown profile-action">
-                        <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="far fa-ellipsis-v"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="{{ route('admin.edit-employee', $item->id) }}">
-                                <i class="far fa-pen me-2"></i> Edit
-                            </a>
-                            <button class="dropdown-item delete" data-id="{{ $item->id }}">
-                                <i class="far fa-trash-alt me-2"></i> Delete
-                            </button>
-                            <a class="dropdown-item more-add" href="{{route('admin.employees.information',$item->id)}}">
-                                <i class="far fa-plus-square me-2"></i>Add More
-                            </a>
-                            <a class="dropdown-item status" href="{{route('admin.employees.status',$item->id)}}">
-                                @if ($item->status == 1)
-                                <i class="fas fa-ban me-2"></i>
-                                <span class="yeh-data">Inactive</span>
-                                @else
-                                <i class="far fa-check-circle me-2"></i> <span class="yeh-data">Active</span>
-                                @endif
-                            </a>
-                        </div>
-                    </div>
-                    <div class="small text-muted">
-                        <h4 class="user-name mt-3 mb-0 text-ellipsis">{{$item->first_name.' '.$item->last_name}}</h4>
-                        {{$item->designation->designation_name}}
-                    </div>
-                </div>
-            </div>
-        @endforeach
     </div>
-    @endisset
-</div>
 </div>
 @endsection
 @push('plugin-js')
@@ -219,56 +182,55 @@
         $(document).on("click", ".delete", function() {
             var yes = $(this);
             swal({
-                    title: "Are you sure?",
-                    text: "Once deleted, you will not be able to recover this!",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        var id = $(this).data("id");
-                        var url = "{{ route('admin.employees.delete', ':id') }}";
-                        url = url.replace(':id', id);
-                        $.ajax({
-                            type: "get",
-                            url: url,
-                            cache: false,
-                            success: function(res) {
-                                if (res.msg == 'no') {
-                                    swal("unsuccessful! Your Department has been Add Any Employees! ", {
-                                        icon: "error",
-                                    })
-                                } else {
-                                    swal("Success! Your Department has been deleted!", {
-                                        icon: "success",
-                                    })
-                                    $(yes).parent().parent().parent().parent().hide(
-                                        0500);
-
-                                }
-                            }
-                        });
-                    }
-                });
-            });
-
-            $(document).on("click", ".search", function() {
-                var id = $('#empID').val();
-                var name = $('#empName').val();
-                var designation = $('#designation').val();
-
-                if (id != NULL || name != NULL || designation != NULL) {
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    var id = $(this).data("id");
+                    var url = "{{ route('admin.employees.delete', ':id') }}";
+                    url = url.replace(':id', id);
                     $.ajax({
-                        type: "GET",
-                        url: '',
+                        type: "get",
+                        url: url,
                         cache: false,
                         success: function(res) {
+                            if (res.msg == 'no') {
+                                swal("unsuccessful! Your Department has been Add Any Employees! ", {
+                                    icon: "error",
+                                })
+                            } else {
+                                swal("Success! Your Department has been deleted!", {
+                                    icon: "success",
+                                })
+                                $(yes).parent().parent().parent().parent().hide(
+                                    0500);
 
+                            }
                         }
                     });
                 }
             });
         });
+        $(document).on("click", ".search", function() {
+            var id = $('#empID').val();
+            var name = $('#empName').val();
+            var designation = $('#designation').val();
+
+            if (id != NULL || name != NULL || designation != NULL) {
+                $.ajax({
+                    type: "GET",
+                    url: '',
+                    cache: false,
+                    success: function(res) {
+
+                    }
+                });
+            }
+        });
+    });
 </script>
 @endpush
