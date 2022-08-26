@@ -7,6 +7,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{asset('assets/img/favicon.png')}}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/fontawsome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/line-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/morris/morris.css') }}">
 

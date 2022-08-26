@@ -112,10 +112,10 @@
                                                 <a class="btn btn-white btn-sm btn-rounded status"
                                                     data-id="{{ $item->id }}" href="javascript:void(0);">
                                                     @if ($item->status == 1)
-                                                        <i class="fa fa-dot-circle-o text-success"></i><span
+                                                        <i class="fas fa-check-circle me-2"></i><span
                                                             class="yes-data">Approved</span>
                                                     @else
-                                                        <i class="fa fa-dot-circle-o text-danger"></i> <span
+                                                        <i class="far fa-times-circle me-2"></i> <span
                                                             class="yes-data">Declined</span>
                                                     @endif
                                                 </a>

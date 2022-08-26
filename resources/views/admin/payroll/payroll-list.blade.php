@@ -76,7 +76,7 @@
                     </div>
                 </div>
                 <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-                    <a href="#" class="btn btn-success w-100"> Search </a>
+                    <a href="#" class="btn btn-success"> Search </a>
                 </div>
             </div>
 
@@ -114,7 +114,7 @@
                                         <td>{{ $item->joiningDate }}</td>
                                         <td>
                                             @if (isset($item->salary->user_id))
-                                                <a class="salaryinfo btn btn-sm btn-success"
+                                                <a class="salaryinfo btn add-btn"
                                                     data-id="{{ $item->id }}">{{ $item->salary->net_salary }}</a>
                                             @else
                                                 <div class="col-auto float-end ms-auto">
@@ -124,7 +124,7 @@
                                                 </div>
                                             @endif
                                         </td>
-                                        <td><a class="btn btn-sm btn-primary"
+                                        <td><a class="salaryinfo btn add-btn"
                                                 href="{{ route('admin.employee.view_slip', $item->id) }}">View Slip</a>
                                         </td>
                                         <td class="text-end">
