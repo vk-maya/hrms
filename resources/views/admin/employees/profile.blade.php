@@ -18,7 +18,7 @@
                     <div class="col-auto ms-auto">
                         <a href="{{ route('admin.employees.attach', $employees->id) }}" class="btn add-btn"><i class="fa fa-paperclip" aria-hidden="true"></i>Attach Document</a>
                         <a href="{{ route('admin.employees.edit', $employees->id) }}" class="btn add-btn"><i class="fa fa-plus"></i>Edit User</a>
-                    </div> 
+                    </div>
                 </div>
             </div>
             <div class="card mb-0">
@@ -38,13 +38,11 @@
                                             <div class="profile-info-left">
                                                 <h3 class="user-name m-t-0 mb-0">{{ $employees->first_name }}</h3>
                                                 <h6 class="text-muted">
-                                                    {{ $employees->profiledesignation->designation_name }}</h6>
-                                                <small
-                                                    class="text-muted">{{ $employees->department->department_name }}</small>
+                                                    <b>{{ $employees->department->department_name }}</b> - {{ $employees->profiledesignation->designation_name }}</h6>
                                                 <div class="staff-id">Employee ID : {{ $employees->employeeID }}</div>
                                                 <div class="staff-id">Machine ID :@if(isset($employees)&& $employees->machineID != NULL){{ $employees->machineID }}@else NO @endif</div>
                                                 <div class="small doj text-muted">Date of Join :
-                                                    {{ \Carbon\Carbon::parse($employees->joiningDate)->format('d/m/Y') }}
+                                                    {{ \Carbon\Carbon::parse($employees->joiningDate)->format('d F Y') }}
                                                 </div>
                                                 <div class="staff-msg"><a class="btn add-btn"
                                                         href="{{ route('admin.emp.show-taskk', $employees->id) }}">Show-Task</a>
@@ -63,8 +61,8 @@
                                                 </li>
                                                 <li>
                                                     <div class="title">Birthday:</div>
-                                                    <div class="text">@if(isset($employees)&& $employees->dob != NULL){{ $employees->dob }}@else NO @endisset</div>
-                                                   
+                                                    <div class="text">@if(isset($employees)&& $employees->dob != NULL){{ \Carbon\Carbon::parse($employees->dob)->format('d F Y') }}@else NO @endisset</div>
+
                                                 </li>
                                                 <li>
                                                     <div class="title">Address:</div>
@@ -75,9 +73,9 @@
                                                     <div class="text">
                                                         @if ($employees->gender == 'm')
                                                             {{ 'Male' }}
-                                                        @elseif($employees->gender == 'm')
+                                                        @elseif($employees->gender == 'f')
                                                             {{ 'Female' }}
-                                                            @else
+                                                        @else
                                                             NO
                                                         @endif
                                                     </div>
@@ -201,7 +199,7 @@
                     </div>
                 </div>
             </div>
-        </div> 
+        </div>
     @endsection
     @push('plugin-js')
         <script src="{{ asset('assets/js/select2.min.js') }}"></script>
