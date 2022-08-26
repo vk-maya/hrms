@@ -274,7 +274,11 @@ class AdminController extends Controller
         $employee = User::when($id, function($query) use ($id){
             $query->where('employeeID', 'LIKE', '%' . $id . '%');
         })->when($name, function($query) use ($name){
-            $query->where('first_name', $name);
+            $query->where('first_name', 'LIKE', '%' . $name . '%');
+        })->when($designation, function($query) use ($designation){
+            $query->where('designation_id', $designation);
         })->get();
+
+        return response()->json($employee);
     }
 }
