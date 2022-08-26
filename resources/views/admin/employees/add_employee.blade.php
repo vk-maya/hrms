@@ -98,8 +98,7 @@
                             @endif
 
                             <div class="row">
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div class="form-group">
+                                <div class="col-lg-3 col-md-4 col-sm-6 form-group">
                                         <label class="col-form-label">First Name <span class="text-danger">*</span></label>
                                         <input class="form-control" name="first_name" type="text" value="@if(isset($employee)) {{ $employee->first_name }}@else{{ old('first_name') }}@endif">
                                         <span class="text-danger">
@@ -108,9 +107,7 @@
                                             @enderror
                                         </span>
                                     </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div class="form-group">
+                                <div class="col-lg-3 col-md-4 col-sm-6 form-group">
                                         <label class="col-form-label">Last Name</label>
                                         <input class="form-control" name="last_name" type="text" value="@if(isset($employee)) {{ $employee->last_name }}@else{{ old('last_name') }}@endif">
                                         <span class="text-danger">
@@ -119,9 +116,7 @@
                                             @enderror
                                         </span>
                                     </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div class="form-group">
+                                <div class="col-lg-3 col-md-4 col-sm-6 form-group">
                                         <label class="col-form-label">Gender</label>
                                         <select class="select form-control" name="gender" required>
                                             <option value="">Selected Gender</option>
@@ -136,9 +131,7 @@
                                             @enderror
                                         </span>
                                     </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div class="form-group">
+                                <div class="col-lg-3 col-md-4 col-sm-6 form-group">
                                         <label class="col-form-label">Birth Date</label>
                                         <div class="">
                                             <input type="date" class="form-control" name="dob"
@@ -151,8 +144,7 @@
                                                 </span>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="col-lg-3 col-md-4 col-sm-6 form-group">
                                     <label class="col-form-label" for="emp">Employee ID</label>
                                     <div class="input-group">
                                         @if (!isset($employee))
@@ -170,7 +162,7 @@
                                     <div id="empt">
                                     </div>
                                 </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="col-lg-3 col-md-4 col-sm-6 form-group">
                                     <label class="col-form-label" for="machine">Machine ID</label>
                                     <div class="input-group">
                                         <span class="input-group-text" id="inputGroupPrepend">Mac-ID-</span>
@@ -179,7 +171,7 @@
                                             placeholder="Enter Machine ID">
                                     </div>
                                 </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="col-lg-3 col-md-4 col-sm-6 form-group">
                                     <div class="form-group">
                                         <label class="col-form-label">Phone </label>
                                         <input class="form-control phone" name="phone" type="text" maxlength="10"
@@ -192,7 +184,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="col-lg-3 col-md-4 col-sm-6 form-group">
                                     <div class="form-group">
                                         <label class="col-form-label">Email <span class="text-danger">*</span></label>
                                         <input class="form-control" name="email" type="email" id="email"
@@ -208,7 +200,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="col-lg-3 col-md-4 col-sm-6 form-group6">
                                     <div class="position-relative">
                                         <label class="col-form-label">Password</label>
                                     </div>
@@ -223,15 +215,14 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="col-lg-3 col-md-4 col-sm-6 form-group">
                                     <div class="position-relative">
                                         <label class="col-form-label">Confirm Password</label>
                                         <input class="form-control" name="password_confirmation" type="password">
 
                                     </div>
                                 </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div class="form-group">
+                                <div class="col-lg-3 col-md-4 col-sm-6 form-group">
                                         <label class="col-form-label">Address</label>
                                         <input class="form-control"
                                             value="@if(isset($employee)){{$employee->address}}@else{{old('address')}}@endif"
@@ -242,9 +233,7 @@
                                             @enderror
                                         </span>
                                     </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div class="form-group">
+                                <div class="col-lg-3 col-md-4 col-sm-6 form-group">
                                         <label class="col-form-label">Country <span class="text-danger">*</span></label>
                                         <select name="country_id" class="form-control select2" id="inputcountry"
                                             onkeypress="country()">
@@ -261,11 +250,8 @@
                                                 <p>Country is required.</p>
                                             @enderror
                                         </span>
-
-                                    </div>
                                 </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div class="form-group">
+                                <div class="col-lg-3 col-md-4 col-sm-6 form-group">
                                         <label class="col-form-label">State <span class="text-danger">*</span></label>
                                         <select class="form-control select2" name="state_id" id="inputstate">
                                             <option value="">Select State</option>
@@ -279,9 +265,7 @@
                                             <input type="hidden" value="{{$employee->state_id}}" id="EditState">
                                         @endisset
                                     </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div class="form-group">
+                                <div class="col-lg-3 col-md-4 col-sm-6 form-group">
                                         <label class="col-form-label">City <span class="text-danger">*</span></label>
                                         <select class="form-control select2" name="city_id" id="inputcity">
                                             <option value="">Select City</option>
@@ -295,8 +279,7 @@
                                             <input type="hidden" value="{{$employee->city_id}}" id="Editcity">
                                         @endisset
                                     </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="col-lg-3 col-md-4 col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Pin Code</label>
                                         <input type="text" name="pincode" class="form-control"
@@ -309,7 +292,7 @@
                                     </div>
                                 </div>
                                 {{-- {{ \Carbon\Carbon::parse($employee->joiningDate)->format('d-m-Y') }} --}}
-                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="col-lg-3 col-md-4 col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Joining Date <span
                                                 class="text-danger">*</span></label>
@@ -327,7 +310,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="col-lg-3 col-md-4 col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Department <span
                                                 class="text-danger">*</span></label>
@@ -352,7 +335,7 @@
                                         @endisset
                                     </div>
                                 </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="col-lg-3 col-md-4 col-sm-6">
                                     <div class="form-group">
                                         <label class="col-form-label">Designation <span
                                                 class="text-danger">*</span></label>
@@ -366,8 +349,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div class="border-right-dashed">
+                                <div class="col-lg-3 col-md-4 col-sm-6">
                                     <label for="statusinput" class="mb-3">Status</label>
                                     <div class="col-md-12">
                                         <div class="form-check form-switch d-flex align-items-center p-0">
@@ -381,8 +363,7 @@
                                         </div>
                                      </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="col-lg-3 col-md-6 col-sm-6">
                                     <div class="form-group ml-2">
                                         <label class="col-form-label">Work Place</label>
                                         <div>
@@ -417,7 +398,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6 form-group ">
+                                <div class="col-lg-3 col-md-4 col-sm-6 form-group">
                                     <label>Upload Profile Photo</label>
                                     <input name="image" class="form-control" value="" type="file">
                                     <span class="text-danger">
@@ -426,7 +407,7 @@
                                         @enderror
                                     </span>
                                 </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6 form-group">
+                                <div class="col-lg-3 col-md-4 col-sm-6 form-group">
                                     <label>Attach Employees Document</label>
                                     <input name="files[]" class="form-control" value="" type="file"
                                         multiple>
@@ -435,9 +416,7 @@
                                             <p>Photo is required.</p>
                                         @enderror
                                     </span>
-                                </div>
-                              
-                               
+                                </div>                               
                                 @if (isset($employee) && $employee->image != '')
                                     <div class="profile-img">
                                         <a href="" class="avatar">
