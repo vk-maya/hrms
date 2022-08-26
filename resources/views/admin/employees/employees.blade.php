@@ -3,23 +3,6 @@
     <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
 @endpush
 @section('content')
-<<<<<<< HEAD
-<div class="page-wrapper">
-    <div class="content container-fluid">
-        <div class="page-header">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h3 class="page-title">Employee</h3>
-                    <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Employee</li>
-                    </ul>
-                </div>
-                <div class="col-auto ms-auto">
-                    <a href="{{ route('admin.employees') }}" class="grid-view btn btn-link active"><i class="fa fa-th"></i></a>
-                    <a href="{{ route('admin.employees.list') }}" class="list-view btn btn-link emplist" id="employeeslist"><i class="fa fa-bars"></i></a>
-                    <div class="view-icons">
-=======
     <div class="page-wrapper">
         <div class="content container-fluid">
             <div class="page-header">
@@ -32,18 +15,10 @@
                         </ul>
                     </div>
                     <div class="col-auto float-end ms-auto">
->>>>>>> master
                         <a href="{{ route('admin.add-employee') }}" class="btn add-btn"><i class="fa fa-plus"></i>
                             Add Employee</a>
                         <a href="{{ route('admin.add.employees.leavemonth') }}" class="btn add-btn"><i class="fa fa-plus"></i>
                             Add Leave</a>
-<<<<<<< HEAD
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row filter-row">
-=======
                         <div class="view-icons">
                             <a href="{{ route('admin.employees') }}" class="grid-view btn btn-link active"><i
                                     class="fa fa-th"></i></a>
@@ -53,7 +28,6 @@
                     </div>
                 </div>
             </div>
->>>>>>> master
             <div class="row filter-row">
                 <div class="col-sm-6 col-md-3">
                     <div class="form-group form-focus">
@@ -277,8 +251,6 @@
                         });
                     }
                 });
-<<<<<<< HEAD
-=======
             });
 
             $(document).on("click", ".search", function() {
@@ -286,7 +258,7 @@
                 var name = $('#empName').val();
                 var designation = $('#designation').val();
 
-                if (id != NULL || name != NULL designation != NULL) {
+                if (id != NULL || name != NULL || designation != NULL) {
                     $.ajax({
                         type: "GET",
                         url: '',
@@ -297,25 +269,6 @@
                     });
                 }
             });
->>>>>>> master
         });
-
-        $(document).on("click", ".search", function() {
-            var id = $('#empID').val();
-            var name = $('#empName').val();
-            var designation = $('#designation').val();
-
-            if (id != NULL || name != NULL designation != NULL) {
-                $.ajax({
-                    type: "GET",
-                    url: '',
-                    cache: false,
-                    success: function(res) {
-
-                    }
-                });
-            }
-        });
-    });
 </script>
 @endpush
