@@ -12,6 +12,8 @@ use Illuminate\Console\Command;
 use App\Models\Leave\Leaverecord;
 use App\Models\Leave\settingleave;
 use App\Models\Admin\LeaveMonthAttandance;
+use App\Models\Leave\Leave;
+use App\Models\WorkFromHome;
 
 class Attendence extends Command
 {
@@ -54,6 +56,19 @@ class Attendence extends Command
 
         foreach ($response->data as $key) {
             $user = User::where('employeeID', $key->Empcode)->first();
+            // $leave = Leave::where('user_id',$user->id)
+
+            $leaveCount = Leave::where('user_id', $user->id)->where('status',1)->where(function ($query) use ($date) {
+                $query->where("form", ">=", $date)->where('to','<=', $date);})->count();
+            $wfhCount = WorkFromHome::where('user_id', $user->id)->where('status',1)->where(function ($query) use ($date) {
+                $query->where("from", ">=", $date)->where('to','<=', $date);})->count();
+                if ($leaveCount>0) {
+                    $leaveCount="L";
+                }elseif($wfhCount>0){
+                    $leaveCount="WFH";
+                }else{
+                    $leaveCount="A";
+                }
             if (!empty($user)) {
                 $attend = Attendance::where('user_id', $user->id)->where('date', $date)->first();
                 if (!empty($attend)) {
@@ -70,6 +85,7 @@ class Attendence extends Command
                     $attend->attendance = $key->Status;
                     $attend->status = ($key->Status == 'P') ? 1 : 0;
                     $attend->passdate = ($key->Status == 'P') ? date('Y-m-d', strtotime($date)) : null;
+                    $attend->mark = ($key->Status == 'P') ? 'P' : $leaveCount;
                     $attend->save();
                 } else {
                     $in_time = $key->INTime == '--:--' ? '00:00' : $key->INTime;
@@ -80,7 +96,8 @@ class Attendence extends Command
                     } else {
                         $work_time = '00:00';
                     }
-                    Attendance::create(['user_id' => $user->id, 'in_time' => $key->INTime == '--:--' ? '00:00' : $key->INTime, 'out_time' => $key->OUTTime == '--:--' ? '00:00' : $key->OUTTime, 'work_time' => $work_time, 'date' => date('Y-m-d', strtotime($date)), 'day' => date('d', strtotime($date)), 'month' => date('m', strtotime($date)), 'year' => date('Y', strtotime($date)), 'attendance' => $key->Status, 'status' => ($key->Status == 'P') ? 1 : 0, 'passdate' => ($key->Status == 'P') ? date('Y-m-d', strtotime($date)) : null]);
+                 
+                    Attendance::create(['user_id' => $user->id, 'in_time' => $key->INTime == '--:--' ? '00:00' : $key->INTime, 'out_time' => $key->OUTTime == '--:--' ? '00:00' : $key->OUTTime, 'work_time' => $work_time, 'date' => date('Y-m-d', strtotime($date)), 'day' => date('d', strtotime($date)), 'month' => date('m', strtotime($date)), 'year' => date('Y', strtotime($date)), 'attendance' => $key->Status, 'status' => ($key->Status == 'P') ? 1 : 0, 'mark' => ($key->Status == 'P') ? 'P' : $leaveCount,'passdate' => ($key->Status == 'P') ? date('Y-m-d', strtotime($date)) : null]);
                 }
                 //leave vs attandance function
                 $date = date('Y-m-d', strtotime($date));

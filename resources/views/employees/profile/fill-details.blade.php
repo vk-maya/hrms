@@ -6,12 +6,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <meta name="description" content="Smarthr - Bootstrap Admin Template">
-    <meta name="keywords"
-        content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern, accounts, invoice, html5, responsive, CRM, Projects">
-    <meta name="author" content="Dreamguys - Bootstrap Admin Template">
     <meta name="robots" content="noindex, nofollow">
-    <title>Scrum Digital Employees Management</title>
+    <title>Scrum Digital - HRMS</title>
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/favicon.png') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/font-awesome.min.css') }}">
@@ -120,7 +116,6 @@
                         <span> {{ Auth::guard('web')->user()->name }}</span>
                     </a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="{{ route('employees.profile') }}">My Profile</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button class=" dropdown-item" type="submit">
@@ -136,10 +131,14 @@
                 <div class="page-header">
                     <div class="row align-items-center">
                         <div class="col">
-                            <h3 class="page-title">Details</h3>
+                            <h3 class="page-title">Personal Information</h3>
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item active">Fill Employees Details</li>
+                                <li class="breadcrumb-item active">Complete or Verify Your Details</li>
                             </ul>
+                        </div>
+                        <div class="col-auto float-end ms-auto">
+                            <h4 class="page-title">Joining Date</h4>
+                            <span><b>{{\Carbon\Carbon::parse($employees->joiningDate)->format('d F Y')}}</b></span>
                         </div>
                     </div>
                 </div>
@@ -151,6 +150,15 @@
                                 @csrf
                                 <input type="text" hidden
                                     value="@if (isset($employees)) {{ $employees->id }} @endif" name="id">
+                                <div class="row">
+                                    @if($employees->image != NULL)
+                                        <div class="col-md-12 text-center">
+                                            <span class="avatar" style="width: 100px; height: 100px">
+                                                <img src="{{ asset('storage/uploads/' . $employees->image) }}">
+                                            </span>
+                                        </div>
+                                    @endisset
+                                </div>
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <div class="form-group">
@@ -200,7 +208,7 @@
                                             <label>Birth Date</label>
                                             <div class="">
                                                 <input type="date" class="form-control" name="dob"
-                                                    value="{{$employees->dob}}">
+                                                    value="@if(isset($employees) && $employees->dob != NULL){{\Carbon\Carbon::parse($employees->dob)->format('Y-m-d')}}@endif" max="{{ \Carbon\Carbon::now()->subMonths(216)->toDateString() }}">
                                                 <span class="text-danger">
                                                     @error('dob')
                                                         <p>Employee Birth Date field is required.</p>
@@ -212,8 +220,7 @@
                                     <div class="col-sm-6">
                                         <label class="col-form-label" for="emp">Employee ID</label>
                                         <div class="input-group">
-                                            <span class="input-group-text" id="inputGroupPrepend">SDC-EMP-</span>
-                                            <input type="text" readonly class="form-control" name="employeeID"
+                                            <input type="text" readonly class="form-control"
                                                 id="emp"
                                                 value="@if(isset($employees)){{$employees->employeeID}}@endif">
                                         </div>
@@ -229,9 +236,8 @@
                                         <div class="form-group">
                                             <label class="col-form-label">Email <span
                                                     class="text-danger">*</span></label>
-                                            <input class="form-control" name="email" type="email" id="email" readonly
-                                                value="@if(isset($employees)){{$employees->email}}@endif"
-                                                onkeypress="emaill()">
+                                            <input class="form-control" type="email" id="email" readonly
+                                                value="@if(isset($employees)){{$employees->email}}@endif" style="text-transform: none;">
                                             <span class="text-danger">
                                                 @error('email')
                                                     <p>Email ID field is required.</p>
@@ -334,22 +340,17 @@
                                                 @enderror
                                             </span>
                                         </div>
-                                    </div>                                   
-                                    @if($employees->image != NULL)
-                                        <div class="profile-img">
-                                            <a href="" class="avatar">
-                                                <img src="{{ asset('storage/uploads/' . $employees->image) }}"
-                                                    alt=""></a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Update Profile Photo</label>
+                                            <input name="image" class="form-control" value="" type="file">
+                                            <span class="text-danger">
+                                                @error('image')
+                                                    <p>Photo field is required.</p>
+                                                @enderror
+                                            </span>
                                         </div>
-                                    @endisset
-                                    <div class="form-group">
-                                        <label>Upload Photo</label>
-                                        <input name="image" class="form-control" value="" type="file">
-                                        <span class="text-danger">
-                                            @error('image')
-                                                <p>Photo field is required.</p>
-                                            @enderror
-                                        </span>
                                     </div>
                                     <div class="submit-section">
                                         <button class="btn btn-primary submit-btn" type="submit">Submit</button>
@@ -360,15 +361,11 @@
                     </div>
                 </div>
             </div>
-        </div> 
+        </div>
     </div>
-    <script data-cfasync="false" src="../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('assets/js/jquery.slimscroll.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/morris/morris.min.js') }}"></script>
-    <script src="{{ asset('assets/plugins/raphael/raphael.min.js') }}"></script>
-    <script src="{{ asset('assets/js/chart.js') }}"></script>
     <script src="{{ asset('assets/js/app.js') }}"></script>
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
@@ -384,7 +381,7 @@
             if (!(arr.indexOf(kk) >= 0))
                 e.preventDefault();
         });
- 
+
         function states() {
             var contid = document.getElementById("inputcountry");
             var id = $('#inputcountry').val();

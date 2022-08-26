@@ -5055,7 +5055,7 @@ textarea.form-control{
 
 .profile-widget .dropdown.profile-action .dropdown-menu.show{
     padding: 0px;
-    border: none;    
+    border: none;
     box-shadow: 0px 0px 4px 0px #ccc;
     min-width: 120px!important;
     inset: 0px -12px auto auto!important;
@@ -6807,7 +6807,7 @@ button.close{
     background-color: #f7f7f7;
     border-radius: 50%;
 }
-.header .dropdown-menu .admin-heading h4{ 
+.header .dropdown-menu .admin-heading h4{
     margin-top: 10px;
     margin-bottom: 0;
     font-size: 20px;

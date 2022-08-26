@@ -1,8 +1,9 @@
 @extends('admin.layouts.app')
 @push('css')
-<link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
 @endpush
 @section('content')
+<<<<<<< HEAD
 <div class="page-wrapper">
     <div class="content container-fluid">
         <div class="page-header">
@@ -18,15 +19,41 @@
                     <a href="{{ route('admin.employees') }}" class="grid-view btn btn-link active"><i class="fa fa-th"></i></a>
                     <a href="{{ route('admin.employees.list') }}" class="list-view btn btn-link emplist" id="employeeslist"><i class="fa fa-bars"></i></a>
                     <div class="view-icons">
+=======
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+            <div class="page-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h3 class="page-title">Employee</h3>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Employee</li>
+                        </ul>
+                    </div>
+                    <div class="col-auto float-end ms-auto">
+>>>>>>> master
                         <a href="{{ route('admin.add-employee') }}" class="btn add-btn"><i class="fa fa-plus"></i>
                             Add Employee</a>
                         <a href="{{ route('admin.add.employees.leavemonth') }}" class="btn add-btn"><i class="fa fa-plus"></i>
                             Add Leave</a>
+<<<<<<< HEAD
                     </div>
                 </div>
             </div>
         </div>
         <div class="row filter-row">
+=======
+                        <div class="view-icons">
+                            <a href="{{ route('admin.employees') }}" class="grid-view btn btn-link active"><i
+                                    class="fa fa-th"></i></a>
+                            <a href="{{ route('admin.employees.list') }}" class="list-view btn btn-link emplist"
+                                id="employeeslist"><i class="fa fa-bars"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+>>>>>>> master
             <div class="row filter-row">
                 <div class="col-sm-6 col-md-3">
                     <div class="form-group form-focus">
@@ -84,28 +111,68 @@
                                                     <a href="{{route('admin.employees.profile',$item->id)}}"><b>{{$item->first_name.' '.$item->last_name}}</b><br>
                                                         <span>{{$item->designation->designation_name}}</span></a>
                                                 </div>
-                                            </div>
-                                        </h2>
-                                    </td>
-                                    <td>{{$item->employeeID}}</td>
-                                    <td>{{$item->email}}</td>
-                                    <td>{{$item->phone}}</td>
-                                    <td> {{ \Carbon\Carbon::parse($item->joiningDate)->format('d M Y') }}</td>
-                                    {{-- <td>{{$item->designation->designation_name}}</td> --}}
-                                    <td class="text-end">
-                                        <div class="dropdown dropdown-action">
-                                            <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item" href="{{ route('admin.edit-employee',$item->id) }}"><i class="fas fa-pencil me-3"></i> Edit</a>
-                                                <button class="dropdown-item delete" data-id="{{$item->id}}"><i class="fas fa-trash-alt me-3"></i> Delete</button>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+                </div>
+            @endisset
+            @isset($employees)
+                <div class="row staff-grid-row" id="grid">
+                    @foreach ($employees as $item)
+                        <div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
+                            <div class="profile-widget">
+                                <div class="profile-img">
+                                    <a href="{{route('admin.employees.profile',$item->id)}}">
+                                    <span class="avatar">
+                                        <img src="@if($item->image != NULL){{ asset('storage/uploads/' . $item->image) }}@else{{ asset('assets/img/avtar.jpg')}}@endif"></span></a>
+                                </div>
+                                <div class="dropdown profile-action">
+                                    <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
+                                        aria-expanded="false"><i class="material-icons">more</i></a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item" href="{{ route('admin.edit-employee', $item->id) }}"><i
+                                                class="fa fa-pencil me-3"></i> Edit</a>
+                                        <button class="dropdown-item delete" data-id="{{ $item->id }}"><i
+                                                class="fa fa-trash-alt me-3"></i> Delete</button>
+                                        <a class="dropdown-item more-add" href="{{route('admin.employees.information',$item->id)}}"><i class="fa fa-plus text-info  m-r-5"></i>Add More</a>
+                                        <a class="dropdown-item status" href="{{route('admin.employees.status',$item->id)}}">
+                                            @if ($item->status == 1)
+                                                 <i class="fa fa-times text-danger" aria-hidden="true"></i>
+                                                <span
+                                                    class="yeh-data">Inactive</span>
+                                            @else
+                                                <i class="fa fa-check m-r-5 text-success"></i> <span
+                                                    class="yeh-data">Active</span>
+                                            @endif
+                                        </a>
+                                    </div>
+                                </div>
+                                <div>
+                                    @if ($item->status == 0)
+                                        <span class="position-relative">
+                                            <span
+                                                class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
+                                            </span>
+                                        </span>
+                                    @else
+                                        <span class="position-relative">
+                                            <span
+                                                class="position-absolute top-0 start-100 translate-middle p-2 bg-success border border-light rounded-circle">
+                                            </span>
+                                        </span>
+                                    @endif
+                                </div>
+                                <div class="small text-muted">
+                                    <h4 class="user-name m-t-10 mb-0 text-ellipsis">{{$item->first_name.' '.$item->last_name}}</h4>
+                                    {{$item->designation->designation_name}}
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -210,6 +277,27 @@
                         });
                     }
                 });
+<<<<<<< HEAD
+=======
+            });
+
+            $(document).on("click", ".search", function() {
+                var id = $('#empID').val();
+                var name = $('#empName').val();
+                var designation = $('#designation').val();
+
+                if (id != NULL || name != NULL designation != NULL) {
+                    $.ajax({
+                        type: "GET",
+                        url: '',
+                        cache: false,
+                        success: function(res) {
+
+                        }
+                    });
+                }
+            });
+>>>>>>> master
         });
 
         $(document).on("click", ".search", function() {

@@ -25,14 +25,14 @@
 						<li class="menu-title">
 							<span>Employees</span>
 						</li>
-						<li class="submenu @if(in_array(\Request::route()->getName(), ["admin.employees", "admin.attendance", "admin.holidays", "admin.leave-setting", "admin.leave.list"])) active @endif">
+						<li class="submenu @if(in_array(\Request::route()->getName(), ["admin.employees", "admin.attendance", "admin.holidays", "admin.leave-setting", "admin.leave.list", "admin.add-leave-type"])) active @endif">
 							<a href="#"><i class="la la-user"></i> <span> Employees</span> <span
 									class="menu-arrow"></span></a>
 							<ul style="display: none;">
 								<li><a class="@if(\Request::route()->getName() == 'admin.employees') active @endif" href="{{route('admin.employees')}}">Employees</a></li>
 								<li><a class="@if(\Request::route()->getName() == 'admin.attendance') active @endif" href="{{route('admin.attendance')}}">Attendance</a></li>
 								<li><a class="@if(\Request::route()->getName() == 'admin.holidays') active @endif" href="{{route('admin.holidays')}}">Holiday</a></li>
-								<li><a class="@if(\Request::route()->getName() == 'admin.leave-setting') active @endif" href="{{route('admin.leave-setting')}}">Leave Settings</a></li>
+								<li><a class="@if(in_array(\Request::route()->getName(), ["admin.leave-setting", "admin.add-leave-type"])) active @endif " href="{{route('admin.leave-setting')}}">Leave Settings</a></li>
 								<li><a class="@if(\Request::route()->getName() == 'admin.leave.list') active @endif" href="{{route('admin.leave.list')}}">Leave</a></li>
 							</ul>
 						</li>

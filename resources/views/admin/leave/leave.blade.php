@@ -245,13 +245,18 @@
                                                                 aria-expanded="false"><i
                                                                     class="fa fa-dot-circle-o text-danger"></i> Declined</a>
                                                         @else
-                                                            <a class="btn btn-white btn-sm btn-rounded dropdown-toggle disabled"
+                                                            <a class="btn btn-white btn-sm btn-rounded dropdown-toggle"
                                                                 href="" data-bs-toggle="dropdown"
                                                                 aria-expanded="false"><i
                                                                     class="fa fa-dot-circle-o text-success"></i>
                                                                 Approved</a>
                                                         @endif
                                                         <div class="dropdown-menu dropdown-menu-right">
+                                                            @if ($item->status == 2)
+                                                            <span  class="dropdown-item disabled">
+                                                                <i class="fa fa-dot-circle-o text-purple"></i>
+                                                                New</span>  
+                                                            @else
                                                             <form action="{{ route('admin.wfh.report') }}"
                                                                 method="POST">
                                                                 @csrf
@@ -263,19 +268,31 @@
                                                                     <i class="fa fa-dot-circle-o text-purple"></i>
                                                                     New</button>
                                                             </form>
+                                                            @endif
+                                                            @if ($item->status == 1)
+                                                            <span  class="dropdown-item disabled">
+                                                                <i class="fa fa-dot-circle-o text-success"></i>
+                                                                Approved</span>
+                                                            @else
                                                             <form action="{{ route('admin.wfh.report') }}"
-                                                                method="POST">
-                                                                @csrf
-                                                                <input type="hidden" name="status" value="1">
-                                                                <input type="hidden" name="user_id" value="{{ $item->user->id}}">
-                                                                <input type="hidden" name="id"
-                                                                    value="{{ $item->id }}">
-                                                                <input type="hidden" name="type_id"
-                                                                    value="{{ $item->leaves_id }}">
-                                                                <button type="submit" class="dropdown-item">
-                                                                    <i class="fa fa-dot-circle-o text-success"></i>
-                                                                    Approved</button>
-                                                            </form>
+                                                            method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="status" value="1">
+                                                            <input type="hidden" name="user_id" value="{{ $item->user->id}}">
+                                                            <input type="hidden" name="id"
+                                                                value="{{ $item->id }}">
+                                                            <input type="hidden" name="type_id"
+                                                                value="{{ $item->leaves_id }}">
+                                                            <button type="submit" class="dropdown-item">
+                                                                <i class="fa fa-dot-circle-o text-success"></i>
+                                                                Approved</button>
+                                                        </form>
+                                                            @endif
+                                                            @if ($item->status == 0)
+                                                            <span  class="dropdown-item disabled">
+                                                                <i class="fa fa-dot-circle-o text-danger"></i>
+                                                                Declined</span> 
+                                                            @else
                                                             <form action="{{ route('admin.wfh.report') }}"
                                                                 method="POST">
                                                                 @csrf
@@ -286,6 +303,7 @@
                                                                     <i class="fa fa-dot-circle-o text-danger"></i>
                                                                     Declined</button>
                                                             </form>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </td>

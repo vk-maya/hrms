@@ -38,7 +38,7 @@ require __DIR__ . '/admin_auth.php';
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-Route::get('/fill/UserData',[UserController::class,'fill'])->middleware('auth')->name('fill.data');
+Route::get('/complete-profile',[UserController::class,'fill'])->middleware('auth')->name('fill.data');
 Route::post('fill/Userstore', [UserController::class, 'fillstore'])->middleware('auth')->name('fill.data.store');
 Route::post('country', [UserController::class, 'country'])->name('state.name');
 Route::post('state', [UserController::class, 'state'])->name('state.city.name');
