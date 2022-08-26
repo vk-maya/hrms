@@ -113,10 +113,10 @@
                                             <a class="btn btn-white btn-sm btn-rounded status" data-id="{{ $item->id }}"
                                                 href="javascript:void(0);">
                                                 @if ($item->status == 1)
-                                                    <i class="fa fa-dot-circle-o text-success"></i> <span
+                                                    <i class="fas fa-check-circle me-2"></i> <span
                                                         class="yeh-data">Approved</span>
                                                 @else
-                                                    <i class="fa fa-dot-circle-o text-danger"></i> <span
+                                                    <i class="far fa-times-circle me-2"></i> <span
                                                         class="yeh-data">Declined</span>
                                                 @endif
                                             </a>
@@ -128,10 +128,10 @@
                                                 aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
                                                 <button class="dropdown-item edit" data-id="{{ $item->id }}"><i
-                                                        class="fa fa-pencil m-r-5"></i>
+                                                        class="fa fa-pencil me-2"></i>
                                                     Edit</button>
                                                 <button class="dropdown-item delete" data-id="{{ $item->id }}"><i
-                                                        class="fa fa-trash-o m-r-5"></i> Delete</button>
+                                                        class="fas fa-trash-alt me-2"></i> Delete</button>
                                             </div>
                                         </div>
                                     </td>

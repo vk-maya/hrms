@@ -260,8 +260,8 @@ input:focus,select:focus,textarea:focus{
 
 @font-face {
     font-family: 'Mulish';
-    src: url('Mulish-ExtraLightItalic.woff2') format('woff2'),
-        url('Mulish-ExtraLightItalic.woff') format('woff');
+    src: url('../fonts/Mulish-ExtraLightItalic.woff2') format('woff2'),
+        url('../fonts/Mulish-ExtraLightItalic.woff') format('woff');
     font-weight: 200;
     font-style: italic;
     font-display: swap;
@@ -269,8 +269,8 @@ input:focus,select:focus,textarea:focus{
 
 @font-face {
     font-family: 'Mulish';
-    src: url('Mulish-LightItalic.woff2') format('woff2'),
-        url('Mulish-LightItalic.woff') format('woff');
+    src: url('../fonts/Mulish-LightItalic.woff2') format('woff2'),
+        url('../fonts/Mulish-LightItalic.woff') format('woff');
     font-weight: 300;
     font-style: italic;
     font-display: swap;
@@ -278,8 +278,8 @@ input:focus,select:focus,textarea:focus{
 
 @font-face {
     font-family: 'Mulish';
-    src: url('Mulish-Medium.woff2') format('woff2'),
-        url('Mulish-Medium.woff') format('woff');
+    src: url('../fonts/Mulish-Medium.woff2') format('woff2'),
+        url('../fonts/Mulish-Medium.woff') format('woff');
     font-weight: 500;
     font-style: normal;
     font-display: swap;
@@ -287,8 +287,8 @@ input:focus,select:focus,textarea:focus{
 
 @font-face {
     font-family: 'Mulish';
-    src: url('Mulish-MediumItalic.woff2') format('woff2'),
-        url('Mulish-MediumItalic.woff') format('woff');
+    src: url('../fonts/Mulish-MediumItalic.woff2') format('woff2'),
+        url('../fonts/Mulish-MediumItalic.woff') format('woff');
     font-weight: 500;
     font-style: italic;
     font-display: swap;
@@ -886,7 +886,10 @@ ul{
     color: #00c5fb;
 }
 .btn.btn-rounded{
-    border-radius:50px
+    border-radius:50px;
+    min-width: 105px!important;
+    align-items: center;
+    display: inline-flex;
 }
 .btn-white{
     background-color:#fff;
@@ -1384,8 +1387,9 @@ a.bg-danger:focus,a.bg-danger:hover,button.bg-danger:focus,button.bg-danger:hove
     -ms-transform-origin:left top 0
 }
 
-.header .dropdown-item:hover{
-    background-color: rgb(0 178 243 / 10%);
+.dropdown-item:hover{
+    color: #016ed7;
+    background-color: #f7f7f7;
 }
 .card{
     border:1px solid #f0f0f0;
@@ -1633,9 +1637,6 @@ a.bg-danger:focus,a.bg-danger:hover,button.bg-danger:focus,button.bg-danger:hove
 .form-group{
     margin-bottom:1rem
 }
-input[type=file].form-control{
-    height:36px
-}
 .form-text{
     color:#999;
     font-size:12px;
@@ -1646,7 +1647,6 @@ input[type=file].form-control{
     box-shadow:none;
     font-size:15px;
     height:50px;
-    text-transform: capitalize;
 }
 .form-control.search-message{
     height:38px;
@@ -2780,13 +2780,6 @@ input[type=file].form-control{
         margin-top:20px
     }
 }
-.submit-section .submit-btn{
-    font-size:18px;
-    font-weight:600;
-    min-width:200px;
-    border-radius:50px;
-    padding:10px 20px
-}
 @media(max-width:575px){
     .submit-section .submit-btn{
         margin:10px 0 0;
@@ -3030,7 +3023,6 @@ input[type=file].form-control{
 .form-control-sm.form-control{
     height:30px;
     appearance:auto;
-    border-radius:0
 }
 .activity-box{
     position:relative
@@ -5026,7 +5018,7 @@ textarea.form-control{
 .add-btn{
     background-color:#00c5fb;
     border: 1px solid #00c5fb;
-    color:#fff;
+    color: #fff !important;
     font-weight:500;
     min-width:140px;
     border-radius:4px;
@@ -5037,7 +5029,7 @@ textarea.form-control{
     margin-right:5px
 }
 .add-btn:hover {
-    color: #00c5fb;
+    color: #00c5fb!important;
     background-color: transparent;
 }
 .avatar-dropdown .dropdown-toggle:after{
@@ -5059,9 +5051,7 @@ textarea.form-control{
 .profile-widget .profile-img{
     cursor:pointer;
     position:relative;
-    margin-bottom: 25px;
 }
-
 
 .profile-widget .dropdown.profile-action .dropdown-menu.show{
     padding: 0px;
@@ -5070,14 +5060,19 @@ textarea.form-control{
     min-width: 120px!important;
     inset: 0px -12px auto auto!important;
 }
-.profile-widget .dropdown.profile-action .dropdown-menu.show .dropdown-item:hover{
-    color: #000;
-    background-color: rgb(0 197 251 / 10%);
-    }
-.profile-widget .dropdown.profile-action .action-icon{
-    color:#777;
-    font-size:18px;
-    display:inline-block
+.profile-widget .dropdown.profile-action .action-icon {
+    color: #777;
+    font-size: 18px;
+    display: inline-block;
+    width: 25px;
+    text-align: center;
+    height: 25px;
+    border-radius: 50%;
+    line-height: 25px;
+    transition: 0.3s;
+}
+.profile-widget .dropdown.profile-action .action-icon:hover{
+    background-color: #e1e9eb;
 }
 .profile-widget .dropdown.profile-action .dropdown-toggle::after{
     display:none
@@ -6365,7 +6360,7 @@ button.close{
     border-radius: 50%;
     height: 120px;
     width: 120px;
-    border: 2px solid;
+    border: 2px solid #ccc;
 }
 .profile-view .profile-img{
     width:120px;
@@ -6519,13 +6514,6 @@ button.close{
     display:block;
     font-size:12px;
     line-height:1.35
-}
-.submit-btn{
-    font-size:18px;
-    font-weight:600;
-    min-width:200px;
-    padding:10px 20px;
-    border-radius:50px
 }
 .profile-img-wrap{
     height:120px;
@@ -6830,7 +6818,7 @@ button.close{
     font-weight: 500;
     color: #746b6b;
 }
-.header .dropdown-item {
+.dropdown-item {
     color: #4d5652;
     border-top: 1px solid #f3f3f3;
     padding: 5px 15px;
@@ -6861,11 +6849,10 @@ button.close{
 .profile-widget .profile-img .avatar{
     font-size:24px;
     height:80px;
-    line-height:80px;
     margin:0;
     width:80px;
     border: 2px solid #ccc;
-     overflow: hidden;                                                                                       
+    margin-top: 20px;                                                                                      
 }
 .header .user-menu.nav>li.flag-nav .dropdown-menu{
     max-height:100px;
@@ -6892,8 +6879,8 @@ button.close{
     }
 
    .page-wrapper .label-switch::before {
-      width: 5em;
-      height: 27px;
+      width: 4em;
+      height: 20px;
       border: 1px solid #cfcfcf;
       border-radius: 4em;
       background: #cfcfcf;
@@ -6901,11 +6888,10 @@ button.close{
 
    .page-wrapper .label-switch::after {
       position: absolute;
-      left: 0;
       top: 2px;
       left: 2px;
-      width: 23px;
-      height: 23px;
+      width: 16px;
+      height: 16px;
       background: #fafafa;
       border-radius: 50%;
       transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1), background 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
@@ -6964,5 +6950,60 @@ button.close{
     font-size: 12px;
     padding: 5px 10px;
     margin-top:21px;
+}
+/* .border-right-dashed{
+    border-right: 2px dashed #ccc;
+} */
+.accent-chek {
+    line-height: 28px;
+    display: flex;
+    align-items: center;
+}
+.profile-widget .user {
+    position: absolute;
+    background-color: #fff;
+    width: 15px;
+    height: 15px;
+    border-radius: 10px;
+    border: 2px solid #ccc;
+    top: 3rem;
+    right: 9.6rem;
+}
+.profile-widget .user.offline{
+    background-color: red;
+}
+.profile-widget .user.online{
+    background-color: green;
+}
+input[type=file].form-control {
+    line-height: 36px;
+    height: 50px;
+}
+.dropdown-menu.dropdown-menu-right.show{
+    padding: 0;
+    right: 3rem!important;
+    top: -3rem!important;
+}
+.salaryinfo.btn.add-btn{
+    padding: 8px 0!important;
+    min-width: 100px;
+}
+.dropdown.dropdown-action .dropdown-item{
+    background-color: #fff!important;
+}
+.submit-section .submit-btn {
+    font-size: 18px;
+    font-weight: 600;
+    min-width: 200px;
+    border-radius: 5px;
+    padding: 10px 20px;
+    transition: 0.3s;
+    background-color: #00c4fb;
+    border: 1px solid #00c4fb;
+    color: #fff!important;
+}
+.submit-section .submit-btn:hover{
+background: #fff;
+color: #00c3fa!important;
 }
 /*Custom Css*/
