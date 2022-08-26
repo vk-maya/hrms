@@ -211,7 +211,7 @@ class LeaveController extends Controller
     public function attendanceWfhStore(Request $request)
     {
         $attendance = Attendance::where('date',$request->wdate)->first();
-        // dd($attendance  ->toArray());
+   
         $rules = [
             'id' => ['required', 'integer'],
             'day' => ['required', 'integer'],
@@ -253,27 +253,8 @@ class LeaveController extends Controller
         $leaveApproved = $attendance->date;
         $leavePending = Leave::where('user_id', Auth::guard('web')->user()->id)->where("form", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->first();
         $leaveApprovedRecord=Leaverecord::where('user_id', Auth::guard('web')->user()->id)->where("from", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->first();
-        $request->validate($rules);
-        if ($leavePending != null) {  
-            // dd($request->toArray());
-            $days=1;
-                $leaveType = settingleave::find($leaveApprovedRecord->type_id);
-                $monthLeave = monthleave::where('status',1)->where('user_id', Auth::guard('web')->user()->id)->latest()->first();
-                if ($leaveType->type == "PL") {
-                    $monthLeave->apprAnual = $monthLeave->apprAnual -$days;
-                } elseif ($leaveType->type == "PL") {
-                    $monthLeave->apprSick = $monthLeave->apprSick -$days;
-                } else {
-                    $monthLeave->other = $monthLeave->other - $days;
-                }
-                $monthLeave->save();
-            $leaveApprovedRecord->day = $leaveApprovedRecord->day-$days;
-            $leaveApprovedRecord->save();
-            $leavePending->day=$leavePending->day-$days;
-            $leavePending->save();
-        }
-        $wfh = WorkFromHome::where('user_id', Auth::guard('web')->user()->id)->where('from', $leaveApproved)->count();
-        // dd($wfh);
+        $request->validate($rules);     
+        $wfh = WorkFromHome::where('user_id', Auth::guard('web')->user()->id)->where('from', $leaveApproved)->count();      
         if ($leavePending != null && $wfh == 0) {
             $data = new WorkFromHome();
             $data->user_id = Auth::guard('web')->user()->id;
@@ -287,8 +268,7 @@ class LeaveController extends Controller
             $attendance->action = 3;
             // $attendance->mark="WFH";
             $attendance->save();
-        }
-        dd("stop");
+        }       
         return redirect()->back();
     }
 

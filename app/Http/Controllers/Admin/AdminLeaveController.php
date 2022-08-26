@@ -668,46 +668,239 @@ class AdminLeaveController extends Controller
         return redirect()->back();
     }
     public function wfhReport(Request $request) {
-        dd($request->toArray());
 
         $data = WorkFromHome::where('user_id',$request->user_id)->where('id',$request->id)->first();
-        $totaldayUpdate=Leave::where('leave_id',$request->id)->where('form',">=",$data->from)->where('to',"<=",$data->to)->get();
-
-        if ($data != null && $totaldayUpdate == null){
+        $days =$data->day;
+        $leaveApproved = $data->from;
+        $from= $data->from;
+        $totaldayUpdate=Leave::where('id',$request->id)->where('form',">=",$data->from)->where('to',"<=",$data->to)->get();
+        $leaveCount=Leave::where('user_id',$request->user_id)->where('form',"<=",$data->from)->where('to',">=",$data->to)->count();
+        // dd($leaveCount);
+        if ($request->status==1 && $data != null) {            
+            if ($data != null && $leaveCount == 0){
+                $data->admin_id =Auth::guard('admin')->user()->id;
+                $data->status=$request->status;
+                $data->save();
+            }else{                   
+                    $attendance = Attendance::find($request->id);
+                        $leavePending = Leave::where('user_id', Auth::guard('web')->user()->id)->where("form", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->first();
+                        $leaveApprovedRecord=Leaverecord::where('user_id', Auth::guard('web')->user()->id)->where("from", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->first();
+                        if ($leavePending != null) {                           
+                                $leaveType = settingleave::find($leaveApprovedRecord->type_id);
+                                $monthLeave = monthleave::where('status',1)->where('user_id', Auth::guard('web')->user()->id)->latest()->first();
+                                    if ($leaveType->type == "PL") {
+                                        $monthLeave->apprAnual = $monthLeave->apprAnual -$days;
+                                    } elseif ($leaveType->type == "PL") {
+                                        $monthLeave->apprSick = $monthLeave->apprSick -$days;
+                                    } else {
+                                        $monthLeave->other = $monthLeave->other - $days;
+                                    }
+                            $monthLeave->save();
+                            $leaveApprovedRecord->day = $leaveApprovedRecord->day-$days;
+                            $leaveApprovedRecord->save();
+                            $leavePending->day=$leavePending->day-$days;
+                            $leavePending->save();
+                        }
+                        $data->admin_id =Auth::guard('admin')->user()->id;
+                        $data->status=$request->status;
+                        $data->save();    
+                }
+                $attendance = Attendance::where('date',$from)->first();
+                if ($attendance!= null) {
+                    $attendance->action = 1;
+                    $attendance->mark="WFH";
+                    $attendance->save();
+                }
+                
+        }elseif($request->status==0 && $data->status== 2){
             $data->admin_id =Auth::guard('admin')->user()->id;
             $data->status=$request->status;
             $data->save();
-        }else{
-            $attendance = Attendance::find($request->id);
-                $leaveApproved = $attendance->date;
-                $leavePending = Leave::where('user_id', Auth::guard('web')->user()->id)->where("form", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->first();
-                $leaveApprovedRecord=Leaverecord::where('user_id', Auth::guard('web')->user()->id)->where("from", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->first();
-                if ($leavePending != null) {
-                    $days=1;
-                        $leaveType = settingleave::find($leaveApprovedRecord->type_id);
-                        $monthLeave = monthleave::where('status',1)->where('user_id', Auth::guard('web')->user()->id)->latest()->first();
-                            if ($leaveType->type == "PL") {
-                                $monthLeave->apprAnual = $monthLeave->apprAnual -$days;
-                            } elseif ($leaveType->type == "PL") {
-                                $monthLeave->apprSick = $monthLeave->apprSick -$days;
-                            } else {
-                                $monthLeave->other = $monthLeave->other - $days;
-                            }
-                    $monthLeave->save();
-                    $leaveApprovedRecord->day = $leaveApprovedRecord->day-$days;
-                    $leaveApprovedRecord->save();
-                    $leavePending->day=$leavePending->day-$days;
-                    $leavePending->save();
+            $attendance = Attendance::where('date',$from)->first();
+            if ($attendance!= null) {
+                $attendance->action =0;
+                $attendance->mark="A";
+                $attendance->save();
+            }
+        }elseif($request->status==0 && $data->status== 1){
+            if ($data != null && $totaldayUpdate == null){
+                $data->admin_id =Auth::guard('admin')->user()->id;
+                $data->status=$request->status;
+                $data->save();
+                $attendance = Attendance::where('date',$from)->first();
+                if ($attendance!= null) {
+                    $attendance->action =0;
+                    $attendance->mark="A";
+                    $attendance->save();
                 }
+            }else{
+                    $leavePending = Leave::where('user_id', Auth::guard('web')->user()->id)->where("form", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->first();
+                    $leaveApprovedRecord=Leaverecord::where('user_id', Auth::guard('web')->user()->id)->where("from", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->first();
+                    if ($leavePending != null) {
+                       
+                            $leaveType = settingleave::find($leaveApprovedRecord->type_id);
+                            $monthLeave = monthleave::where('status',1)->where('user_id', Auth::guard('web')->user()->id)->latest()->first();
+                                if ($leaveType->type == "PL") {
+                                    $monthLeave->apprAnual = $monthLeave->apprAnual +$days;
+                                } elseif ($leaveType->type == "PL") {
+                                    $monthLeave->apprSick = $monthLeave->apprSick +$days;
+                                } else {
+                                    $monthLeave->other = $monthLeave->other + $days;
+                                }
+                                    $monthLeave->save();
+                                    $leaveApprovedRecord->day = $leaveApprovedRecord->day+$days;
+                                    $leaveApprovedRecord->save();
+                                    $leavePending->day=$leavePending->day+$days;
+                                    $leavePending->save();
+                    }
+                                    $data->admin_id =Auth::guard('admin')->user()->id;
+                                    $data->status=$request->status;
+                                    $data->save();
+                                    $attendance = Attendance::where('date',$from)->first();
+                                    if ($attendance!= null) {
+                                        $attendance->action =0;
+                                        $attendance->mark="L";
+                                        $attendance->save();
+                                    }
+            }         
+        }elseif($request->status==1 && $data->status== 0){
+            if ($data != null && $totaldayUpdate == null){
+                $data->admin_id =Auth::guard('admin')->user()->id;
+                $data->status=$request->status;
+                $data->save();
+                $attendance = Attendance::where('date',$from)->first();
+                if ($attendance!= null) {
+                    $attendance->action =1;
+                    $attendance->mark="WFH";
+                    $attendance->save();
+                }
+            }else{
+            
+                    $leavePending = Leave::where('user_id', Auth::guard('web')->user()->id)->where("form", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->first();
+                    $leaveApprovedRecord=Leaverecord::where('user_id', Auth::guard('web')->user()->id)->where("from", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->first();
+                    if ($leavePending != null) {
+                       
+                            $leaveType = settingleave::find($leaveApprovedRecord->type_id);
+                            $monthLeave = monthleave::where('status',1)->where('user_id', Auth::guard('web')->user()->id)->latest()->first();
+                                if ($leaveType->type == "PL") {
+                                    $monthLeave->apprAnual = $monthLeave->apprAnual -$days;
+                                } elseif ($leaveType->type == "PL") {
+                                    $monthLeave->apprSick = $monthLeave->apprSick -$days;
+                                } else {
+                                    $monthLeave->other = $monthLeave->other - $days;
+                                }
+                        $monthLeave->save();
+                        $leaveApprovedRecord->day = $leaveApprovedRecord->day-$days;
+                        $leaveApprovedRecord->save();
+                        $leavePending->day=$leavePending->day-$days;
+                        $leavePending->save();
+                    }
+                    $data->admin_id =Auth::guard('admin')->user()->id;
+                    $data->status=$request->status;
+                    $data->save();  
+                    $attendance = Attendance::where('date',$from)->first();
+                    if ($attendance!= null) {
+                        $attendance->action =1;
+                        $attendance->mark="WFH";
+                        $attendance->save();
+                    }  
+            }
+          
+        }elseif($request->status==2 && $data->status== 1){      
 
-        }
+            if ($data != null && $totaldayUpdate == null){
+                $data->admin_id =Auth::guard('admin')->user()->id;
+                $data->status=$request->status;
+                $data->save();
+                $attendance = Attendance::where('date',$from)->first();
+                if ($attendance!= null) {
+                    $attendance->action =2;
+                    $attendance->mark="";
+                    $attendance->save();
+                }
+            }else{              
+                    $leavePending = Leave::where('user_id', Auth::guard('web')->user()->id)->where("form", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->first();
+                    $leaveApprovedRecord=Leaverecord::where('user_id', Auth::guard('web')->user()->id)->where("from", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->first();
+                    if ($leavePending != null) {
 
-        $attendance = Attendance::where('date',$from)->first();
-        if ($attendance!= null) {
-            $attendance->action = 1;
-            $attendance->mark="WFH";
-            $attendance->save();
-        }
+                       
+                            $leaveType = settingleave::find($leaveApprovedRecord->type_id);
+                            $monthLeave = monthleave::where('status',1)->where('user_id', Auth::guard('web')->user()->id)->latest()->first();
+                                if ($leaveType->type == "PL") {
+                                    $monthLeave->apprAnual = $monthLeave->apprAnual +$days;
+                                } elseif ($leaveType->type == "PL") {
+                                    $monthLeave->apprSick = $monthLeave->apprSick +$days;
+                                } else {
+                                    $monthLeave->other = $monthLeave->other + $days;
+                                }
+                        $monthLeave->save();
+                        $leaveApprovedRecord->day = $leaveApprovedRecord->day+$days;
+                        $leaveApprovedRecord->save();
+                        $leavePending->day=$leavePending->day+$days;
+                        $leavePending->save();
+                    }
+                    $data->admin_id =Auth::guard('admin')->user()->id;
+                    $data->status=$request->status;
+                    $data->save();   
+                    $attendance = Attendance::where('date',$from)->first();
+                    if ($attendance!= null) {
+                        $attendance->action =2;
+                        $attendance->mark="L";
+                        $attendance->save();
+                    } 
+            }         
+        }elseif($request->status==2 && $data->status== 0){
+            $data->admin_id =Auth::guard('admin')->user()->id;
+            $data->status=$request->status;
+            $data->save();
+            $attendance = Attendance::where('date',$from)->first();
+            if ($attendance!= null) {
+                $attendance->action = 2;
+                $attendance->mark="";
+                $attendance->save();
+            }
+        }elseif($request->status==1 && $data->status== 2){
+            if ($data != null && $totaldayUpdate == null){
+                $data->admin_id =Auth::guard('admin')->user()->id;
+                $data->status=$request->status;
+                $data->save();
+                $attendance = Attendance::where('date',$from)->first();
+                if ($attendance!= null) {
+                    $attendance->action = 1;
+                    $attendance->mark="WFH";
+                    $attendance->save();
+                }
+            }else{              
+                    $leavePending = Leave::where('user_id', Auth::guard('web')->user()->id)->where("form", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->first();
+                    $leaveApprovedRecord=Leaverecord::where('user_id', Auth::guard('web')->user()->id)->where("from", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->first();
+                    if ($leavePending != null) {
+                       
+                            $leaveType = settingleave::find($leaveApprovedRecord->type_id);
+                            $monthLeave = monthleave::where('status',1)->where('user_id', Auth::guard('web')->user()->id)->latest()->first();
+                                if ($leaveType->type == "PL") {
+                                    $monthLeave->apprAnual = $monthLeave->apprAnual -$days;
+                                } elseif ($leaveType->type == "PL") {
+                                    $monthLeave->apprSick = $monthLeave->apprSick -$days;
+                                } else {
+                                    $monthLeave->other = $monthLeave->other - $days;
+                                }
+                        $monthLeave->save();
+                        $leaveApprovedRecord->day = $leaveApprovedRecord->day-$days;
+                        $leaveApprovedRecord->save();
+                        $leavePending->day=$leavePending->day-$days;
+                        $leavePending->save();
+                    }
+                    $data->admin_id =Auth::guard('admin')->user()->id;
+                    $data->status=$request->status;
+                    $data->save();  
+                    $attendance = Attendance::where('date',$from)->first();
+                    if ($attendance!= null) {
+                        $attendance->action = 1;
+                        $attendance->mark="WFH";
+                        $attendance->save();
+                    }
+            }
+        }      
         return redirect()->back();
     }
     public function moreleave($id)
