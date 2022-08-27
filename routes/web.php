@@ -210,6 +210,8 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::post('payroll-store',[PayrollController::class,'store'])->name('payroll.store');
     Route::get('payroll/edit/{id}',[PayrollController::class,'payroll'])->name('payroll.edit');
     Route::get('add/salary/{id}',[PayrollController::class,'parolljs'])->name('add.salary');
+    ///////test route 
+    Route::get('tsetsing/route/{id}',[PayrollController::class,'testroute'])->name('test.link');
 
     //...................PDF..................//
     Route::get('export-pdf/{id}', [PayrollController::class, 'downloadPdf'])->name('export-pdf');

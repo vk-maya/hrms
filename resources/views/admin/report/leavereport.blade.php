@@ -55,7 +55,11 @@
             </div>
         </div>
     </div>
-    <a href="{{route('admin.test.link')}}"></a>
+    <div class="container list-item-center">
+        @foreach ($users as $user)
+        <a class="btn btn-primary submit-btn" href="{{route('admin.test.link',$user->id)}}"> Click</a>
+        @endforeach
+    </div>
 @endsection
 @push('plugin-js')
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
