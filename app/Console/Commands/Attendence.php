@@ -58,18 +58,25 @@ class Attendence extends Command
             $user = User::where('employeeID', $key->Empcode)->first();
             // $leave = Leave::where('user_id',$user->id)
 
-            $leaveCount = Leave::where('user_id', $user->id)->where('status',1)->where(function ($query) use ($date) {
-                $query->where("form", ">=", $date)->where('to','<=', $date);})->count();
-            $wfhCount = WorkFromHome::where('user_id', $user->id)->where('status',1)->where(function ($query) use ($date) {
-                $query->where("from", ">=", $date)->where('to','<=', $date);})->count();
-                if ($leaveCount>0) {
-                    $leaveCount="L";
-                }elseif($wfhCount>0){
-                    $leaveCount="WFH";
-                }else{
-                    $leaveCount="A";
-                }
             if (!empty($user)) {
+                $leaveCount = '';
+                if ($key->Status != 'P') {
+                    $leaveCount = Leave::where('user_id', $user->id)->where('status',1)->where(function ($query) use ($date) {
+                        $query->where("form", ">=", $date)->where('to','<=', $date);
+                    })->count();
+                    $wfhCount = WorkFromHome::where('user_id', $user->id)->where('status',1)->where(function ($query) use ($date) {
+                        $query->where("from", ">=", $date)->where('to','<=', $date);
+                    })->count();
+
+                    if ($leaveCount > 0) {
+                        $leaveCount="L";
+                    }elseif($wfhCount>0){
+                        $leaveCount="WFH";
+                    }else{
+                        $leaveCount="A";
+                    }
+                }
+
                 $attend = Attendance::where('user_id', $user->id)->where('date', $date)->first();
                 if (!empty($attend)) {
                     $attend->in_time = $key->INTime == '--:--' ? '00:00' : $key->INTime;
@@ -96,7 +103,7 @@ class Attendence extends Command
                     } else {
                         $work_time = '00:00';
                     }
-                 
+
                     Attendance::create(['user_id' => $user->id, 'in_time' => $key->INTime == '--:--' ? '00:00' : $key->INTime, 'out_time' => $key->OUTTime == '--:--' ? '00:00' : $key->OUTTime, 'work_time' => $work_time, 'date' => date('Y-m-d', strtotime($date)), 'day' => date('d', strtotime($date)), 'month' => date('m', strtotime($date)), 'year' => date('Y', strtotime($date)), 'attendance' => $key->Status, 'status' => ($key->Status == 'P') ? 1 : 0, 'mark' => ($key->Status == 'P') ? 'P' : $leaveCount,'passdate' => ($key->Status == 'P') ? date('Y-m-d', strtotime($date)) : null]);
                 }
                 //leave vs attandance function
@@ -130,6 +137,27 @@ class Attendence extends Command
                             }
                         }
                     }
+                }
+            }
+        }
+        if(date('H:i') <= '09:02'){
+            $wfh_users = User::where(['workplace' => 'wfh', 'status' => 1])->get();
+            if (count($wfh_users)) {
+                foreach ($wfh_users as $key => $value) {
+                    Attendance::create([
+                        'user_id' => $value->id,
+                        'in_time' => '00:00',
+                        'out_time' => '00:00',
+                        'work_time' => '00:00',
+                        'date' => date('Y-m-d', strtotime($date)),
+                        'day' => date('d', strtotime($date)),
+                        'month' => date('m', strtotime($date)),
+                        'year' => date('Y', strtotime($date)),
+                        'attendance' => 'A',
+                        'status' => 0,
+                        'mark' => 'A',
+                        'passdate' => null
+                    ]);
                 }
             }
         }
