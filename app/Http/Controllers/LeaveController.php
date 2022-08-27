@@ -266,10 +266,9 @@ class LeaveController extends Controller
             $data->save();           
             $attendance = Attendance::where('date',$request->wdate)->first();
             $attendance->action = 3;
-            // $attendance->mark="WFH";
             $attendance->save();
         }       
-        return redirect()->back();
+        return redirect()->route('employees.leave');
     }
 
 
