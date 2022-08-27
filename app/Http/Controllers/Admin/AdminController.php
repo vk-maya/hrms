@@ -253,7 +253,11 @@ class AdminController extends Controller
                         $data->to = Carbon::parse($jd)->format('Y-m').'-'.Carbon::parse($jd)->daysInMonth;
                         $data->anualLeave = $annualleave;
                         $data->sickLeave = $sickleave;
-                        $data->status = 1;
+                        if (Carbon::parse($jd)->format('m') == Carbon::now()->format('m')) {
+                            $data->status = 1;
+                        }else{
+                            $data->status = 0;
+                        }
                         $data->save();
                         $jd = Carbon::parse($jd)->addMonth();
                     }

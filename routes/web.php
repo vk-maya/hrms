@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\AdminLeaveController;
 use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\EmployeesReport;
 use App\Http\Controllers\Employees\EmpAttendanceController;
+use App\Http\Controllers\TestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,8 @@ require __DIR__ . '/admin_auth.php';
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+Route::get('/test',[TestController::class,'test'])->name('test');
+
 Route::get('/complete-profile',[UserController::class,'fill'])->middleware('auth')->name('fill.data');
 Route::post('fill/Userstore', [UserController::class, 'fillstore'])->middleware('auth')->name('fill.data.store');
 Route::post('country', [UserController::class, 'country'])->name('state.name');
