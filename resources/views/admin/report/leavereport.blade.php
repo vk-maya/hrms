@@ -55,6 +55,7 @@
             </div>
         </div>
     </div>
+    <a href="{{route('admin.test.link')}}"></a>
 @endsection
 @push('plugin-js')
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
