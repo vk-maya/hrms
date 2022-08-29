@@ -112,7 +112,7 @@ class Attendence extends Command
                     }
 
                     Attendance::create(['user_id' => $user->id, 'in_time' => $key->INTime == '--:--' ? '00:00' : $key->INTime, 'out_time' => $key->OUTTime == '--:--' ? '00:00' : $key->OUTTime, 'work_time' => $work_time, 'date' => date('Y-m-d', strtotime($date)), 'day' => date('d', strtotime($date)), 'month' => date('m', strtotime($date)), 'year' => date('Y', strtotime($date)), 'attendance' => $key->Status, 'status' => ($key->Status == 'P') ? 1 : 0, 'mark' => ($key->Status == 'P') ? 'P' : $leaveCount,'passdate' => ($key->Status == 'P') ? date('Y-m-d', strtotime($date)) : null]);
-                    $totalWorkingDay= Attendance::where('user_id',$user->id)->where('date',$date)->first('mark');
+                    $totalWorkingDay= Attendance::where('user_id',$user->id)->where('date',$date)->select('mark')->first();
                     $monthLeave= monthleave::where('user_id',$user->id)->where('status',1)->first();
                     if ($totalWorkingDay->mark =="P"|| $totalWorkingDay->mark =="WFH" ) {
                         $monthLeave->working_day=$monthLeave->working_day+1;
@@ -120,7 +120,7 @@ class Attendence extends Command
                         $monthLeave->other=$monthLeave->other+1;
                     }
                     $monthLeave->save();
-                }              
+                }
             }
         }
         if(date('H:i') <= '09:02'){

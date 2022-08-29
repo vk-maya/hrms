@@ -8,6 +8,7 @@ use App\Models\Holiday;
 use App\Models\Leave\Leave;
 use App\Models\Leave\Leaverecord;
 use App\Models\Leave\settingleave;
+use App\Models\monthleave;
 use App\Models\User;
 use App\Models\WorkFromHome;
 use Carbon\Carbon;
@@ -74,7 +75,7 @@ class MonthlyAttend extends Command
                             $wfhCount = WorkFromHome::where('user_id', $user->id)->where('status',1)->where(function ($query) use ($date) {
                                 $query->where("from", ">=", $date)->where('to','<=', $date);
                             })->count();
-        
+
                             if ($leaveCount>0) {
                                 $leaveCount="L";
                             }elseif($wfhCount>0){
@@ -100,6 +101,14 @@ class MonthlyAttend extends Command
                             $attend->passdate = ($key->Status == 'P') ? date('Y-m-d', strtotime($date)) : null;
                             $attend->mark = ($key->Status == 'P') ? 'P' : $leaveCount;
                             $attend->save();
+
+                            $monthLeave= monthleave::where('user_id',$user->id)->where('status',1)->first();
+                            if ($attend->mark =="P"|| $attend->mark =="WFH" ) {
+                                $monthLeave->working_day=$monthLeave->working_day+1;
+                            }else{
+                                $monthLeave->other=$monthLeave->other+1;
+                            }
+                            $monthLeave->save();
                         } else {
                             $in_time = $key->INTime == '--:--' ? '00:00' : $key->INTime;
                             $out_time = $key->OUTTime == '--:--' ? '00:00' : $key->OUTTime;
@@ -110,44 +119,15 @@ class MonthlyAttend extends Command
                                 $work_time = '00:00';
                             }
                             Attendance::create(['user_id' => $user->id, 'in_time' => $key->INTime == '--:--' ? '00:00' : $key->INTime, 'out_time' => $key->OUTTime == '--:--' ? '00:00' : $key->OUTTime, 'work_time' => $work_time, 'date' => date('Y-m-d', strtotime($date)), 'day' => date('d', strtotime($date)), 'month' => date('m', strtotime($date)), 'year' => date('Y', strtotime($date)), 'attendance' => $key->Status, 'status' => $key->Status == 'P' ? 1 : 0, 'mark' => ($key->Status == 'P') ? 'P' : $leaveCount,'passdate' => ($key->Status == 'P') ? date('Y-m-d', strtotime($date)) : null]);
-                        }
-                        //leave vs attandance function
-                        $date = date('Y-m-d', strtotime($date));
-                        $id = Attendance::where('user_id', $user->id)->where('status', 1)->where('date', $date)->latest()->first();
-                        if (isset($id)) {
 
-                            $id = $id->user_id;
-                            $month = date('m', strtotime($date));
-                            $data = Leaverecord::where('user_id', $id)->where('status', 1)->where(function ($query) use ($date) {
-                                $query->where("from", "<=", $date)->where("to", ">=", $date);
-                            })->count();
-                            $leavedata = Leaverecord::where('user_id', $id)->where('status', 1)->where(function ($query) use ($date) {
-                                $query->where("from", "<=", $date)->where("to", ">=", $date);
-                            })->first();
-
-                            if (isset($leavedata)) {
-                                $leavetype = settingleave::find($leavedata->type_id);
-                                if ($data > 0) {
-                                    $monthattedance = LeaveMonthAttandance::where('status', 1)->where('user_id', $id)->where('date', $date)->first();
-                                    if ($monthattedance == null) {
-                                        $monthattedance = LeaveMonthAttandance::where('user_id', $id)->where('status', 1)
-                                            ->where('month', $month)->first();
-                                        $monthattedance = new LeaveMonthAttandance();
-                                        $monthattedance->user_id = $id;
-                                        $monthattedance->type_id = $leavedata->type_id;
-                                        $monthattedance->date = $date;
-                                        $monthattedance->month = $month;
-                                        if ($leavetype->type == "PL") {
-                                            $monthattedance->anual = 1;
-                                        } elseif ($leavetype->type == "Sick") {
-                                            $monthattedance->sick = 1;
-                                        } else {
-                                            $monthattedance->other = 1;
-                                        }
-                                        $monthattedance->save();
-                                    }
-                                }
+                            $totalWorkingDay= Attendance::where('user_id',$user->id)->where('date',$date)->select('mark')->first();
+                            $monthLeave= monthleave::where('user_id',$user->id)->where('status',1)->first();
+                            if ($totalWorkingDay->mark =="P"|| $totalWorkingDay->mark =="WFH" ) {
+                                $monthLeave->working_day=$monthLeave->working_day+1;
+                            }else{
+                                $monthLeave->other=$monthLeave->other+1;
                             }
+                            $monthLeave->save();
                         }
                     }
                 }
