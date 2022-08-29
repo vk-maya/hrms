@@ -155,7 +155,7 @@ class Attendence extends Command
                         'year' => date('Y', strtotime($date)),
                         'attendance' => 'A',
                         'status' => 0,
-                        'mark' => 'A',
+                        'mark' => 'WFH',
                         'passdate' => null
                     ]);
                 }
