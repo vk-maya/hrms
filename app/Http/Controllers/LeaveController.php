@@ -51,47 +51,21 @@ class LeaveController extends Controller
         return view('employees.leave.add-wfh');
     }
     public function wfhstore(Request $request){
+        // dd($request->toArray());
         $dateFrom = new DateTime($request->form);
         $dateTo = new DateTime($request->to);
         $interval = $dateFrom->diff($dateTo);
         $da = $interval->format('%a');
         $days = $da + 1;
-
         $workfrom = new WorkFromHome();
             $workfrom->user_id = $request->user_id;
             $workfrom->from = $request->from;
-            $workfrom->to = $request->to;
-
-             //sunday and saturday count in request->from to request->to
-             $day = Carbon::createFromFormat('Y-m-d', $request->from);
-             $ssfrom = date('d',strtotime($day));
-             $ssto = date('d',strtotime($request->to));
-             $sunday = 0;
-             $saturday = 0;          
-             foreach(range($ssfrom,$ssto) as $key => $next) {
-                 if (strtolower($day->format('l')) == 'sunday') {
-                     $sunday++;
-                    }
-                    //saturday Count first And third
-                    $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
-                    $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
-                    if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d"))) {
-                        $saturday++;
-                    }
-                    $day = $day->addDays();
-             }
-             $days=$days-$sunday;
-             $days=$days-$saturday;
-             $hfrom=$request->from;
-             $hto =$request->to;
-             $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
-             $days=$days-$holiday;           
+            $workfrom->to = $request->to;                     
             $workfrom->day =$days;
             $workfrom->task = $request->task;
             $workfrom->status =2;
             $workfrom->save();
-            return redirect()->back();
-    }
+            return redirect()->route('employees.leave');    }
     public function leaveadd()
     {
         $data = settingleave::all();
@@ -188,6 +162,7 @@ class LeaveController extends Controller
         $request->validate($rules);
         $attendance = Attendance::find($request->id);
         $leaveApproved = $attendance->date;
+        
         $leavePending = Leave::where('user_id', Auth::guard('web')->user()->id)->where("form", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->count();
         // dd($leavePending);
         if ($leavePending == 0) {
@@ -210,6 +185,7 @@ class LeaveController extends Controller
     //wfh Request Store Function 
     public function attendanceWfhStore(Request $request)
     {
+        dd($request);
         $attendance = Attendance::where('date',$request->wdate)->first();
    
         $rules = [
@@ -221,16 +197,15 @@ class LeaveController extends Controller
         $attendance = Attendance::find($request->id);
         $leaveApproved = $attendance->date;
         $leavePending = Leave::where('user_id', Auth::guard('web')->user()->id)->where(function ($query) use ($leaveApproved) {
-            $query->where("form", ">=", $leaveApproved)->where("to", "<=", $leaveApproved);
-        })->count();
+            $query->where("form", ">=", $leaveApproved)->where("to", "<=", $leaveApproved);})->count();
         $request->validate($rules);
         $wfh = WorkFromHome::where('user_id', Auth::guard('web')->user()->id)->where('from','>=',$leaveApproved)->where('to','<=',$leaveApproved)->count();
-        if ($leavePending == 0 && $wfh == 0) {
+        if (empty($leavePending) && empty($wfh)) {
             $data = new WorkFromHome();
             $data->user_id = Auth::guard('web')->user()->id;
             $data->from = $attendance->date;
             $data->to =  $attendance->date;     
-            $data->day = 1;
+            $data->day =1;
             $data->task = $request->task;
             $data->status = 2;
             $data->save();

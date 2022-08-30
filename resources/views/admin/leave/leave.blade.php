@@ -117,24 +117,12 @@
                                                         @endif
 
                                                         <div class="dropdown-menu dropdown-menu-right">
-                                                            @if ($item->status ==1 || $item->status == 0 )  
-                                                            <form action="{{ route('admin.leave.report') }}"
-                                                                method="POST">
-                                                                @csrf
-                                                                <input type="hidden" name="status" value="2">
-                                                                <input type="hidden" name="id"
-                                                                    value="{{ $item->id }}">
-                                                                <button type="submit" class="dropdown-item">
-                                                                    <i class="fa fa-dot-circle-o text-purple"></i>
-                                                                    New</button>
-                                                            </form>
-                                                            @else                                                                                         
+                                                            @if ($item->status ==2 )                                                                                                                                                  
                                                                 <span  class="dropdown-item disabled">
                                                                     <i class="fa fa-dot-circle-o text-purple"></i>
-                                                                    New</span>                                                
-
+                                                                    New</span>
                                                             @endif
-                                                            @if ($item->status == 0 || $item->status == 2)                                                            
+                                                            @if ($item->status != 1)                                                            
                                                             <form action="{{ route('admin.leave.report') }}"
                                                                 method="POST">
                                                                 @csrf
@@ -150,10 +138,10 @@
                                                             @else
                                                             <span  class="dropdown-item disabled">
                                                                 <i class="fa fa-dot-circle-o text-success"></i>
-                                                                Approved</span>                                                
+                                                                Approved</span>
 
                                                             @endif
-                                                            @if ($item->status == 1 || $item->status == 2)  
+                                                            @if ($item->status !=0)  
                                                             <form action="{{ route('admin.leave.report') }}"
                                                                 method="POST">
                                                                 @csrf
@@ -167,7 +155,7 @@
                                                             @else
                                                             <span  class="dropdown-item disabled">
                                                                 <i class="fa fa-dot-circle-o text-danger"></i>
-                                                                Declined</span>  
+                                                                Declined</span>
                                                                 @endif
                                                         </div>
                                                     </div>
@@ -255,19 +243,7 @@
                                                             @if ($item->status == 2)
                                                             <span  class="dropdown-item disabled">
                                                                 <i class="fa fa-dot-circle-o text-purple"></i>
-                                                                New</span>  
-                                                            @else
-                                                            <form action="{{ route('admin.wfh.report') }}"
-                                                                method="POST">
-                                                                @csrf
-                                                                <input type="hidden" name="status" value="2">
-                                                                <input type="hidden" name="user_id" value="{{ $item->user->id}}">
-                                                                <input type="hidden" name="id"
-                                                                    value="{{ $item->id }}">
-                                                                <button type="submit" class="dropdown-item">
-                                                                    <i class="fa fa-dot-circle-o text-purple"></i>
-                                                                    New</button>
-                                                            </form>
+                                                                New</span>                                                            
                                                             @endif
                                                             @if ($item->status == 1)
                                                             <span  class="dropdown-item disabled">

@@ -58,8 +58,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Task<span class="text-danger">*</span></label>
-                                    <textarea name="reason" required rows="4" class="form-control">{{old('reason')}}</textarea>
-                                    @error('reason')
+                                    <textarea name="task" required rows="4" class="form-control">{{old('task')}}</textarea>
+                                    @error('task')
                                         <span class="text-danger">
                                             <strong>{{ $message }}</strong>
                                         </span>
