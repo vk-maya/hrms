@@ -59,7 +59,7 @@ class MonthlyAttend extends Command
 
             if ($sunday && $first_saturday != $date && $third_saturday != $date && !$holiday) {
                 $client = new Client();
-                $response = $client->request('POST', 'http://hrmsapi.scrumdigital.in/api/getattendance', ['form_params' => ['date' => $date,]]);
+                $response = $client->request('POST', 'http://hrmsapi.scrumdigital.in/api/getattendance', ['form_params' => ['date' => $date]]);
                 $response = json_decode($response->getBody()
                     ->getContents());
 
@@ -74,7 +74,7 @@ class MonthlyAttend extends Command
                             $wfhCount = WorkFromHome::where('user_id', $user->id)->where('status',1)->where(function ($query) use ($date) {
                                 $query->where("from", ">=", $date)->where('to','<=', $date);
                             })->count();
-        
+
                             if ($leaveCount>0) {
                                 $leaveCount="L";
                             }elseif($wfhCount>0){

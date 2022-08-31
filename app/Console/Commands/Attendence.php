@@ -50,9 +50,8 @@ class Attendence extends Command
     {
         $date = date('Y-m-d');
         $client = new Client();
-        $response = $client->request('POST', 'http://hrmsapi.scrumdigital.in/api/getattendance', ['form_params' => ['date' => $date,]]);
-        $response = json_decode($response->getBody()
-            ->getContents());
+        $response = $client->request('POST', 'http://hrmsapi.scrumdigital.in/api/getattendance', ['form_params' => ['date' => $date]]);
+        $response = json_decode($response->getBody()->getContents());
 
         foreach ($response->data as $key) {
             $user = User::where('employeeID', $key->Empcode)->first();
@@ -119,7 +118,7 @@ class Attendence extends Command
                         $monthLeave->other=$monthLeave->other+1;
                     }
                     $monthLeave->save();
-                }              
+                }
             }
         }
         if(date('H:i') <= '09:02'){
