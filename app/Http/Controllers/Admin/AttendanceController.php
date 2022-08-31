@@ -53,7 +53,7 @@ class AttendanceController extends Controller
     public function attendanceMonthRecord($id,$date){
         $month = date('m', strtotime($date));
         $year = date('Y', strtotime($date));
-        $monthrecord= Attendance::with('userinfoatt')->where('user_id',$id)->where('month',$month)->where('year',$year)->get();   
+        $monthrecord= Attendance::with('userinfoatt')->where('user_id',$id)->where('month',$month)->where('year',$year)->get();
         return view('admin.attendance.employeerecord',compact('monthrecord'));
     }
         public function recordReport(Request $request){
