@@ -92,7 +92,7 @@
                                     <th>Join Date</th>
                                     <th>Salary</th>
                                     <th>Payslip</th>
-                                    <th class="text-end">Action</th>
+                                    <th class="text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>

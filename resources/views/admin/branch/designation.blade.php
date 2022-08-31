@@ -42,7 +42,6 @@
         .input-switch:checked~.label-switch::before {
             background: #00a900;
             border-color: #008e00;
-            margin-top: 2px;
         }
 
         .input-switch:checked~.label-switch::after {
@@ -50,7 +49,6 @@
             right: 0;
             background: #00ce00;
             border-color: #009a00;
-            /* margin-top: 4px; */
         }
 
         .info-text {
@@ -98,7 +96,7 @@
                                     <th class="text-center">Designation </th>
                                     <th class="text-center">Department </th>
                                     <th class="text-center">Status</th>
-                                    <th class="text-end">Action</th>
+                                    <th class="text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -112,20 +110,20 @@
                                                 <a class="btn btn-white btn-sm btn-rounded status"
                                                     data-id="{{ $item->id }}" href="javascript:void(0);">
                                                     @if ($item->status == 1)
-                                                        <i class="fas fa-check-circle me-2"></i><span
-                                                            class="yes-data">Approved</span>
+                                                        <i class="fas fa-check-circle text-success me-2"></i><span
+                                                            class="yes-data ">Approved</span>
                                                     @else
-                                                        <i class="far fa-times-circle me-2"></i> <span
+                                                    <i class="fas fa-check-circle text-danger me-2"></i> <span
                                                             class="yes-data">Declined</span>
                                                     @endif
                                                 </a>
                                             </div>
                                         </td>
 
-                                        <td class="text-end">
+                                        <td class="text-center">
                                             <div class="dropdown dropdown-action">
                                                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
-                                                    aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                                                    aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                                                 <div class="dropdown-menu dropdown-menu-right">
                                                     <button class="dropdown-item edit" data-id="{{ $item->id }}"><i
                                                             class="fa fa-pencil m-r-5"></i>
@@ -173,9 +171,9 @@
                                             @endforeach
                                         </select>                                   
                                 </div>
-                                <label for="statusinput">Status</label>
+                                <label class="mt-2 mb-2" for="statusinput">Status</label>
                                 <div class="col-md-12">
-                                    <div class="form-check form-switch">
+                                    <div class="form-check form-switch d-flex">
                                         <input class='input-switch' type="checkbox" value="1" name="status" checked
                                             id="demo" />
                                         <label class="label-switch" for="demo"></label>
@@ -183,10 +181,11 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="text-center">
                             <button type="submit" class="btn btn-primary" id="submit">
                                 Submit
-
                             </button>
+                            </div>
                         </form>
                     </div>
                 </div>

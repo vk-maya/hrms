@@ -97,7 +97,7 @@
                                 <input type="text" hidden value="{{$employee->id}}" name="id" >
                             @endif
 
-                            <div class="row">
+                            <div class="row justify-content-center">
                                 <div class="col-lg-3 col-md-4 col-sm-6 form-group">
                                         <label class="col-form-label">First Name <span class="text-danger">*</span></label>
                                         <input class="form-control" name="first_name" type="text" value="@if(isset($employee)) {{ $employee->first_name }}@else{{ old('first_name') }}@endif">
@@ -200,7 +200,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-lg-3 col-md-4 col-sm-6 form-group6">
+                                <div class="col-lg-3 col-md-4 col-sm-6">
                                     <div class="position-relative">
                                         <label class="col-form-label">Password</label>
                                     </div>
@@ -214,8 +214,7 @@
                                         </span>
                                     </div>
                                 </div>
-
-                                <div class="col-lg-3 col-md-4 col-sm-6 form-group">
+                                <div class="col-lg-3 col-md-4 col-sm-6">
                                     <div class="position-relative">
                                         <label class="col-form-label">Confirm Password</label>
                                         <input class="form-control" name="password_confirmation" type="password">
@@ -363,7 +362,7 @@
                                         </div>
                                      </div>
                                     </div>
-                                <div class="col-lg-3 col-md-6 col-sm-6">
+                                <div class="col-lg-3 col-md-4 col-sm-6">
                                     <div class="form-group ml-2">
                                         <label class="col-form-label">Work Place</label>
                                         <div>
@@ -426,9 +425,10 @@
                                     
                                 @endisset
                                 <hr>
-                                <h3>Salary Earning And Deductions</h3>
+                                
                                 {{-- {{$salaryedit}} --}}
                                 <div class="row">
+                                <h3>Salary Earning And Deductions</h3>
                                     <div class="col-md-6 col-sm-6">
                                         <div class="ftr-list">
                                         <h3>Earning</h3>

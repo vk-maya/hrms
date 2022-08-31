@@ -197,7 +197,7 @@
                                     </div>
                                 </div>
                                 <div class="load-more text-center">
-                                    <a class="text-dark" href="javascript:void(0);">Load More</a>
+                                    <a class=" btn add-btn text-dark" href="javascript:void(0);">Load More</a>
                                 </div>
                             </div>
                         </div>
@@ -287,7 +287,7 @@
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <a href="{{route('admin.employees')}}">View All Employees</a>
+                                <a class="btn add-btn" href="{{route('admin.employees')}}">View All Employees</a>
                             </div>
                         </div>
                     </div>
@@ -325,13 +325,10 @@
                                                 <td class="text-end">
                                                     <div class="dropdown dropdown-action">
                                                         <a href="#" class="action-icon dropdown-toggle"
-                                                            data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                                class="material-icons">more_vert</i></a>
+                                                            data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                                                         <div class="dropdown-menu dropdown-menu-right">
-                                                            <a class="dropdown-item" href="javascript:void(0)"><i
-                                                                    class="fa fa-pencil m-r-5"></i> Edit</a>
-                                                            <a class="dropdown-item" href="javascript:void(0)"><i
-                                                                    class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                                            <a class="dropdown-item" href="javascript:void(0)"><i class="fas fa-pencil me-3"></i> Edit</a>
+                                                            <a class="dropdown-item" href="javascript:void(0)"><i class="fas fa-trash-alt me-3"></i> Delete</a>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -354,13 +351,10 @@
                                                 <td class="text-end">
                                                     <div class="dropdown dropdown-action">
                                                         <a href="#" class="action-icon dropdown-toggle"
-                                                            data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                                class="material-icons">more_vert</i></a>
+                                                            data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                                                         <div class="dropdown-menu dropdown-menu-right">
-                                                            <a class="dropdown-item" href="javascript:void(0)"><i
-                                                                    class="fa fa-pencil m-r-5"></i> Edit</a>
-                                                            <a class="dropdown-item" href="javascript:void(0)"><i
-                                                                    class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                                            <a class="dropdown-item" href="javascript:void(0)"><i class="fas fa-pencil me-3"></i>Edit</a>
+                                                            <a class="dropdown-item" href="javascript:void(0)"><i class="fas fa-trash-alt me-3"></i> Delete</a>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -383,13 +377,10 @@
                                                 <td class="text-end">
                                                     <div class="dropdown dropdown-action">
                                                         <a href="#" class="action-icon dropdown-toggle"
-                                                            data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                                class="material-icons">more_vert</i></a>
+                                                            data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                                                         <div class="dropdown-menu dropdown-menu-right">
-                                                            <a class="dropdown-item" href="javascript:void(0)"><i
-                                                                    class="fa fa-pencil m-r-5"></i> Edit</a>
-                                                            <a class="dropdown-item" href="javascript:void(0)"><i
-                                                                    class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                                            <a class="dropdown-item" href="javascript:void(0)"><i class="fas fa-pencil me-3"></i> Edit</a>
+                                                            <a class="dropdown-item" href="javascript:void(0)"><i class="fas fa-trash-alt me-3"></i> Delete</a>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -412,13 +403,10 @@
                                                 <td class="text-end">
                                                     <div class="dropdown dropdown-action">
                                                         <a href="#" class="action-icon dropdown-toggle"
-                                                            data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                                class="material-icons">more_vert</i></a>
+                                                            data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                                                         <div class="dropdown-menu dropdown-menu-right">
-                                                            <a class="dropdown-item" href="javascript:void(0)"><i
-                                                                    class="fa fa-pencil m-r-5"></i> Edit</a>
-                                                            <a class="dropdown-item" href="javascript:void(0)"><i
-                                                                    class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                                            <a class="dropdown-item" href="javascript:void(0)"><i class="fas fa-pencil me-3"></i> Edit</a>
+                                                            <a class="dropdown-item" href="javascript:void(0)"><i class="fas fa-trash-alt me-3"></i> Delete</a>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -441,13 +429,10 @@
                                                 <td class="text-end">
                                                     <div class="dropdown dropdown-action">
                                                         <a href="#" class="action-icon dropdown-toggle"
-                                                            data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                                class="material-icons">more_vert</i></a>
+                                                            data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                                                         <div class="dropdown-menu dropdown-menu-right">
-                                                            <a class="dropdown-item" href="javascript:void(0)"><i
-                                                                    class="fa fa-pencil m-r-5"></i> Edit</a>
-                                                            <a class="dropdown-item" href="javascript:void(0)"><i
-                                                                    class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                                            <a class="dropdown-item" href="javascript:void(0)"><i class="fas fa-pencil me-3"></i> Edit</a>
+                                                            <a class="dropdown-item" href="javascript:void(0)"><i class="fas fa-trash-alt me-3"></i> Delete</a>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -457,7 +442,7 @@
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <a href="projects.html">View all projects</a>
+                                <a class="btn add-btn" href="projects.html">View all projects</a>
                             </div>
                         </div>
                     </div>

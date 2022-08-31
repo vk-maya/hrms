@@ -11,7 +11,7 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Employees Task-list</h3>
+                        <h3 class="page-title">Employees </h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Employees Task-list</li>
@@ -34,7 +34,7 @@
                             @foreach ($data as $key => $item)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
-                                <td class="text-end"><a href="{{ route('admin.employ.task.list', $item->id) }}">{{ $item->title }}</a>
+                                <td class="text-end"><a class="btn add-btn" href="{{ route('admin.employ.task.list', $item->id) }}">{{ $item->title }}</a>
                                 </td>
                                 <td class="text-end">{{ \Carbon\Carbon::parse($item->post_date)->format('d/m/Y') }} </td>
                                 <td class="text-end"><a href="{{ route('admin.employ.task.list', $item->id) }}">

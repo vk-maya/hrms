@@ -1,5 +1,4 @@
 <div class="header">
-
     <div class="header-left">
         <a href="{{ route('admin.dashboard') }}" class="logo">
             <img src="{{ asset('assets/img/logo.png') }}" alt="">
@@ -15,7 +14,7 @@
     </a>
 
     @php
-        $session = \App\Models\Admin\Session::where('status', 1)->first();
+    $session = \App\Models\Admin\Session::where('status', 1)->first();
     @endphp
     <div class="page-title-box">
         <h3>Session - {{date('Y', strtotime($session->from)).'-'.date('Y', strtotime($session->to))}}</h3>
@@ -32,13 +31,11 @@
                 </a>
                 <form action="#">
                     <input class="form-control" type="text" placeholder="Search here">
-                    <button class="btn" type="submit"><i class="fa fa-search"></i></button>
+                    <button class="btn" type="submit"><i class="far fa-search"></i></button>
                 </form>
             </div>
         </li>
-
-
-        <li class="nav-item dropdown has-arrow flag-nav">
+        <!-- <li class="nav-item dropdown has-arrow flag-nav">
             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button">
                 <img src="{{ asset('assets/img/flags/us.png') }}" alt="" height="20"> <span>India</span>
             </a>
@@ -47,11 +44,11 @@
                     <img src="{{ asset('assets/img/flags/us.png') }}" alt="" height="20" class="me-3"> <span>India</span>
                 </a>
             </div>
-        </li>
+        </li> -->
         <li class="nav-item dropdown has-arrow main-drop">
             <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
                 <span class="user-img"><img
-                        src="{{ asset('assets/img/avtar.jpg') }}" alt="">
+                    src="{{ asset('assets/img/avtar.jpg') }}" alt="">
                 </span>
                 <span> {{ Auth::guard('admin')->user()->name }}</span>
             </a>
@@ -66,23 +63,21 @@
                 <a class="dropdown-item" href="{{ route('admin.logout') }}" onclick="event.preventDefault();
                 document.getElementById('logout-form').submit();"><i class="fas fa-sign-out me-3"></i>
                 Log Out
-                </a>
-                <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
-            </div>
-        </li>
-    </ul>
-
-
-<div class="dropdown mobile-user-menu">
-    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i
-        class="fa fa-ellipsis-v"></i></a>
-        <div class="dropdown-menu dropdown-menu-right">
-            <a class="dropdown-item" href="profile.html">My Profile</a>
-            <a class="dropdown-item" href="settings.html">Settings</a>
-            <a class="dropdown-item" href="index.html">Logout</a>
+            </a>
+            <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
         </div>
+    </li>
+</ul>
+<div class="dropdown mobile-user-menu">
+    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fa fa-ellipsis-v"></i>
+    </a>
+    <div class="dropdown-menu dropdown-menu-right">
+        <a class="dropdown-item" href="profile.html">My Profile</a>
+        <a class="dropdown-item" href="settings.html">Settings</a>
+        <a class="dropdown-item" href="index.html">Logout</a>
     </div>
-
+</div>
 </div>

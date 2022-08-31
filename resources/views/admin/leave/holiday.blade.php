@@ -46,7 +46,7 @@
                                 <th>Title </th>
                                 <th>Holiday Date</th>
                                 <th>Day</th>
-                                <th class="text-end">Action</th>
+                                <th class="text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -60,13 +60,10 @@
                                     <td class="text-end">
                                         <div class="dropdown dropdown-action">
                                             <a href="#" class="action-icon dropdown-toggle"
-                                                data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                    class="material-icons">more_vert</i></a>
+                                                data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                                             <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item" href="{{route('admin.holiday.edit',$item->id)}}"><i
-                                                        class="fa fa-pencil m-r-5"></i> Edit</a>
-                                                <a class="dropdown-item" href="{{route('admin.holiday.delete',$item->id)}}"><i
-                                                        class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                                <a class="dropdown-item" href="{{route('admin.holiday.edit',$item->id)}}"><i class="fas fa-pencil me-2"></i>Edit</a>
+                                                <a class="dropdown-item" href="{{route('admin.holiday.delete',$item->id)}}"><i class="fas fa-trash-alt me-2"></i>Delete</a>
                                             </div>
                                         </div>
                                     </td>
@@ -97,23 +94,19 @@
                             <label>Holiday Name <span class="text-danger">*</span></label>
                             <input class="form-control" type="text" name="name" value="@isset($holi){{$holi->holidayName}}@endisset">
                             @error('name')
-                            <span class="text-danger">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <span class="text-danger">{{ $message }}</span>
                         @enderror
                         </div>
                         <div class="form-group">
                             <label>Holiday Date <span class="text-danger">*</span></label>
                             <div><input class="form-control" type="date" name="date" value="@isset($holi){{$holi->date}}@endisset" min="{{$min_date}}" max="{{$max_date}}">
                                 @error('date')
-                            <span class="text-danger">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                            <span class="text-danger">{{ $message }}</span>
                         @enderror
                             </div>
                         </div>
                         <div class="submit-section">
-                            <button class="btn btn-primary submit-btn">Submit</button>
+                            <button class="btn add-btn submit-btn">Submit</button>
                         </div>
                     </form>
                 </div>

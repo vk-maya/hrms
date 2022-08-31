@@ -1,5 +1,6 @@
 @include('admin.partials.css')
 @include('admin.partials.header')
 @include('admin.partials.sidebar')
-        @yield('content')
+@yield('content')
+@include('admin.partials.footer')
 @include('admin.partials.js')

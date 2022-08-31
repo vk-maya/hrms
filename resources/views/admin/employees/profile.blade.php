@@ -99,7 +99,8 @@
                                     class="nav-link">Projects</a></li>
                             <li class="nav-item"><a href="#bank_statutory" data-bs-toggle="tab"
                                     class="nav-link">Bank & Statutory <small class="text-danger">(Admin
-                                        Only)</small></a></li>
+                                        Only)</small></a>
+                                    </li>
                         </ul>
                     </div>
                 </div>

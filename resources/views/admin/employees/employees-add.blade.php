@@ -32,7 +32,7 @@
 
                             <input type="text" hidden value="@if (isset($employees)){{ $employees->id }}@else @endif" name="id" >
 
-                            <div class="row justify-content-center">
+                            <div class="row   justify-content-center">
                                 <div class="col-lg-3 col-md-4 col-sm-6 form-group">
                                     <div class="">
                                         <label class="col-form-label">First Name <span class="text-danger">*</span></label>
