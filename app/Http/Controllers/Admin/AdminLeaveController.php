@@ -433,8 +433,9 @@ class AdminLeaveController extends Controller
                             $leaveRecord->save();
                         }
                     }
-                    $totaldayUpdate=Leaverecord::where('leave_id',$userLeave->id)->where('from',">=",$firstMonthofDay)->where('to',"<=",$lastMonthofDay)->get();
-                    if (!empty($totaldayUpdate)) {
+                $totaldayUpdate=Leaverecord::where('leave_id',$userLeave->id)->where('from',">=",$firstMonthofDay)->where('to',"<=",$lastMonthofDay)->get();
+                $totaldayUpdatecount=Leaverecord::where('leave_id',$userLeave->id)->where('from',">=",$firstMonthofDay)->where('to',"<=",$lastMonthofDay)->count();
+                    if (!empty($totaldayUpdatecount)) {
                         $totalLeaveDay=0;
                         foreach ($totaldayUpdate as $value) {
                             $totalLeaveDay=$totalLeaveDay+$value->day;
@@ -470,7 +471,7 @@ class AdminLeaveController extends Controller
                         }
                         $monthLeaveRecord->save();
                     }else{
-                        $userLeave->status=1;
+                        $userLeave->status=$request->status;
                         $leaveRecord->admin_id =Auth::guard('admin')->user()->id;
                         $userLeave->save();
                     }
@@ -480,12 +481,14 @@ class AdminLeaveController extends Controller
                         $attendance->mark="L";
                         $attendance->save();
                     }
+                    
             }elseif($request->status == 1 && $leaverecordCount > 0){
                     $totaldayUpdate=Leaverecord::where('leave_id',$request->id)->where('from',">=",$firstMonthofDay)->where('to',"<=",$lastMonthofDay)->get();
-                if ($totaldayUpdate != null) { 
+                    $totaldayUpdatecount=Leaverecord::where('leave_id',$request->id)->where('from',">=",$firstMonthofDay)->where('to',"<=",$lastMonthofDay)->get();
+                if (!empty($totaldayUpdatecount)) { 
                     foreach ($totaldayUpdate as $value) {
                         $record =Leaverecord::find($value->id);
-                        $record->status=1;
+                        $record->status=$request->status;
                         $record->admin_id =Auth::guard('admin')->user()->id;
                         $record->save();
                     }
@@ -512,11 +515,51 @@ class AdminLeaveController extends Controller
                     }else{
                         $monthLeaveRecord->other=$monthLeaveRecord->other+$userLeave->day;
                     }
+                        $monthLeaveRecord->save();
+                        $userLeave->status=$request->status;
+                        $userLeave->save();
+                }else{
+                    $userLeave->status=$request->status;
+                    $userLeave->save();
+                }            
+            }elseif($request->status ==0 && $userLeave->status == 1){
+                $totaldayUpdate=Leaverecord::where('leave_id',$request->id)->where('from',">=",$firstMonthofDay)->where('to',"<=",$lastMonthofDay)->get();
+                    $totaldayUpdatecount=Leaverecord::where('leave_id',$request->id)->where('from',">=",$firstMonthofDay)->where('to',"<=",$lastMonthofDay)->get();
+                if (!empty($totaldayUpdatecount)) { 
+                    foreach ($totaldayUpdate as $value) {
+                        $record =Leaverecord::find($value->id);
+                        $record->status=$request->status;
+                        $record->admin_id =Auth::guard('admin')->user()->id;
+                        $record->save();
+                    }
+                    $leaveType = settingleave::find($userLeave->leaves_id);
+                    $monthLeaveRecord= monthleave::where('user_id',$userLeave->user_id)->where('status',1)->first();
+                    $netLeaveAnuApp=$monthLeaveRecord->apprAnual;
+                    $netLeaveSickApp=$monthLeaveRecord->apprSick;
+                    if ($leaveType->type=="PL") {
+                        if ($netLeaveAnuApp>=$userLeave->day){
+                            $monthLeaveRecord->apprAnual=$monthLeaveRecord->apprAnual-$userLeave->day;
+                        }else{
+                            $aprday=$userLeave->day-$monthLeaveRecord->apprAnual;
+                        $monthLeaveRecord->apprAnual= $monthLeaveRecord->apprAnual-$monthLeaveRecord->apprAnual;
+                        $monthLeaveRecord->other=$monthLeaveRecord->other-$aprday;
+                        }
+                    }elseif($leaveType->type=="Sick"){
+                        if ($netLeaveSickApp>=$userLeave->day){
+                            $monthLeaveRecord->apprSick= $monthLeaveRecord->apprSick+$userLeave->day;
+                        }else{
+                        $monthLeaveRecord->apprSick= $monthLeaveRecord->apprSick+$netLeaveSickApp;
+                        $leaveAnual = $userLeave->day-$netLeaveSickApp;
+                        $monthLeaveRecord->other=$monthLeaveRecord->other+$leaveAnual;
+                        }
+                    }else{
+                        $monthLeaveRecord->other=$monthLeaveRecord->other+$userLeave->day;
+                    }
                     $monthLeaveRecord->save();
-                $userLeave->status=1;
+                $userLeave->status=$request->status;
                 $userLeave->save();
                 }else{
-                    $userLeave->status=1;
+                    $userLeave->status=$request->status;
                     $userLeave->save();
                 }
                 $attendance = Attendance::where('date',$from)->where('user_Id',$data->user_id)->first();
@@ -525,96 +568,93 @@ class AdminLeaveController extends Controller
                     $attendance->mark="L";
                     $attendance->save();
                 }
-            }elseif($request->status == 0 && $userLeave->status == 1){
-                    $totaldayUpdate=Leaverecord::where('leave_id',$request->id)->where('from',">=",$firstMonthofDay)->where('to',"<=",$lastMonthofDay)->get();
-                    if ($totaldayUpdate != null) { 
-                        foreach ($totaldayUpdate as $value) {
-                            $record =Leaverecord::find($value->id);
-                            $record->status=0;
-                            $record->admin_id =Auth::guard('admin')->user()->id;
-                            $record->save();
-                                }
-                            $userLeave=Leave::where('id',$request->id)->first();
-                            $leaveType = settingleave::find($userLeave->leaves_id);
-                            $monthLeaveRecord= monthleave::where('user_id',$userLeave->user_id)->where('status',1)->first();
-                            $netLeaveAnuApp=$monthLeaveRecord->apprAnual;
-                            $netLeaveSickApp=$monthLeaveRecord->apprSick;
-                    if ($leaveType->type=="PL") {
-                            if ($netLeaveAnuApp>=$userLeave->day){
-                                $monthLeaveRecord->apprAnual= $monthLeaveRecord->apprAnual-$userLeave->day;
-                            }else{
-                                $monthLeaveRecord->apprAnual=$netLeaveAnuApp;
-                                $leaveAnual = $userLeave->day-$netLeaveAnuApp;
-                                $monthLeaveRecord->other=$monthLeaveRecord->other-$leaveAnual;
-                            }
-                    }elseif($leaveType->type=="Sick"){
-                            if ($netLeaveSickApp>=$userLeave->day){
-                                $monthLeaveRecord->apprSick=$monthLeaveRecord->apprSick-$userLeave->day;
-                            }else{
-                            $monthLeaveRecord->apprSick=$netLeaveSickApp;
-                            $leaveAnual = $userLeave->day-$netLeaveSickApp;
-                            $monthLeaveRecord->other=$monthLeaveRecord->other-$leaveAnual;
-                            }
-                    }else{
-                        $monthLeaveRecord->other=$monthLeaveRecord->other-$userLeave->day;
-                    }
-                    $monthLeaveRecord->save();
-                    $userLeave->status=0;
-                    $userLeave->save();
                 }else{
-                    $userLeave->status=0;
+                    $userLeave->status=$request->status;
                     $userLeave->save();
-                }
-                $attendance = Attendance::where('date',$from)->where('user_Id',$data->user_id)->first();
-                if ($attendance!= null) {
-                    $attendance->action = 0;
-                    $attendance->mark="A";
-                    $attendance->save();
-                }
-            
-            }
+                }                            
         return redirect()->back();
     }
-    public function wfhReport(Request $request) { 
+    public function wfhReport(Request $request){
+// dd($request->toArray());
         $data = WorkFromHome::where('user_id',$request->user_id)->where('id',$request->id)->first();
-        $datawf = WorkFromHome::where('user_id',$request->user_id)->where('id',$request->id)->first();
-        $datacount = WorkFromHome::where('user_id',$request->user_id)->where('id',$request->id)->count();
-        $wfhCount = wfhrecord::where('user_id',$data->user_id)->where('wfh_id',$request->id)->count();
-        //leave record save datatable   
-        if (empty($wfhCount)) {          
-            $userWfh = WorkFromHome::find($request->id);
-            $userWfh->admin_id =Auth::guard('admin')->user()->id;;
-            $dateFrom = new DateTime($userWfh->from);
-            $dateTo = new DateTime($userWfh->to);
-            $interval = $dateFrom->diff($dateTo);
-            $da = $interval->format('%a');
-            $days = $da + 1;
-            $firstMonthofDay =  Carbon::now()->startOfMonth()->toDateString(); //Current month Range
-            $lastMonthofDay = Carbon::now()->endOfMonth()->toDateString();
-            $nextMonthFirstfDay =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(1)->toDateString(); //second month Range
-            $nextToNextMonthFirstfDay =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(2)->toDateString(); //last and 3 range month
-            $request->from=$userWfh->from;
-            $request->to=$userWfh->to;
-            $from=$request->from;
-            $to =$request->to;
-            $leaverecord = wfhrecord::where('user_id',$userWfh->user_id)->where('wfh_id',$request->id)->get();
-            $leaverecordCount =$leaverecord->count();
-                if ($request->status ==1 && empty($leaverecordCount)) {
-                        if ($request->from >= $firstMonthofDay && $request->to <= $lastMonthofDay) {
-                            $wfhRecord = new wfhrecord();
-                            $wfhRecord->user_id = $userWfh->user_id;
-                            $wfhRecord->wfh_id = $request->id;
-                            $wfhRecord->from = $request->from;
-                            $wfhRecord->to = $request->to;
-                            //sunday and saturday count in request->from to request->to
-                            $day = Carbon::createFromFormat('Y-m-d', $request->from);
-                            $ssfrom = date('d',strtotime($day));
-                            $ssto = date('d',strtotime($request->to));
-                            $sunday = 0;
-                            $saturday = 0;
-                            foreach(range($ssfrom,$ssto) as $key => $next) {
-                                if (strtolower($day->format('l')) == 'sunday') {
-                                    $sunday++;
+            $datawf = WorkFromHome::where('user_id',$request->user_id)->where('id',$request->id)->first();
+            $datacount = WorkFromHome::where('user_id',$request->user_id)->where('id',$request->id)->count();
+            $wfhCount = wfhrecord::where('user_id',$data->user_id)->where('wfh_id',$request->id)->count();
+            //leave record save datatable   
+            if (empty($wfhCount)) {          
+                $userWfh = WorkFromHome::find($request->id);
+                $userWfh->admin_id =Auth::guard('admin')->user()->id;;
+                $dateFrom = new DateTime($userWfh->from);
+                $dateTo = new DateTime($userWfh->to);
+                $interval = $dateFrom->diff($dateTo);
+                $da = $interval->format('%a');
+                $days = $da + 1;
+                $firstMonthofDay =  Carbon::now()->startOfMonth()->toDateString(); //Current month Range
+                $lastMonthofDay = Carbon::now()->endOfMonth()->toDateString();
+                $nextMonthFirstfDay =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(1)->toDateString(); //second month Range
+                $nextToNextMonthFirstfDay =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(2)->toDateString(); //last and 3 range month
+                $request->from=$userWfh->from;
+                $request->to=$userWfh->to;
+                $from=$request->from;
+                $to =$request->to;
+                $leaverecord = wfhrecord::where('user_id',$userWfh->user_id)->where('wfh_id',$request->id)->get();
+                $leaverecordCount = wfhrecord::where('user_id',$userWfh->user_id)->where('wfh_id',$request->id)->count();
+                    if ($request->status ==1 && empty($leaverecordCount)) {
+                            if ($request->from >= $firstMonthofDay && $request->to <= $lastMonthofDay) {
+                                $wfhRecord = new wfhrecord();
+                                $wfhRecord->user_id = $userWfh->user_id;
+                                $wfhRecord->wfh_id = $request->id;
+                                $wfhRecord->from = $request->from;
+                                $wfhRecord->to = $request->to;
+                                //sunday and saturday count in request->from to request->to
+                                $day = Carbon::createFromFormat('Y-m-d', $request->from);
+                                $ssfrom = date('d',strtotime($day));
+                                $ssto = date('d',strtotime($request->to));
+                                $sunday = 0;
+                                $saturday = 0;
+                                foreach(range($ssfrom,$ssto) as $key => $next) {
+                                    if (strtolower($day->format('l')) == 'sunday') {
+                                        $sunday++;
+                                        }
+                                        //saturday Count first And third
+                                        $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
+                                        $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
+                                        if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d"))) {
+                                            $saturday++;
+                                        }
+                                        $day = $day->addDays();
+                                }
+                                $days=$days-$sunday;
+                                $days=$days-$saturday;
+                                $hfrom=$request->from;
+                                $hto =$request->to;
+                                $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
+                                $days=$days-$holiday;
+                                $wfhRecord->day =$days;
+                                $wfhRecord->task = $userWfh->task;
+                                $wfhRecord->status =1;
+                                $wfhRecord->admin_id =Auth::guard('admin')->user()->id;
+                                $wfhRecord->save();
+                            } elseif ($request->from <= $lastMonthofDay && $request->to >= $lastMonthofDay) {
+                                $lastMonthofDayD = Carbon::now()->endOfMonth();
+                                $diffDay = $dateFrom->diff($lastMonthofDayD);
+                                $diffDay = $diffDay->format('%a');
+                                $daysn = $diffDay + 1;
+                                $daysnl = $diffDay + 1;
+                                $wfhRecord = new wfhrecord();
+                                $wfhRecord->user_id = $userWfh->user_id;
+                                $wfhRecord->wfh_id = $request->id;
+                                $wfhRecord->from = $request->from;
+                                $wfhRecord->to = $lastMonthofDay;
+                                //sunday and saturady count function
+                                $day = Carbon::createFromFormat('Y-m-d', $request->from);
+                                $ssfrom = date('d',strtotime($day));
+                                $ssto = date('d',strtotime($lastMonthofDay));
+                                $sunday = 0;
+                                $saturday = 0;
+                                foreach(range($ssfrom,$ssto) as $key => $next) {
+                                    if (strtolower($day->format('l')) == 'sunday') {
+                                        $sunday++;
                                     }
                                     //saturday Count first And third
                                     $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
@@ -623,195 +663,115 @@ class AdminLeaveController extends Controller
                                         $saturday++;
                                     }
                                     $day = $day->addDays();
-                            }
-                            $days=$days-$sunday;
-                            $days=$days-$saturday;
-                            $hfrom=$request->from;
-                            $hto =$request->to;
-                            $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
-                            $days=$days-$holiday;
-                            $wfhRecord->day =$days;
-                            $wfhRecord->task = $userWfh->task;
-                            $wfhRecord->status =1;
-                            $wfhRecord->admin_id =Auth::guard('admin')->user()->id;
-                            $wfhRecord->save();
-                        } elseif ($request->from <= $lastMonthofDay && $request->to >= $lastMonthofDay) {
-                            $lastMonthofDayD = Carbon::now()->endOfMonth();
-                            $diffDay = $dateFrom->diff($lastMonthofDayD);
-                            $diffDay = $diffDay->format('%a');
-                            $daysn = $diffDay + 1;
-                            $daysnl = $diffDay + 1;
-                            $wfhRecord = new wfhrecord();
-                            $wfhRecord->user_id = $userWfh->user_id;
-                            $wfhRecord->wfh_id = $request->id;
-                            $wfhRecord->from = $request->from;
-                            $wfhRecord->to = $lastMonthofDay;
-                            //sunday and saturady count function
-                            $day = Carbon::createFromFormat('Y-m-d', $request->from);
-                            $ssfrom = date('d',strtotime($day));
-                            $ssto = date('d',strtotime($lastMonthofDay));
-                            $sunday = 0;
-                            $saturday = 0;
-                            foreach(range($ssfrom,$ssto) as $key => $next) {
-                                if (strtolower($day->format('l')) == 'sunday') {
-                                    $sunday++;
                                 }
-                                //saturday Count first And third
-                                $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
-                                $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
-                                if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d"))) {
-                                    $saturday++;
-                                }
-                                $day = $day->addDays();
-                            }
-                            $hfrom=$request->from;
-                            $hto=$lastMonthofDay;
-                            $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
-                            $daysn=$daysn-$sunday;
-                            $daysn=$daysn-$saturday;
-                            $daysn=$daysn-$holiday;
-                            $wfhRecord->day = $daysn;
-                            $wfhRecord->task = $userWfh->task;
-                            $wfhRecord->status =1;
-                            $wfhRecord->admin_id =Auth::guard('admin')->user()->id;
-                            $wfhRecord->save();
-                            $NewRecord = $days - $daysnl;
-                            if ($NewRecord > 0) {
-                                $lastMonthofDays = Carbon::now()->endOfMonth();
-                                $fromNewDate = $lastMonthofDays->addDay(1)->toDateString();
-                                $newTodate= $request->to;
-                                $wfhRecord = new wfhrecord();
-                                $wfhRecord->user_id = $userWfh->user_id;
-                                $wfhRecord->wfh_id = $request->id;
-                                $wfhRecord->from = $fromNewDate;
-                                $wfhRecord->to = $request->to;
-                                //sunday and saturady count function
-                                $day = Carbon::createFromFormat('Y-m-d', $fromNewDate);
-                                $dayss = Carbon::createFromFormat('Y-m-d', $fromNewDate);
-                                $ssfrom = date('d',strtotime($day));
-                                $ssto = date('d',strtotime($request->to));
-                                $smonth = date('Y-m',strtotime($day));
-                                $sunday = 0;
-                                $saturday = 0;
-                                foreach(range($ssfrom,$ssto) as $key => $next) {
-                                    if (strtolower($day->format('l')) == 'sunday') {
-                                        $sunday++;
-                                        }
-                                        //saturday Count first And third
-                                        $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
-                                        $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
-                                        $satn1 = Carbon::parse('first saturday of next month')->format('Y-m-d');
-                                        $satn3 = Carbon::parse('third saturday of next month')->format('Y-m-d');
-                                        if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d") || $satn3 == $day->format("Y-m-d") || $satn1 == $day->format("Y-m-d"))) {
-                                            $saturday++;
-                                        }
-                                        $day = $day->addDays();
-                                    }
-                                $hfrom=$fromNewDate;
-                                $hto=$request->to;
+                                $hfrom=$request->from;
+                                $hto=$lastMonthofDay;
                                 $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
-                                $NewRecord=$NewRecord-$sunday;
-                                $NewRecord=$NewRecord-$saturday;
-                                $NewRecord=$NewRecord-$holiday;
-                                $wfhRecord->day = $NewRecord;
+                                $daysn=$daysn-$sunday;
+                                $daysn=$daysn-$saturday;
+                                $daysn=$daysn-$holiday;
+                                $wfhRecord->day = $daysn;
                                 $wfhRecord->task = $userWfh->task;
                                 $wfhRecord->status =1;
                                 $wfhRecord->admin_id =Auth::guard('admin')->user()->id;
                                 $wfhRecord->save();
-                            }
-                        } elseif ($request->from > $lastMonthofDay && $request->to < $nextToNextMonthFirstfDay) {
-                            $wfhRecord = new wfhrecord();
-                            $wfhRecord->user_id = $userWfh->user_id;
-                            $wfhRecord->wfh_id = $request->id;
-                            $wfhRecord->from = $request->from;
-                            $wfhRecord->to = $request->to;
-                                //sunday and saturady count function
-                                $day = Carbon::createFromFormat('Y-m-d', $request->from);
-                                $ssfrom = date('d',strtotime($day));
-                                $ssto = date('d',strtotime($request->to));
-                                $smonth = date('Y-m',strtotime($day));
-                                $sunday = 0;
-                                $saturday = 0;
-                                foreach(range($ssfrom,$ssto) as $key => $next) {
-                                    if (strtolower($day->format('l')) == 'sunday') {
-                                        $sunday++;
+                                $NewRecord = $days - $daysnl;
+                                if ($NewRecord > 0) {
+                                    $lastMonthofDays = Carbon::now()->endOfMonth();
+                                    $fromNewDate = $lastMonthofDays->addDay(1)->toDateString();
+                                    $newTodate= $request->to;
+                                    $wfhRecord = new wfhrecord();
+                                    $wfhRecord->user_id = $userWfh->user_id;
+                                    $wfhRecord->wfh_id = $request->id;
+                                    $wfhRecord->from = $fromNewDate;
+                                    $wfhRecord->to = $request->to;
+                                    //sunday and saturady count function
+                                    $day = Carbon::createFromFormat('Y-m-d', $fromNewDate);
+                                    $dayss = Carbon::createFromFormat('Y-m-d', $fromNewDate);
+                                    $ssfrom = date('d',strtotime($day));
+                                    $ssto = date('d',strtotime($request->to));
+                                    $smonth = date('Y-m',strtotime($day));
+                                    $sunday = 0;
+                                    $saturday = 0;
+                                    foreach(range($ssfrom,$ssto) as $key => $next) {
+                                        if (strtolower($day->format('l')) == 'sunday') {
+                                            $sunday++;
+                                            }
+                                            //saturday Count first And third
+                                            $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
+                                            $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
+                                            $satn1 = Carbon::parse('first saturday of next month')->format('Y-m-d');
+                                            $satn3 = Carbon::parse('third saturday of next month')->format('Y-m-d');
+                                            if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d") || $satn3 == $day->format("Y-m-d") || $satn1 == $day->format("Y-m-d"))) {
+                                                $saturday++;
+                                            }
+                                            $day = $day->addDays();
                                         }
-                                        //saturday Count first And third
-                                        $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
-                                        $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
-                                        $satn1 = Carbon::parse('first saturday of next month')->format('Y-m-d');
-                                        $satn3 = Carbon::parse('third saturday of next month')->format('Y-m-d');
-                                        if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d") || $satn3 == $day->format("Y-m-d") || $satn1 == $day->format("Y-m-d"))) {
-                                            $saturday++;
-                                        }
-                                        $day = $day->addDays();
-                                    }
-                            $hfrom=$request->from;
-                            $hto=$request->to;
-                            $holiday= Holiday::where('status',1)->where(function($query)use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
-                            $days=$days-$sunday;
-                            $days=$days-$saturday;
-                            $days=$days-$holiday;
-                            $wfhRecord->day =$days;
-                            $wfhRecord->task = $userWfh->task;
-                            $wfhRecord->status =1;
-                            $wfhRecord->admin_id =Auth::guard('admin')->user()->id;
-                            $wfhRecord->save();
-                        } elseif ($request->from >= $nextMonthFirstfDay && $request->to >= $nextToNextMonthFirstfDay) {
-                            $nextToMonthLastDayD =  Carbon::now()->endOfMonth()->addMonthsNoOverflow(1); //last and 3 range month
-                            $diffDay = $dateFrom->diff($nextToMonthLastDayD);
-                            $diffDay = $diffDay->format('%a');
-                            $daysn = $diffDay + 1;
-                            $daysl = $diffDay + 1;
-                            $wfhRecord = new wfhrecord();
-                            $wfhRecord->user_id = $userWfh->user_id;
-                            $wfhRecord->wfh_id = $request->id;
-                            $wfhRecord->from = $request->from;
-                            $wfhRecord->to = $nextToMonthLastDayD;
-                            //sunday and saturady count function
-                            $day = Carbon::createFromFormat('Y-m-d', $request->from);
-                            $ssfrom = date('d',strtotime($request->from));
-                            $ssto = date('d',strtotime($nextToMonthLastDayD));
-                            $smonth = date('Y-m',strtotime($day));
-                            $sunday = 0;
-                            $saturday = 0;
-                            foreach(range($ssfrom,$ssto) as $key => $next) {
-                                if (strtolower($day->format('l')) == 'sunday') {
-                                    $sunday++;
+                                    $hfrom=$fromNewDate;
+                                    $hto=$request->to;
+                                    $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
+                                    $NewRecord=$NewRecord-$sunday;
+                                    $NewRecord=$NewRecord-$saturday;
+                                    $NewRecord=$NewRecord-$holiday;
+                                    $wfhRecord->day = $NewRecord;
+                                    $wfhRecord->task = $userWfh->task;
+                                    $wfhRecord->status =1;
+                                    $wfhRecord->admin_id =Auth::guard('admin')->user()->id;
+                                    $wfhRecord->save();
                                 }
-                                $day = $day->addDays();
-                                //saturday Count first And third
-                                $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
-                                $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
-                                $satn1 = Carbon::parse('first saturday of next month')->format('Y-m-d');
-                                $satn3 = Carbon::parse('third saturday of next month')->format('Y-m-d');
-                                if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d") || $satn3 == $day->format("Y-m-d") || $satn1 == $day->format("Y-m-d"))) {
-                                    $saturday++;
-                                }
-                            }
-                            $hfrom=$request->from;
-                            $hto=$nextToMonthLastDayD;
-                            $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
-                            $daysn=$daysn-$sunday;
-                            $daysn=$daysn-$saturday;
-                            $daysn=$daysn-$holiday;
-                            $wfhRecord->day = $daysn;
-                            $wfhRecord->task = $userWfh->task;
-                            $wfhRecord->status =1;
-                            $wfhRecord->admin_id =Auth::guard('admin')->user()->id;
-                            $wfhRecord->save();
-                            $NewRecord = $days - $daysl;
-                            if ($NewRecord > 0) {
-                                $lastMonthofDays = $nextToNextMonthFirstfDayD =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(2)->toDateString(); //last and 3 range month
+                            } elseif ($request->from > $lastMonthofDay && $request->to < $nextToNextMonthFirstfDay) {
                                 $wfhRecord = new wfhrecord();
                                 $wfhRecord->user_id = $userWfh->user_id;
                                 $wfhRecord->wfh_id = $request->id;
-                                $wfhRecord->from = $lastMonthofDays;
+                                $wfhRecord->from = $request->from;
                                 $wfhRecord->to = $request->to;
+                                    //sunday and saturady count function
+                                    $day = Carbon::createFromFormat('Y-m-d', $request->from);
+                                    $ssfrom = date('d',strtotime($day));
+                                    $ssto = date('d',strtotime($request->to));
+                                    $smonth = date('Y-m',strtotime($day));
+                                    $sunday = 0;
+                                    $saturday = 0;
+                                    foreach(range($ssfrom,$ssto) as $key => $next) {
+                                        if (strtolower($day->format('l')) == 'sunday') {
+                                            $sunday++;
+                                            }
+                                            //saturday Count first And third
+                                            $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
+                                            $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
+                                            $satn1 = Carbon::parse('first saturday of next month')->format('Y-m-d');
+                                            $satn3 = Carbon::parse('third saturday of next month')->format('Y-m-d');
+                                            if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d") || $satn3 == $day->format("Y-m-d") || $satn1 == $day->format("Y-m-d"))) {
+                                                $saturday++;
+                                            }
+                                            $day = $day->addDays();
+                                        }
+                                $hfrom=$request->from;
+                                $hto=$request->to;
+                                $holiday= Holiday::where('status',1)->where(function($query)use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
+                                $days=$days-$sunday;
+                                $days=$days-$saturday;
+                                $days=$days-$holiday;
+                                $wfhRecord->day =$days;
+                                $wfhRecord->task = $userWfh->task;
+                                $wfhRecord->status =1;
+                                $wfhRecord->admin_id =Auth::guard('admin')->user()->id;
+                                $wfhRecord->save();
+                            } elseif ($request->from >= $nextMonthFirstfDay && $request->to >= $nextToNextMonthFirstfDay) {
+                                $nextToMonthLastDayD =  Carbon::now()->endOfMonth()->addMonthsNoOverflow(1); //last and 3 range month
+                                $diffDay = $dateFrom->diff($nextToMonthLastDayD);
+                                $diffDay = $diffDay->format('%a');
+                                $daysn = $diffDay + 1;
+                                $daysl = $diffDay + 1;
+                                $wfhRecord = new wfhrecord();
+                                $wfhRecord->user_id = $userWfh->user_id;
+                                $wfhRecord->wfh_id = $request->id;
+                                $wfhRecord->from = $request->from;
+                                $wfhRecord->to = $nextToMonthLastDayD;
                                 //sunday and saturady count function
-                                $day = Carbon::createFromFormat('Y-m-d',$lastMonthofDays);
-                                $ssfrom = date('d',strtotime($day));
-                                $ssto = date('d',strtotime($request->to));
+                                $day = Carbon::createFromFormat('Y-m-d', $request->from);
+                                $ssfrom = date('d',strtotime($request->from));
+                                $ssto = date('d',strtotime($nextToMonthLastDayD));
                                 $smonth = date('Y-m',strtotime($day));
                                 $sunday = 0;
                                 $saturday = 0;
@@ -819,244 +779,104 @@ class AdminLeaveController extends Controller
                                     if (strtolower($day->format('l')) == 'sunday') {
                                         $sunday++;
                                     }
+                                    $day = $day->addDays();
                                     //saturday Count first And third
                                     $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
                                     $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
-                                    $satn1 =Carbon::parse('first saturday of next month')->format('Y-m-d');
+                                    $satn1 = Carbon::parse('first saturday of next month')->format('Y-m-d');
                                     $satn3 = Carbon::parse('third saturday of next month')->format('Y-m-d');
-                                    $satn4 = Carbon::parse("first saturday of second month")->format("Y-m-d");
-                                    $satn5 = Carbon::parse("third saturday of second month")->format("Y-m-d");
-                                        if (strtolower($day->format('l')) == 'saturday' && ($satn4 == $day->format("Y-m-d") || $satn5 == $day->format("Y-m-d"))) {
-                                            $saturday++;
-                                            }
-                                            $day = $day->addDays();
+                                    if (strtolower($day->format('l')) == 'saturday' && ($sat1 == $day->format("Y-m-d") || $sat3 == $day->format("Y-m-d") || $satn3 == $day->format("Y-m-d") || $satn1 == $day->format("Y-m-d"))) {
+                                        $saturday++;
+                                    }
                                 }
-                                $hfrom=$lastMonthofDays;
-                                $hto=$request->to;
+                                $hfrom=$request->from;
+                                $hto=$nextToMonthLastDayD;
                                 $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
-                                $NewRecord=$NewRecord-$sunday;
-                                $NewRecord=$NewRecord-$saturday;
-                                $NewRecord=$NewRecord-$holiday;
-                                $wfhRecord->day = $NewRecord;
+                                $daysn=$daysn-$sunday;
+                                $daysn=$daysn-$saturday;
+                                $daysn=$daysn-$holiday;
+                                $wfhRecord->day = $daysn;
                                 $wfhRecord->task = $userWfh->task;
                                 $wfhRecord->status =1;
                                 $wfhRecord->admin_id =Auth::guard('admin')->user()->id;
                                 $wfhRecord->save();
+                                $NewRecord = $days - $daysl;
+                                if ($NewRecord > 0) {
+                                    $lastMonthofDays = $nextToNextMonthFirstfDayD =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(2)->toDateString(); //last and 3 range month
+                                    $wfhRecord = new wfhrecord();
+                                    $wfhRecord->user_id = $userWfh->user_id;
+                                    $wfhRecord->wfh_id = $request->id;
+                                    $wfhRecord->from = $lastMonthofDays;
+                                    $wfhRecord->to = $request->to;
+                                    //sunday and saturady count function
+                                    $day = Carbon::createFromFormat('Y-m-d',$lastMonthofDays);
+                                    $ssfrom = date('d',strtotime($day));
+                                    $ssto = date('d',strtotime($request->to));
+                                    $smonth = date('Y-m',strtotime($day));
+                                    $sunday = 0;
+                                    $saturday = 0;
+                                    foreach(range($ssfrom,$ssto) as $key => $next) {
+                                        if (strtolower($day->format('l')) == 'sunday') {
+                                            $sunday++;
+                                        }
+                                        //saturday Count first And third
+                                        $sat1 = Carbon::parse('first saturday of this month')->format('Y-m-d');
+                                        $sat3 = Carbon::parse('third saturday of this month')->format('Y-m-d');
+                                        $satn1 =Carbon::parse('first saturday of next month')->format('Y-m-d');
+                                        $satn3 = Carbon::parse('third saturday of next month')->format('Y-m-d');
+                                        $satn4 = Carbon::parse("first saturday of second month")->format("Y-m-d");
+                                        $satn5 = Carbon::parse("third saturday of second month")->format("Y-m-d");
+                                            if (strtolower($day->format('l')) == 'saturday' && ($satn4 == $day->format("Y-m-d") || $satn5 == $day->format("Y-m-d"))) {
+                                                $saturday++;
+                                                }
+                                                $day = $day->addDays();
+                                    }
+                                    $hfrom=$lastMonthofDays;
+                                    $hto=$request->to;
+                                    $holiday= Holiday::where('status',1)->where(function($query) use ($hfrom,$hto){ $query->whereBetween('date',[$hfrom,$hto]);})->count();
+                                    $NewRecord=$NewRecord-$sunday;
+                                    $NewRecord=$NewRecord-$saturday;
+                                    $NewRecord=$NewRecord-$holiday;
+                                    $wfhRecord->day = $NewRecord;
+                                    $wfhRecord->task = $userWfh->task;
+                                    $wfhRecord->status =1;
+                                    $wfhRecord->admin_id =Auth::guard('admin')->user()->id;
+                                    $wfhRecord->save();
+                                }
                             }
                         }
                     }
-            }
-        $fromDate= Carbon::parse($data->from)->endOfMonth()->format('Y-m-d');                
-        $wfhRecord =wfhrecord::where('user_id',$data->user_id)->where('from',">=",$data->from)->where('to',"<=",$fromDate)->where('wfh_id',$data->id)->first();
-        $data=$wfhRecord;
-        $days =$data->day; $from= $data->from;
-        $attendance = Attendance::where('date',$from)->where('user_id',$request->user_id)->first();
-        $attendanceCount = Attendance::where('date',$from)->where('user_id',$request->user_id)->count();
-        if ($request->status==1 && !empty($data)) {
-            if (!empty($datacount)){
-                    $data->admin_id =Auth::guard('admin')->user()->id;
-                    $data->status=$request->status;
-                    $data->save();
-                    if (!empty($attendanceCount)) {
-                        $attendance->action = 1;
-                        $attendance->mark="WFH";
-                        $attendance->save();    
-                        $monthLeave= monthleave::where('user_id',$request->user_id)->where('from',"<=",$data->from)->where('to',">=",$fromDate)->first();
-                        $monthLeave->other=$monthLeave->other-$data->day;
-                        $monthLeave->working_day=$monthLeave->working_day+$data->day;
-                        $monthLeave->save();               
+            $attendance= Attendance::where('user_id',$request->user_id)->where('date','>=',$data->from)->where('date','<=',$data->to)->get();
+            $attendanceCount= Attendance::where('user_id',$request->user_id)->where('date','>=',$data->from)->where('date','<=',$data->to)->count();
+            if (!empty($attendanceCount)) {
+                foreach ($attendance as  $value) {
+                    if ($request->type!=$value->mark){
+                        $value->mark=$request->type;
+                        $monthLeave= monthleave::where('user_id',$request->user_id)->where('from','<=',$data->from)->where('to','>=',$data->to)->first();
+                        if ($request->type =="WFH") {   
+                            $monthLeave->working_day= $monthLeave->working_day+1;
+                            $monthLeave->save();
+                        }elseif($request->type =="L"){
+                            $monthLeave->working_day= $monthLeave->working_day-1;
+                            $monthLeave->save();
+                        }                        
+                        $value->save();
                     }
-            }
-        }elseif($request->status==0 && $data->status== 1){ 
-            if (!empty($datacount)){
-                $data->admin_id =Auth::guard('admin')->user()->id;
-                $data->status=$request->status;
-                $data->save();
-                if (!empty($attendanceCount)){
-                    $attendance->action =0;
-                    $attendance->mark="A";
-                    $attendance->save();     
-                    $monthLeave= monthleave::where('user_id',$request->user_id)->where('from',"<=",$data->from)->where('to',">=",$fromDate)->first();
-                    $monthLeave->other=$monthLeave->other+$data->day;
-                   $monthLeave->working_day=$monthLeave->working_day-$data->day;
-                   $monthLeave->save();
-                    }
-            }
-        }elseif($request->status==1 && $data->status== 0){
-            if (!empty($data)){
-                $data->admin_id =Auth::guard('admin')->user()->id;
-                $data->status=$request->status;
-                $data->save();
-                if (!empty($attendance)) {
-                    $attendance->action =1;
-                    $attendance->mark="WFH";
-                    $attendance->save();
-                    $monthLeave= monthleave::where('user_id',$request->user_id)->where('from',"<=",$fromDate)->where('to',">=",$data->to)->first();
-                    $monthLeave->other=$monthLeave->other-$data->day;
-                    $monthLeave->working_day=$monthLeave->working_day+$data->day;
-                    $monthLeave->save();
                 }
             }
-        }
-        $datawf->status=$request->status;
-        $allDay= wfhrecord::where('wfh_id',$request->id)->get();
-        $dayss=0;
-        foreach ($allDay as $days) {
-            $dayss=$dayss+$days->day;
-        }
-        $datawf->day=$dayss;
-        $datawf->save();
-        return redirect()->back();
+            $data->status=$request->status;
+            $data->save();
+            $wfhrecord = wfhrecord::where('wfh_id',$request->id)->get('status');
+            $wfhrecordcount = wfhrecord::where('wfh_id',$request->id)->count();
+            if (!empty($wfhrecordcount)) {
+               foreach ($wfhrecord as $value) {
+                $value->status=$request->status;
+                $value->save();
+               }
+            }      
+            return redirect()->back();
     }
-    public function wfhReportzz(Request $request) { 
-        // dd($request->toArray());
-        $data = WorkFromHome::where('user_id',$request->user_id)->where('id',$request->id)->first();
-        $datacount = $data->count();
-        $days =$data->day; $from= $data->from;
-        $leavePending = Leave::where('user_id',$request->user_id)->where("form", "<=", $data->from)->where("to", ">=", $data->from)->first();
-        $leaveApprovedRecord=Leaverecord::where('user_id',$request->user_id)->where("from", "<=", $data->from)->where("to", ">=", $data->from)->first();
-        $totaldayUpdate=Leave::where('user_id',$request->user_id)->where('form',">=",$data->from)->where('to',"<=",$data->to)->get();
-        $totalleaveCount=$totaldayUpdate->count();
-        $attendance = Attendance::where('date',$from)->where('user_id',$request->user_id)->first();
-        $attendanceCount = $attendance->count();
-        if ($request->status==1 && !empty($data)) {
-            if (!empty($datacount) && empty($totalleaveCount)){
-                $data->admin_id =Auth::guard('admin')->user()->id;
-                $data->status=$request->status;
-                $data->save();
-                if (!empty($attendanceCount)) {
-                    $attendance->action = 1;
-                    $attendance->mark="WFH";
-                    $attendance->save();
-                    if ($attendance->mark =="P"|| $attendance->mark =="WFH" ) {
-                        $monthLeave= monthleave::where('user_id',$request->user_id)->where('from',"<=",$data->from)->where('to',">=",$data->to)->first();
-                        $monthLeave->other=$monthLeave->other-$data->day;
-                        $monthLeave->working_day=$monthLeave->working_day+$data->day;
-                        $monthLeave->save();
-                    }
-                }
-            }else{
-                if (!empty($totalleaveCount)){  
-                    $leaveType = settingleave::find($leaveApprovedRecord->type_id);
-                    $monthLeave= monthleave::where('user_id',$request->user_id)->where('from',"<=",$data->from)->where('to',">=",$data->to)->first();
-                                if ($leaveType->type == "PL") {
-                                        $monthLeave->apprAnual = $monthLeave->apprAnual -$days;
-                                        $monthLeave->working_day=$monthLeave->working_day+$days;
-
-                                    } elseif ($leaveType->type == "Sick") {
-                                        $monthLeave->apprSick = $monthLeave->apprSick -$days;
-                                        $monthLeave->working_day=$monthLeave->working_day+$days;
-                                    } else {
-                                        $monthLeave->other = $monthLeave->other - $days;
-                                        $monthLeave->working_day=$monthLeave->working_day+$days;
-                                    }
-                                    $monthLeave->save();
-                                    $leaveApprovedRecord->status =0;
-                                    $leaveApprovedRecord->save();
-                                    $leavePending->status=0;
-                                    $leavePending->save();
-                        }
-                        $data->admin_id =Auth::guard('admin')->user()->id;
-                        $data->status=$request->status;
-                        $data->save();    
-                        if (!empty($attendanceCount)) {
-                            $attendance->action = 1;
-                            $attendance->mark="WFH";
-                            $attendance->save();
-                        }
-                }
-        }elseif($request->status==0 && $data->status== 1){ 
-            if (!empty($datacount) && empty($totalleaveCount)){
-                $data->admin_id =Auth::guard('admin')->user()->id;
-                $data->status=$request->status;
-                $data->save();
-                if (!empty($attendanceCount)){
-                    if ($attendance->mark =="P"|| $attendance->mark =="WFH" ){ 
-                        $monthLeave= monthleave::where('user_id',$request->user_id)->where('from',"<=",$data->from)->where('to',">=",$data->to)->first();
-                         $monthLeave->other=$monthLeave->other+$data->day;
-                        $monthLeave->working_day=$monthLeave->working_day-$data->day;
-                        $monthLeave->save();
-                    }
-                    $attendance->action =0;
-                    $attendance->mark="A";
-                    $attendance->save();
-            }
-            }else{
-                    if(!empty($totalleaveCount)){
-                        $leaveType = settingleave::find($leaveApprovedRecord->type_id);
-                        $monthLeave= monthleave::where('user_id',$request->user_id)->where('from',"<=",$data->from)->where('to',">=",$data->to)->first();
-                            if ($leaveType->type == "PL") {
-                                    $monthLeave->apprAnual = $monthLeave->apprAnual +$days;
-                                    $monthLeave->working_day=$monthLeave->working_day-$days;
-
-                                } elseif ($leaveType->type == "Sick") {
-                                    $monthLeave->apprSick = $monthLeave->apprSick +$days;
-                                    $monthLeave->working_day=$monthLeave->working_day-$days;
-
-                                } else {
-                                    $monthLeave->other = $monthLeave->other + $days;
-                                    $monthLeave->working_day=$monthLeave->working_day-$days;
-
-                                }
-                                    $monthLeave->save();
-                                    $leaveApprovedRecord->status=1;
-                                    $leaveApprovedRecord->save();
-                                    $leavePending->status=1;
-                                    $leavePending->save();                    }
-                                    $data->admin_id =Auth::guard('admin')->user()->id;
-                                    $data->status=$request->status;
-                                    $data->save();
-
-                                    if ($attendance!= null) {
-                                        $attendance->action =0;
-                                        $attendance->mark="L";
-                                        $attendance->save();                                       
-                                    }
-            }
-        }elseif($request->status==1 && $data->status== 0){
-            if (!empty($data) && empty($totalleaveCount)){
-                $data->admin_id =Auth::guard('admin')->user()->id;
-                $data->status=$request->status;
-                $data->save();
-                if ($attendance!= null) {
-                    $attendance->action =1;
-                    $attendance->mark="WFH";
-                    $attendance->save();
-                }
-            }else{
-                    if (!empty($totalleaveCount)) {
-                        $leaveType = settingleave::find($leaveApprovedRecord->type_id);
-                        $monthLeave= monthleave::where('user_id',$request->user_id)->where('from',"<=",$data->from)->where('to',">=",$data->to)->first();
-                            if ($leaveType->type == "PL") {
-                                    $monthLeave->apprAnual = $monthLeave->apprAnual -$days;
-                                    $monthLeave->working_day=$monthLeave->working_day+$days;
-
-                                } elseif ($leaveType->type == "Sick") {
-                                    $monthLeave->apprSick = $monthLeave->apprSick -$days;
-                                    $monthLeave->working_day=$monthLeave->working_day+$days;
-
-                                } else {
-                                    $monthLeave->other = $monthLeave->other - $days;
-                                    $monthLeave->working_day=$monthLeave->working_day+$days;
-                                }
-                        $monthLeave->save();
-                        $leaveApprovedRecord->status =0;
-                        $leaveApprovedRecord->save();
-                        $leavePending->status=0;
-                        $leavePending->save();
-                    }
-                    $data->admin_id =Auth::guard('admin')->user()->id;
-                    $data->status=$request->status;
-                    $data->save();  
-                    if ($attendance!= null) {
-                        $attendance->action =1;
-                        $attendance->mark="WFH";
-                        $attendance->save();
-                    }
-                }
-        }
-        return redirect()->back();
-    }
+  
     public function moreleave($id)
     {
         $data = Leaverecord::where('leave_id', $id)->with('leavetype')->get();

@@ -213,7 +213,7 @@ class LeaveController extends Controller
         }
         return redirect()->route('employees.leave');
     }
-    
+
     //Leave With WFH Request Function 
     public function attendanceLeaveWfhStore(Request $request)
     {
@@ -225,11 +225,11 @@ class LeaveController extends Controller
         ];
         $attendance = Attendance::find($request->id);
         $leaveApproved = $attendance->date;
-        $leavePending = Leave::where('user_id', Auth::guard('web')->user()->id)->where("form", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->first();
+        $leavePending = Leave::where('user_id', Auth::guard('web')->user()->id)->where("form", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->count();
         $leaveApprovedRecord=Leaverecord::where('user_id', Auth::guard('web')->user()->id)->where("from", "<=", $leaveApproved)->where("to", ">=", $leaveApproved)->first();
         $request->validate($rules);     
         $wfh = WorkFromHome::where('user_id', Auth::guard('web')->user()->id)->where('from', $leaveApproved)->count();      
-        if ($leavePending != null && $wfh == 0) {
+        if (!empty($leavePending) && empty($wfh)) {
             $data = new WorkFromHome();
             $data->user_id = Auth::guard('web')->user()->id;
             $data->from = $attendance->date;
