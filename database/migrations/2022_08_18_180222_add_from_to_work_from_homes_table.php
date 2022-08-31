@@ -15,8 +15,8 @@ class AddFromToWorkFromHomesTable extends Migration
     {
         Schema::table('work_from_homes', function (Blueprint $table) {
             //
-            $table->date('from')->after('user_id')->nullable();
-            $table->date('to')->after('from')->nullable();
+            $table->date('from')->after('user_id');
+            $table->date('to')->after('from');
         });
     }
 
