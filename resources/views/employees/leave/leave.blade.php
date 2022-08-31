@@ -81,7 +81,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>                 
                         @php
                             $plp = 0;
                             $psick = 0;
