@@ -43,11 +43,23 @@ class SalaryManage extends Command
      *
      * @return int
      */
-    public function handle(){   
+    public function handle(){
         $user_data = User::where('status', 1)->get();
-        foreach ($user_data as  $user) {
-            // ----------------------leave to other leave shift ------------------//monthLeave In status 0 Update Function
-            $monthleave = monthleave::where('user_id', $user->id)->where('to', $lastMonthofDay)->where('status', 1)->first();
+    foreach ($user_data as $user) {
+            $today = \Carbon\Carbon::now();
+            $fristMonthofDay = Carbon::now()->startOfMonth()->subMonthsNoOverflow()->toDateString();
+            $lastMonthofDay = Carbon::now()->subMonthsNoOverflow()->endOfMonth()->toDateString();
+            $leaves = Leaverecord::where('user_id', $user->id)->where(function ($query) use ($fristMonthofDay, $lastMonthofDay) {
+                $query->whereBetween('from', [$fristMonthofDay, $lastMonthofDay]);})->get();         
+                $leavet = settingleave::where('status', 1)->get();    
+                $monthleave = monthleave::where('user_id', $user->id)->where('status', 1)->first();
+                if ($monthleave!= null) {
+                    $monthleave->status = 0;
+                    $monthleave->save();
+                    }
+        // ----------------------leave to other leave shift ------------------//monthLeave In status 0 Update Function
+
+            $monthleave = monthleave::where('user_id', $user->id)->where('to', $lastMonthofDay)->where('status', 0)->first();
             if ($monthleave->apprAnual > $monthleave->anualLeave) {
                 $netleaveAnual = $monthleave->apprAnual - $monthleave->anualLeave;
                 if ($monthleave->other != null) {
@@ -64,8 +76,8 @@ class SalaryManage extends Command
                     $monthleave->other = $netleaveAnual;
                 }
             }
-            $monthleave->status=0;  
-            $monthleave->save();            
+            $monthleave->save();
+        
             $monthleave = monthleave::where('user_id', $user->id)->where('to', $lastMonthofDay)->where('status', 0)->first();
             $monthdata = $monthleave;          
             // --------------------new row create user in next month controle---------------------//get a new entery month in user
@@ -75,56 +87,59 @@ class SalaryManage extends Command
             $monthleave = new monthleave();
             $monthleave->user_id = $user->id;
             $monthleave->useryear_id = $session->id;
-            if ($fristMonthofDay>=$user->joiningDate) {
-                $monthleave->from = $user->joiningDate;
-            }else{
-                $monthleave->from = $fristMonthofDay;
-            }
-            if ($user->resignDate != null) {
-                $monthleave->to = $user->resignDate;
-            }else{
-                $monthleave->to = $lastMonthofDay;
-            }
-            $anual = $monthdata->anualLeave - $monthdata->apprAnual;
-            if ($anual > 0) {
-                foreach ($leavet as $leave) {
-                    if ($leave->type == "PL") {
-                        $day = $leave->day / 12;
-                        $monthleave->anualLeave = $anual + $day;
-                        $monthleave->carry_pl_leave = $anual;
-                    }
+                if ($fristMonthofDay>=$user->joiningDate) {
+                    $monthleave->from = $user->joiningDate;
+                    
+                }else{
+                    $monthleave->from = $fristMonthofDay;
                 }
-            } else {
-                foreach ($leavet as $leave) {
-                    if ($leave->type == "PL") {
-                        $day = $leave->day / 12;
-                        $monthleave->anualLeave = $day;
-                        $monthleave->carry_pl_leave = $anual;
-                    }
+                if ($user->resignDate != null) {
+                    $monthleave->to = $user->resignDate;
+                }else{
+
+                    $monthleave->to = $lastMonthofDay;
+                }
+
+        $anual = $monthdata->anualLeave - $monthdata->apprAnual;
+        if ($anual > 0) {
+            foreach ($leavet as $leave) {
+                if ($leave->type == "PL") {
+                    $day = $leave->day / 12;
+                    $monthleave->anualLeave = $anual + $day;
+                    $monthleave->carry_pl_leave = $anual;
                 }
             }
-            $sick = $monthdata->sickLeave - $monthdata->apprSick; //due day sick
-            if ($sick > 0) {
-                foreach ($leavet as $leave) {
-                    if ($leave->type == "Sick") {
-                        $day = $leave->day / 12;
-                        $monthleave->sickLeave = $sick + $day;
-                        $monthleave->carry_sick_leave = $sick;
-                    }
-                }
-            } else {
-                foreach ($leavet as $leave) {
-                    if ($leave->type == "Sick") {
-                        $day = $leave->day / 12;
-                        $monthleave->sickLeave = $day;
-                        $monthleave->carry_sick_leave = $sick;
-                    }
+        } else {
+            foreach ($leavet as $leave) {
+                if ($leave->type == "PL") {
+                    $day = $leave->day / 12;
+                    $monthleave->anualLeave = $day;
+                    $monthleave->carry_pl_leave = $anual;
                 }
             }
-            $monthleave->status = 1;
-            $monthleave->save();
         }
-    } 
+        $sick = $monthdata->sickLeave - $monthdata->apprSick; //due day sick
+        if ($sick > 0) {
+            foreach ($leavet as $leave) {
+                if ($leave->type == "Sick") {
+                    $day = $leave->day / 12;
+                    $monthleave->sickLeave = $sick + $day;
+                    $monthleave->carry_sick_leave = $sick;
+                }
+            }
+        } else {
+            foreach ($leavet as $leave) {
+                if ($leave->type == "Sick") {
+                    $day = $leave->day / 12;
+                    $monthleave->sickLeave = $day;
+                    $monthleave->carry_sick_leave = $sick;
+                }
+            }
+        }
+        $monthleave->status = 1;
+        $monthleave->save();
+    }
+}
     }
     // public function handle(){
     //     $user_data = User::where('status', 1)->get();
@@ -298,4 +313,3 @@ class SalaryManage extends Command
     //         $monthleave->save();
     //     }
     // }
-}
