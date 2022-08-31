@@ -577,8 +577,8 @@ class AdminLeaveController extends Controller
     }
     public function wfhReport(Request $request) { 
         $data = WorkFromHome::where('user_id',$request->user_id)->where('id',$request->id)->first();
+        $datawf = WorkFromHome::where('user_id',$request->user_id)->where('id',$request->id)->first();
         $datacount = WorkFromHome::where('user_id',$request->user_id)->where('id',$request->id)->count();
-        $datawh = WorkFromHome::where('user_id',$request->user_id)->where('id',$request->id)->first();
         $wfhCount = wfhrecord::where('user_id',$data->user_id)->where('wfh_id',$request->id)->count();
         //leave record save datatable   
         if (empty($wfhCount)) {          
@@ -850,14 +850,10 @@ class AdminLeaveController extends Controller
         $wfhRecord =wfhrecord::where('user_id',$data->user_id)->where('from',">=",$data->from)->where('to',"<=",$fromDate)->where('wfh_id',$data->id)->first();
         $data=$wfhRecord;
         $days =$data->day; $from= $data->from;
-        $leavePending = Leave::where('user_id',$request->user_id)->where("form", "<=", $data->from)->where("to", ">=", $data->from)->first();
-        $leaveApprovedRecord=Leaverecord::where('user_id',$request->user_id)->where("from", "<=", $data->from)->where("to", ">=", $data->from)->first();
-        $totaldayUpdate=Leave::where('user_id',$request->user_id)->where('form',">=",$data->from)->where('to',"<=",$data->to)->get();
-        $totalleaveCount=Leave::where('user_id',$request->user_id)->where('form',">=",$data->from)->where('to',"<=",$data->to)->count();
         $attendance = Attendance::where('date',$from)->where('user_id',$request->user_id)->first();
         $attendanceCount = Attendance::where('date',$from)->where('user_id',$request->user_id)->count();
         if ($request->status==1 && !empty($data)) {
-            if (!empty($datacount) && empty($totalleaveCount)){
+            if (!empty($datacount)){
                     $data->admin_id =Auth::guard('admin')->user()->id;
                     $data->status=$request->status;
                     $data->save();
@@ -865,43 +861,14 @@ class AdminLeaveController extends Controller
                         $attendance->action = 1;
                         $attendance->mark="WFH";
                         $attendance->save();    
-                        $monthLeave= monthleave::where('user_id',$request->user_id)->where('from',"<=",$data->from)->where('to',">=",$data->to)->first();
+                        $monthLeave= monthleave::where('user_id',$request->user_id)->where('from',"<=",$data->from)->where('to',">=",$fromDate)->first();
                         $monthLeave->other=$monthLeave->other-$data->day;
                         $monthLeave->working_day=$monthLeave->working_day+$data->day;
                         $monthLeave->save();               
                     }
-            }else{
-                if (!empty($totalleaveCount)){
-                    $leaveType = settingleave::find($leaveApprovedRecord->type_id);
-                    $monthLeave= monthleave::where('user_id',$request->user_id)->where('from',"<=",$data->from)->where('to',">=",$data->to)->first();
-                                if ($leaveType->type == "PL") {
-                                        $monthLeave->apprAnual = $monthLeave->apprAnual -$days;
-                                        $monthLeave->working_day=$monthLeave->working_day+$days;
-
-                                    } elseif ($leaveType->type == "Sick") {
-                                        $monthLeave->apprSick = $monthLeave->apprSick -$days;
-                                        $monthLeave->working_day=$monthLeave->working_day+$days;
-                                    } else {
-                                        $monthLeave->other = $monthLeave->other - $days;
-                                        $monthLeave->working_day=$monthLeave->working_day+$days;
-                                    }
-                                    $monthLeave->save();
-                                    $leaveApprovedRecord->status =0;
-                                    $leaveApprovedRecord->save();
-                                    $leavePending->status=0;
-                                    $leavePending->save();
-                        }
-                            $data->admin_id =Auth::guard('admin')->user()->id;
-                            $data->status=$request->status;
-                            $data->save();    
-                        if (!empty($attendanceCount)) {
-                            $attendance->action = 1;
-                            $attendance->mark="WFH";
-                            $attendance->save();
-                        }
-                    }
+            }
         }elseif($request->status==0 && $data->status== 1){ 
-            if (!empty($datacount) && empty($totalleaveCount)){
+            if (!empty($datacount)){
                 $data->admin_id =Auth::guard('admin')->user()->id;
                 $data->status=$request->status;
                 $data->save();
@@ -909,42 +876,14 @@ class AdminLeaveController extends Controller
                     $attendance->action =0;
                     $attendance->mark="A";
                     $attendance->save();     
-                    $monthLeave= monthleave::where('user_id',$request->user_id)->where('from',"<=",$data->from)->where('to',">=",$data->to)->first();
+                    $monthLeave= monthleave::where('user_id',$request->user_id)->where('from',"<=",$data->from)->where('to',">=",$fromDate)->first();
                     $monthLeave->other=$monthLeave->other+$data->day;
                    $monthLeave->working_day=$monthLeave->working_day-$data->day;
                    $monthLeave->save();
                     }
-            }else{
-                    if(!empty($totalleaveCount)){
-                        $leaveType = settingleave::find($leaveApprovedRecord->type_id);
-                        $monthLeave= monthleave::where('user_id',$request->user_id)->where('from',"<=",$data->from)->where('to',">=",$data->to)->first();
-                            if ($leaveType->type == "PL") {
-                                    $monthLeave->apprAnual = $monthLeave->apprAnual +$days;
-                                    $monthLeave->working_day=$monthLeave->working_day-$days;
-                                } elseif ($leaveType->type == "Sick") {
-                                    $monthLeave->apprSick = $monthLeave->apprSick +$days;
-                                    $monthLeave->working_day=$monthLeave->working_day-$days;
-                                } else {
-                                    $monthLeave->other = $monthLeave->other + $days;
-                                    $monthLeave->working_day=$monthLeave->working_day-$days;
-
-                                }
-                                    $monthLeave->save();
-                                    $leaveApprovedRecord->status=1;
-                                    $leaveApprovedRecord->save();
-                                    $leavePending->status=1;
-                                    $leavePending->save();                    }
-                                    $data->admin_id =Auth::guard('admin')->user()->id;
-                                    $data->status=$request->status;
-                                    $data->save();
-                                    if (!empty($attendance)) {
-                                        $attendance->action =0;
-                                        $attendance->mark="L";
-                                        $attendance->save();                                       
-                                    }
             }
         }elseif($request->status==1 && $data->status== 0){
-            if (!empty($data) && empty($totalleaveCount)){
+            if (!empty($data)){
                 $data->admin_id =Auth::guard('admin')->user()->id;
                 $data->status=$request->status;
                 $data->save();
@@ -952,51 +891,21 @@ class AdminLeaveController extends Controller
                     $attendance->action =1;
                     $attendance->mark="WFH";
                     $attendance->save();
-                    $monthLeave= monthleave::where('user_id',$request->user_id)->where('from',"<=",$data->from)->where('to',">=",$data->to)->first();
+                    $monthLeave= monthleave::where('user_id',$request->user_id)->where('from',"<=",$fromDate)->where('to',">=",$data->to)->first();
                     $monthLeave->other=$monthLeave->other-$data->day;
                     $monthLeave->working_day=$monthLeave->working_day+$data->day;
                     $monthLeave->save();
-                }            
-            }else{
-                    if (!empty($totalleaveCount)) {
-                        $leaveType = settingleave::find($leaveApprovedRecord->type_id);
-                        $monthLeave= monthleave::where('user_id',$request->user_id)->where('from',"<=",$data->from)->where('to',">=",$data->to)->first();
-                            if ($leaveType->type == "PL") {
-                                    $monthLeave->apprAnual = $monthLeave->apprAnual -$days;
-                                    $monthLeave->working_day=$monthLeave->working_day+$days;
-
-                                } elseif ($leaveType->type == "Sick") {
-                                    $monthLeave->apprSick = $monthLeave->apprSick -$days;
-                                    $monthLeave->working_day=$monthLeave->working_day+$days;
-
-                                } else {
-                                    $monthLeave->other = $monthLeave->other - $days;
-                                    $monthLeave->working_day=$monthLeave->working_day+$days;
-                                }
-                                        $monthLeave->save();
-                                        $leaveApprovedRecord->status =0;
-                                        $leaveApprovedRecord->save();
-                                        $leavePending->status=0;
-                                        $leavePending->save();
-                    }
-                                    $data->admin_id =Auth::guard('admin')->user()->id;
-                                    $data->status=$request->status;
-                                    $data->save();  
-                                    if ($attendance!= null) {
-                                        $attendance->action =1;
-                                        $attendance->mark="WFH";
-                                        $attendance->save();
-                                    }
                 }
+            }
         }
-        $datawh->status=$request->status;
+        $datawf->status=$request->status;
         $allDay= wfhrecord::where('wfh_id',$request->id)->get();
         $dayss=0;
         foreach ($allDay as $days) {
             $dayss=$dayss+$days->day;
         }
-        $datawh->day=$dayss;
-        $datawh->save();
+        $datawf->day=$dayss;
+        $datawf->save();
         return redirect()->back();
     }
     public function wfhReportzz(Request $request) { 
