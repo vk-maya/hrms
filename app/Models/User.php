@@ -44,6 +44,9 @@ class User extends Authenticatable
         'workplace',
         'image',
     ];
+    public function monthleave(){
+        return $this->hasMany(monthleave::class,'user_id','id');
+    }
     public function leave(){
         return $this->hasMany(Leave::class,'user_id','id');
     }

@@ -31,6 +31,7 @@
 							<ul style="display: none;">
 								<li><a class="@if(\Request::route()->getName() == 'admin.employees') active @endif" href="{{route('admin.employees')}}">Employees</a></li>
 								<li><a class="@if(\Request::route()->getName() == 'admin.attendance') active @endif" href="{{route('admin.attendance')}}">Attendance</a></li>
+								<li><a class="@if(\Request::route()->getName() == 'admin.attendance.employee') active @endif" href="{{route('admin.attendance.employee')}}">Emp Attendance</a></li>
 								<li><a class="@if(\Request::route()->getName() == 'admin.holidays') active @endif" href="{{route('admin.holidays')}}">Holiday</a></li>
 								<li><a class="@if(in_array(\Request::route()->getName(), ["admin.leave-setting", "admin.add-leave-type"])) active @endif " href="{{route('admin.leave-setting')}}">Leave Settings</a></li>
 								<li><a class="@if(\Request::route()->getName() == 'admin.leave.list') active @endif" href="{{route('admin.leave.list')}}">Leave</a></li>

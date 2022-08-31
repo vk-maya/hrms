@@ -22,4 +22,7 @@ class Attendance extends Model
     public function leavestatus(){
         return $this->hasOne(Leave::class,'user_id','user_id');
     }
+    public function userinfoatt(){
+        return $this->hasOne(User::class,'id','user_id');
+    }
 }

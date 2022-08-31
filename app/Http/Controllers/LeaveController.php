@@ -51,7 +51,7 @@ class LeaveController extends Controller
         return view('employees.leave.add-wfh');
     }
     public function wfhstore(Request $request){
-        // dd($request->toArray());
+        dd($request->toArray());
         $dateFrom = new DateTime($request->form);
         $dateTo = new DateTime($request->to);
         $interval = $dateFrom->diff($dateTo);
@@ -185,7 +185,6 @@ class LeaveController extends Controller
     //wfh Request Store Function 
     public function attendanceWfhStore(Request $request)
     {
-        dd($request);
         $attendance = Attendance::where('date',$request->wdate)->first();
    
         $rules = [

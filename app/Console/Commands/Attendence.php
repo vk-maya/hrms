@@ -61,16 +61,15 @@ class Attendence extends Command
             if (!empty($user)) {
                 $leaveCount = '';
                 if ($key->Status != 'P') {
-                    $leaveCount = Leave::where('user_id', $user->id)->where('status',1)->where(function ($query) use ($date) {
+                    $leaveCount = Leave::where('user_id', $user->id)->where('status',0)->where(function ($query) use ($date) {
                         $query->where("form", ">=", $date)->where('to','<=', $date);
                     })->count();
-                    $wfhCount = WorkFromHome::where('user_id', $user->id)->where('status',1)->where(function ($query) use ($date) {
+                    $wfhCount = WorkFromHome::where('user_id', $user->id)->where('status',0)->where(function ($query) use ($date) {
                         $query->where("from", ">=", $date)->where('to','<=', $date);
                     })->count();
-
-                    if ($leaveCount > 0) {
+                    if ($leaveCount == 0){
                         $leaveCount="L";
-                    }elseif($wfhCount>0){
+                    }elseif($wfhCount ==0){
                         $leaveCount="WFH";
                     }else{
                         $leaveCount="A";
@@ -97,7 +96,7 @@ class Attendence extends Command
                     $monthLeave= monthleave::where('user_id',$user->id)->where('status',1)->first();
                     if ($attend->mark =="P"|| $attend->mark =="WFH" ) {
                         $monthLeave->working_day=$monthLeave->working_day+1;
-                    }else{
+                    }elseif($totalWorkingDay->mark =="A"){{
                         $monthLeave->other=$monthLeave->other+1;
                     }
                     $monthLeave->save();
@@ -116,7 +115,7 @@ class Attendence extends Command
                     $monthLeave= monthleave::where('user_id',$user->id)->where('status',1)->first();
                     if ($totalWorkingDay->mark =="P"|| $totalWorkingDay->mark =="WFH" ) {
                         $monthLeave->working_day=$monthLeave->working_day+1;
-                    }else{
+                    }elseif($totalWorkingDay->mark =="A"){
                         $monthLeave->other=$monthLeave->other+1;
                     }
                     $monthLeave->save();
