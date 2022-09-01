@@ -43,7 +43,7 @@ class SalaryManage extends Command
      *
      * @return int
      */
-    public function handle(){   
+    public function handle(){
         $user_data = User::where('status', 1)->get();
         foreach ($user_data as  $user) {
             // ----------------------leave to other leave shift ------------------//monthLeave In status 0 Update Function
@@ -64,10 +64,10 @@ class SalaryManage extends Command
                     $monthleave->other = $netleaveAnual;
                 }
             }
-            $monthleave->status=0;  
-            $monthleave->save();            
+            $monthleave->status=0;
+            $monthleave->save();
             $monthleave = monthleave::where('user_id', $user->id)->where('to', $lastMonthofDay)->where('status', 0)->first();
-            $monthdata = $monthleave;          
+            $monthdata = $monthleave;
             // --------------------new row create user in next month controle---------------------//get a new entery month in user
             $session = Session::where('status', 1)->first();
             $fristMonthofDay = Carbon::now()->startOfMonth()->toDateString();
@@ -124,7 +124,6 @@ class SalaryManage extends Command
             $monthleave->status = 1;
             $monthleave->save();
         }
-    } 
     }
     // public function handle(){
     //     $user_data = User::where('status', 1)->get();
