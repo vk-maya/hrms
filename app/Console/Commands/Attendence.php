@@ -95,7 +95,7 @@ class Attendence extends Command
                     $monthLeave= monthleave::where('user_id',$user->id)->where('status',1)->first();
                     if ($attend->mark =="P"|| $attend->mark =="WFH" ) {
                         $monthLeave->working_day=$monthLeave->working_day+1;
-                    }elseif($totalWorkingDay->mark =="A"){{
+                    }elseif($attend->mark =="A"){
                         $monthLeave->other=$monthLeave->other+1;
                     }
                     $monthLeave->save();

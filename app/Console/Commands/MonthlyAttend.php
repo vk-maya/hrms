@@ -60,7 +60,7 @@ class MonthlyAttend extends Command
 
             if ($sunday && $first_saturday != $date && $third_saturday != $date && !$holiday) {
                 $client = new Client();
-                $response = $client->request('POST', 'http://hrmsapi.scrumdigital.in/api/getattendance', ['form_params' => ['date' => $date,]]);
+                $response = $client->request('POST', 'http://hrmsapi.scrumdigital.in/api/getattendance', ['form_params' => ['date' => $date]]);
                 $response = json_decode($response->getBody()
                     ->getContents());
 
