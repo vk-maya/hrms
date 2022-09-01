@@ -45,46 +45,61 @@ class SalaryManage extends Command
      */
     public function handle(){
         $user_data = User::where('status', 1)->get();
-        foreach ($user_data as  $user) {
+        foreach ($user_data as $user) {
+                $today = \Carbon\Carbon::now();
+                $fristMonthofDay = Carbon::now()->startOfMonth()->subMonthsNoOverflow()->toDateString();
+                $lastMonthofDay = Carbon::now()->subMonthsNoOverflow()->endOfMonth()->toDateString();
+                $leaves = Leaverecord::where('user_id', $user->id)->where(function ($query) use ($fristMonthofDay, $lastMonthofDay) {
+                    $query->whereBetween('from', [$fristMonthofDay, $lastMonthofDay]);})->get();
+                    $leavet = settingleave::where('status', 1)->get();
+                    $monthleave = monthleave::where('user_id', $user->id)->where('status', 1)->first();
+                    if ($monthleave!= null) {
+                        $monthleave->status = 0;
+                        $monthleave->save();
+                        }
             // ----------------------leave to other leave shift ------------------//monthLeave In status 0 Update Function
-            $monthleave = monthleave::where('user_id', $user->id)->where('to', $lastMonthofDay)->where('status', 1)->first();
-            if ($monthleave->apprAnual > $monthleave->anualLeave) {
-                $netleaveAnual = $monthleave->apprAnual - $monthleave->anualLeave;
-                if ($monthleave->other != null) {
-                    $monthleave->other = $monthleave->other + $netleaveAnual;
-                } else {
-                    $monthleave->other = $netleaveAnual;
+
+                $monthleave = monthleave::where('user_id', $user->id)->where('to', $lastMonthofDay)->where('status', 0)->first();
+                if ($monthleave->apprAnual > $monthleave->anualLeave) {
+                    $netleaveAnual = $monthleave->apprAnual - $monthleave->anualLeave;
+                    if ($monthleave->other != null) {
+                        $monthleave->other = $monthleave->other + $netleaveAnual;
+                    } else {
+                        $monthleave->other = $netleaveAnual;
+                    }
                 }
-            }
-            if ($monthleave->apprSick > $monthleave->sickLeave) {
-                $netleaveAnual = $monthleave->apprSick - $monthleave->sickLeave;
-                if ($monthleave->other != null) {
-                    $monthleave->other = $monthleave->other + $netleaveAnual;
-                } else {
-                    $monthleave->other = $netleaveAnual;
+                if ($monthleave->apprSick > $monthleave->sickLeave) {
+                    $netleaveAnual = $monthleave->apprSick - $monthleave->sickLeave;
+                    if ($monthleave->other != null) {
+                        $monthleave->other = $monthleave->other + $netleaveAnual;
+                    } else {
+                        $monthleave->other = $netleaveAnual;
+                    }
                 }
-            }
-            $monthleave->status=0;
-            $monthleave->save();
-            $monthleave = monthleave::where('user_id', $user->id)->where('to', $lastMonthofDay)->where('status', 0)->first();
-            $monthdata = $monthleave;
-            // --------------------new row create user in next month controle---------------------//get a new entery month in user
-            $session = Session::where('status', 1)->first();
-            $fristMonthofDay = Carbon::now()->startOfMonth()->toDateString();
-            $lastMonthofDay = Carbon::now()->endOfMonth()->toDateString();
-            $monthleave = new monthleave();
-            $monthleave->user_id = $user->id;
-            $monthleave->useryear_id = $session->id;
-            if ($fristMonthofDay>=$user->joiningDate) {
-                $monthleave->from = $user->joiningDate;
-            }else{
-                $monthleave->from = $fristMonthofDay;
-            }
-            if ($user->resignDate != null) {
-                $monthleave->to = $user->resignDate;
-            }else{
-                $monthleave->to = $lastMonthofDay;
-            }
+                $monthleave->save();
+
+                $monthleave = monthleave::where('user_id', $user->id)->where('to', $lastMonthofDay)->where('status', 0)->first();
+                $monthdata = $monthleave;
+                // --------------------new row create user in next month controle---------------------//get a new entery month in user
+                $session = Session::where('status', 1)->first();
+                $fristMonthofDay = Carbon::now()->startOfMonth()->toDateString();
+                $lastMonthofDay = Carbon::now()->endOfMonth()->toDateString();
+                $monthleave = new monthleave();
+                $monthleave->user_id = $user->id;
+                $monthleave->useryear_id = $session->id;
+                    if ($fristMonthofDay>=$user->joiningDate) {
+                        $monthleave->from = $user->joiningDate;
+
+                    }else{
+                        $monthleave->from = $fristMonthofDay;
+                    }
+                    if ($user->resignDate != null) {
+                        $monthleave->to = $user->resignDate;
+                    }else{
+
+                        $monthleave->to = $lastMonthofDay;
+                    }
+
             $anual = $monthdata->anualLeave - $monthdata->apprAnual;
             if ($anual > 0) {
                 foreach ($leavet as $leave) {
@@ -125,6 +140,7 @@ class SalaryManage extends Command
             $monthleave->save();
         }
     }
+}
     // public function handle(){
     //     $user_data = User::where('status', 1)->get();
 
@@ -297,4 +313,3 @@ class SalaryManage extends Command
     //         $monthleave->save();
     //     }
     // }
-}
