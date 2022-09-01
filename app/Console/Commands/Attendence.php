@@ -142,7 +142,6 @@ class Attendence extends Command
                 }
             }
         }
-        }
-        $this->info('Attendence Update Successfully');
-        }    
+        return $this->info('Attendence Update Successfully');
     }
+}
