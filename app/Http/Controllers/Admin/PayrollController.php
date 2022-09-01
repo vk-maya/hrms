@@ -242,16 +242,15 @@ class PayrollController extends Controller
                 }
         return redirect()->route('admin.payroll.list');
     }
-    public function testroute($id)
-    {
+    public function testroute($id){
+    
   
         $user = User::where(['status'=> 1,'id'=>$id])->first();     
             $today = \Carbon\Carbon::now();
             $fristMonthofDay = Carbon::now()->startOfMonth()->subMonthsNoOverflow()->toDateString();
             $lastMonthofDay = Carbon::now()->subMonthsNoOverflow()->endOfMonth()->toDateString();
             $leaves = Leaverecord::where('user_id', $user->id)->where(function ($query) use ($fristMonthofDay, $lastMonthofDay) {
-                $query->whereBetween('from', [$fristMonthofDay, $lastMonthofDay]);
-            })->get();         
+                $query->whereBetween('from', [$fristMonthofDay, $lastMonthofDay]);})->get();         
                 $leavet = settingleave::where('status', 1)->get();    
                 $monthleave = monthleave::where('user_id', $user->id)->where('status', 1)->first();
                 if ($monthleave!= null) {

@@ -56,46 +56,10 @@ class AttendanceController extends Controller
         $monthrecord= Attendance::with('userinfoatt')->where('user_id',$id)->where('month',$month)->where('year',$year)->get();   
         return view('admin.attendance.employeerecord',compact('monthrecord'));
     }
-    public function recordReport(Request $request){
-        $record= Attendance::find($request->id);
-        $record->mark=$request->status;
-        // $record->save();
-        $monthLeave= monthleave::where('user_id',$record->user_id)->where('from','<=',$record->date)->where('to','>=',$record->date)->first();
-        if ($request->status == 'WFH') {
-            $monthLeave->working_day+1;
-            $monthLeave->other-1;
-            $record->mark=$request->status;
-        }elseif($request->status == 'A'){
-            $monthLeave->other+1;
-            $monthLeave->working_day-1;
-            $record->mark=$request->status;
-        }elseif($request->status == 'LWFH'){
-            $leaveRecord= Leaverecord::where('user_id',$record->user_id)->where('from','<=',$record->date)->where('to','>=',$record->date)->where('status',1)->first();
-            $leavetype=settingleave::find($leaveRecord->type_id);
-            if ($leavetype== "PL"){
-                if ($monthLeave->apprAnual>=1) {
-                    $monthLeave->apprAnual=$monthLeave->apprAnual-1;
-                }else{
-                    $monthLeave->other=$monthLeave->other-1;
-                }
-            }elseif($leavetype== "Sick"){
-                if ($monthLeave->apprSick>=1) {
-                    
-                    $monthLeave->apprSick=$monthLeave->apprSick-1;
-                }else{
-
-                    $monthLeave->other=$monthLeave->other-1;
-                }
-            }elseif($request->status == 'LWFH'){
-                
-            }else{
-                $monthLeave->other=$monthLeave->other-1;
-            }
-            $record->mark=$request->status;
-            $record->save();
+        public function recordReport(Request $request){
+            $attendance = Attendance::find($request->id);
+            $attendance->mark=$request->status;
+            $attendance->save();
+        return redirect()->back();
         }
-
     }
-    
-
-}

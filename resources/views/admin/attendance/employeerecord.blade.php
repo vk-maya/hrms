@@ -93,14 +93,18 @@
                                                         href="" data-bs-toggle="dropdown" aria-expanded="false">
                                                         <i class="fa fa-dot-circle-o text-danger"></i> A-absent
                                                     </a>
+                                                @elseif($item->mark == 'L')
+                                                <a class="btn btn-white btn-sm btn-rounded dropdown-toggle"
+                                                href="" data-bs-toggle="dropdown" aria-expanded="false"><i
+                                                    class="fa fa-dot-circle-o text-warning"></i>Leave</a>
                                                 @elseif($item->mark == 'WFH')
                                                     <a class="btn btn-white btn-sm btn-rounded dropdown-toggle"
                                                         href="" data-bs-toggle="dropdown" aria-expanded="false"><i
                                                             class="fa fa-dot-circle-o text-info"></i>WFH</a>
                                                 @elseif($item->mark == "P")
-                                                <span  class="dropdown-item disabled">
+                                                <a  class="btn btn-white btn-sm btn-rounded disabled">
                                                     <i class="fa fa-dot-circle-o text-success"></i>
-                                                    P-present</span>
+                                                    P-present</a>
                                                 @else
                                                     <a class="btn btn-white btn-sm btn-rounded dropdown-toggle"
                                                         href="" data-bs-toggle="dropdown" aria-expanded="false"><i
@@ -112,13 +116,22 @@
                                                     @if ($item->mark == 'L')
                                                         <form action="{{ route('admin.employee.month.record.report') }}" method="POST">
                                                             @csrf
-                                                            <input type="hidden" name="status" value="LWFH">
+                                                            <input type="hidden" name="status" value="WFH">
                                                             <input type="hidden" name="id"
                                                                 value="{{ $item->id }}">                                                            
                                                             <button type="submit" class="dropdown-item">
                                                                 <i class="fa fa-dot-circle-o text-success"></i>
-                                                                LWFH</button>
+                                                                WFH</button>
                                                         </form> 
+                                                        <form action="{{ route('admin.employee.month.record.report') }}" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="status" value="A">
+                                                            <input type="hidden" name="id"
+                                                                value="{{ $item->id }}">
+                                                            <button type="submit" class="dropdown-item">
+                                                                <i class="fa fa-dot-circle-o text-danger"></i>
+                                                                A-absent</button>
+                                                        </form>
                                                     @endif
                                                     @if ($item->mark == 'A')
                                                         <form action="{{ route('admin.employee.month.record.report') }}" method="POST">
@@ -130,8 +143,17 @@
                                                                 <i class="fa fa-dot-circle-o text-success"></i>
                                                                 WFH</button>
                                                         </form>
+                                                        <form action="{{ route('admin.employee.month.record.report') }}" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="status" value="L">
+                                                            <input type="hidden" name="id"
+                                                                value="{{ $item->id }}">
+                                                            <button type="submit" class="dropdown-item">
+                                                                <i class="fa fa-dot-circle-o text-warning"></i>
+                                                                Leave</button>
+                                                        </form>
                                                     @endif
-                                                    @if ($item->mark == 'WFH')
+                                                    @if ($item->mark =='WFH')
                                                         <form action="{{ route('admin.employee.month.record.report') }}" method="POST">
                                                             @csrf
                                                             <input type="hidden" name="status" value="A">
@@ -141,7 +163,16 @@
                                                                 <i class="fa fa-dot-circle-o text-danger"></i>
                                                                 A-absent</button>
                                                         </form>
-                                                    @endif                                                 
+                                                        <form action="{{ route('admin.employee.month.record.report') }}" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="status" value="L">
+                                                            <input type="hidden" name="id"
+                                                                value="{{ $item->id }}">
+                                                            <button type="submit" class="dropdown-item">
+                                                                <i class="fa fa-dot-circle-o text-warning"></i>
+                                                                Leave</button>
+                                                        </form>
+                                                    @endif                                                
                                                 </div>
                                             </div>
                                         </td>

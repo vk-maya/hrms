@@ -239,31 +239,29 @@
                                                                     class="fa fa-dot-circle-o text-success"></i>
                                                                 Approved</a>
                                                         @endif
-                                                        <div class="dropdown-menu dropdown-menu-right">
-                                                            @if ($item->status == 2)
-                                                            <span  class="dropdown-item disabled">
-                                                                <i class="fa fa-dot-circle-o text-purple"></i>
-                                                                New</span>                                                            
-                                                            @endif
+
+
+                                                        <div class="dropdown-menu dropdown-menu-right">                                                           
                                                             @if ($item->status == 1)
-                                                            <span  class="dropdown-item disabled">
-                                                                <i class="fa fa-dot-circle-o text-success"></i>
-                                                                Approved</span>
+                                                                <span  class="dropdown-item disabled">
+                                                                    <i class="fa fa-dot-circle-o text-success"></i>
+                                                                    Approved</span>
                                                             @else
-                                                            <form action="{{ route('admin.wfh.report') }}"
-                                                            method="POST">
-                                                            @csrf
-                                                            <input type="hidden" name="status" value="1">
-                                                            <input type="hidden" name="user_id" value="{{ $item->user->id}}">
-                                                            <input type="hidden" name="id"
-                                                                value="{{ $item->id }}">
-                                                            <input type="hidden" name="type_id"
-                                                                value="{{ $item->leaves_id }}">
-                                                            <button type="submit" class="dropdown-item">
-                                                                <i class="fa fa-dot-circle-o text-success"></i>
-                                                                Approved</button>
-                                                        </form>
+                                                                <form action="{{ route('admin.wfh.report') }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="status" value="1">
+                                                                <input type="hidden" name="user_id" value="{{ $item->user->id}}">
+                                                                <input type="hidden" name="id"
+                                                                    value="{{ $item->id }}">
+                                                                <input type="hidden" name="type"
+                                                                    value="WFH">
+                                                                <button type="submit" class="dropdown-item">
+                                                                    <i class="fa fa-dot-circle-o text-success"></i>
+                                                                    Approved</button>
+                                                                </form>
                                                             @endif
+
                                                             @if ($item->status == 0)
                                                             <span  class="dropdown-item disabled">
                                                                 <i class="fa fa-dot-circle-o text-danger"></i>
@@ -272,9 +270,11 @@
                                                             <form action="{{ route('admin.wfh.report') }}"
                                                                 method="POST">
                                                                 @csrf
-                                                                <input type="hidden" name="status" value=0>
                                                                 <input type="hidden" name="user_id" value="{{ $item->user->id}}">
-                                                                <input type="hidden" name="id" value="{{ $item->id }}">
+                                                                <input type="hidden" name="type" value="L">
+                                                                <input type="hidden" name="status" value="0">
+                                                                <input type="hidden" name="id"
+                                                                value="{{ $item->id }}">
                                                                 <button type="submit" class="dropdown-item">
                                                                     <i class="fa fa-dot-circle-o text-danger"></i>
                                                                     Declined</button>
