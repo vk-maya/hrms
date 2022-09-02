@@ -35,7 +35,7 @@ class TestController extends Controller
                 }
             }
 
-            $diffr = round(Carbon::parse($jd)->floatDiffInMonths(Carbon::now()));
+            $diffr = round(Carbon::parse($jd)->floatDiffInMonths(Carbon::now()))+1;
             $month_date = Carbon::now()->subMonth($diffr)->format('Y-m-d');
 
             if ($jd >= $session->from){
