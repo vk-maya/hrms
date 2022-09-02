@@ -44,7 +44,6 @@ class TestController extends Controller
                     $jd = $jd . "-01";
                 }else if(date('d', strtotime($jd)) > 15){
                     $jd = Carbon::parse($jd)->addMonth(1)->format('Y-m-01');
-                    // $jd = $jd . "-01";
                 }
             }else{
                 $jd = $session->from;
