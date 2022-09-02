@@ -89,13 +89,13 @@
                                             </h2>
                                         </td> 
                                         @php
-                                            $month= date('Y-m', strtotime($item->monthleave()->first()->from));
+                                            $month= date('m-Y', strtotime($item->monthleave()->first()->from));
                                         @endphp                                
-                                        <td>{{date('d-m-Y', strtotime($item->monthleave()->first()->from))}}</td>                                        
-                                        <td>{{$item->monthleave()->first()->apprAnual}}</td>                                        
-                                        <td>{{$item->monthleave()->first()->apprSick}}</td>                                        
-                                        <td>{{$item->monthleave()->first()->other}}</td>                                        
-                                        <td>{{$item->monthleave()->first()->working_day}}</td>                                        
+                                        <td>{{$month}}</td>
+                                        <td>@if ($item->monthleave()->first()->apprAnual>0){{$item->monthleave()->first()->apprAnual}}@else 0 @endif</td>                                        
+                                        <td>@if ($item->monthleave()->first()->apprSick>0){{$item->monthleave()->first()->apprSick}}@else 0 @endif</td>                                        
+                                        <td>@if ($item->monthleave()->first()->other>0){{$item->monthleave()->first()->other}}@else 0 @endif</td>                                    
+                                        <td>@if ($item->monthleave()->first()->working_day>0){{$item->monthleave()->first()->working_day}}@else 0 @endif</td>                                    
                                         <td><a href="{{route('admin.employee.month',[$item->id,$month])}}">Month Record </a></td>                                        
                                     </tr>
                                 @endforeach
