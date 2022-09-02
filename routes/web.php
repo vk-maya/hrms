@@ -128,7 +128,7 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::any('attendance',[AttendanceController::class,'attendance'])->name('attendance');
     Route::any('attendance/employee',[AttendanceController::class,'attendanceEmployee'])->name('attendance.employee');
     Route::get('attendance/info/{id}',[AttendanceController::class,'attinfo'])->name('attendance.info');
-    Route::get('attendance/employees/month/{id}/{date}',[AttendanceController::class,'attendanceMonthRecord'])->name('employee.month');
+    Route::get('attendance/employees/month/{id}/{year}/{month}',[AttendanceController::class,'attendanceMonthRecord'])->name('employee.month');
     Route::post('attendance/employees/record',[AttendanceController::class,'recordReport'])->name('employee.month.record.report');
 
     // -----------------------------------file Document Attach------------------------------------------
@@ -217,7 +217,7 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::post('payroll-store',[PayrollController::class,'store'])->name('payroll.store');
     Route::get('payroll/edit/{id}',[PayrollController::class,'payroll'])->name('payroll.edit');
     Route::get('add/salary/{id}',[PayrollController::class,'parolljs'])->name('add.salary');
-    ///////test route 
+    ///////test route
     Route::get('tsetsing/route/{id}',[PayrollController::class,'testroute'])->name('test.link');
 
     //...................PDF..................//

@@ -46,13 +46,13 @@ class AttendanceController extends Controller
     }
     public function attinfo($id){
         $attendinfo = Attendance::find($id);
-    
+
         return response()->json(['attend' => $attendinfo]);
 
     }
-    public function attendanceMonthRecord($id,$date){
-        $month = date('m', strtotime($date));
-        $year = date('Y', strtotime($date));
+    public function attendanceMonthRecord($id, $year, $month){
+        // $month = date('m', strtotime($month));
+        // $year = date('Y', strtotime($year));
         $monthrecord= Attendance::with('userinfoatt')->where('user_id',$id)->where('month',$month)->where('year',$year)->get();
         return view('admin.attendance.employeerecord',compact('monthrecord'));
     }

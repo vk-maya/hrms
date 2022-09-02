@@ -69,7 +69,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="table-responsive">
-                        <table class="table table-striped custom-table table-nowrap">                           
+                        <table class="table table-striped custom-table table-nowrap">
                             <tbody>
                                 <th>Employees Name</th>
                                 <th>Month</th>
@@ -87,16 +87,17 @@
                                                         src="@if ($item->image != null) {{ asset('storage/uploads/' . $item->image) }}@else{{ asset('assets/img/avtar.jpg') }} @endif""></a>
                                                 <a href="{{ route('admin.employees.profile', $item->id) }}">{{ $item->first_name }}</a>
                                             </h2>
-                                        </td> 
+                                        </td>
                                         @php
-                                            $month= date('m-Y', strtotime($item->monthleave()->first()->from));
-                                        @endphp                                
-                                        <td>{{$month}}</td>
-                                        <td>@if ($item->monthleave()->first()->apprAnual>0){{$item->monthleave()->first()->apprAnual}}@else 0 @endif</td>                                        
-                                        <td>@if ($item->monthleave()->first()->apprSick>0){{$item->monthleave()->first()->apprSick}}@else 0 @endif</td>                                        
-                                        <td>@if ($item->monthleave()->first()->other>0){{$item->monthleave()->first()->other}}@else 0 @endif</td>                                    
-                                        <td>@if ($item->monthleave()->first()->working_day>0){{$item->monthleave()->first()->working_day}}@else 0 @endif</td>                                    
-                                        <td><a href="{{route('admin.employee.month',[$item->id,$month])}}">Month Record </a></td>                                        
+                                            $month= date('m', strtotime($item->monthleave()->first()->from));
+                                            $year= date('Y', strtotime($item->monthleave()->first()->from));
+                                        @endphp
+                                        <td>{{\Carbon\Carbon::parse($item->monthleave()->first()->from)->format('M').', '.$year}}</td>
+                                        <td>@if ($item->monthleave()->first()->apprAnual>0){{$item->monthleave()->first()->apprAnual}}@else 0 @endif</td>
+                                        <td>@if ($item->monthleave()->first()->apprSick>0){{$item->monthleave()->first()->apprSick}}@else 0 @endif</td>
+                                        <td>@if ($item->monthleave()->first()->other>0){{$item->monthleave()->first()->other}}@else 0 @endif</td>
+                                        <td>@if ($item->monthleave()->first()->working_day>0){{$item->monthleave()->first()->working_day}}@else 0 @endif</td>
+                                        <td><a href="{{route('admin.employee.month',[$item->id,$year,$month])}}">Month Record </a></td>
                                     </tr>
                                 @endforeach
                             </tbody>
