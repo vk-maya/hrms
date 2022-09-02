@@ -42,6 +42,8 @@ class TestController extends Controller
                 if ($jd < $month_date){
                     $jd = date('Y-m', strtotime($jd));
                     $jd = $jd . "-01";
+                }else if(date('d', strtotime($jd)) > 15){
+                    $jd = Carbon::parse($jd)->subMonth(1);
                 }
             }else{
                 $jd = $session->from;
@@ -61,7 +63,9 @@ class TestController extends Controller
                 $data->from = Carbon::parse($jd)->format('Y-m').'-01';
                 $data->to = Carbon::parse($jd)->format('Y-m').'-'.Carbon::parse($jd)->daysInMonth;
                 $data->anualLeave = $annualleave;
+                $data->carry_pl_leave = $anual;
                 $data->sickLeave = $sickleave;
+                $data->carry_sick_leave = $sickl;
                 if (Carbon::parse($jd)->format('m') == Carbon::now()->format('m')) {
                     $data->status = 1;
                 }else{
