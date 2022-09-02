@@ -52,7 +52,7 @@ class TestController extends Controller
             }
             $annualleave = 0;
             $sickleave = 0;
-            for ($i=1; $i < $diffr; $i++) {
+            for ($i=1; $i <= $diffr; $i++) {
                 $annualleave = $annualleave + $anual;
                 $sickleave = $sickleave + $sickl;
                 $data = new monthleave();
