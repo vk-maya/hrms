@@ -42,14 +42,11 @@ class TestController extends Controller
                 if ($jd < $month_date){
                     $jd = date('Y-m', strtotime($jd));
                     $jd = $jd . "-01";
-                }else{
-                    $jd = Carbon::parse($jd)->addMonths();
-                    $jd = date('Y-m', strtotime($jd));
-                    $jd = $jd . "-01";
                 }
             }else{
                 $jd = $session->from;
             }
+
             $annualleave = 0;
             $sickleave = 0;
             for ($i=1; $i <= $diffr; $i++) {
