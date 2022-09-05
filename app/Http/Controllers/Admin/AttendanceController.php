@@ -80,10 +80,13 @@ class AttendanceController extends Controller
         // $attendance = Attendance::with('userinfo')->get();
         $first_date = date('Y-m-d',strtotime('first day of this month'));
         $last_date = date('Y-m-d',strtotime('last day of this month'));
+        $first_date = '2022-08-01';
+        $last_date = '2022-08-31';
         $attendance = User::with(['attendence' => function($query)use($first_date,$last_date){
             $query->whereBetween('date', [$first_date,$last_date]);
         }])->where('status', 1)->orderBy('users.first_name')->get();
-        $month = (new DateTime($date))->format('t');
+        // $month = (new DateTime($date))->format('t');
+        $month = 31;
         return view('admin.attendance.attendence_report',compact('attendance','month'));
     }
 

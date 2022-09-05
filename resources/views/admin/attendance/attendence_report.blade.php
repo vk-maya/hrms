@@ -91,7 +91,7 @@
                                             <h2 class="table-avatar">
                                                 <a class="avatar avatar-xs"
                                                     href="{{ route('admin.employees.profile', $item->id) }}"><img alt=""
-                                                        src="@if ($item->image != null) {{ asset('storage/uploads/' . $item->image) }}@else{{ asset('assets/img/avtar.jpg') }} @endif""></a>
+                                                        src="@if ($item->image != null) {{ asset('storage/uploads/' . $item->image) }}@else{{ asset('assets/img/avtar.jpg') }} @endif"></a>
                                                 <a href="{{ route('admin.employees.profile', $item->id) }}">{{ $item->first_name }}</a>
                                             </h2>
                                         </td>
@@ -99,7 +99,7 @@
                                             $count = 0;
                                         @endphp
                                         @for ($i = 1; $i <= $month; $i++)
-                                            @if (in_array(date("Y-m-d",strtotime(now()->format("Y-m-").$i)),$item->attendence->pluck('date')->toArray()))
+                                            @if (in_array(date("Y-m-d",strtotime(now()->format("Y-08-").$i)),$item->attendence->pluck('date')->toArray()))
                                                 {{-- @if ($item->attendence[$count]->attendance == 'P')
                                                     <td>
                                                         <i class="fa fa-check text-success attend-info-show" data-id="{{ $item->attendence[$count]->id }}"></i>
