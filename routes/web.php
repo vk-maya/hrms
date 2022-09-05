@@ -130,6 +130,7 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::get('attendance/info/{id}',[AttendanceController::class,'attinfo'])->name('attendance.info');
     Route::get('attendance/employees/month/{id}/{year}/{month}',[AttendanceController::class,'attendanceMonthRecord'])->name('employee.month');
     Route::post('attendance/employees/record',[AttendanceController::class,'recordReport'])->name('employee.month.record.report');
+    Route::get('attendance-report',[AttendanceController::class,'attendanceReport'])->name('attendance-report');
 
     // -----------------------------------file Document Attach------------------------------------------
     Route::get('file/attach/{id}',[EmployeesController::class,'attachfile'])->name('employees.attach');

@@ -64,11 +64,27 @@ class AttendanceController extends Controller
         $monthrecord= Attendance::with('userinfoatt')->where('user_id',$id)->where('month',$month)->where('year',$year)->get();
         return view('admin.attendance.employeerecord',compact('monthrecord'));
     }
-        public function recordReport(Request $request){
-          
-            $attendance = Attendance::find($request->id);
-            $attendance->mark=$request->status;
-            $attendance->save();
+    public function recordReport(Request $request){
+
+        $attendance = Attendance::find($request->id);
+        $attendance->mark=$request->status;
+        $attendance->save();
         return redirect()->back();
-        }
     }
+
+    public function attendanceReport($date = ''){
+        if(empty($date)){
+            $date = now()->toDateString();
+        }
+        $attinfo= "";
+        // $attendance = Attendance::with('userinfo')->get();
+        $first_date = date('Y-m-d',strtotime('first day of this month'));
+        $last_date = date('Y-m-d',strtotime('last day of this month'));
+        $attendance = User::with(['attendence' => function($query)use($first_date,$last_date){
+            $query->whereBetween('date', [$first_date,$last_date]);
+        }])->where('status', 1)->orderBy('users.first_name')->get();
+        $month = (new DateTime($date))->format('t');
+        return view('admin.attendance.attendence_report',compact('attendance','month'));
+    }
+
+}
