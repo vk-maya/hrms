@@ -12,7 +12,7 @@
             <div class="page-header">
                 <div class="row">
                     <div class="col-sm-12">
-                        <h3 class="page-title">Attendance</h3>
+                        <h3 class="page-title">Attendance (August 2022)</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Attendance</li>
@@ -74,7 +74,16 @@
                                 <tr>
                                     <th rowspan="2">Employee</th>
                                     @for ($i = 1; $i <= $month; $i++)
-                                        <th colspan="2" style="text-align:center;">{{ $i }}</th>
+                                        @php
+                                            $day = date('D', strtotime('2022-08-'.$i));
+                                        @endphp
+                                        @if ($day == 'Sun')
+                                            <th colspan="2" style="text-align:center;color:green;">
+                                        @else
+                                            <th colspan="2" style="text-align:center;">
+                                        @endif
+                                            {{ date('D, d-m-Y', strtotime('2022-08-'.$i)) }}
+                                        </th>
                                     @endfor
                                 </tr>
                                 <tr>
