@@ -93,7 +93,7 @@ class User extends Authenticatable
     }
 
     public function usersalary(){
-        return $this->hasOne(usersalary::class,'user_id')->where('status', 1);
+        return $this->hasOne(UserSalary::class,'user_id')->where('status', 1);
     }
 
 
