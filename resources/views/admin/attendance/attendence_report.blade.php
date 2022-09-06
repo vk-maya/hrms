@@ -112,7 +112,7 @@
                             <tbody>
                                 @foreach ($attendance as $item)
                                 @php
-                                    $count = $sunday_count = $present = $absent = $wfh = $halfday = $leave = 0;
+                                    $count = $sunday_count = $present = $absent = $wfh = $halfday = $leave = $total_work = $total_working_days = 0;
                                 @endphp
                                     <tr>
                                         <td>
@@ -179,7 +179,7 @@
                                         @endfor
                                         @php
                                             $total_working_days = $total_days-($holiday+$sunday_count+2)
-                                            $total_work = $present+$wfh;
+                                            $total_work = $present + $wfh;
                                         @endphp
                                         <td><b>{{$present}}</b></td>
                                         <td><b>{{$absent}}</b></td>
