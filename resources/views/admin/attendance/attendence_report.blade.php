@@ -73,7 +73,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="table-responsive">
-                        <table class="table table-striped custom-table table-nowrap">
+                        <table class="table table-striped custom-table table-nowrap table-bordered">
                             <thead>
                                 <tr>
                                     <th rowspan="2">Employee</th>
