@@ -191,14 +191,14 @@
                                         <td><b>{{$absent+$halfday+$leave}}</b></td>
                                         <td>
                                             @php
-                                                $user_salary = \App\Models\usersalary::where('user_id', $item->id)->where('status', 1)->first();
+                                                $user_salary = \App\Models\Admin\usersalary::where('user_id', $item->id)->where('status', 1)->first();
                                                 if (!empty($user_salary)) {
                                                     $salary = ($total_work / $total_working_days) * $user_salary->new_salary;
                                                 }else{
                                                     $salary = ($total_work / $total_working_days) * 10000;
                                                 }
                                             @endphp
-                                            <b>{{$salary}}</b>
+                                            <b>₹ {{round($salary)}}</b>
                                         </td>
                                     </tr>
                                 @endforeach
