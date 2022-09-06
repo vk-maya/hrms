@@ -127,7 +127,9 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     // -----------------------------------attendance route-----------------------------------------
 
     Route::any('attendance',[AttendanceController::class,'attendance'])->name('attendance');
+    Route::any('attendance/search',[AttendanceController::class,'attendanceSearch'])->name('attendance.search');
     Route::any('attendance/employee',[AttendanceController::class,'attendanceEmployee'])->name('attendance.employee');
+    Route::any('attendance/employee/search',[AttendanceController::class,'attendanceEmployeeSearch'])->name('attendance.employee.search');
     Route::get('attendance/info/{id}',[AttendanceController::class,'attinfo'])->name('attendance.info');
     Route::get('attendance/employees/month/{id}/{year}/{month}',[AttendanceController::class,'attendanceMonthRecord'])->name('employee.month');
     Route::post('attendance/employees/record',[AttendanceController::class,'recordReport'])->name('employee.month.record.report');

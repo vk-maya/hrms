@@ -20,52 +20,89 @@
                     </div>
                 </div>
             </div>
-            <div class="row filter-row">
-                <div class="col-sm-6 col-md-3">
-                    <div class="form-group form-focus">
-                        <input type="text" class="form-control floating">
-                        <label class="focus-label">Employee Name</label>
+            <form action="{{route('admin.attendance.search')}}" method="GET">
+                <div class="row filter-row">
+                    <div class="col-sm-3 col-md">
+                        <div class="form-group form-focus select-focus">
+                            <select class="select floating" name="user_id">
+                                <option value="">All Employees</option>
+                                @foreach ($attendance as $employee)
+                                <option @if(isset(request()->user_id) && request()->user_id == $employee->id) selected @endif value="{{$employee->id}}">{{$employee->first_name}}</option>
+                                @endforeach
+                            </select>
+                            <label class="focus-label">Employee Name</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-md">
+                        <div class="form-group form-focus select-focus">
+                            <select class="select floating" name="month">
+                                <option @if(isset(request()->month) && request()->month == 1)
+                                    selected
+                                @endif value="1">Jan</option>
+                                <option @if(isset(request()->month) && request()->month == 2)
+                                    selected
+                                @endif value="2">Feb</option>
+                                <option @if(isset(request()->month) && request()->month == 3)
+                                    selected
+                                @endif value="3">Mar</option>
+                                <option @if(isset(request()->month) && request()->month == 4)
+                                    selected
+                                @endif value="4">Apr</option>
+                                <option @if(isset(request()->month) && request()->month == 5)
+                                    selected
+                                @endif value="5">May</option>
+                                <option @if(isset(request()->month) && request()->month == 6)
+                                    selected
+                                @endif value="6">Jun</option>
+                                <option @if(isset(request()->month) && request()->month == 7)
+                                    selected
+                                @endif value="7">Jul</option>
+                                <option @if(isset(request()->month) && request()->month == 8)
+                                    selected
+                                @endif value="8">Aug</option>
+                                <option @if(isset(request()->month) && request()->month == 9)
+                                    selected
+                                @endif value="9">Sep</option>
+                                <option @if(isset(request()->month) && request()->month == 10)
+                                    selected
+                                @endif value="10">Oct</option>
+                                <option @if(isset(request()->month) && request()->month == 11)
+                                    selected
+                                @endif value="11">Nov</option>
+                                <option @if(isset(request()->month) && request()->month == 12)
+                                    selected
+                                @endif value="12">Dec</option>
+                            </select>
+                            <label class="focus-label">Select Month</label>
+                        </div>
+                    </div>
+                    @php
+                    $years=2019;
+                    $curenty= date('Y', strtotime(now()))
+                    @endphp
+                    <div class="col-sm-3 col-md">
+                        <div class="form-group form-focus select-focus">
+                            <select class="select floating" name="year">
+                                <option>-</option>                       
+                                @for($years; $years <=$curenty; $years++)
+                                    <option @if(isset(request()->year) && request()->year == $years) selected @endif value="{{$years}}">{{$years}}</option>
+                                @endfor
+                            </select>
+                            <label class="focus-label">Select Year</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-md">
+                        <div class="search-btn">
+                            <button type="submit" class="btn btn-success"> Search </button>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-md">
+                        <div class="search-btn">
+                            <a href="{{route('admin.attendance')}}" class="btn btn-success"> Reset </a>
+                        </div>
                     </div>
                 </div>
-                <div class="col-sm-6 col-md-3">
-                    <div class="form-group form-focus select-focus">
-                        <select class="select floating">
-                            <option>-</option>
-                            <option>Jan</option>
-                            <option>Feb</option>
-                            <option>Mar</option>
-                            <option>Apr</option>
-                            <option>May</option>
-                            <option>Jun</option>
-                            <option>Jul</option>
-                            <option>Aug</option>
-                            <option>Sep</option>
-                            <option>Oct</option>
-                            <option>Nov</option>
-                            <option>Dec</option>
-                        </select>
-                        <label class="focus-label">Select Month</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3">
-                    <div class="form-group form-focus select-focus">
-                        <select class="select floating">
-                            <option>-</option>
-                            <option>2019</option>
-                            <option>2018</option>
-                            <option>2017</option>
-                            <option>2016</option>
-                            <option>2015</option>
-                        </select>
-                        <label class="focus-label">Select Year</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3">
-                    <div class="search-btn">
-                        <a href="#" class="btn btn-success"> Search </a>
-                    </div>
-                </div>
-            </div>
+            </form>
             <div class="row">
                 <div class="col-lg-12">
                     <div class="table-responsive">
@@ -93,7 +130,7 @@
                                             $count = 0;
                                         @endphp
                                         @for ($i = 1; $i <= $month; $i++)
-                                            @if (in_array(date("Y-m-d",strtotime(now()->format("Y-m-").$i)),$item->attendence->pluck('date')->toArray()))
+                                            @if (in_array(date("Y-m-d",strtotime($monthYears.'-'.$i)),$item->attendence->pluck('date')->toArray()))
                                                 @if ($item->attendence[$count]->attendance == 'P')
                                                     <td>
                                                         <i class="fa fa-check text-success attend-info-show" data-id="{{ $item->attendence[$count]->id }}"></i>
@@ -137,7 +174,6 @@
                                         <h6>Punch In at</h6>
                                         <p id="intime"></p>
                                     </div>
-                                    {{-- {{$attendance}} --}}
 
                                     <div class="punch-info">
                                         <div class="punch-hours">

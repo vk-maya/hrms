@@ -20,7 +20,6 @@ class EmpAttendanceController extends Controller
             $query->whereBetween('date',[$first_date,$last_date]);
         })->orderBy('created_at', 'DESC')->get();
         $leaveType= settingleave::where('status',1)->get();
-        // dd($attendance->toArray());
         return view('employees.leave.attendance',compact('attendance','leaveType'));
     }
     public function searchMonthRecordAtt(Request $request){
