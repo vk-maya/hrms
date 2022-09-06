@@ -186,16 +186,16 @@
                                         <td><b>{{$wfh}}</b></td>
                                         <td><b>{{$halfday}}</b></td>
                                         <td><b>{{$leave}}</b></td>
-                                        <td><b>{{$total_working_days}}</b></td>
+                                        <td><b>{{$total_days}}</b></td>
                                         <td><b>{{$total_work}}</b></td>
                                         <td><b>{{$absent+$halfday+$leave}}</b></td>
                                         <td>
                                             @php
                                                 $user_salary = \App\Models\Admin\UserSalary::where('user_id', $item->id)->where('status', 1)->first();
                                                 if (!empty($user_salary)) {
-                                                    $salary = ($total_work / $total_working_days) * $user_salary->net_salary;
+                                                    $salary = ($total_work+($holiday+$sunday_count+2) / $total_days) * $user_salary->net_salary;
                                                 }else{
-                                                    $salary = ($total_work / $total_working_days) * 10000;
+                                                    $salary = ($total_work($holiday+$sunday_count+2) / $total_days) * 10000;
                                                 }
                                             @endphp
                                             <b>₹ {{round($salary)}}</b>
