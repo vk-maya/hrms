@@ -86,6 +86,7 @@
                                         </th>
                                     @endfor
                                     <th colspan="4" style="text-align:center;">Working Stats</th>
+                                    <th colspan="2" style="text-align:center;">Total Work</th>
                                 </tr>
                                 <tr>
                                     @for ($i = 1; $i <= $month; $i++)
@@ -97,6 +98,8 @@
                                     <th>Absent</th>
                                     <th>WFH</th>
                                     <th>Half Day</th>
+                                    <th>Present</th>
+                                    <th>Absent</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -164,6 +167,8 @@
                                         <td><b>{{$absent}}</b></td>
                                         <td><b>{{$wfh}}</b></td>
                                         <td><b>{{$halfday}}</b></td>
+                                        <td><b>{{$present+$wfh}}</b></td>
+                                        <td><b>{{$absent+$halfday}}</b></td>
                                     </tr>
                                 @endforeach
                             </tbody>
