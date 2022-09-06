@@ -84,6 +84,7 @@
                                         @endif
                                             {{ date('D, d-m-Y', strtotime('2022-08-'.$i)) }}
                                         </th>
+                                        <th colspan="4" style="text-align:center;">Working Stats</th>
                                     @endfor
                                 </tr>
                                 <tr>
@@ -92,10 +93,17 @@
                                     <th>Out Time</th>
                                     <th>Attend</th>
                                     @endfor
+                                    <th>Present</th>
+                                    <th>Absent</th>
+                                    <th>WFH</th>
+                                    <th>Half Day</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($attendance as $item)
+                                @php
+                                    $present = $absent = $wfh = $halfday = 0;
+                                @endphp
                                     <tr>
                                         <td>
                                             <h2 class="table-avatar">
@@ -124,6 +132,23 @@
                                                     {{$item->attendence[$count]->out_time}}
                                                 </td>
                                                 <td>
+                                                    @if ($item->attendence[$count]->mark == 'P')
+                                                        @php
+                                                            $present++;
+                                                        @endphp
+                                                    @elseif ($item->attendence[$count]->mark == 'A')
+                                                        @php
+                                                            $absent++;
+                                                        @endphp
+                                                    @elseif ($item->attendence[$count]->mark == 'WFH')
+                                                        @php
+                                                            $wfh++;
+                                                        @endphp
+                                                    @elseif ($item->attendence[$count]->mark == 'HD')
+                                                        @php
+                                                            $halfday++;
+                                                        @endphp
+                                                    @endif
                                                     {{$item->attendence[$count]->mark}}
                                                 </td>
                                                 @php
@@ -135,6 +160,10 @@
                                                 <td>-</td>
                                             @endif
                                         @endfor
+                                        <td>{{$present}}</td>
+                                        <td>{{$absent}}</td>
+                                        <td>{{$wfh}}</td>
+                                        <td>{{$halfday}}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
