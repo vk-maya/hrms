@@ -193,7 +193,7 @@
                                             @php
                                                 $user_salary = \App\Models\Admin\UserSalary::where('user_id', $item->id)->where('status', 1)->first();
                                                 if (!empty($user_salary)) {
-                                                    $salary = ($total_work / $total_working_days) * $user_salary->new_salary;
+                                                    $salary = ($total_work / $total_working_days) * $user_salary->net_salary;
                                                 }else{
                                                     $salary = ($total_work / $total_working_days) * 10000;
                                                 }
