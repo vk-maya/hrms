@@ -57,7 +57,8 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
 
 
     // ------------------------------attendance route--------------------------
-    Route::get('employees/attendance',[EmpAttendanceController::class,'get'])->name('attendance');
+    Route::get('employees/attendance',[EmpAttendanceController::class,'get'])->name('attendance');  
+    Route::any('search/',[EmpAttendanceController::class,'searchMonthRecordAtt'])->name('search.month.attendance');
     Route::get('attendance/leave/{id}',[LeaveController::class,'attendanceLeave'])->name('attendance.get.leave');
     Route::post('attendance/leave',[LeaveController::class,'attendance'])->name('attendance.leave');
     Route::post('attendance/wfh',[LeaveController::class,'attendanceWfhStore'])->name('attendance.wfh');
