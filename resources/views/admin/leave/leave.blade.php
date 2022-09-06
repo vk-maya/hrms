@@ -55,10 +55,10 @@
             <div id="leave_request" class="pro-overview tab-pane fade show active">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="table-responsivesss">
-                            <table class="table table-striped custom-table mb-0 datatable">
+                        <div class="table-responsive">
+                            <table class="table cus-table-striped custom-table mb-0 datatable">
                                 <thead>
-                                    <tr class="d-flex justify-content-between       ">
+                                    <tr>
                                         <th>Employee</th>
                                         <th>Leave Type</th>
                                         <th>From</th>
@@ -183,8 +183,8 @@
             <div class="tab-pane fade" id="wfh_request">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="table-responsivesss">
-                            <table class="table table-striped custom-table mb-0 datatable">
+                        <div class="table-responsive">
+                            <table class="table cus-table-striped custom-table mb-0 datatable">
                                 <thead>
                                     <tr>
                                         <th>Employee</th>

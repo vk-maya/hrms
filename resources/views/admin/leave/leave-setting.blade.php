@@ -20,8 +20,8 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-4">
+        <div class="row justify-contant-center">
+            <div class="col-lg-4 col-md-6 col-sm-6">
                 <div class="card leave-box" id="leave_annual">
                     <div class="card-body">
                         <div class="h3 card-title with-switch">
@@ -35,8 +35,11 @@
                             </div>
                         </div>
                         <div class="leave-item">
-                            <form action="{{ route('admin.leave.type') }}" method="POST">
+                            <form class="w-100" action="{{ route('admin.leave.type') }}" method="POST">
                                 @csrf
+                                <div class="leave-edit-btn-sec leave-right text-end d-block">
+                                    <button type="submit" class="leave-edit-btn-cust leave-edit-btn"><i class="fal fa-pencil"></i></button>
+                                </div>
                                 <div class="leave-row">
                                     <div class="leave-left">
                                         <div class="input-box">
@@ -52,14 +55,27 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="leave-edit-btn-sec leave-right">
-                                        <button type="submit" class="leave-edit-btn-cust leave-edit-btn"><i class="fal fa-pencil"></i></button>
-                                    </div>
                                 </div>
                             </form>
                             <div class="leave-row">
                                 <form class="w-100" action="{{ route('admin.leave.type') }}" method="POST">
                                     @csrf
+                                    <div class="d-flex align-items-center justify-content-between mt-2 mb-2">
+                                        <div class="mt-3 ms-1">
+                                            <div class="form-check ">
+                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="carry_yes" value="option2" disabled>
+                                                <label class="form-check-label" for="carry_yes">Yes</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="carry_no" value="option1" disabled>
+                                                <label class="form-check-label" for="carry_no">No</label>
+                                            </div>
+                                        </div>
+                                        <div class="leave-edit-btn-sec leave-right">
+                                            <button class="leave-edit-btn-cust leave-edit-btn"><i class="fal fa-pencil"></i></button>
+                                        </div>
+                                    </div>
+
                                     <div class="leave-left">
                                         <div class="input-box">
                                             <label class="d-block">Carry forward </label>
@@ -76,21 +92,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="mt-3 ms-1">
-                                                <div class="form-check ">
-                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="carry_yes" value="option2" disabled>
-                                                    <label class="form-check-label" for="carry_yes">Yes</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="carry_no" value="option1" disabled>
-                                                    <label class="form-check-label" for="carry_no">No</label>
-                                                </div>
-                                            </div>
-                                            <div class="leave-edit-btn-sec leave-right">
-                                                <button class="leave-edit-btn-cust leave-edit-btn"><i class="fal fa-pencil"></i></button>
-                                            </div>
-                                        </div>
                                     </div>
                                 </form>
                             </div>
@@ -98,7 +99,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-lg-4 col-md-6 col-sm-6">
                 <div class="card leave-box" id="leave_sick">
                     <div class="card-body">
                         <div class="h3 card-title with-switch">
@@ -112,6 +113,9 @@
                             </div>
                         </div>
                         <div class="leave-item">
+                            <div class="leave-edit-btn-sec leave-right text-end d-block">
+                                <button type="submit" class="leave-edit-btn-cust leave-edit-btn"><i class="fal fa-pencil"></i></button>
+                            </div>
                             <form action="{{ route('admin.leave.type') }}" method="POST">
                                 @csrf
                                 <div class="leave-row">
@@ -129,16 +133,14 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="leave-edit-btn-sec leave-right">
-                                        <button type="submit" class="leave-edit-btn-cust leave-edit-btn"><i class="fal fa-pencil"></i></button>
-                                    </div>
                                 </div>
+
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-lg-4 col-md-6 col-sm-6">
                 <div class="card leave-box" id="leave_sick">
                     <div class="card-body">
                         <div class="h3 card-title with-switch">
@@ -154,6 +156,9 @@
                         <div class="leave-item">
                             <form action="{{ route('admin.leave.type') }}" method="POST">
                                 @csrf
+                                <div class="leave-edit-btn-sec leave-right text-end d-block">
+                                    <button type="submit" class="leave-edit-btn-cust leave-edit-btn"><i class="fal fa-pencil"></i></button>
+                                </div>
                                 <div class="leave-row">
                                     <div class="leave-left">
                                         <div class="input-box">
@@ -169,17 +174,15 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="leave-right leave-edit-btn-sec">
-                                        <button type="submit" class="leave-edit-btn-cust leave-edit-btn"><i class="fal fa-pencil"></i></button>
-                                    </div>
                                 </div>
+
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
             {{-- <div class="card leave-box mb-0" id="leave_custom01">
-            <div class="card-body">
+                 <div class="card-body">
                 <div class="h3 card-title with-switch">
                     LOP
                     <div class="onoffswitch">
@@ -192,7 +195,6 @@
                     <button class="btn btn-danger leave-delete-btn" type="button">Delete</button>
                 </div>
                 <div class="leave-item">
-
                     <div class="leave-row">
                         <div class="leave-left">
                             <div class="input-box">
@@ -250,9 +252,7 @@
                             <button class="leave-edit-btn-cust leave-edit-btn"><i class="fal fa-pencil"></i></button>
                         </div>
                     </div>
-
                 </div>
-
                 <div class="custom-policy">
                     <div class="leave-header">
                         <div class="title">Custom policy</div>

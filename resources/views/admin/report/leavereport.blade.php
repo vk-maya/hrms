@@ -8,9 +8,9 @@
 <div class="page-wrapper">
     <div class="content container-fluid">
         <div class="page-header">
-            <div class="row align-items-center">
+            <div class="row">
                 <div class="col">
-                    <h3 class="page-title">Employee Salary</h3>
+                    <h3 class="page-title">Employee Salary </h3>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
                         <li class="breadcrumb-item active">Salary</li>
@@ -24,27 +24,24 @@
                     <div class="modal-body">
                         <form action="{{route('admin.employees.salary.generate')}}" method="POST">
                             @csrf
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="col-form-label">Select Month</label>
-                                        <input type="month" class="form-control" name="month" value="">
-                                    </div>
+                            <div class="row align-items-center justify-content-center">
+                                <div class="col-lg-4 col-md-6 col-sm-6 form-group">
+                                    <label class="col-form-label">Select Month</label>
+                                    <input type="month" class="form-control" name="month" value="">
                                 </div>
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label class="col-form-label">Select Employees</label>
-                                        <select class="select" name="user_id">
-                                            <option value="{{$users}}">All</option>
-                                            @foreach ($users as $user)
-                                            <option @if (isset($id)&& $user->id == $id) selected @endif value="@if(isset($id)&& $user->id== $id) {{$id}} @else {{$user->id}}@endif">{{ $user->first_name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
+                                <div class="col-lg-4 col-md-6 col-sm-6 form-group">
+                                    <label class="col-form-label">Select Employees</label>
+                                    <select class="select" name="user_id">
+                                        <option value="{{$users}}">All</option>
+                                        @foreach ($users as $user)
+                                        <option @if (isset($id)&& $user->id == $id) selected @endif value="@if(isset($id)&& $user->id== $id) {{$id}} @else {{$user->id}}@endif">{{ $user->first_name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
-                                <div class="submit-section mt-1">
-                                    <button class="btn btn-primary submit-btn">Submit</button>
+                                <div class="col-lg-4 col-md-6 col-sm-6 ">
+                                    <div class="submit-section">
+                                        <button class="btn btn-primary submit-btn">Submit</button>
+                                    </div>
                                 </div>
                         </form>
                     </div>

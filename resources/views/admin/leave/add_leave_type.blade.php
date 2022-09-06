@@ -26,7 +26,7 @@
                             @if ($leave!=NULL)
                             <input type="hidden" name="id" value="{{$leave->id}}">
                             @endif
-                            <div class="col-sm-6">
+                            <div class="col-lg-4 col-sm-6">
                                 <div class="form-group">
                                     <label for="inputname">Title</label>
                                     <input id="InputTitle" name="type" value="{{($leave==NULL)?old('type'):$leave->type}}" required class="form-control" type="text">
@@ -37,14 +37,14 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-lg-4 col-sm-6">
                                 <label for="inputname">Days (Yearly)</label>
                                 <div class="form-group">
                                     <input class="form-control" required name="day" type="number" id="days" value="{{($leave==NULL)?old('days'):$leave->day}}">
                                     <span id="monthly">{{($leave==NULL)?old('days'):'Monthly - '.$leave->day/12}}</span>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-lg-4 col-sm-6">
                                 <label for="inputname">CarryForward (Monthly)</label>
                                 <div class="form-group">
                                     <input class="form-control" name="carryfordward" type="number" value="{{($leave==NULL)?old('carryfordward'):$leave->carryfordward}}">

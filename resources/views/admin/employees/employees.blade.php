@@ -14,35 +14,36 @@
                             <li class="breadcrumb-item active">Employee</li>
                         </ul>
                     </div>
-                    <div class="col-auto d-flex">
+                    <div class="col-auto icon-topic d-flex">
                     <div class="view-icons">
                             <a href="{{ route('admin.employees') }}" class="grid-view btn btn-link active"><i
                                     class="fa fa-th"></i></a>
                             <a href="{{ route('admin.employees.list') }}" class="list-view btn btn-link emplist"
                                 id="employeeslist"><i class="fa fa-bars"></i></a>
                         </div>
+                        <div class="employ-add-btn">
                         <a href="{{ route('admin.add-employee') }}" class="btn add-btn"><i class="fa fa-plus"></i>
                             Add Employee</a>
                         <a href="{{ route('admin.add.employees.leavemonth') }}" class="btn add-btn"><i class="fa fa-plus"></i>
                             Add Leave</a>
-                       
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row filter-row">
-                <div class="col-sm-6 col-md-3">
+            <div class="row filter-row justify-content-center mb-4">
+                <div class="col-lg-3 col-sm-6 col-md-6">
                     <div class="form-group form-focus">
                         <input type="text" class="form-control floating" id="empID">
                         <label class="focus-label">Employee ID</label>
                     </div>
                 </div>
-                <div class="col-sm-6 col-md-3">
+                <div class="col-lg-3 col-sm-6 col-md-6">
                     <div class="form-group form-focus">
                         <input type="text" class="form-control floating" id="empName">
                         <label class="focus-label">Employee Name</label>
                     </div>
                 </div>
-                <div class="col-sm-6 col-md-3">
+                <div class="col-lg-3 col-sm-6 col-md-6">
                     <div class="form-group form-focus select-focus">
                         <select class="form-control select floating" id="designation">
                             <option>Select Designation</option>
@@ -53,7 +54,7 @@
                         <label class="focus-label">Designation</label>
                     </div>
                 </div>
-                <div class="col-sm-6 col-md-3">
+                <div class="col-lg-3 col-sm-6 col-md-6">
                     <div class="btn-search">
                         <a class="btn btn-success search"> Search </a>
                     </div>
@@ -63,7 +64,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-responsive">
-                        <table class="table table-striped custom-table datatable">
+                        <table class="table cus-table-striped custom-table datatable">
                             <thead>
                                 <tr>
                                     <th>Name</th>
@@ -114,7 +115,7 @@
             @isset($employees)
                 <div class="row staff-grid-row" id="grid">
                     @foreach ($employees as $item)
-                        <div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
+                        <div class="col-xl-3  col-lg-4 col-md-4 col-sm-6">
                             <div class="profile-widget">
                                 <div class="profile-img">
                                     <a href="{{route('admin.employees.profile',$item->id)}}">

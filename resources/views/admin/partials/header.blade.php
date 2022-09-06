@@ -70,7 +70,7 @@
         </div>
     </li>
 </ul>
-<div class="dropdown mobile-user-menu">
+<!-- <div class="dropdown mobile-user-menu">
     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="fa fa-ellipsis-v"></i>
     </a>
@@ -79,5 +79,5 @@
         <a class="dropdown-item" href="settings.html">Settings</a>
         <a class="dropdown-item" href="index.html">Logout</a>
     </div>
-</div>
+</div> -->
 </div>
