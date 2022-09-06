@@ -78,9 +78,9 @@
                                             $day = date('D', strtotime('2022-08-'.$i));
                                         @endphp
                                         @if ($day == 'Sun')
-                                            <th colspan="2" style="text-align:center;color:green;">
+                                            <th colspan="3" style="text-align:center;color:green;">
                                         @else
-                                            <th colspan="2" style="text-align:center;">
+                                            <th colspan="3" style="text-align:center;">
                                         @endif
                                             {{ date('D, d-m-Y', strtotime('2022-08-'.$i)) }}
                                         </th>
@@ -90,6 +90,7 @@
                                     @for ($i = 1; $i <= $month; $i++)
                                     <th>In Time</th>
                                     <th>Out Time</th>
+                                    <th>Attend</th>
                                     @endfor
                                 </tr>
                             </thead>
@@ -122,10 +123,14 @@
                                                 <td>
                                                     {{$item->attendence[$count]->out_time}}
                                                 </td>
+                                                <td>
+                                                    {{$item->attendence[$count]->mark}}
+                                                </td>
                                                 @php
                                                     $count++;
                                                 @endphp
                                             @else
+                                                <td>-</td>
                                                 <td>-</td>
                                                 <td>-</td>
                                             @endif
