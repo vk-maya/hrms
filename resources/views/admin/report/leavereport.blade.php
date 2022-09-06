@@ -43,22 +43,14 @@
                                         <button class="btn btn-primary submit-btn">Submit</button>
                                     </div>
                                 </div>
+                            </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-<<<<<<< HEAD
 </div>
-</div>
-=======
-    <div class="container list-item-center">
-        @foreach ($users as $user)
-        <a class="btn btn-primary submit-btn" href="{{route('admin.test.link',$user->id)}}"> {{$user->first_name}}</a>
-        @endforeach
-    </div>
->>>>>>> master
 @endsection
 @push('plugin-js')
 <script src="{{ asset('assets/js/select2.min.js') }}"></script>
