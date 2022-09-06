@@ -122,13 +122,13 @@
                                             </h2>
                                         </td>
                                         @for ($i = 1; $i <= $month; $i++)
+                                            @php
+                                                $sunday = date('w', strtotime("2022-08-".$i));
+                                                if($sunday == 0){
+                                                    $sunday_count++;
+                                                }
+                                            @endphp
                                             @if (in_array(date("Y-m-d",strtotime(now()->format("Y-08-").$i)),$item->attendence->pluck('date')->toArray()))
-                                                @php
-                                                    $sunday = date('w', strtotime("Y-08-").$i);
-                                                    if($sunday == 0){
-                                                        $sunday_count++;
-                                                    }
-                                                @endphp
                                                 {{-- @if ($item->attendence[$count]->attendance == 'P')
                                                     <td>
                                                         <i class="fa fa-check text-success attend-info-show" data-id="{{ $item->attendence[$count]->id }}"></i>
