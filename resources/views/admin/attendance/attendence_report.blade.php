@@ -178,7 +178,7 @@
                                             @endif
                                         @endfor
                                         @php
-                                            $total_working_days = $total_days-($holiday+$sunday_count+2)
+                                            $total_working_days = $total_days-($holiday+$sunday_count+2);
                                             $total_work = $present + $wfh;
                                         @endphp
                                         <td><b>{{$present}}</b></td>
