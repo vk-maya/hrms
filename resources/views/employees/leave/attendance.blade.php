@@ -10,7 +10,7 @@
             <div class="page-header">
                 <div class="row">
                     <div class="col-sm-12">
-                        <h3 class="page-title">Attendance vvvvvvvvv</h3>
+                        <h3 class="page-title">Attendance</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Attendance</li>
@@ -94,7 +94,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="table-responsive">
-                        <table class="table table-striped custom-table mb-0">
+                        <table class="table cus-table-striped custom-table mb-0">
                             <thead>
                                 <tr>
                                     <th>#</th>

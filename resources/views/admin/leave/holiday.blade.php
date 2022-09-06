@@ -56,7 +56,7 @@ $year = date('Y', strtotime('-1 year')).' - '.date('Y');
                                 <td>{{$item->holidayName}}</td>
                                 <td>{{\Carbon\Carbon::parse($item->date)->format('d M Y') }}</td>
                                 <td>{{date("l",strtotime($item->date))}}</td>
-                                <td class="text-end">
+                                <td class="text-center">
                                     <div class="dropdown dropdown-action">
                                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                                         <div class="dropdown-menu dropdown-menu-right">

@@ -10,7 +10,7 @@
         <div class="page-header">
             <div class="row">
                 <div class="col">
-                    <h3 class="page-title">Employee Salary </h3>
+                    <h3 class="page-title">Employee Salary 1212121</h3>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
                         <li class="breadcrumb-item active">Salary</li>
@@ -38,27 +38,19 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6 ">
+                                <div class="col-lg-4 col-md-6 col-sm-6 text-right">
                                     <div class="submit-section">
                                         <button class="btn btn-primary submit-btn">Submit</button>
                                     </div>
                                 </div>
+                            </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-<<<<<<< HEAD
 </div>
-</div>
-=======
-    <div class="container list-item-center">
-        @foreach ($users as $user)
-        <a class="btn btn-primary submit-btn" href="{{route('admin.test.link',$user->id)}}"> {{$user->first_name}}</a>
-        @endforeach
-    </div>
->>>>>>> master
 @endsection
 @push('plugin-js')
 <script src="{{ asset('assets/js/select2.min.js') }}"></script>

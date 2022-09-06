@@ -120,13 +120,13 @@
                                 </td>
                                 <td><a class="salaryinfo btn add-btn" href="{{ route('admin.employee.view_slip', $item->id) }}">View Slip</a>
                                 </td>
-                                <td class="text-end">
+                                <td class="text-center">
                                     <div class="dropdown dropdown-action">
-                                        <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                                        <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item edit" href="#" data-id="{{ $item->id }}"><i class="fa fa-pencil m-r-5"></i>
+                                            <a class="dropdown-item edit" href="#" data-id="{{ $item->id }}"><i class="fa fa-pencil me-2"></i>
                                                 Edit</a>
-                                            <a class="dropdown-item increment" href="#" data-id="{{ $item->id }}"><i class="fa fa-plus" aria-hidden="true"></i>
+                                            <a class="dropdown-item increment" href="#" data-id="{{ $item->id }}"><i class="fa fa-plus me-2"></i>
                                                 Increment</a>
                                         </div>
                                     </div>
@@ -378,7 +378,7 @@
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="payslip-title">Salary information </h4>
+                                    <h4 class="payslip-title">Salary information</h4>
                                     <div class="row">
                                         <div class="col-lg-12 m-b-20">
                                             <ul class="list-unstyled">
@@ -458,8 +458,8 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        <div class="col-sm-12">
-                                            <p><strong>Net Salary: <span id="netsalary">0</span> </strong></p>
+                                        <div class="col-sm-12 text-end">
+                                            <p class="mb-0"><strong>Net Salary: <span id="netsalary">0</span> </strong></p>
                                         </div>
                                     </div>
                                 </div>

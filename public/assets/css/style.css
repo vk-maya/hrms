@@ -1547,7 +1547,7 @@ ul {
     min-width: 105px !important;
     align-items: center;
     display: inline-flex;
-    background-color:#f1f1f1;
+    background-color: #dee2e67d;
     border: none;
     color: #5f626a;
 }
@@ -2274,7 +2274,7 @@ button.bg-danger:hover {
     color: #00c5fb
 }
 
-.pagination>li>a, 
+.pagination>li>a,
 .pagination>li>span {
     color: #5a5a5a;
 }
@@ -2283,7 +2283,7 @@ button.bg-danger:hover {
     color: #ffff;
     background: #00c5fb;
     border-color: #00c5fb;
-}                                                                               
+}
 
 .page-link:focus {
     box-shadow: unset
@@ -3293,18 +3293,19 @@ button.bg-danger:hover {
     transition: all .2s ease;
     width: 230px;
     z-index: 1001;
-    background-color:#567695;
+    background-color: #567695;
 }
 
 @media(max-width:992px) {
     .sidebar {
-         margin-left: -225px;
-         width: 225px; 
+        margin-left: -225px;
+        width: 225px;
         -webkit-transition: all .4s ease;
         -ms-transition: all .4s ease;
         transition: all .4s ease;
         z-index: 1041
     }
+
     .slide-nav .sidebar {
         margin-left: 0;
     }
@@ -3379,7 +3380,8 @@ button.bg-danger:hover {
     padding: 8px 15px;
     color: #fff;
 }
-.sidebar .sidebar-menu ul li a:hover{
+
+.sidebar .sidebar-menu ul li a:hover {
     background-color: rgb(204 243 254 / 30%);
 }
 
@@ -3498,10 +3500,13 @@ button.bg-danger:hover {
 .sidebar .sidebar-menu ul li.active a {
     color: #fff;
     background-color: rgb(0 0 0 / 20%);
+    transition: 0.3s;
     /* background: #00c5fb;
     background: linear-gradient(to right, #00c5fb 0%, #0253cc 100%); */
 }
-
+.sidebar .sidebar-menu ul li.active a:hover{
+    background-color: rgb(204 243 254 / 30%);
+}
 .sidebar .sidebar-menu ul ul {
     display: none
 }
@@ -3512,13 +3517,12 @@ button.bg-danger:hover {
     position: relative;
     padding: 9px 10px 9px 50px
 }
-/* 
-.sidebar .sidebar-menu ul ul a.active {
-    color: #00c5fb;
-    /*text-decoration:underline*/
-} */
 
-.slide-nav .sidebar {
+.sidebar .sidebar-menu ul ul a.active {
+    color: #000;
+    background-color:#ccd3dd ;
+}
+ .slide-nav .sidebar {
     margin-left: 0
 }
 
@@ -3934,14 +3938,17 @@ button.bg-danger:hover {
 .custom-modal .modal-content .modal-body .chat-user-list .media:hover {
     background-color: #f7f7f7
 }
-.modal-lg, .modal-xl {
-    max-width: 500px;
+
+.modal-lg,
+.modal-xl {
+    max-width: 650px;
 }
 
 .submit-section {
-        width: 100%;
-        margin-top: 20px;
-    }
+    width: 100%;
+    margin-top: 20px;
+    text-align: center;
+}
 
 @media(max-width:575px) {
     .submit-section {
@@ -4136,7 +4143,7 @@ button.bg-danger:hover {
 }
 
 .table td a {
-    color:#000f49;
+    color: #000f49;
 }
 
 .table>:not(:first-child) {
@@ -5836,6 +5843,7 @@ textarea.form-control {
     margin: 0 0 15px;
     padding: 15px
 }
+
 .welcome-box {
     background-color: #fff;
     border-bottom: 1px solid #ededed;
@@ -8831,7 +8839,7 @@ button.close {
     border: 1px solid #cfcfcf;
     background: #cfcfcf;
     border-radius: 4em;
-    
+
 }
 
 .page-wrapper .label-switch::after {
@@ -8961,7 +8969,7 @@ input[type=file].form-control {
 
 .dropdown.dropdown-action .dropdown-item:hover {
     color: #444;
-    background-color: rgb(0 15 73 / 5%)!important;
+    background-color: rgb(0 15 73 / 5%) !important;
 }
 
 /* .dropdown.dropdown-action a.action-icon{
@@ -9019,7 +9027,7 @@ input[type=file].form-control {
 
 .footer-adm {
     /* margin-left: 14.4rem; */
-    background-color:#FFF;
+    background-color: #FFF;
     padding-left: 2rem;
     padding-top: 10px;
     padding-bottom: 10px
@@ -9149,20 +9157,22 @@ input[type=file].form-control {
     text-align: end;
     display: block;
 }
-.table-responsive .table.dataTable.cus-table-striped .even{
-    background-color:#f5f7fb !important;
+
+.table-responsive .table.dataTable.cus-table-striped .even {
+    background-color: #f5f7fb !important;
 }
-.load-more{
-  margin-top: 2.7rem;   
+
+.load-more {
+    margin-top: 2.7rem;
 }
 
 
 
-@media(max-width:992px){
-.footer-adm {
-    margin-left: 0;
-    margin-top: 20px;
-}
+@media(max-width:992px) {
+    .footer-adm {
+        margin-left: 0;
+        margin-top: 20px;
+    }
 }
 
 @media(max-width:991px) {
@@ -9186,7 +9196,7 @@ input[type=file].form-control {
         margin-top: 10px;
     }
 
-  
+
 }
 
 @media(max-width: 767px) {
