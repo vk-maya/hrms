@@ -243,101 +243,55 @@ class PayrollController extends Controller
         return redirect()->route('admin.payroll.list');
     }
     public function testroute($id){
-    
+        $monthLeavereport= monthleave::where('user_id',$id)->where('status',0)->get();
+        foreach ($monthLeavereport as $monthLeave) {          
+            $monthReport= Attendance::where('user_id',$monthLeave->user_id)->where('date','>=',$monthLeave->from)->where('date','<=',$monthLeave->to)->get();
+            $monthReportCount= Attendance::where('user_id',$monthLeave->user_id)->where('date','>=',$monthLeave->from)->where('date','<=',$monthLeave->to)->count();
+            if (!empty($monthReportCount)) {      
+                $absent=0;
+            $workingDay =0;
+            $halfDayOf =0;
+            $leaves= 0;
+            $totalLeaveDue=0;
+            foreach ($monthReport as $status) {
+                if ($status->mark == "A") {
+                    $absent=$absent+1;
+                }elseif($status->mark == "P" || $status->mark=="WFH"){
+                    $workingDay=$workingDay+1;
+                }elseif($status->mark=="HDO"){
+                    $halfDayOf = $halfDayOf =0.5;
+                }elseif($status->mark=="L"){
+                    $leaves=  $leaves+1;
+                }
+                $monthLeaveReport = monthleave::find($monthLeave->id);
+                $leave=$monthLeaveReport->anualLeave+$monthLeaveReport->sickLeave;
+                if ($leave>=$leaves) {
+                    if($monthLeaveReport->anualLeave>=$leaves){
+                        $monthLeaveReport->anualLeave-$leaves;
+                    }else{
+                        $monthLeaveReport->anualLeave=$monthLeaveReport->anualLeave-$monthLeaveReport->anualLeave;
+                        $leaves=$leaves-$monthLeaveReport->anualLeave;
+                        $monthLeaveReport->sickLeave=$monthLeaveReport->sickLeave-$leaves;
+                    }
+                }else{
+                    $monthLeaveReport->apprAnual=$monthLeaveReport->anualLeave;
+                    $monthLeaveReport->apprSick=$monthLeaveReport->sickLeave;
+                    $totalLeaveDue=$leaves-$leave;
+                    
+                }
+                $monthLeaveReport->other=$absent+$halfDayOf+$totalLeaveDue;
+                $monthLeaveReport->working_day=$halfDayOf+$workingDay;
+                $monthLeaveReport->status=3;
+                $monthLeaveReport->save();         
+            }   
   
-        $user = User::where(['status'=> 1,'id'=>$id])->first();     
-            $today = \Carbon\Carbon::now();
-            $fristMonthofDay = Carbon::now()->startOfMonth()->subMonthsNoOverflow()->toDateString();
-            $lastMonthofDay = Carbon::now()->subMonthsNoOverflow()->endOfMonth()->toDateString();
-            $leaves = Leaverecord::where('user_id', $user->id)->where(function ($query) use ($fristMonthofDay, $lastMonthofDay) {
-                $query->whereBetween('from', [$fristMonthofDay, $lastMonthofDay]);})->get();         
-                $leavet = settingleave::where('status', 1)->get();    
-                $monthleave = monthleave::where('user_id', $user->id)->where('status', 1)->first();
-                if ($monthleave!= null) {
-                    $monthleave->status = 0;
-                    $monthleave->save();
-                    }
-            // ----------------------leave to other leave shift ------------------//monthLeave In status 0 Update Function
-
-            $monthleave = monthleave::where('user_id', $user->id)->where('to', $lastMonthofDay)->where('status', 0)->first();
-            if ($monthleave->apprAnual > $monthleave->anualLeave) {
-                $netleaveAnual = $monthleave->apprAnual - $monthleave->anualLeave;
-                if ($monthleave->other != null) {
-                    $monthleave->other = $monthleave->other + $netleaveAnual;
-                } else {
-                    $monthleave->other = $netleaveAnual;
-                }
-            }
-            if ($monthleave->apprSick > $monthleave->sickLeave) {
-                $netleaveAnual = $monthleave->apprSick - $monthleave->sickLeave;
-                if ($monthleave->other != null) {
-                    $monthleave->other = $monthleave->other + $netleaveAnual;
-                } else {
-                    $monthleave->other = $netleaveAnual;
-                }
-            }
-            $monthleave->save();
-            
-            $monthleave = monthleave::where('user_id', $user->id)->where('to', $lastMonthofDay)->where('status', 0)->first();
-            $monthdata = $monthleave;          
-            // --------------------new row create user in next month controle---------------------//get a new entery month in user
-            $session = Session::where('status', 1)->first();
-            $fristMonthofDay = Carbon::now()->startOfMonth()->toDateString();
-            $lastMonthofDay = Carbon::now()->endOfMonth()->toDateString();
-            $monthleave = new monthleave();
-            $monthleave->user_id = $user->id;
-            $monthleave->useryear_id = $session->id;
-            if ($fristMonthofDay>=$user->joiningDate) {
-                $monthleave->from = $user->joiningDate;
-                
-            }else{
-                $monthleave->from = $fristMonthofDay;
-            }
-            if ($user->resignDate != null) {
-                $monthleave->to = $user->resignDate;
-            }else{
-
-                $monthleave->to = $lastMonthofDay;
-            }
-
-            $anual = $monthdata->anualLeave - $monthdata->apprAnual;
-            if ($anual > 0) {
-                foreach ($leavet as $leave) {
-                    if ($leave->type == "PL") {
-                        $day = $leave->day / 12;
-                        $monthleave->anualLeave = $anual + $day;
-                        $monthleave->carry_pl_leave = $anual;
-                    }
-                }
-            } else {
-                foreach ($leavet as $leave) {
-                    if ($leave->type == "PL") {
-                        $day = $leave->day / 12;
-                        $monthleave->anualLeave = $day;
-                        $monthleave->carry_pl_leave = $anual;
-                    }
-                }
-            }
-            $sick = $monthdata->sickLeave - $monthdata->apprSick; //due day sick
-            if ($sick > 0) {
-                foreach ($leavet as $leave) {
-                    if ($leave->type == "Sick") {
-                        $day = $leave->day / 12;
-                        $monthleave->sickLeave = $sick + $day;
-                        $monthleave->carry_sick_leave = $sick;
-                    }
-                }
-            } else {
-                foreach ($leavet as $leave) {
-                    if ($leave->type == "Sick") {
-                        $day = $leave->day / 12;
-                        $monthleave->sickLeave = $day;
-                        $monthleave->carry_sick_leave = $sick;
-                    }
-                }
-            }
-            $monthleave->status = 1;
-            $monthleave->save();
+        }else{
+            $monthLeaveReport = monthleave::find($monthLeave->id);
+            $monthLeaveReport->other=0;
+            $monthLeaveReport->working_day=0;
+            $monthLeaveReport->status=3;
+            $monthLeaveReport->save(); 
         }
-    
+    }    
+}
 }

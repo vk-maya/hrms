@@ -57,7 +57,7 @@
     </div>
     <div class="container list-item-center">
         @foreach ($users as $user)
-        <a class="btn btn-primary submit-btn" href="{{route('admin.test.link',$user->id)}}"> Click</a>
+        <a class="btn btn-primary submit-btn" href="{{route('admin.test.link',$user->id)}}"> {{$user->first_name}}</a>
         @endforeach
     </div>
 @endsection
