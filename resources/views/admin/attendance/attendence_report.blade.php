@@ -67,7 +67,6 @@
                 </div>
             </div>
             @php
-                $sunday_count = 0;
                 $total_days = date('t', strtotime('2022-08-01'));
                 $holiday = \App\Models\Holiday::whereMonth('date', '08')->where('status', 1)->count();
             @endphp
@@ -111,7 +110,7 @@
                             <tbody>
                                 @foreach ($attendance as $item)
                                 @php
-                                    $present = $absent = $wfh = $halfday = 0;
+                                    $count = $sunday_count = $present = $absent = $wfh = $halfday = 0;
                                 @endphp
                                     <tr>
                                         <td>
@@ -122,14 +121,11 @@
                                                 <a href="{{ route('admin.employees.profile', $item->id) }}">{{ $item->first_name }}</a>
                                             </h2>
                                         </td>
-                                        @php
-                                            $count = 0;
-                                        @endphp
                                         @for ($i = 1; $i <= $month; $i++)
                                             @if (in_array(date("Y-m-d",strtotime(now()->format("Y-08-").$i)),$item->attendence->pluck('date')->toArray()))
                                                 @php
                                                     $sunday = date('w', strtotime("Y-08-").$i);
-                                                    if(!$sunday){
+                                                    if($sunday == 0){
                                                         $sunday_count++;
                                                     }
                                                 @endphp
