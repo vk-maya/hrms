@@ -84,8 +84,8 @@
                                         @endif
                                             {{ date('D, d-m-Y', strtotime('2022-08-'.$i)) }}
                                         </th>
-                                        <th colspan="4" style="text-align:center;">Working Stats</th>
                                     @endfor
+                                    <th colspan="4" style="text-align:center;">Working Stats</th>
                                 </tr>
                                 <tr>
                                     @for ($i = 1; $i <= $month; $i++)
