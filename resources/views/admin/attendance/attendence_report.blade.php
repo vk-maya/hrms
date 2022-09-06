@@ -89,7 +89,7 @@
                                             {{ date('D, d-m-Y', strtotime('2022-08-'.$i)) }}
                                         </th>
                                     @endfor
-                                    <th colspan="4" style="text-align:center;">Working Stats</th>
+                                    <th colspan="5" style="text-align:center;">Working Stats</th>
                                     <th colspan="3" style="text-align:center;">Total Work</th>
                                 </tr>
                                 <tr>
@@ -102,6 +102,7 @@
                                     <th>Absent</th>
                                     <th>WFH</th>
                                     <th>Half Day</th>
+                                    <th>Leave</th>
                                     <th>Working Days</th>
                                     <th>Present</th>
                                     <th>Absent</th>
@@ -110,7 +111,7 @@
                             <tbody>
                                 @foreach ($attendance as $item)
                                 @php
-                                    $count = $sunday_count = $present = $absent = $wfh = $halfday = 0;
+                                    $count = $sunday_count = $present = $absent = $wfh = $halfday = $leave = 0;
                                 @endphp
                                     <tr>
                                         <td>
@@ -159,6 +160,10 @@
                                                         @php
                                                             $halfday++;
                                                         @endphp
+                                                    @elseif ($item->attendence[$count]->mark == 'L')
+                                                        @php
+                                                            $leave++;
+                                                        @endphp
                                                     @endif
                                                     {{$item->attendence[$count]->mark}}
                                                 </td>
@@ -175,9 +180,10 @@
                                         <td><b>{{$absent}}</b></td>
                                         <td><b>{{$wfh}}</b></td>
                                         <td><b>{{$halfday}}</b></td>
+                                        <td><b>{{$leave}}</b></td>
                                         <td><b>{{$total_days-($holiday+$sunday_count+2)}}</b></td>
                                         <td><b>{{$present+$wfh}}</b></td>
-                                        <td><b>{{$absent+$halfday}}</b></td>
+                                        <td><b>{{$absent+$halfday+$leave}}</b></td>
                                     </tr>
                                 @endforeach
                             </tbody>
