@@ -14,12 +14,8 @@
                             <li class="breadcrumb-item active">Employee</li>
                         </ul>
                     </div>
-                    <div class="col-auto float-end ms-auto">
-                        <a href="{{ route('admin.add-employee') }}" class="btn add-btn"><i class="fa fa-plus"></i>
-                            Add Employee</a>
-                        {{-- <a href="{{ route('admin.add.employees.leavemonth') }}" class="btn add-btn"><i class="fa fa-plus"></i>
-                            Add Leave</a> --}}
-                        <div class="view-icons">
+                    <div class="col-auto icon-topic d-flex">
+                    <div class="view-icons">
                             <a href="{{ route('admin.employees') }}" class="grid-view btn btn-link active"><i
                                     class="fa fa-th"></i></a>
                             <a href="{{ route('admin.employees.list') }}" class="list-view btn btn-link emplist"
