@@ -66,6 +66,11 @@
                     </div>
                 </div>
             </div>
+            @php
+                $sunday_count = 0;
+                $total_days = date('t', strtotime('2022-08-01'));
+                $holiday = \App\Models\Holiday::whereMonth('date', '08')->where('status', 1)->count();
+            @endphp
             <div class="row">
                 <div class="col-lg-12">
                     <div class="table-responsive">
@@ -86,7 +91,7 @@
                                         </th>
                                     @endfor
                                     <th colspan="4" style="text-align:center;">Working Stats</th>
-                                    <th colspan="2" style="text-align:center;">Total Work</th>
+                                    <th colspan="3" style="text-align:center;">Total Work</th>
                                 </tr>
                                 <tr>
                                     @for ($i = 1; $i <= $month; $i++)
@@ -98,6 +103,7 @@
                                     <th>Absent</th>
                                     <th>WFH</th>
                                     <th>Half Day</th>
+                                    <th>Working Days</th>
                                     <th>Present</th>
                                     <th>Absent</th>
                                 </tr>
@@ -121,6 +127,12 @@
                                         @endphp
                                         @for ($i = 1; $i <= $month; $i++)
                                             @if (in_array(date("Y-m-d",strtotime(now()->format("Y-08-").$i)),$item->attendence->pluck('date')->toArray()))
+                                                @php
+                                                    $sunday = date('w', strtotime("Y-08-").$i);
+                                                    if(!$sunday){
+                                                        $sunday_count++;
+                                                    }
+                                                @endphp
                                                 {{-- @if ($item->attendence[$count]->attendance == 'P')
                                                     <td>
                                                         <i class="fa fa-check text-success attend-info-show" data-id="{{ $item->attendence[$count]->id }}"></i>
@@ -167,6 +179,7 @@
                                         <td><b>{{$absent}}</b></td>
                                         <td><b>{{$wfh}}</b></td>
                                         <td><b>{{$halfday}}</b></td>
+                                        <td><b>{{$total_days-($holiday+$sunday_count+2)}}</b></td>
                                         <td><b>{{$present+$wfh}}</b></td>
                                         <td><b>{{$absent+$halfday}}</b></td>
                                     </tr>
