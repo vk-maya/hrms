@@ -104,7 +104,7 @@
                                     <th>WFH</th>
                                     <th>Half Day</th>
                                     <th>Leave</th>
-                                    <th>Working Days</th>
+                                    <th>Total Days</th>
                                     <th>Present</th>
                                     <th>Absent</th>
                                 </tr>
@@ -187,7 +187,7 @@
                                         <td><b>{{$halfday}}</b></td>
                                         <td><b>{{$leave}}</b></td>
                                         <td><b>{{$total_days}}</b></td>
-                                        <td><b>{{$total_work}}</b></td>
+                                        <td><b>{{$total_work+$holiday+$sunday_count+2}}</b></td>
                                         <td><b>{{$absent+$halfday+$leave}}</b></td>
                                         <td>
                                             @php
