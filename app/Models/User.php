@@ -92,6 +92,10 @@ class User extends Authenticatable
         return $this->hasOne(userinfo::class,'user_id');
     }
 
+    public function usersalary(){
+        return $this->hasOne(usersalary::class,'user_id')->where('status', 1);
+    }
+
 
 // })->count();
     //  $attendance= Attendance::where('user_id',Auth::guard('web')->user()->machineID)->where(function($query)use($first_date,$last_date){

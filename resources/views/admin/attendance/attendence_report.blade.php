@@ -91,6 +91,7 @@
                                     @endfor
                                     <th colspan="5" style="text-align:center;">Working Stats</th>
                                     <th colspan="3" style="text-align:center;">Total Work</th>
+                                    <th rowspan="2" style="text-align:center;">Salary</th>
                                 </tr>
                                 <tr>
                                     @for ($i = 1; $i <= $month; $i++)
@@ -176,14 +177,29 @@
                                                 <td>-</td>
                                             @endif
                                         @endfor
+                                        @php
+                                            $total_working_days = $total_days-($holiday+$sunday_count+2)
+                                            $total_work = $present+$wfh;
+                                        @endphp
                                         <td><b>{{$present}}</b></td>
                                         <td><b>{{$absent}}</b></td>
                                         <td><b>{{$wfh}}</b></td>
                                         <td><b>{{$halfday}}</b></td>
                                         <td><b>{{$leave}}</b></td>
-                                        <td><b>{{$total_days-($holiday+$sunday_count+2)}}</b></td>
-                                        <td><b>{{$present+$wfh}}</b></td>
+                                        <td><b>{{$total_working_days}}</b></td>
+                                        <td><b>{{$total_work}}</b></td>
                                         <td><b>{{$absent+$halfday+$leave}}</b></td>
+                                        <td>
+                                            @php
+                                                $user_salary = \App\Models\usersalary::where('user_id', $item->id)->where('status', 1)->first();
+                                                if (!empty($user_salary)) {
+                                                    $salary = ($total_work / $total_working_days) * $user_salary->new_salary;
+                                                }else{
+                                                    $salary = ($total_work / $total_working_days) * 10000;
+                                                }
+                                            @endphp
+                                            <b>{{$salary}}</b>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
