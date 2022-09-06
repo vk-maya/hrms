@@ -224,8 +224,6 @@ class AdminController extends Controller
                     $diffr = round(Carbon::parse($jd)->floatDiffInMonths(Carbon::now()));
                     $month_date = Carbon::now()->subMonth($diffr)->format('Y-m-d');
 
-                    $str = date('Y-m', strtotime($jd));
-
                     if ($jd >= $session->from){
                         if ($jd < $month_date){
                             $jd = date('Y-m', strtotime($jd));
@@ -253,7 +251,11 @@ class AdminController extends Controller
                         $data->to = Carbon::parse($jd)->format('Y-m').'-'.Carbon::parse($jd)->daysInMonth;
                         $data->anualLeave = $annualleave;
                         $data->sickLeave = $sickleave;
-                        $data->status = 1;
+                        if (Carbon::parse($jd)->format('m') == Carbon::now()->format('m')) {
+                            $data->status = 1;
+                        }else{
+                            $data->status = 0;
+                        }
                         $data->save();
                         $jd = Carbon::parse($jd)->addMonth();
                     }

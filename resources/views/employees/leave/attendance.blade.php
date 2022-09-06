@@ -18,54 +18,78 @@
                     </div>
                 </div>
             </div>
-            <div class="row filter-row">
-                <div class="col-sm-3">
-                    <div class="form-group form-focus">
-                        <div class="cal-icon">
-                            <input type="text" class="form-control floating datetimepicker">
+            <form action="{{route('employees.search.month.attendance')}}" method="GET">
+                <div class="row filter-row">
+                    <div class="col">
+                        <div class="form-group form-focus select-focus">
+                            <select class="select floating" name="month">
+                                <option @if(isset(request()->month) && request()->month == 1)
+                                    selected
+                                @endif value="1">Jan</option>
+                                <option @if(isset(request()->month) && request()->month == 2)
+                                    selected
+                                @endif value="2">Feb</option>
+                                <option @if(isset(request()->month) && request()->month == 3)
+                                    selected
+                                @endif value="3">Mar</option>
+                                <option @if(isset(request()->month) && request()->month == 4)
+                                    selected
+                                @endif value="4">Apr</option>
+                                <option @if(isset(request()->month) && request()->month == 5)
+                                    selected
+                                @endif value="5">May</option>
+                                <option @if(isset(request()->month) && request()->month == 6)
+                                    selected
+                                @endif value="6">Jun</option>
+                                <option @if(isset(request()->month) && request()->month == 7)
+                                    selected
+                                @endif value="7">Jul</option>
+                                <option @if(isset(request()->month) && request()->month == 8)
+                                    selected
+                                @endif value="8">Aug</option>
+                                <option @if(isset(request()->month) && request()->month == 9)
+                                    selected
+                                @endif value="9">Sep</option>
+                                <option @if(isset(request()->month) && request()->month == 10)
+                                    selected
+                                @endif value="10">Oct</option>
+                                <option @if(isset(request()->month) && request()->month == 11)
+                                    selected
+                                @endif value="11">Nov</option>
+                                <option @if(isset(request()->month) && request()->month == 12)
+                                    selected
+                                @endif value="12">Dec</option>
+                            </select>
+                            <label class="focus-label">Select Month</label>
                         </div>
-                        <label class="focus-label">Date</label>
+                    </div>
+                    @php
+                    $years=2019;
+                    $curenty= date('Y', strtotime(now()))
+                    @endphp
+                    <div class="col">
+                        <div class="form-group form-focus select-focus">
+                            <select class="select floating" name="year">
+                                <option>-</option>                       
+                                @for($years; $years <=$curenty; $years++)
+                                    <option @if(isset(request()->year) && request()->year == $years) selected @endif value="{{$years}}">{{$years}}</option>
+                                @endfor
+                            </select>
+                            <label class="focus-label">Select Year</label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="search-btn">
+                            <button type="submit" class="btn btn-success"> Search </button>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="search-btn">
+                            <a href="{{route('employees.attendance')}}" class="btn btn-success"> Reset </a>
+                        </div>
                     </div>
                 </div>
-                <div class="col-sm-3">
-                    <div class="form-group form-focus select-focus">
-                        <select class="select floating">
-                            <option>-</option>
-                            <option>Jan</option>
-                            <option>Feb</option>
-                            <option>Mar</option>
-                            <option>Apr</option>
-                            <option>May</option>
-                            <option>Jun</option>
-                            <option>Jul</option>
-                            <option>Aug</option>
-                            <option>Sep</option>
-                            <option>Oct</option>
-                            <option>Nov</option>
-                            <option>Dec</option>
-                        </select>
-                        <label class="focus-label">Select Month</label>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="form-group form-focus select-focus">
-                        <select class="select floating">
-                            <option>-</option>
-                            <option>2019</option>
-                            <option>2018</option>
-                            <option>2017</option>
-                            <option>2016</option>
-                            <option>2015</option>
-                        </select>
-                        <label class="focus-label">Select Year</label>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="d-grid">
-                        <a href="#" class="btn btn-success"> Search </a>
-                    </div>
-                </div>
-            </div>
+            </form>
 
             <div class="row">
                 <div class="col-lg-12">

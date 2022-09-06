@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Employees;
 
+use Carbon\Carbon;
 use App\Models\Attendance;
 use App\Models\Leave\Leave;
 use Illuminate\Http\Request;
@@ -21,5 +22,14 @@ class EmpAttendanceController extends Controller
         $leaveType= settingleave::where('status',1)->get();
         // dd($attendance->toArray());
         return view('employees.leave.attendance',compact('attendance','leaveType'));
+    }
+    public function searchMonthRecordAtt(Request $request){
+    $first_date = Carbon::createFromDate($request->year,$request->month)->startOfMonth()->toDateString();
+    $last_date = Carbon::createFromDate($request->year,$request->month)->endOfMonth()->toDateString();
+    $attendance= Attendance::with('wfh','leavestatus')->where('user_id',Auth::guard('web')->user()->id)->where(function($query)use($first_date,$last_date){
+        $query->whereBetween('date',[$first_date,$last_date]);
+    })->orderBy('created_at', 'DESC')->get();
+    $leaveType= settingleave::where('status',1)->get();
+    return view('employees.leave.attendance',compact('attendance','leaveType'));
     }
 }

@@ -44,35 +44,56 @@ class User extends Authenticatable
         'workplace',
         'image',
     ];
+
+    public function monthleave(){
+        return $this->hasOne(monthleave::class,'user_id','id')->where('status', 1);
+    }
+
+    public function monthleavelist(){
+        return $this->hasOne(monthleave::class,'user_id','id');
+    }
+
     public function leave(){
         return $this->hasMany(Leave::class,'user_id','id');
     }
+
     public function designation()    {
         return $this->belongsTo(Designation::class);
     }
+
     public function userDesignation()    {
         return $this->belongsTo(Designation::class,'designation_id');
     }
+
     public function leaders()
     {
         // return $this->belongsTo(ProjectLeaders::class);
         return $this->hasMany(ProjectLeaders::class,"leader_id");
     }
+
     public function team()
     {
         return $this->hasMany(ProjectTeams::class,"team_id");
     }
+
     public function dailyTask(){
         return $this->hasMany(DailyTasks::class,"user_id");
     }
+
     public function department(){
         return $this->hasOne(Department::class,'id','department_id');
     }
+
     public function profiledesignation(){
         return $this->hasOne(Designation::class,'id','designation_id');
     }
+
     public function moreinfo(){
         return $this->hasOne(userinfo::class,'user_id');
+    }
+
+    public function usersalary(){
+        return $this->hasOne(UserSalary::class,'user_id')->where('status', 1);
     }
 
 

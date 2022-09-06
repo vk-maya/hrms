@@ -17,7 +17,6 @@ class CreateUserleaveYearsTable extends Migration
             $table->id();
             $table->integer('user_id');
             $table->integer('session_id')->nullable();
-            $table->date('joingDate')->nullable();
             $table->string('basicAnual')->nullable();
             $table->float('basicSick')->nullable();
             $table->float('netSick')->nullable();

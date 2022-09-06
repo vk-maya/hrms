@@ -90,6 +90,7 @@
                                         @endphp
                                         <td>{{ $item->day }}</td>
 
+<<<<<<< HEAD
                                         <td><a href="#" data-bs-toggle="modal" data-bs-target="#add_department{{ $item->id }}">{{ \Illuminate\Support\Str::limit($item->reason, 20, '..') }}</a>
                                         </td>
                                         <td><a href="{{ route('admin.leave.view', $item->id) }}">More View</a></td>
@@ -101,6 +102,66 @@
                                                 </a>
                                                 @elseif($item->status == 0)
                                                 <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-dot-circle-o text-danger"></i> Declined</a>
+=======
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            @if ($item->status ==2 )                                                                                                                                                  
+                                                                <span  class="dropdown-item disabled">
+                                                                    <i class="fa fa-dot-circle-o text-purple"></i>
+                                                                    New</span>
+                                                            @endif
+                                                            @if ($item->status != 1)                                                            
+                                                            <form action="{{ route('admin.leave.report') }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="status" value="1">
+                                                                <input type="hidden" name="id"
+                                                                    value="{{ $item->id }}">
+                                                                <input type="hidden" name="type_id"
+                                                                    value="{{ $item->leaves_id }}">
+                                                                <button type="submit" class="dropdown-item">
+                                                                    <i class="fa fa-dot-circle-o text-success"></i>
+                                                                    Approved</button>
+                                                            </form>
+                                                            @else
+                                                            <span  class="dropdown-item disabled">
+                                                                <i class="fa fa-dot-circle-o text-success"></i>
+                                                                Approved</span>
+
+                                                            @endif
+                                                            @if ($item->status !=0)  
+                                                            <form action="{{ route('admin.leave.report') }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="status" value=0>
+                                                                <input type="hidden" name="id"
+                                                                    value="{{ $item->id }}">
+                                                                <button type="submit" class="dropdown-item">
+                                                                    <i class="fa fa-dot-circle-o text-danger"></i>
+                                                                    Declined</button>
+                                                            </form>
+                                                            @else
+                                                            <span  class="dropdown-item disabled">
+                                                                <i class="fa fa-dot-circle-o text-danger"></i>
+                                                                Declined</span>
+                                                                @endif
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                        
+                                                @if ($item->status == 2 || $item->status == 0)
+                                                    <td class="text-end">
+                                                        <div class="dropdown dropdown-action">
+                                                            <a href="#" class="action-icon dropdown-toggle"
+                                                                data-bs-toggle="dropdown" aria-expanded="false"><i
+                                                                    class="material-icons">more_vert</i></a>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a class="dropdown-item"
+                                                                    href="{{ route('admin.leave.delete', $item->id) }}"><i
+                                                                        class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+>>>>>>> master
                                                 @else
                                                 <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-dot-circle-o text-success"></i>
                                                     Approved</a>
@@ -179,6 +240,7 @@
                         </div>
                     </div>
                 </div>
+<<<<<<< HEAD
             </div>
             <div class="tab-pane fade" id="wfh_request">
                 <div class="row">
@@ -217,6 +279,116 @@
                                                 </a>
                                                 @elseif($item->status == 0)
                                                 <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-dot-circle-o text-danger"></i> Declined</a>
+=======
+                <div class="tab-pane fade" id="wfh_request">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsivesss">
+                                <table class="table table-striped custom-table mb-0 datatable">
+                                    <thead>
+                                        <tr>
+                                            <th>Employee</th>                                            
+                                            <th>From</th>
+                                            <th>To</th>
+                                            <th>Days</th>
+                                            <th>Task</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($wfhData as $item)
+                                            <tr>
+                                                @php
+                                                    $start = new DateTime($item->from);
+                                                    $end = new DateTime($item->to);
+                                                @endphp
+                                                <td><a class="disabled" href="">{{ $item->user->first_name }}</a> </td>
+                                                <td> {{ $start->format('d-M-Y') }}</td>                                      
+                                                <td> {{ $end->format('d-M-Y') }}</td>                                      
+                                                <td>{{ $item->day }}</td>
+                                                <td><a href="#"
+                                                        data-bs-toggle="modal"data-bs-target="#task{{ $item->id }}">{{ \Illuminate\Support\Str::limit($item->task, 20, '..') }}</a>
+                                                </td>                                             
+                                                <td class="text-center">
+                                                    <div class="dropdown action-label">
+                                                        @if ($item->status == 2)
+                                                            <a class="btn btn-white btn-sm btn-rounded dropdown-toggle"
+                                                                href="" data-bs-toggle="dropdown"
+                                                                aria-expanded="false">
+                                                                <i class="fa fa-dot-circle-o text-purple"></i> New
+                                                            </a>
+                                                        @elseif($item->status == 0)
+                                                            <a class="btn btn-white btn-sm btn-rounded dropdown-toggle"
+                                                                href="" data-bs-toggle="dropdown"
+                                                                aria-expanded="false"><i
+                                                                    class="fa fa-dot-circle-o text-danger"></i> Declined</a>
+                                                        @else
+                                                            <a class="btn btn-white btn-sm btn-rounded dropdown-toggle"
+                                                                href="" data-bs-toggle="dropdown"
+                                                                aria-expanded="false"><i
+                                                                    class="fa fa-dot-circle-o text-success"></i>
+                                                                Approved</a>
+                                                        @endif
+
+
+                                                        <div class="dropdown-menu dropdown-menu-right">                                                           
+                                                            @if ($item->status == 1)
+                                                                <span  class="dropdown-item disabled">
+                                                                    <i class="fa fa-dot-circle-o text-success"></i>
+                                                                    Approved</span>
+                                                            @else
+                                                                <form action="{{ route('admin.wfh.report') }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="status" value="1">
+                                                                <input type="hidden" name="user_id" value="{{ $item->user->id}}">
+                                                                <input type="hidden" name="id"
+                                                                    value="{{ $item->id }}">
+                                                                <input type="hidden" name="type"
+                                                                    value="WFH">
+                                                                <button type="submit" class="dropdown-item">
+                                                                    <i class="fa fa-dot-circle-o text-success"></i>
+                                                                    Approved</button>
+                                                                </form>
+                                                            @endif
+
+                                                            @if ($item->status == 0)
+                                                            <span  class="dropdown-item disabled">
+                                                                <i class="fa fa-dot-circle-o text-danger"></i>
+                                                                Declined</span> 
+                                                            @else
+                                                            <form action="{{ route('admin.wfh.report') }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="user_id" value="{{ $item->user->id}}">
+                                                                <input type="hidden" name="type" value="L">
+                                                                <input type="hidden" name="status" value="0">
+                                                                <input type="hidden" name="id"
+                                                                value="{{ $item->id }}">
+                                                                <button type="submit" class="dropdown-item">
+                                                                    <i class="fa fa-dot-circle-o text-danger"></i>
+                                                                    Declined</button>
+                                                            </form>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                {{-- {{$item}} --}}
+                                                @if ($item->status == 2 || $item->status == 0)
+                                                    <td class="text-center">
+                                                        <div class="dropdown dropdown-action">
+                                                            <a href="#" class="action-icon dropdown-toggle"
+                                                                data-bs-toggle="dropdown" aria-expanded="false"><i
+                                                                    class="material-icons">more_vert</i></a>
+                                                            <div class="dropdown-menu dropdown-menu-right">
+                                                                <a class="dropdown-item"
+                                                                    href="{{ route('admin.leave.delete', $item->id) }}"><i
+                                                                        class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+>>>>>>> master
                                                 @else
                                                 <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-dot-circle-o text-success"></i>
                                                     Approved</a>
