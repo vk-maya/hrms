@@ -160,10 +160,10 @@
                                                 <td>-</td>
                                             @endif
                                         @endfor
-                                        <td>{{$present}}</td>
-                                        <td>{{$absent}}</td>
-                                        <td>{{$wfh}}</td>
-                                        <td>{{$halfday}}</td>
+                                        <td><b>{{$present}}</b></td>
+                                        <td><b>{{$absent}}</b></td>
+                                        <td><b>{{$wfh}}</b></td>
+                                        <td><b>{{$halfday}}</b></td>
                                     </tr>
                                 @endforeach
                             </tbody>
