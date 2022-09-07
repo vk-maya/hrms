@@ -68,7 +68,7 @@
     </style>
 @endpush
 @section('content')
-    <div class="page-wrapper">
+    <div class="page-wrapper qqqq">
         <div class="content container-fluid">
             <div class="page-header">
                 <div class="row align-items-center">

@@ -20,15 +20,14 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-4">
+        <div class="row justify-contant-center">
+            <div class="col-lg-4 col-md-6 col-sm-6">
                 <div class="card leave-box" id="leave_annual">
                     <div class="card-body">
                         <div class="h3 card-title with-switch">
                             Privilege leaves
                             <div class="onoffswitch">
-                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
-                                id="switch_annual" checked>
+                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="switch_annual" checked>
                                 <label class="onoffswitch-label" for="switch_annual">
                                     <span class="onoffswitch-inner"></span>
                                     <span class="onoffswitch-switch"></span>
@@ -36,8 +35,11 @@
                             </div>
                         </div>
                         <div class="leave-item">
-                            <form action="{{ route('admin.leave.type') }}" method="POST">
+                            <form class="w-100" action="{{ route('admin.leave.type') }}" method="POST">
                                 @csrf
+                                <div class="leave-edit-btn-sec leave-right text-end d-block">
+                                    <button type="submit" class="leave-edit-btn-cust leave-edit-btn"><i class="fal fa-pencil"></i></button>
+                                </div>
                                 <div class="leave-row">
                                     <div class="leave-left">
                                         <div class="input-box">
@@ -53,30 +55,31 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="leave-edit-btn-sec leave-right">
-                                        <button type="submit" class="leave-edit-btn-cust leave-edit-btn"><i class="fal fa-pencil"></i></button>
-                                    </div>
                                 </div>
                             </form>
                             <div class="leave-row">
-                                <form action="{{ route('admin.leave.type') }}" method="POST">
+                                <form class="w-100" action="{{ route('admin.leave.type') }}" method="POST">
                                     @csrf
+                                    <div class="d-flex align-items-center justify-content-between mt-2 mb-2">
+                                        <div class="mt-3 ms-1">
+                                            <div class="form-check ">
+                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="carry_yes" value="option2" disabled>
+                                                <label class="form-check-label" for="carry_yes">Yes</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="carry_no" value="option1" disabled>
+                                                <label class="form-check-label" for="carry_no">No</label>
+                                            </div>
+                                        </div>
+                                        <div class="leave-edit-btn-sec leave-right">
+                                            <button class="leave-edit-btn-cust leave-edit-btn"><i class="fal fa-pencil"></i></button>
+                                        </div>
+                                    </div>
+
                                     <div class="leave-left">
                                         <div class="input-box">
-                                            <label class="d-block">Carry forward</label>
+                                            <label class="d-block">Carry forward </label>
                                             <div class="leave-inline-form">
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio"
-                                                    name="inlineRadioOptions" id="carry_no" value="option1"
-                                                    disabled>
-                                                    <label class="form-check-label" for="carry_no">No</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio"
-                                                    name="inlineRadioOptions" id="carry_yes" value="option2"
-                                                    disabled>
-                                                    <label class="form-check-label" for="carry_yes">Yes</label>
-                                                </div>
                                                 <div class="input-group">
                                                     <input type="hidden" readonly name="type" required value="PL">
                                                     <span class="input-group-text">Max</span>
@@ -90,106 +93,96 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="leave-edit-btn-sec leave-right">
-                                        <button class="leave-edit-btn-cust leave-edit-btn"><i class="fal fa-pencil"></i></button>
-                                    </div>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-lg-4 col-md-6 col-sm-6">
                 <div class="card leave-box" id="leave_sick">
                     <div class="card-body">
                         <div class="h3 card-title with-switch">
-                         Sick leave 
-                         <div class="onoffswitch">
-                            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="switch_sick"
-                            checked>
-                            <label class="onoffswitch-label" for="switch_sick">
-                                <span class="onoffswitch-inner"></span>
-                                <span class="onoffswitch-switch"></span>
-                            </label>
+                            Sick leave
+                            <div class="onoffswitch">
+                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="switch_sick" checked>
+                                <label class="onoffswitch-label" for="switch_sick">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="leave-item">
-                        <form action="{{ route('admin.leave.type') }}" method="POST">
-                            @csrf
-                            <div class="leave-row">
-                                <div class="leave-left">
-                                    <div class="input-box">
-                                        <div class="form-group">
-                                            <input type="hidden" required name="type" value="Sick">
-                                            <label>Days</label>
-                                            <input type="number" required name="day" class="form-control" disabled>
-                                            @error('day')
-                                            <span class="text-danger">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                        <div class="leave-item">
+                            <div class="leave-edit-btn-sec leave-right text-end d-block">
+                                <button type="submit" class="leave-edit-btn-cust leave-edit-btn"><i class="fal fa-pencil"></i></button>
+                            </div>
+                            <form action="{{ route('admin.leave.type') }}" method="POST">
+                                @csrf
+                                <div class="leave-row">
+                                    <div class="leave-left">
+                                        <div class="input-box">
+                                            <div class="form-group">
+                                                <input type="hidden" required name="type" value="Sick">
+                                                <label>Days</label>
+                                                <input type="number" required name="day" class="form-control" disabled>
+                                                @error('day')
+                                                <span class="text-danger">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="leave-edit-btn-sec leave-right">
-                                    <button type="submit" class="leave-edit-btn-cust leave-edit-btn"><i class="fal fa-pencil"></i></button>
-                                </div>
-                            </div>
-                        </form>
+
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card leave-box" id="leave_sick">
-                <div class="card-body">
-                    <div class="h3 card-title with-switch">
-                        Other leave
-                        <div class="onoffswitch">
-                            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="switch_other"
-                            checked>
-                            <label class="onoffswitch-label" for="switch_other">
-                                <span class="onoffswitch-inner"></span>
-                                <span class="onoffswitch-switch"></span>
-                            </label>
+            <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="card leave-box" id="leave_sick">
+                    <div class="card-body">
+                        <div class="h3 card-title with-switch">
+                            Other leave
+                            <div class="onoffswitch">
+                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="switch_other" checked>
+                                <label class="onoffswitch-label" for="switch_other">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="leave-item">
-                        <form action="{{ route('admin.leave.type') }}" method="POST">
-                            @csrf
-                            <div class="leave-row">
-                                <div class="leave-left">
-                                    <div class="input-box">
-                                        <div class="form-group">
-                                            <input type="hidden" required name="type" value="Other">
-                                            <label>Days</label>
-                                            <input type="number" required readonly name="day" value="0"
-                                            class="form-control" disabled>
-                                            @error('day')
-                                            <span class="text-danger">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                            @enderror
+                        <div class="leave-item">
+                            <form action="{{ route('admin.leave.type') }}" method="POST">
+                                @csrf
+                                <div class="leave-edit-btn-sec leave-right text-end d-block">
+                                    <button type="submit" class="leave-edit-btn-cust leave-edit-btn"><i class="fal fa-pencil"></i></button>
+                                </div>
+                                <div class="leave-row">
+                                    <div class="leave-left">
+                                        <div class="input-box">
+                                            <div class="form-group">
+                                                <input type="hidden" required name="type" value="Other">
+                                                <label>Days</label>
+                                                <input type="number" required readonly name="day" value="0" class="form-control" disabled>
+                                                @error('day')
+                                                <span class="text-danger">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="leave-right leave-edit-btn-sec">
-                                    <button type="submit" class="leave-edit-btn-cust leave-edit-btn"><i class="fal fa-pencil"></i></button>
-                                </div>
-                            </div>
-                        </form>
+
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-
-
-
-
-
-        {{-- <div class="card leave-box mb-0" id="leave_custom01">
-            <div class="card-body">
+            {{-- <div class="card leave-box mb-0" id="leave_custom01">
+                 <div class="card-body">
                 <div class="h3 card-title with-switch">
                     LOP
                     <div class="onoffswitch">
@@ -202,7 +195,6 @@
                     <button class="btn btn-danger leave-delete-btn" type="button">Delete</button>
                 </div>
                 <div class="leave-item">
-
                     <div class="leave-row">
                         <div class="leave-left">
                             <div class="input-box">
@@ -216,8 +208,6 @@
                             <button class="leave-edit-btn-cust leave-edit-btn"><i class="fal fa-pencil"></i></button>
                         </div>
                     </div>
-
-
                     <div class="leave-row">
                         <div class="leave-left">
                             <div class="input-box">
@@ -242,8 +232,6 @@
                             <button class="leave-edit-btn-cust leave-edit-btn"><i class="fal fa-pencil"></i></button>
                         </div>
                     </div>
-
-
                     <div class="leave-row">
                         <div class="leave-left">
                             <div class="input-box">
@@ -264,9 +252,7 @@
                             <button class="leave-edit-btn-cust leave-edit-btn"><i class="fal fa-pencil"></i></button>
                         </div>
                     </div>
-
                 </div>
-
                 <div class="custom-policy">
                     <div class="leave-header">
                         <div class="title">Custom policy</div>
@@ -314,12 +300,12 @@
                         </div>
                     </div> --}}
 
-                </div>
-            </div>
         </div>
+    </div>
+</div>
 
 
-        {{-- <div id="add_custom_policy" class="modal custom-modal fade" role="dialog">
+{{-- <div id="add_custom_policy" class="modal custom-modal fade" role="dialog">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -370,7 +356,7 @@
             </div>
         </div> --}}
 
-        {{-- <div id="edit_custom_policy" class="modal custom-modal fade" role="dialog">
+{{-- <div id="edit_custom_policy" class="modal custom-modal fade" role="dialog">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -445,15 +431,15 @@
             </div>
         </div> --}}
 
-    </div>
-    @endsection
-    @push('js')
-    <script src="{{ asset('assets/js/select2.min.js') }}"></script>
-    <script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/js/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('assets/js/moment.min.js') }}"></script>
-    <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-    <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
-    <script src="{{ asset('assets/js/multiselect.min.js') }}"></script>
-    {{-- <script src="{{ asset('assets/js/select2.min.js') }}"></script> --}}
-    @endpush
+</div>
+@endsection
+@push('js')
+<script src="{{ asset('assets/js/select2.min.js') }}"></script>
+<script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
+<script src="{{ asset('assets/js/dataTables.bootstrap4.min.js') }}"></script>
+<script src="{{ asset('assets/js/moment.min.js') }}"></script>
+<script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
+<script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
+<script src="{{ asset('assets/js/multiselect.min.js') }}"></script>
+{{-- <script src="{{ asset('assets/js/select2.min.js') }}"></script> --}}
+@endpush

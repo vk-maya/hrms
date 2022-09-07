@@ -66,10 +66,14 @@
                     </div>
                 </div>
             </div>
+            @php
+                $total_days = date('t', strtotime('2022-08-01'));
+                $holiday = \App\Models\Holiday::whereMonth('date', '08')->where('status', 1)->count();
+            @endphp
             <div class="row">
                 <div class="col-lg-12">
                     <div class="table-responsive">
-                        <table class="table table-striped custom-table table-nowrap">
+                        <table class="table table-striped custom-table table-nowrap table-bordered">
                             <thead>
                                 <tr>
                                     <th rowspan="2">Employee</th>
@@ -78,23 +82,38 @@
                                             $day = date('D', strtotime('2022-08-'.$i));
                                         @endphp
                                         @if ($day == 'Sun')
-                                            <th colspan="2" style="text-align:center;color:green;">
+                                            <th colspan="3" style="text-align:center;color:green;">
                                         @else
-                                            <th colspan="2" style="text-align:center;">
+                                            <th colspan="3" style="text-align:center;">
                                         @endif
                                             {{ date('D, d-m-Y', strtotime('2022-08-'.$i)) }}
                                         </th>
                                     @endfor
+                                    <th colspan="5" style="text-align:center;">Working Stats</th>
+                                    <th colspan="3" style="text-align:center;">Total Work</th>
+                                    <th rowspan="2" style="text-align:center;">Salary</th>
                                 </tr>
                                 <tr>
                                     @for ($i = 1; $i <= $month; $i++)
                                     <th>In Time</th>
                                     <th>Out Time</th>
+                                    <th>Attend</th>
                                     @endfor
+                                    <th>Present</th>
+                                    <th>Absent</th>
+                                    <th>WFH</th>
+                                    <th>Half Day</th>
+                                    <th>Leave</th>
+                                    <th>Total Days</th>
+                                    <th>Present</th>
+                                    <th>Absent</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($attendance as $item)
+                                @php
+                                    $count = $sunday_count = $present = $absent = $wfh = $halfday = $leave = $total_work = $total_working_days = 0;
+                                @endphp
                                     <tr>
                                         <td>
                                             <h2 class="table-avatar">
@@ -104,10 +123,13 @@
                                                 <a href="{{ route('admin.employees.profile', $item->id) }}">{{ $item->first_name }}</a>
                                             </h2>
                                         </td>
-                                        @php
-                                            $count = 0;
-                                        @endphp
                                         @for ($i = 1; $i <= $month; $i++)
+                                            @php
+                                                $sunday = date('w', strtotime("2022-08-".$i));
+                                                if($sunday == 0){
+                                                    $sunday_count++;
+                                                }
+                                            @endphp
                                             @if (in_array(date("Y-m-d",strtotime(now()->format("Y-08-").$i)),$item->attendence->pluck('date')->toArray()))
                                                 {{-- @if ($item->attendence[$count]->attendance == 'P')
                                                     <td>
@@ -122,14 +144,62 @@
                                                 <td>
                                                     {{$item->attendence[$count]->out_time}}
                                                 </td>
+                                                <td>
+                                                    @if ($item->attendence[$count]->mark == 'P')
+                                                        @php
+                                                            $present++;
+                                                        @endphp
+                                                    @elseif ($item->attendence[$count]->mark == 'A')
+                                                        @php
+                                                            $absent++;
+                                                        @endphp
+                                                    @elseif ($item->attendence[$count]->mark == 'WFH')
+                                                        @php
+                                                            $wfh++;
+                                                        @endphp
+                                                    @elseif ($item->attendence[$count]->mark == 'HD')
+                                                        @php
+                                                            $halfday++;
+                                                        @endphp
+                                                    @elseif ($item->attendence[$count]->mark == 'L')
+                                                        @php
+                                                            $leave++;
+                                                        @endphp
+                                                    @endif
+                                                    {{$item->attendence[$count]->mark}}
+                                                </td>
                                                 @php
                                                     $count++;
                                                 @endphp
                                             @else
                                                 <td>-</td>
                                                 <td>-</td>
+                                                <td>-</td>
                                             @endif
                                         @endfor
+                                        @php
+                                            $total_working_days = $total_days-($holiday+$sunday_count+2);
+                                            $total_work = $present + $wfh;
+                                        @endphp
+                                        <td><b>{{$present}}</b></td>
+                                        <td><b>{{$absent}}</b></td>
+                                        <td><b>{{$wfh}}</b></td>
+                                        <td><b>{{$halfday}}</b></td>
+                                        <td><b>{{$leave}}</b></td>
+                                        <td><b>{{$total_days}}</b></td>
+                                        <td><b>{{$total_work+$holiday+$sunday_count+2}}</b></td>
+                                        <td><b>{{$absent+$halfday+$leave}}</b></td>
+                                        <td>
+                                            @php
+                                                $user_salary = \App\Models\Admin\UserSalary::where('user_id', $item->id)->where('status', 1)->first();
+                                                if (!empty($user_salary)) {
+                                                    $salary = (($total_work+$holiday+$sunday_count+2) / $total_days) * $user_salary->net_salary;
+                                                }else{
+                                                    $salary = (($total_work+$holiday+$sunday_count+2) / $total_days) * 10000;
+                                                }
+                                            @endphp
+                                            <b>₹ {{round($salary)}}</b>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

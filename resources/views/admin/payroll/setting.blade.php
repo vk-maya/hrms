@@ -9,13 +9,13 @@
     <div class="page-wrapper">
 
         <div class="content container-fluid">
-            <div class="row">
-                <div class="col-md-8 offset-md-2">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
 
                     <div class="page-header">
                         <div class="row">
                             <div class="col-sm-12">
-                                <h3 class="page-title">Company Settings</h3>
+                                <h3 class="page-title text-center">Company Settings</h3>
                             </div>
                         </div>
                     </div>
@@ -36,21 +36,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>Permanent Address</label>
-                                    <input class="form-control" name="p_address" value="{{isset($setting)?$setting->p_address:''}}"
-                                        type="text">
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label>Curent Address</label>
-                                    <input class="form-control" name="c_address" value="{{isset($setting)?$setting->c_address:''}}"
-                                        type="text">
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-md-6 col-lg-4">
+                            <div class="col-lg-12">
                                 <div class="form-group">
                                     <label>Country</label>
                                     <select class="select" name="country" id="inputcountry"  onkeypress="country()">
@@ -64,7 +50,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-6 col-lg-4">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="form-group">
                                     <label>State/Province</label>
                                     <select class="select" name="state" id="inputstate">
@@ -75,7 +61,7 @@
                                 @endisset
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-6 col-lg-4">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="form-group">
                                     <label>City</label>
                                     <select class="select" name="city" id="inputcity">
@@ -114,6 +100,22 @@
                             </div>
                         </div>
                         <div class="row">
+                              <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Curent Address</label>
+                                    <input class="form-control" name="c_address" value="{{isset($setting)?$setting->c_address:''}}"
+                                        type="text">
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Permanent Address</label>
+                                    <input class="form-control" name="p_address" value="{{isset($setting)?$setting->p_address:''}}"
+                                        type="text">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label>Website Url</label>
@@ -121,7 +123,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="submit-section">
+                         <div class="submit-section text-center">
                             <button class="btn btn-primary submit-btn">Save</button>
                         </div>
                     </form>

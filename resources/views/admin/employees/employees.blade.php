@@ -14,34 +14,34 @@
                             <li class="breadcrumb-item active">Employee</li>
                         </ul>
                     </div>
-                    <div class="col-auto float-end ms-auto">
-                        <a href="{{ route('admin.add-employee') }}" class="btn add-btn"><i class="fa fa-plus"></i>
-                            Add Employee</a>
-                        {{-- <a href="{{ route('admin.add.employees.leavemonth') }}" class="btn add-btn"><i class="fa fa-plus"></i>
-                            Add Leave</a> --}}
-                        <div class="view-icons">
+                    <div class="col-auto icon-topic d-flex">
+                    <div class="view-icons">
                             <a href="{{ route('admin.employees') }}" class="grid-view btn btn-link active"><i
                                     class="fa fa-th"></i></a>
                             <a href="{{ route('admin.employees.list') }}" class="list-view btn btn-link emplist"
                                 id="employeeslist"><i class="fa fa-bars"></i></a>
                         </div>
+                        <div class="employ-add-btn">
+                        <a href="{{ route('admin.add-employee') }}" class="btn add-btn"><i class="fa fa-plus"></i>
+                            Add Employee</a>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row filter-row">
-                <div class="col-sm-6 col-md-3">
+            <div class="row filter-row justify-content-center mb-4">
+                <div class="col-lg-3 col-sm-6 col-md-6">
                     <div class="form-group form-focus">
                         <input type="text" class="form-control floating" id="empID">
                         <label class="focus-label">Employee ID</label>
                     </div>
                 </div>
-                <div class="col-sm-6 col-md-3">
+                <div class="col-lg-3 col-sm-6 col-md-6">
                     <div class="form-group form-focus">
                         <input type="text" class="form-control floating" id="empName">
                         <label class="focus-label">Employee Name</label>
                     </div>
                 </div>
-                <div class="col-sm-6 col-md-3">
+                <div class="col-lg-3 col-sm-6 col-md-6">
                     <div class="form-group form-focus select-focus">
                         <select class="form-control select floating" id="designation">
                             <option>Select Designation</option>
@@ -52,7 +52,7 @@
                         <label class="focus-label">Designation</label>
                     </div>
                 </div>
-                <div class="col-sm-6 col-md-3">
+                <div class="col-lg-3 col-sm-6 col-md-6">
                     <div class="btn-search">
                         <a class="btn btn-success search"> Search </a>
                     </div>
@@ -62,7 +62,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="table-responsive">
-                        <table class="table table-striped custom-table datatable">
+                        <table class="table cus-table-striped custom-table datatable">
                             <thead>
                                 <tr>
                                     <th>Name</th>
@@ -71,7 +71,7 @@
                                     <th>Mobile</th>
                                     <th class="text-nowrap">Join Date</th>
                                     {{-- <th>Designation</th> --}}
-                                    <th class="text-end no-sort">Action</th>
+                                    <th class="text-center no-sort">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="list">
@@ -91,16 +91,14 @@
                                         <td>{{$item->phone}}</td>
                                         <td> {{ \Carbon\Carbon::parse($item->joiningDate)->format('d M Y') }}</td>
                                         {{-- <td>{{$item->designation->designation_name}}</td> --}}
-                                        <td class="text-end">
+                                        <td class="text-center">
                                             <div class="dropdown dropdown-action">
                                                 <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
-                                                    aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                                                    aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                                                 <div class="dropdown-menu dropdown-menu-right">
                                                     <a class="dropdown-item"
-                                                        href="{{ route('admin.edit-employee',$item->id) }}"><i
-                                                            class="fa fa-pencil m-r-5"></i> Edit</a>
-                                                    <button class="dropdown-item delete" data-id="{{$item->id}}"><i
-                                                            class="fa fa-trash-o m-r-5"></i> Delete</button>
+                                                        href="{{ route('admin.edit-employee',$item->id) }}"><i class="far fa-pencil me-3"></i>Edit</a>
+                                                    <button class="dropdown-item delete" data-id="{{$item->id}}"><i class="fas fa-trash-alt me-3"></i> Delete</button>
                                                 </div>
                                             </div>
                                         </td>
@@ -115,7 +113,7 @@
             @isset($employees)
                 <div class="row staff-grid-row" id="grid">
                     @foreach ($employees as $item)
-                        <div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
+                        <div class="col-xl-3  col-lg-4 col-md-4 col-sm-6">
                             <div class="profile-widget">
                                 <div class="profile-img">
                                     <a href="{{route('admin.employees.profile',$item->id)}}">
@@ -124,20 +122,18 @@
                                 </div>
                                 <div class="dropdown profile-action">
                                     <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
-                                        aria-expanded="false"><i class="material-icons">more</i></a>
+                                        aria-expanded="false"><i class="far fa-ellipsis-v"></i></a>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="{{ route('admin.edit-employee', $item->id) }}"><i
-                                                class="fa fa-pencil me-3"></i> Edit</a>
-                                        <button class="dropdown-item delete" data-id="{{ $item->id }}"><i
-                                                class="fa fa-trash-alt me-3"></i> Delete</button>
-                                        <a class="dropdown-item more-add" href="{{route('admin.employees.information',$item->id)}}"><i class="fa fa-plus text-info  m-r-5"></i>Add More</a>
+                                        <a class="dropdown-item" href="{{ route('admin.edit-employee', $item->id) }}"><i class="far fa-pencil me-2"></i> Edit</a>
+                                        <button class="dropdown-item delete" data-id="{{ $item->id }}"><i class="fas fa-trash-alt me-2"></i> Delete</button>
+                                        <a class="dropdown-item more-add" href="{{route('admin.employees.information',$item->id)}}"><i class="far fa-plus me-2"></i>Add More</a>
                                         <a class="dropdown-item status" href="{{route('admin.employees.status',$item->id)}}">
                                             @if ($item->status == 1)
-                                                 <i class="fa fa-times text-danger" aria-hidden="true"></i>
+                                            <i class="fal fa-times-circle me-2"></i>
                                                 <span
                                                     class="yeh-data">Inactive</span>
                                             @else
-                                                <i class="fa fa-check m-r-5 text-success"></i> <span
+                                                <i class="fa fa-check me-2"></i> <span
                                                     class="yeh-data">Active</span>
                                             @endif
                                         </a>
@@ -147,19 +143,19 @@
                                     @if ($item->status == 0)
                                         <span class="position-relative">
                                             <span
-                                                class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
+                                                class="user online">
                                             </span>
                                         </span>
                                     @else
                                         <span class="position-relative">
                                             <span
-                                                class="position-absolute top-0 start-100 translate-middle p-2 bg-success border border-light rounded-circle">
+                                                class="user offline">
                                             </span>
                                         </span>
                                     @endif
                                 </div>
                                 <div class="small text-muted">
-                                    <h4 class="user-name m-t-10 mb-0 text-ellipsis">{{$item->first_name.' '.$item->last_name}}</h4>
+                                    <h4 class="user-name mb-1 text-ellipsis">{{$item->first_name.' '.$item->last_name}}</h4>
                                     {{$item->designation->designation_name}}
                                 </div>
                             </div>
