@@ -83,7 +83,6 @@
                 <div class="col-sm-3 col-md">
                     <div class="form-group form-focus select-focus">
                         <select class="select floating" name="year">
-                            <option>-</option>                       
                             @for($years; $years <=$curenty; $years++)
                                 <option @if(isset(request()->year) && request()->year == $years) selected @endif value="{{$years}}">{{$years}}</option>
                             @endfor
@@ -107,7 +106,6 @@
                 <div class="col-lg-12">
                     <div class="table-responsive">
                         <table class="table table-striped custom-table table-nowrap">
- 
                             <tbody>
                                 <th>Employees Name</th>
                                 <th>Month</th>
@@ -117,9 +115,7 @@
                                 <th>Total Working Day</th>
                                 <th>More Action</th>
                                 @foreach ($attendance as $item)
-                               
                                     <tr>
-                                        {{-- <td> {{$item->apprAnual}}</td> --}}
                                         <td>
                                             <h2 class="table-avatar">
                                                 <a class="avatar avatar-xs"
@@ -168,8 +164,6 @@
                                         <h6>Punch In at</h6>
                                         <p id="intime"></p>
                                     </div>
-                                    {{-- {{$attendance}} --}}
-
                                     <div class="punch-info">
                                         <div class="punch-hours">
                                             <span id="totalhour"></span>
@@ -179,16 +173,13 @@
                                         <h6>Punch Out at</h6>
                                         <p id="outtime"></p>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 @endsection
 @push('js')
