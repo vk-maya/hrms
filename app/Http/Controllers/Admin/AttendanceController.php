@@ -92,7 +92,6 @@ class AttendanceController extends Controller
             }, $method => function($query)use($first_date,$last_date){
                 $query->where('from', $first_date)->where('to',$last_date);
             }])->orderBy('users.first_name')->where('id',$request->user_id)->get();
-            // dd($attendance->toArray());
         }else{
             $attendance = User::with(['attendence' => function($query)use($first_date,$last_date){
                 $query->whereBetween('date', [$first_date,$last_date]);
