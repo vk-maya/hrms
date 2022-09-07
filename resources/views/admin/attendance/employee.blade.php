@@ -107,6 +107,7 @@
                 <div class="col-lg-12">
                     <div class="table-responsive">
                         <table class="table table-striped custom-table table-nowrap">
+ 
                             <tbody>
                                 <th>Employees Name</th>
                                 <th>Month</th>
@@ -116,7 +117,9 @@
                                 <th>Total Working Day</th>
                                 <th>More Action</th>
                                 @foreach ($attendance as $item)
+                               
                                     <tr>
+                                        {{-- <td> {{$item->apprAnual}}</td> --}}
                                         <td>
                                             <h2 class="table-avatar">
                                                 <a class="avatar avatar-xs"
@@ -126,15 +129,15 @@
                                             </h2>
                                         </td>
                                         @php
-                                            $month= date('m', strtotime($item->monthleave->from));
-                                            $months= date('M', strtotime($item->monthleave->from));
-                                            $year= date('Y', strtotime($item->monthleave->from));
+                                            $month= date('m', strtotime($item[$method]->from));
+                                            $months= date('M', strtotime($item[$method]->from));
+                                            $year= date('Y', strtotime($item[$method]->from));
                                         @endphp
                                         <td>{{$months}}-{{$year}}</td>
-                                        <td>@if(isset($item->monthleave->apprAnual)){{$item->monthleave->apprAnual}}@else 0 @endif</td>
-                                        <td>@if(isset($item->monthleave->apprSick)){{$item->monthleave->apprSick}}@else 0 @endif</td>
-                                        <td>@if(isset($item->monthleave->other)){{$item->monthleave->other}}@else 0 @endif</td>
-                                        <td>@if(isset($item->monthleave->working_day)){{$item->monthleave->working_day}}@else 0 @endif</td>
+                                        <td>@if(isset($item[$method]->apprAnual)){{$item[$method]->apprAnual}}@else 0 @endif</td>
+                                        <td>@if(isset($item[$method]->apprSick)){{$item[$method]->apprSick}}@else 0 @endif</td>
+                                        <td>@if(isset($item[$method]->other)){{$item[$method]->other}}@else 0 @endif</td>
+                                        <td>@if(isset($item[$method]->working_day)){{$item[$method]->working_day}}@else 0 @endif</td>
                                         <td><a href="{{route('admin.employee.month',[$item->id,$year,$month])}}">Month Record </a></td>                                                                 
                                     </tr>
                                 @endforeach
