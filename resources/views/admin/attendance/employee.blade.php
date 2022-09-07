@@ -20,12 +20,12 @@
                     </div>
                 </div>
             </div>
-            <form action="{{route('admin.attendance.employee')}}" method="GET">
+        <form action="{{route('admin.attendance.employee.search')}}" method="GET">
             <div class="row filter-row">
                 <div class="col-sm-3 col-md">
                     <div class="form-group form-focus select-focus">
                         <select class="select floating" name="user_id">
-                            <option value=""></option>
+                            <option value="">All</option>
                             @foreach ($allemployees as $employee)
                             <option @if(isset(request()->user_id) && request()->user_id == $employee->id) selected @endif value="{{$employee->id}}">{{$employee->first_name}}</option>
                             @endforeach
@@ -126,15 +126,16 @@
                                             </h2>
                                         </td>
                                         @php
-                                            $month= date('m', strtotime($item->$method->from));
-                                            $year= date('Y', strtotime($item->$method->from));
+                                            $month= date('m', strtotime($item->monthleave->from));
+                                            $months= date('M', strtotime($item->monthleave->from));
+                                            $year= date('Y', strtotime($item->monthleave->from));
                                         @endphp
-                                        <td>{{\Carbon\Carbon::parse($item->$method->from)->format('M').', '.$year}}</td>
-                                        <td>@if ($item->$method->apprAnual>0){{$item->$method->apprAnual}}@else 0 @endif</td>
-                                        <td>@if ($item->$method->apprSick>0){{$item->$method->apprSick}}@else 0 @endif</td>
-                                        <td>@if ($item->$method->other>0){{$item->$method->other}}@else 0 @endif</td>
-                                        <td>@if ($item->$method->working_day>0){{$item->$method->working_day}}@else 0 @endif</td>
-                                        <td><a href="{{route('admin.employee.month',[$item->id,$year,$month])}}">Month Record </a></td>
+                                        <td>{{$months}}-{{$year}}</td>
+                                        <td>@if(isset($item->monthleave->apprAnual)){{$item->monthleave->apprAnual}}@else 0 @endif</td>
+                                        <td>@if(isset($item->monthleave->apprSick)){{$item->monthleave->apprSick}}@else 0 @endif</td>
+                                        <td>@if(isset($item->monthleave->other)){{$item->monthleave->other}}@else 0 @endif</td>
+                                        <td>@if(isset($item->monthleave->working_day)){{$item->monthleave->working_day}}@else 0 @endif</td>
+                                        <td><a href="{{route('admin.employee.month',[$item->id,$year,$month])}}">Month Record </a></td>                                                                 
                                     </tr>
                                 @endforeach
                             </tbody>
