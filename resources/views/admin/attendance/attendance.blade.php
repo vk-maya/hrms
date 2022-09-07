@@ -105,52 +105,52 @@
                     </div>
                 </div>
             </form>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="table-responsive">
-                    <table class="table table-striped custom-table table-nowrap">
-                        <thead>
-                            <tr>
-                                <th>Employee</th>
-                                @for ($i = 1; $i <= $month; $i++) <th>{{ $i }}</th>
-                                    @endfor
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($attendance as $item)
-                                    <tr>
-                                        <td>
-                                            <h2 class="table-avatar">
-                                                <a class="avatar avatar-xs"
-                                                    href="{{ route('admin.employees.profile', $item->id) }}"><img alt=""
-                                                        src="@if ($item->image != null) {{ asset('storage/uploads/' . $item->image) }}@else{{ asset('assets/img/avtar.jpg') }} @endif""></a>
-                                                <a href="{{ route('admin.employees.profile', $item->id) }}">{{ $item->first_name }}</a>
-                                            </h2>
-                                        </td>
-                                        @php
-                                            $count = 0;
-                                        @endphp
-                                        @for ($i = 1; $i <= $month; $i++)
-                                            @if (in_array(date("Y-m-d",strtotime($monthYears.'-'.$i)),$item->attendence->pluck('date')->toArray()))
-                                                @if ($item->attendence[$count]->attendance == 'P')
-                                                    <td>
-                                                        <i class="fa fa-check text-success attend-info-show" data-id="{{ $item->attendence[$count]->id }}"></i>
-                                                    </td>
-                                                @else
-                                                    <td><i class="fa fa-close text-danger"></i> </td>
-                                                @endif
-                                                @php
-                                                    $count++;
-                                                @endphp
-                                            @else
-                                                <td>-</td>
-                                            @endif
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped custom-table table-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>Employee</th>
+                                    @for ($i = 1; $i <= $month; $i++) <th>{{ $i }}</th>
                                         @endfor
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($attendance as $item)
+                                        <tr>
+                                            <td>
+                                                <h2 class="table-avatar">
+                                                    <a class="avatar avatar-xs"
+                                                        href="{{ route('admin.employees.profile', $item->id) }}"><img alt=""
+                                                            src="@if ($item->image != null) {{ asset('storage/uploads/' . $item->image) }}@else{{ asset('assets/img/avtar.jpg') }} @endif""></a>
+                                                    <a href="{{ route('admin.employees.profile', $item->id) }}">{{ $item->first_name }}</a>
+                                                </h2>
+                                            </td>
+                                            @php
+                                                $count = 0;
+                                            @endphp
+                                            @for ($i = 1; $i <= $month; $i++)
+                                                @if (in_array(date("Y-m-d",strtotime($monthYears.'-'.$i)),$item->attendence->pluck('date')->toArray()))
+                                                    @if ($item->attendence[$count]->attendance == 'P')
+                                                        <td>
+                                                            <i class="fa fa-check text-success attend-info-show" data-id="{{ $item->attendence[$count]->id }}"></i>
+                                                        </td>
+                                                    @else
+                                                        <td><i class="fa fa-close text-danger"></i> </td>
+                                                    @endif
+                                                    @php
+                                                        $count++;
+                                                    @endphp
+                                                @else
+                                                    <td>-</td>
+                                                @endif
+                                            @endfor
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
