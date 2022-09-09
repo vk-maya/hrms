@@ -15,6 +15,7 @@
                         <h3 class="page-title">Attendance</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                           
                             <li class="breadcrumb-item active">Attendance</li>
                         </ul>
                     </div>
@@ -125,16 +126,27 @@
                                             </h2>
                                         </td>
                                         @php
-                                            $month= date('m', strtotime($item[$method]->from));
-                                            $months= date('M', strtotime($item[$method]->from));
-                                            $year= date('Y', strtotime($item[$method]->from));
+                                         $months="No";
+                                         $year="Available";
+                                         $month="";
+                                         if(!empty($item[$method]->from)){
+                                               $month= date('m', strtotime($item[$method]->from));
+                                         $months= date('M', strtotime($item[$method]->from));
+                                         $year= date('Y', strtotime($item[$method]->from));
+                                        }
+                                            
                                         @endphp
+                                        {{$month}}
                                         <td>{{$months}}-{{$year}}</td>
                                         <td>@if(isset($item[$method]->apprAnual)){{$item[$method]->apprAnual}}@else 0 @endif</td>
                                         <td>@if(isset($item[$method]->apprSick)){{$item[$method]->apprSick}}@else 0 @endif</td>
                                         <td>@if(isset($item[$method]->other)){{$item[$method]->other}}@else 0 @endif</td>
                                         <td>@if(isset($item[$method]->working_day)){{$item[$method]->working_day}}@else 0 @endif</td>
-                                        <td><a href="{{route('admin.employee.month',[$item->id,$year,$month])}}">Month Record </a></td>                                                                 
+                                        @if (!empty($item[$method]->from))
+                                        <td><a href="{{route('admin.employee.month',['id'=>$item->id,'month'=>$month,'year'=>$year])}}">Month Record</a></td>                                                                 
+                                        @else
+                                        <td>No Available</td>                                                                 
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>

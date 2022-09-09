@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddMultiToMonthleavesTable extends Migration
+class AddPlsickToMonthleavesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,9 +15,8 @@ class AddMultiToMonthleavesTable extends Migration
     {
         Schema::table('monthleaves', function (Blueprint $table) {
             //
-            $table->float('working_day')->after('other')->default(0);
-            $table->float('carry_pl_leave')->after('anualLeave')->default(0);
-            $table->float('carry_sick_leave')->after('sickLeave')->default(0);
+            $table->float('monthpl')->after('anualLeave')->default(0);
+            $table->float('monthsick')->after('sickLeave')->default(0);
         });
     }
 

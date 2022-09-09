@@ -82,7 +82,6 @@ class Attendence extends Command
                     if ($attend->in_time != '00:00' && $attend->out_time != '00:00') {
                         $out_time = Carbon::parse($attend->out_time)->format('H:i A');
                         $work_time = Carbon::parse($attend->in_time)->diff(\Carbon\Carbon::parse($attend->out_time))->format('%H:%I:%S');
-                        $work_time = Carbon::parse($work_time . "- 1 hour")->toTimeString();
                         $attend->work_time = $work_time;
                     } else {
                         $attend->work_time = '00:00';
@@ -104,7 +103,6 @@ class Attendence extends Command
                     $out_time = $key->OUTTime == '--:--' ? '00:00' : $key->OUTTime;
                     if ($in_time != '00:00' && $out_time != '00:00') {
                         $work_time = Carbon::parse($in_time)->diff(\Carbon\Carbon::parse($out_time))->format('%H:%I:%S');
-                        $work_time = Carbon::parse($work_time . "- 1 hour")->toTimeString();
                     } else {
                         $work_time = '00:00';
                     }

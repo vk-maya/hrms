@@ -15,11 +15,21 @@
                         <h3 class="page-title">Attendance</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Attendance</li>
+                            <li class="breadcrumb-item active">Attendance</li>                     
                         </ul>
                     </div>
                 </div>
-            </div>        
+            </div>      
+            <form action="" method="POST">
+                @csrf
+                <div class="row filter-row">                  
+                    <div class="col-sm-3 col-md">
+                        <div class="search-btn">
+                            <button type="submit" class="btn btn-success"> Submit </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
             <div class="row">
                 <div class="col-lg-12">
                     <div class="table-responsive">
