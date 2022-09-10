@@ -10,7 +10,7 @@
             <div class="page-header">
                 <div class="row">
                     <div class="col-sm-12">
-                        <h3 class="page-title">Attendance vvvvvvvvv</h3>
+                        <h3 class="page-title">Attendance</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Attendance</li>
@@ -70,7 +70,6 @@
                     <div class="col">
                         <div class="form-group form-focus select-focus">
                             <select class="select floating" name="year">
-                                <option>-</option>                       
                                 @for($years; $years <=$curenty; $years++)
                                     <option @if(isset(request()->year) && request()->year == $years) selected @endif value="{{$years}}">{{$years}}</option>
                                 @endfor

@@ -204,8 +204,7 @@ class LeaveController extends Controller
             $attendance->action = 3;
             $attendance->save();
         }
-        // dd("stop bro");
-        // return redirect()->route('employees.leave');
+       
         return redirect()->back();
 
     }

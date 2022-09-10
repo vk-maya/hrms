@@ -157,7 +157,9 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     // ---------------------employees salary generate---------------------------------
     Route::post('salary/report',[AdminLeaveController::class,'leavereport'])->name('leave.report');
   // report Route 
-    Route::get('month/leave/record/manage/{id}',[PayrollController::class,'monthRecordLeaveManage'])->name('month.leave.record.manage');
+    Route::any('month/leave/record/manage',[PayrollController::class,'monthRecordLeaveManage'])->name('month.leave.record.manage');
+    Route::any('month/leave/record/manage/all',[PayrollController::class,'monthRecordLeaveManage'])->name('month.leave.record.manage.all');
+    Route::any('month/leave/record/salip/generate',[PayrollController::class,'monthslipgenerate'])->name('emp.slip.generate');
     // ---------------------client route-----------------------
     Route::get('client', [ClientController::class, 'index'])->name('client');
     Route::get('client/create', [ClientController::class, 'create'])->name('client.create');

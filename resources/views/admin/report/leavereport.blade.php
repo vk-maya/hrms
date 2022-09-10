@@ -8,16 +8,37 @@
     <div class="page-wrapper">
         <div class="content container-fluid">
             <div class="page-header">
-                <div class="row">
+                <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Employee Salary </h3>
+                        <h3 class="page-title">Employee</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Salary</li>
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Employee</li>
                         </ul>
                     </div>
+                    <div class="col-auto icon-topic d-flex">
+                      
+                        <div class="employ-add-btn">
+                            @if (isset($monthRecord))
+                                <form action="{{ route('admin.month.leave.record.manage.all') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="all" value="{{ json_encode($monthRecord) }}">
+                                    <button type="submit" class="btn add-btn ">All Emp. Month Record</button>
+                                </form>
+                            @endif
+                        </div>
+                        <div class="employ-add-btn">
+                            @if (isset($monthRecord))
+                                <form action="{{ route('admin.emp.slip.generate') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="all" value="{{ json_encode($monthRecord) }}">
+                                    <button type="submit" class="btn add-btn ">All Emp. Slip</button>
+                                </form>
+                            @endif
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </div>       
             <form action="{{ route('admin.emp.report.search') }}" method="POST">
                 @csrf
                 <div class="row filter-row">
@@ -60,7 +81,8 @@
                         <div class="form-group form-focus select-focus">
                             <select class="select floating" name="year">
                                 @for ($years; $years <= $curenty; $years++)
-                                    <option @if (isset(request()->year) && request()->year == $years) selected @endif value="{{ $years }}">
+                                    <option @if (isset(request()->year) && request()->year == $years) selected @endif
+                                        value="{{ $years }}">
                                         {{ $years }}</option>
                                 @endfor
                             </select>
@@ -86,7 +108,7 @@
                             <tr>
                                 <th style="width: 30px;">SR</th>
                                 <th class="text-center">Employees Name</th>
-                                <th class="text-center">Designation</th>
+                                <th class="text-center">Month</th>
                                 <th class="text-center">Month Leave Manage</th>
                                 <th class="text-center">Month Record Generate</th>
                                 <th class="text-center">Status</th>
@@ -99,32 +121,61 @@
                                     @if (!empty($item->monthleavesalary))
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
-                                            <td>{{ $item->first_name }}</td>
-                                            <td>{{ $item->designation->designation_name }}</td>
+                                            <td>{{ $item->first_name}}</td>
                                             @php
-                                                $month= date('m', strtotime($item->monthleavesalary->from));
-                                                $year= date('Y', strtotime($item->monthleavesalary->from));
+                                                $month = date('m', strtotime($item->monthleavesalary->from));
+                                                $year = date('Y', strtotime($item->monthleavesalary->from));
                                             @endphp
-                                            <td><a href="{{route('admin.employee.month',['id'=>$item->id,'month'=>$month,'year'=>$year])}}">Month Record</a></td>   
-                                            <td><a href="{{ route('admin.month.leave.record.manage',$item->id)}}">Generate Month</a> </td>
-                                            <td><a href="{{ route('admin.emp.report') }}">Generate Slip</a></td>
+                                            <td>{{$month.'-'.$year }}</td>
+                                            <td><a
+                                                    href="{{ route('admin.employee.month', ['id' => $item->id, 'month' => $month, 'year' => $year]) }}">Month
+                                                    Record</a></td>
+                                            <td><a
+                                                    href="{{ route('admin.month.leave.record.manage', ['id' => $item->id, 'from' => $item->monthleavesalary->from, 'to' => $item->monthleavesalary->to, 'monthleave_id' => $item->monthleavesalary->id]) }}">Generate
+                                                    Month</a> </td>
+                                            <td><a
+                                                    href="{{ route('admin.emp.slip.generate', ['id' => $item->id, 'from' => $item->monthleavesalary->from, 'to' => $item->monthleavesalary->to, 'monthrecord_id' => $item->monthleavesalary->id]) }}">Generate
+                                                    Slip</a></td>
                                             <td>Salary pending </td>
-                                        </tr>
+                                        </tr>                                   
                                     @endif
-                                @endforeach
+                                @endforeach                        
                             @endif
                         </tbody>
                     </table>
                 </div>
-                @if (isset($monthRecord))
-                    <form action="{{ route('admin.emp.report.search') }}" method="POST">
+                {{-- @if (isset($monthRecord))
+                    <form action="{{ route('admin.month.leave.record.manage.all') }}" method="POST">
                         @csrf
                         <div class="row filter-row">
+                            <h4>Month Record Management</h4>
                             <div class="col-sm-3 col-md">
                                 <div class="form-group form-focus select-focus">
-                                    <select class="select floating" name="user_id">
-                                        <option value="">All Employees</option>
+                                    <select class="select floating" name="all">
+                                        <option value="{{json_encode($monthRecord)}}">All Employees</option>
                                     </select>
+                                    <label class="focus-label">Employee Name</label>
+                                </div>
+                            </div>                           
+                            <div class="col-sm-3 col-md">
+                                <div class="search-btn">
+                                    <button type="submit" class="btn btn-success"> Submit </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                @endif --}}
+                {{-- @if (isset($monthRecord))
+                    <form action="{{ route('admin.emp.slip.generate') }}" method="POST">
+                        @csrf
+                        <div class="row filter-row">
+                            <h4>Salary slip Generate</h4>
+                            <div class="col-sm-3 col-md">
+                                <div class="form-group form-focus select-focus">
+                                    <select class="select floating" name="all">
+                                        <option value="{{ json_encode($monthRecord) }}">All Employees</option>
+                                    </select>
+                                    <label class="focus-label">Employee Name</label>
                                 </div>
                             </div>
                             <div class="col-sm-3 col-md">
@@ -134,7 +185,7 @@
                             </div>
                         </div>
                     </form>
-                @endif
+                @endif --}}
             </div>
         </div>
     </div>

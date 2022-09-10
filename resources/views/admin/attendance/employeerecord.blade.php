@@ -19,17 +19,7 @@
                         </ul>
                     </div>
                 </div>
-            </div>      
-            <form action="" method="POST">
-                @csrf
-                <div class="row filter-row">                  
-                    <div class="col-sm-3 col-md">
-                        <div class="search-btn">
-                            <button type="submit" class="btn btn-success"> Submit </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
+            </div>          
             <div class="row">
                 <div class="col-lg-12">
                     <div class="table-responsive">
@@ -60,7 +50,7 @@
                                                 @elseif($item->mark == 'L')
                                                 <a class="btn btn-white btn-sm btn-rounded dropdown-toggle"
                                                 href="" data-bs-toggle="dropdown" aria-expanded="false"><i
-                                                    class="fa fa-dot-circle-o text-warning"></i>Leave</a>
+                                                    class="fa fa-dot-circle-o text-danger"></i>Leave</a>
                                                 @elseif($item->mark == 'WFH')
                                                     <a class="btn btn-white btn-sm btn-rounded dropdown-toggle"
                                                         href="" data-bs-toggle="dropdown" aria-expanded="false"><i
@@ -97,6 +87,9 @@
                                                                 A-absent</button>
                                                         </form>
                                                     @endif
+
+
+                                                    
                                                     @if ($item->mark == 'A')
                                                         <form action="{{ route('admin.employee.month.record.report') }}" method="POST">
                                                             @csrf
@@ -113,7 +106,7 @@
                                                             <input type="hidden" name="id"
                                                                 value="{{ $item->id }}">
                                                             <button type="submit" class="dropdown-item">
-                                                                <i class="fa fa-dot-circle-o text-warning"></i>
+                                                                <i class="fa fa-dot-circle-o text-danger"></i>
                                                                 Leave</button>
                                                         </form>
                                                     @endif
@@ -133,7 +126,7 @@
                                                             <input type="hidden" name="id"
                                                                 value="{{ $item->id }}">
                                                             <button type="submit" class="dropdown-item">
-                                                                <i class="fa fa-dot-circle-o text-warning"></i>
+                                                                <i class="fa fa-dot-circle-o text-danger"></i>
                                                                 Leave</button>
                                                         </form>
                                                     @endif                                                

@@ -66,9 +66,9 @@ class Attendence extends Command
                     $wfhCount = WorkFromHome::where('user_id', $user->id)->where('status',0)->where(function ($query) use ($date) {
                         $query->where("from", ">=", $date)->where('to','<=', $date);
                     })->count();
-                    if ($leaveCount == 0){
+                    if ($leaveCount >0){
                         $leaveCount="L";
-                    }elseif($wfhCount ==0){
+                    }elseif($wfhCount >0){
                         $leaveCount="WFH";
                     }else{
                         $leaveCount="A";
