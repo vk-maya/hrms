@@ -1,8 +1,5 @@
 @extends('admin.layouts.app')
 @push('css')
-<link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/css/ckeditor.css') }}">
 @endpush
 @section('content')
 <div class="page-wrapper">
@@ -53,7 +50,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="table-responsive">
-                            <table class="table cus-table-striped custom-table mb-0 datatable">
+                            <table class="table cus-table-striped custom-table mb-0 data-table-theme">
                                 <thead>
                                     <tr>
                                         <th>Employee</th>
@@ -181,7 +178,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="table-responsive">
-                            <table class="table cus-table-striped custom-table mb-0 datatable">
+                            <table class="table cus-table-striped custom-table mb-0 data-table-theme">
                                 <thead>
                                     <tr>
                                         <th>Employee</th>
@@ -340,9 +337,4 @@
 @endforeach
 @endsection
 @push('plugin-js')
-<script src="{{ asset('assets/js/select2.min.js') }}"></script>
-<script src="{{ asset('assets/js/moment.min.js') }}"></script>
-<script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-<script src="{{ asset('assets/js/ckeditor.js') }}"></script>
-<script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
 @endpush

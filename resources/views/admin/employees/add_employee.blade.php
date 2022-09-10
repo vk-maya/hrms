@@ -9,7 +9,7 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col">
-                    <h3 class="page-title">Add Employee</h3>
+                    <h3 class="page-title">Add Employee </h3>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                         <li class="breadcrumb-item active"><a href="{{ route('admin.employees') }}">Employees</a></li>
@@ -324,7 +324,7 @@
 
                             {{-- {{$salaryedit}} --}}
                             <div class="row">
-                                <h3>Salary Earning And Deductions</h3>
+                                <h3 class="mb-2">Salary Earning And Deductions</h3>
                                 <div class="col-md-6 col-sm-6">
                                     <div class="ftr-list">
                                         <h3>Earning</h3>
@@ -357,8 +357,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="submit-section">
-                            <button class="btn btn-primary submit-btn" type="submit">Submit</button>
+                        <div class="text-center">
+                            <button class="btn btn-success" type="submit">Submit</button>
                         </div>
                 </div>
                 </form>

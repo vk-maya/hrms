@@ -7,24 +7,22 @@
         <div class="content container-fluid">
             <div class="page-header">
                 <div class="row align-items-center">
-                    <div class="col">
+                    <div class="col-lg-6 col-md-6 col-sm-5 ">
                         <h3 class="page-title">Employee</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Employee</li>
                         </ul>
                     </div>
-                    <div class="col-auto icon-topic d-flex">
+                    <div class="col-lg-6 col-md-6 col-sm-7 text-end">
                     <div class="view-icons">
                             <a href="{{ route('admin.employees') }}" class="grid-view btn btn-link active"><i
                                     class="fa fa-th"></i></a>
                             <a href="{{ route('admin.employees.list') }}" class="list-view btn btn-link emplist"
                                 id="employeeslist"><i class="fa fa-bars"></i></a>
-                        </div>
-                        <div class="employ-add-btn">
-                        <a href="{{ route('admin.add-employee') }}" class="btn add-btn"><i class="fa fa-plus"></i>
+                        <a class="btn add-btn" href="{{ route('admin.add-employee') }}" class="btn add-btn"><i class="fa fa-plus"></i>
                             Add Employee</a>
-                        </div>
+                            </div>
                     </div>
                 </div>
             </div>

@@ -1,11 +1,5 @@
 @extends('admin.layouts.app')
 @push('css')
-<link rel="stylesheet" href="{{ asset('assets/css/dataTables.bootstrap4.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css') }}">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 
 @endpush
 @section('content')
@@ -26,7 +20,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="table-responsive">
-                    <table class="table cus-table-striped custom-table mb-0 " id="designation">
+                    <table class="table cus-table-striped custom-table mb-0 data-table-theme ">
                         <thead>
                             <tr>
                                 <th>Employee</th>
@@ -114,21 +108,7 @@
 </div>
 @endsection
 @push('js')
-<script src="{{ asset('assets/js/select2.min.js') }}"></script>
-<script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('assets/js/dataTables.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('assets/js/moment.min.js') }}"></script>
-<script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-<!-- {{-- <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script> --}} -->
-<script src="{{ asset('assets/js/multiselect.min.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 <script>
-      $('#designation').DataTable({
-        paging: true,
-        searching: true
-    });
-
-
     $(document).ready(function() {
         $(document).on("click", ".attend-info-show", function() {
             var id = $(this).data('id');

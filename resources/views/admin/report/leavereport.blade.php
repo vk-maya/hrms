@@ -1,8 +1,5 @@
 @extends('admin.layouts.app')
 @push('css')
-<link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/css/ckeditor.css') }}">
 @endpush
 @section('content')
 <div class="page-wrapper">
@@ -10,7 +7,7 @@
         <div class="page-header">
             <div class="row">
                 <div class="col">
-                    <h3 class="page-title">Employee Salary 1212121</h3>
+                    <h3 class="page-title">Employee Salary</h3>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="admin-dashboard.html">Dashboard</a></li>
                         <li class="breadcrumb-item active">Salary</li>
@@ -24,7 +21,7 @@
                     <div class="modal-body">
                         <form action="{{route('admin.employees.salary.generate')}}" method="POST">
                             @csrf
-                            <div class="row align-items-center justify-content-center">
+                            <div class="row align-items-end justify-content-center">
                                 <div class="col-lg-4 col-md-6 col-sm-6 form-group">
                                     <label class="col-form-label">Select Month</label>
                                     <input type="month" class="form-control" name="month" value="">
@@ -38,10 +35,8 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6 text-right">
-                                    <div class="submit-section">
-                                        <button class="btn btn-primary submit-btn">Submit</button>
-                                    </div>
+                                <div class="col-lg-4 col-md-6 col-sm-6 salary form-group">
+                                        <button type="sumbit" class="btn btn-success ">Submit</button>
                                 </div>
                             </div>
                         </form>
@@ -53,11 +48,6 @@
 </div>
 @endsection
 @push('plugin-js')
-<script src="{{ asset('assets/js/select2.min.js') }}"></script>
-<script src="{{ asset('assets/js/moment.min.js') }}"></script>
-<script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-<script src="{{ asset('assets/js/ckeditor.js') }}"></script>
-<script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
 <script>
     if (isset($dataedit)) {
         $("#add_salary").modal('show');

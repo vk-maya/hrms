@@ -1,16 +1,7 @@
 @extends('admin.layouts.app')
 @push('css')
-<link rel="stylesheet" href="{{ asset('assets/css/dataTables.bootstrap4.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
-{{-- <link rel="stylesheet" href="assets/plugins/sweetalert2/sweetalert2.min.css"> --}}
 @endpush
 @section('content')
-<style>
-    .error {
-        color: rgb(229, 33, 33);
-    }
-</style>
 <div class="page-wrapper">
     <div class="content container-fluid">
         <div class="page-header">
@@ -80,7 +71,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="table-responsive">
-                    <table class="table cus-table-striped custom-table datatable">
+                    <table class="table cus-table-striped custom-table mb-0 data-table-theme">
                         <thead>
                             <tr>
                                 <th>Employee</th>
@@ -140,7 +131,7 @@
         </div>
     </div>
     <div id="add_salary" class="modal custom-modal fade" role="dialog">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg-add" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Add Employee Salary</h5>
@@ -170,10 +161,10 @@
                         @error('net_salary')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
-                        </div>
-                        <div class="modal-footer submit-section">
-                            <button type="submit" class="btn submit-btn">Submit</button>
-                        </div>
+                </div>
+                <div class="modal-footer submit-section">
+                    <button type="submit" class="btn add-btn">Submit</button>
+                </div>
                 </form>
             </div>
         </div>
@@ -363,16 +354,10 @@
             </div>
             <div class="modal-body">
                 <div class="content container-fluid">
-                    <div class="page-header">
-                        <div class="row align-items-center">
-                            <div class="col-auto float-end ms-auto">
-                                <div class="btn-group btn-group-sm">
-                                    <button class="btn btn-white">CSV</button>
-                                    <button class="btn btn-white">PDF</button>
-                                    <button class="btn btn-white"><i class="fa fa-print fa-lg"></i> Print</button>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="btn-group-sm text-end">
+                        <button class="btn add-btn">CSV</button>
+                        <button class="btn add-btn">PDF</button>
+                        <button class="btn add-btn"><i class="fa fa-print fa-lg"></i> Print</button>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
@@ -383,7 +368,7 @@
                                         <div class="col-lg-12 m-b-20">
                                             <ul class="list-unstyled">
                                                 <li>
-                                                    <h3 class="mb-0"> Name <strong id="fname"></strong></h3>
+                                                    <h3 class="mb-0"> Name : <strong id="fname"></strong></h3>
                                                 </li>
                                                 {{-- <li ><span id="role"></span></li> --}}
                                                 <li>Employee ID: <span id="empid"></span></li>
@@ -395,7 +380,7 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div>
-                                                <h4 class="m-b-10"><strong>Earnings</strong></h4>
+                                                <h4 class="mb-2"><strong>Earnings</strong></h4>
                                                 <table class="table table-bordered">
                                                     <tbody>
                                                         <tr>
@@ -425,7 +410,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div>
-                                                <h4 class="m-b-10"><strong>Deductions</strong></h4>
+                                                <h4 class="mb-2"><strong>Deductions</strong></h4>
                                                 <table class="table table-bordered">
                                                     <tbody>
                                                         <tr>
@@ -473,21 +458,7 @@
 </div>
 @endsection
 @push('js')
-<script src="{{ asset('assets/js/select2.min.js') }}"></script>
-<script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('assets/js/dataTables.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('assets/js/moment.min.js') }}"></script>
-<script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-<script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
-    // ------------shoe data table---------------
-    $('#department').DataTable({
-        paging: true,
-        searching: true
-    });
-
     function multiply() {
         a = Number(document.getElementById('basic_incre').value);
         b = Number(document.getElementById('amount').value);

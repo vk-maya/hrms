@@ -124,7 +124,7 @@
                             </div>
                         </div>
                          <div class="submit-section text-center">
-                            <button class="btn btn-primary submit-btn">Save</button>
+                            <button class="btn btn-success">Save</button>
                         </div>
                     </form>
                 </div>

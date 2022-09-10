@@ -22,7 +22,7 @@
         {{-- {{$employees->dailyTask->orderBy('post_date','desc')->first()->post_date}} --}}
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table cus-table-striped custom-table mb-0" id="department">
+                <table class="table cus-table-striped custom-table mb-0 data-table-theme">
                     <thead>
                         <tr>
                             <th style="width: 30px;">SR</th>
