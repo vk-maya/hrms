@@ -62,6 +62,8 @@
                                     <div class="form-group">
                                         <label>No. of children Select<span class="text-danger">*</span></label>
                                         <select class="select form-control" name="children">
+                                            <option @if (isset($data) && $data->noOfChildren ==0) selected @endif
+                                                value="0">0</option>
                                             <option @if (isset($data) && $data->noOfChildren == 1) selected @endif
                                                 value="1">1</option>
                                             <option @if (isset($data) && $data->noOfChildren == 2) selected @endif
@@ -97,7 +99,7 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6">
                                     <div class="form-group">
-                                        <label>Bank account No.</label>
+                                        <label>Bank account No.<span class="text-danger">*</span></label>
                                         <div>
                                             <input name="bankAc" class="form-control" required type="text" value="@isset($data){{ $data->bankAc}}@else{{old('bankAc')}}@endisset">
                                             <span class="text-danger">
@@ -110,7 +112,7 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6">
                                     <div class="form-group">
-                                        <label>IFSC Code</label>
+                                        <label>IFSC Code<span class="text-danger">*</span></label>
                                         <input name="ifsc" class="form-control" type="text" required value="@isset($data){{ $data->ifsc}}@else{{ old('ifsc')}}@endisset">
                                         <span class="text-danger">
                                             @error('ifsc')
@@ -121,7 +123,7 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6">
                                     <div class="form-group">
-                                        <label>Pan Number</label>
+                                        <label>Pan Number <span class="text-danger">*</span></label>
                                         <input name="pan" class="form-control" type="text" required value="@isset($data){{ $data->pan}}@else{{old('pan')}}@endisset">
                                         <span class="text-danger">
                                             @error('pan')

@@ -492,13 +492,9 @@ textarea:focus {
     src: local("Circular Std Black Italic"), url(../fonts/CircularStd-BlackItalic.woff) format("woff")
 }
 
-
-
-
 @font-face {
     font-family: 'Mulish';
-    src: url('../fonts/Mulish-Bold.woff2') format('woff2'),
-        url('../fonts/Mulish-Bold.woff') format('woff');
+    src: url('../fonts/Mulish-Bold.woff2') format('woff2'), url('../fonts/Mulish-Bold.woff') format('woff');
     font-weight: bold;
     font-style: normal;
     font-display: swap;
@@ -506,8 +502,7 @@ textarea:focus {
 
 @font-face {
     font-family: 'Mulish';
-    src: url('../fonts/Mulish-Black.woff2') format('woff2'),
-        url('../fonts/Mulish-Black.woff') format('woff');
+    src: url('../fonts/Mulish-Black.woff2') format('woff2'), url('../fonts/Mulish-Black.woff') format('woff');
     font-weight: 900;
     font-style: normal;
     font-display: swap;
@@ -515,8 +510,7 @@ textarea:focus {
 
 @font-face {
     font-family: 'Mulish';
-    src: url('../fonts/Mulish-BlackItalic.woff2') format('woff2'),
-        url('../fonts/Mulish-BlackItalic.woff') format('woff');
+    src: url('../fonts/Mulish-BlackItalic.woff2') format('woff2'), url('../fonts/Mulish-BlackItalic.woff') format('woff');
     font-weight: 900;
     font-style: italic;
     font-display: swap;
@@ -524,8 +518,7 @@ textarea:focus {
 
 @font-face {
     font-family: 'Mulish';
-    src: url('../fonts/Mulish-BoldItalic.woff2') format('woff2'),
-        url('../fonts/Mulish-BoldItalic.woff') format('woff');
+    src: url('../fonts/Mulish-BoldItalic.woff2') format('woff2'), url('../fonts/Mulish-BoldItalic.woff') format('woff');
     font-weight: bold;
     font-style: italic;
     font-display: swap;
@@ -533,8 +526,7 @@ textarea:focus {
 
 @font-face {
     font-family: 'Mulish';
-    src: url('../fonts/Mulish-Light.woff2') format('woff2'),
-        url('../fonts/Mulish-Light.woff') format('woff');
+    src: url('../fonts/Mulish-Light.woff2') format('woff2'), url('../fonts/Mulish-Light.woff') format('woff');
     font-weight: 300;
     font-style: normal;
     font-display: swap;
@@ -542,8 +534,7 @@ textarea:focus {
 
 @font-face {
     font-family: 'Mulish';
-    src: url('../fonts/Mulish-ExtraLight.woff2') format('woff2'),
-        url('../fonts/Mulish-ExtraLight.woff') format('woff');
+    src: url('../fonts/Mulish-ExtraLight.woff2') format('woff2'), url('../fonts/Mulish-ExtraLight.woff') format('woff');
     font-weight: 200;
     font-style: normal;
     font-display: swap;
@@ -551,8 +542,7 @@ textarea:focus {
 
 @font-face {
     font-family: 'Mulish';
-    src: url('../fonts/Mulish-Italic.woff2') format('woff2'),
-        url('../fonts/Mulish-Italic.woff') format('woff');
+    src: url('../fonts/Mulish-Italic.woff2') format('woff2'), url('../fonts/Mulish-Italic.woff') format('woff');
     font-weight: normal;
     font-style: italic;
     font-display: swap;
@@ -560,8 +550,7 @@ textarea:focus {
 
 @font-face {
     font-family: 'Mulish';
-    src: url('../fonts/Mulish-ExtraBoldItalic.woff2') format('woff2'),
-        url('../fonts/Mulish-ExtraBoldItalic.woff') format('woff');
+    src: url('../fonts/Mulish-ExtraBoldItalic.woff2') format('woff2'), url('../fonts/Mulish-ExtraBoldItalic.woff') format('woff');
     font-weight: bold;
     font-style: italic;
     font-display: swap;
@@ -569,8 +558,7 @@ textarea:focus {
 
 @font-face {
     font-family: 'Mulish';
-    src: url('../fonts/Mulish-ExtraBold.woff2') format('woff2'),
-        url('../fonts/Mulish-ExtraBold.woff') format('woff');
+    src: url('../fonts/Mulish-ExtraBold.woff2') format('woff2'), url('../fonts/Mulish-ExtraBold.woff') format('woff');
     font-weight: bold;
     font-style: normal;
     font-display: swap;
@@ -578,8 +566,7 @@ textarea:focus {
 
 @font-face {
     font-family: 'Mulish';
-    src: url('../fonts/Mulish-ExtraLightItalic.woff2') format('woff2'),
-        url('../fonts/Mulish-ExtraLightItalic.woff') format('woff');
+    src: url('../fonts/Mulish-ExtraLightItalic.woff2') format('woff2'), url('../fonts/Mulish-ExtraLightItalic.woff') format('woff');
     font-weight: 200;
     font-style: italic;
     font-display: swap;
@@ -587,8 +574,7 @@ textarea:focus {
 
 @font-face {
     font-family: 'Mulish';
-    src: url('../fonts/Mulish-LightItalic.woff2') format('woff2'),
-        url('../fonts/Mulish-LightItalic.woff') format('woff');
+    src: url('../fonts/Mulish-LightItalic.woff2') format('woff2'), url('../fonts/Mulish-LightItalic.woff') format('woff');
     font-weight: 300;
     font-style: italic;
     font-display: swap;
@@ -596,8 +582,7 @@ textarea:focus {
 
 @font-face {
     font-family: 'Mulish';
-    src: url('../fonts/Mulish-Medium.woff2') format('woff2'),
-        url('../fonts/Mulish-Medium.woff') format('woff');
+    src: url('../fonts/Mulish-Medium.woff2') format('woff2'), url('../fonts/Mulish-Medium.woff') format('woff');
     font-weight: 500;
     font-style: normal;
     font-display: swap;
@@ -605,8 +590,7 @@ textarea:focus {
 
 @font-face {
     font-family: 'Mulish';
-    src: url('../fonts/Mulish-MediumItalic.woff2') format('woff2'),
-        url('../fonts/Mulish-MediumItalic.woff') format('woff');
+    src: url('../fonts/Mulish-MediumItalic.woff2') format('woff2'), url('../fonts/Mulish-MediumItalic.woff') format('woff');
     font-weight: 500;
     font-style: italic;
     font-display: swap;
@@ -614,8 +598,7 @@ textarea:focus {
 
 @font-face {
     font-family: 'Mulish';
-    src: url('../fonts/Mulish-SemiBold.woff2') format('woff2'),
-        url('../fonts/Mulish-SemiBold.woff') format('woff');
+    src: url('../fonts/Mulish-SemiBold.woff2') format('woff2'), url('../fonts/Mulish-SemiBold.woff') format('woff');
     font-weight: 600;
     font-style: normal;
     font-display: swap;
@@ -623,8 +606,7 @@ textarea:focus {
 
 @font-face {
     font-family: 'Mulish';
-    src: url('../fonts/Mulish-SemiBoldItalic.woff2') format('woff2'),
-        url('../fonts/Mulish-SemiBoldItalic.woff') format('woff');
+    src: url('../fonts/Mulish-SemiBoldItalic.woff2') format('woff2'), url('../fonts/Mulish-SemiBoldItalic.woff') format('woff');
     font-weight: 600;
     font-style: italic;
     font-display: swap;
@@ -632,13 +614,11 @@ textarea:focus {
 
 @font-face {
     font-family: 'Mulish';
-    src: url('../fonts/Mulish-Regular.woff2') format('woff2'),
-        url('../fonts/Mulish-Regular.woff') format('woff');
+    src: url('../fonts/Mulish-Regular.woff2') format('woff2'), url('../fonts/Mulish-Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
 }
-
 
 h1 {
     font-weight: 600;
@@ -1062,47 +1042,36 @@ strong {
     .col.col-xs-12 {
         width: 100%
     }
-
     .col.col-xs-11 {
         width: 91.66666667%
     }
-
     .col.col-xs-10 {
         width: 83.33333333%
     }
-
     .col.col-xs-9 {
         width: 75%
     }
-
     .col.col-xs-8 {
         width: 66.66666667%
     }
-
     .col.col-xs-7 {
         width: 58.33333333%
     }
-
     .col.col-xs-6 {
         width: 50%
     }
-
     .col.col-xs-5 {
         width: 41.66666667%
     }
-
     .col.col-xs-4 {
         width: 33.33333333%
     }
-
     .col.col-xs-3 {
         width: 25%
     }
-
     .col.col-xs-2 {
         width: 16.66666667%
     }
-
     .col.col-xs-1 {
         width: 8.33333333%
     }
@@ -1112,47 +1081,36 @@ strong {
     .col.col-sm-12 {
         width: 100%
     }
-
     .col.col-sm-11 {
         width: 91.66666667%
     }
-
     .col.col-sm-10 {
         width: 83.33333333%
     }
-
     .col.col-sm-9 {
         width: 75%
     }
-
     .col.col-sm-8 {
         width: 66.66666667%
     }
-
     .col.col-sm-7 {
         width: 58.33333333%
     }
-
     .col.col-sm-6 {
         width: 50%
     }
-
     .col.col-sm-5 {
         width: 41.66666667%
     }
-
     .col.col-sm-4 {
         width: 33.33333333%
     }
-
     .col.col-sm-3 {
         width: 25%
     }
-
     .col.col-sm-2 {
         width: 16.66666667%
     }
-
     .col.col-sm-1 {
         width: 8.33333333%
     }
@@ -1162,47 +1120,36 @@ strong {
     .col.col-md-12 {
         width: 100%
     }
-
     .col.col-md-11 {
         width: 91.66666667%
     }
-
     .col.col-md-10 {
         width: 83.33333333%
     }
-
     .col.col-md-9 {
         width: 75%
     }
-
     .col.col-md-8 {
         width: 66.66666667%
     }
-
     .col.col-md-7 {
         width: 58.33333333%
     }
-
     .col.col-md-6 {
         width: 50%
     }
-
     .col.col-md-5 {
         width: 41.66666667%
     }
-
     .col.col-md-4 {
         width: 33.33333333%
     }
-
     .col.col-md-3 {
         width: 25%
     }
-
     .col.col-md-2 {
         width: 16.66666667%
     }
-
     .col.col-md-1 {
         width: 8.33333333%
     }
@@ -1212,47 +1159,36 @@ strong {
     .col.col-lg-12 {
         width: 100%
     }
-
     .col.col-lg-11 {
         width: 91.66666667%
     }
-
     .col.col-lg-10 {
         width: 83.33333333%
     }
-
     .col.col-lg-9 {
         width: 75%
     }
-
     .col.col-lg-8 {
         width: 66.66666667%
     }
-
     .col.col-lg-7 {
         width: 58.33333333%
     }
-
     .col.col-lg-6 {
         width: 50%
     }
-
     .col.col-lg-5 {
         width: 41.66666667%
     }
-
     .col.col-lg-4 {
         width: 33.33333333%
     }
-
     .col.col-lg-3 {
         width: 25%
     }
-
     .col.col-lg-2 {
         width: 16.66666667%
     }
-
     .col.col-lg-1 {
         width: 8.33333333%
     }
@@ -1486,7 +1422,6 @@ strong {
 }
 
 @media(min-width:768px) {
-
     .avatar-xxl.avatar-away::before,
     .avatar-xxl.avatar-offline::before,
     .avatar-xxl.avatar-online::before {
@@ -1871,7 +1806,6 @@ button.bg-danger:hover {
     text-transform: uppercase;
     border-radius: 5px;
 }
-
 
 .btn-success:hover,
 .btn-success:focus .btn-success.active,
@@ -2905,6 +2839,7 @@ button.bg-danger:hover {
         width: 100%
     }
 }
+
 .header #toggle_btn {
     color: #999;
     float: left;
@@ -2949,25 +2884,20 @@ button.bg-danger:hover {
     .header .page-title-box {
         display: none
     }
-
     .header #toggle_btn {
         display: none;
     }
-
     #mobile_btn {
         display: block;
     }
-
     .main-wrapper.slide-nav .header .bar-icon span:nth-child(1) {
         transform: rotate(45deg);
         position: relative;
         top: 9px;
     }
-
     .main-wrapper.slide-nav .header .bar-icon span:nth-child(2) {
         opacity: 0;
     }
-
     .main-wrapper.slide-nav .header .bar-icon span:nth-child(3) {
         transform: rotate(-45deg);
         position: relative;
@@ -3055,13 +2985,11 @@ button.bg-danger:hover {
         position: absolute;
         left: 0
     }
-
     .header .top-nav-search.active form .form-control {
         background-color: #fff;
         border-color: #e3e3e3;
         color: #333
     }
-
     .header .top-nav-search.active form .btn {
         background-color: transparent;
         border-color: transparent;
@@ -3081,11 +3009,13 @@ button.bg-danger:hover {
     z-index: 99
 }
 
+
 /* @media(max-width:575px){
     .header .user-menu{
         display:none
     }
 } */
+
 .header .user-menu .dropdown-toggle::after {
     border: 0
 }
@@ -3137,7 +3067,6 @@ button.bg-danger:hover {
     .header .has-arrow .dropdown-toggle>span:nth-child(2) {
         display: none
     }
-
     .header .has-arrow .dropdown-toggle:after {
         display: none !important
     }
@@ -3242,37 +3171,29 @@ button.bg-danger:hover {
         width: 60px;
         padding: 0 5px
     }
-
     .mini-sidebar .header-left .logo img {
         height: auto;
         max-height: 30px;
         width: auto
     }
-
     .mini-sidebar .menu-arrow {
         display: none !important
     }
-
     .mini-sidebar .chat-user {
         display: none !important
     }
-
     /* .mini-sidebar .badge {
         display: none !important
     } */
-
     .mini-sidebar.expand-menu .menu-arrow {
         display: block !important
     }
-
     .mini-sidebar.expand-menu .chat-user {
         display: block !important
     }
-
     /* .mini-sidebar.expand-menu .badge {
         display: block !important
     } */
-
     .mini-sidebar .noti-dot:before {
         display: none
     }
@@ -3528,31 +3449,25 @@ button.bg-danger:hover {
     .mini-sidebar .sidebar {
         width: 60px
     }
-
     .mini-sidebar .sidebar .menu-title {
         visibility: hidden;
         white-space: nowrap
     }
-
     .mini-sidebar .sidebar .sidebar-menu>ul>li>a i {
         font-size: 30px;
         width: 30px
     }
-
     .mini-sidebar.expand-menu .sidebar {
         width: 230px
     }
-
     .mini-sidebar.expand-menu .sidebar .menu-title {
         visibility: hidden;
         white-space: nowrap
     }
-
     .mini-sidebar.expand-menu .sidebar .sidebar-menu>ul>li>a i {
         font-size: 30px;
         width: 30px
     }
-
     .mini-sidebar.expand-menu .sidebar .sidebar-menu>ul>li.menu-title {
         visibility: visible
     }
@@ -5313,7 +5228,6 @@ table.dataTable {
     0% {
         -webkit-box-shadow: 0 0 0 0 rgba(0, 0, 0, .1)
     }
-
     100% {
         -webkit-box-shadow: 0 0 0 50px transparent
     }
@@ -5324,7 +5238,6 @@ table.dataTable {
         -moz-box-shadow: 0 0 0 0 rgba(0, 0, 0, .1);
         box-shadow: 0 0 0 0 rgba(0, 0, 0, .1)
     }
-
     100% {
         -moz-box-shadow: 0 0 0 50px transparent;
         box-shadow: 0 0 0 50px transparent
@@ -5851,6 +5764,7 @@ textarea.form-control {
     font-size: 18px;
     margin-bottom: 0
 }
+
 .dash-section .dash-sec-title {
     font-size: 18px;
     font-weight: 700;
@@ -5886,7 +5800,6 @@ textarea.form-control {
 .dash-section .dash-info-list .dash-card-container .dash-card-content {
     flex-direction: row
 }
-
 
 @media(max-width:768px) {
     .dash-section .dash-info-list .dash-card-container .dash-card-content p {
@@ -6535,7 +6448,6 @@ textarea.form-control {
     from {
         transform: scale(.001)
     }
-
     to {
         transform: scale(1)
     }
@@ -6589,7 +6501,6 @@ textarea.form-control {
 .faq-card .card .card-header h4 a:not(.collapsed):after {
     content: "\f068"
 }
-
 
 .view-icons .btn.active {
     color: #333
@@ -6699,16 +6610,20 @@ textarea.form-control {
     font-size: 12px
 }
 
+
 /* .leave-item .leave-row{
     margin-bottom:15px
 } */
+
 .leave-item .leave-row .leave-left {
     flex: 1 1 auto
 }
 
+
 /* .leave-item .leave-row .leave-left .input-box{
     max-width:330px
 } */
+
 .leave-item .leave-row .form-group {
     margin-bottom: 0
 }
@@ -7062,7 +6977,6 @@ textarea.form-control {
         -webkit-transform: translateX(0px);
         -ms-transform: translateX(0px)
     }
-
     .chat-main-row .chat-main-wrapper .message-view.chat-profile-view.opened {
         margin-right: 0
     }
@@ -7076,7 +6990,6 @@ textarea.form-control {
     .chat-main-row .chat-main-wrapper .task-left-sidebar {
         width: 100%
     }
-
     .chat-main-row .chat-main-wrapper .task-left-sidebar.chat-sidebar {
         display: none
     }
@@ -7103,7 +7016,6 @@ textarea.form-control {
         -ms-transition: all .4s ease;
         transition: all .4s ease
     }
-
     .chat-main-row .chat-main-wrapper .task-right-sidebar.opened {
         margin-right: 0
     }
@@ -7921,7 +7833,6 @@ textarea.form-control {
     .contacts-list {
         padding: 0 70px 0 15px
     }
-
     .contacts-list .contact-list {
         list-style: none;
         padding-left: 0;
@@ -8021,7 +7932,6 @@ button.close {
 .page-wrapper.job-wrapper {
     margin: 0 !important
 }
-
 
 .job-widget h4 {
     color: #585858;
@@ -8141,7 +8051,6 @@ button.close {
     .message-view .task-view {
         width: 100%
     }
-
     .task-chat-view {
         display: none !important;
         -webkit-transition: all .4s ease;
@@ -8159,7 +8068,6 @@ button.close {
         padding-bottom: 60px;
         margin-top: 60px
     }
-
     .task-chat-view.opened {
         margin-right: 0 !important;
         display: block !important
@@ -8686,7 +8594,9 @@ button.close {
     white-space: nowrap
 }
 
+
 /*Custom Css*/
+
 .user-pf-tp {
     position: relative;
 }
@@ -8803,7 +8713,6 @@ button.close {
     border: 1px solid #cfcfcf;
     background: #cfcfcf;
     border-radius: 4em;
-
 }
 
 .page-wrapper .label-switch::after {
@@ -8836,7 +8745,7 @@ button.close {
 }
 
 .page-wrapper .info-text::before {
-    content: "Not active";
+    content: "Inactive";
 }
 
 .page-wrapper .input-switch:checked~.info-text::before {
@@ -8881,9 +8790,11 @@ button.close {
     margin-top: 21px;
 }
 
+
 /* .border-right-dashed{
     border-right: 2px dashed #ccc;
 } */
+
 .accent-chek {
     line-height: 28px;
     display: flex;
@@ -8918,6 +8829,7 @@ input[type=file].form-control {
     line-height: 36px;
     height: 50px;
 }
+
 .dropdown.dropdown-action .dropdown-item {
     background-color: #fff !important;
     border-radius: 0px;
@@ -8943,6 +8855,7 @@ input[type=file].form-control {
     transition: 0.3s;
     background-color: #f9f9f9;
 }
+
 .header .has-arrow .dropdown-toggle:after {
     display: none;
 }
@@ -9079,7 +8992,7 @@ input[type=file].form-control {
 }
 
 .page-wrapper.inner .info-text::before {
-    content: "Not active";
+    content: "Inactive";
 }
 
 .page-wrapper.inner .input-switch:checked~.info-text::before {
@@ -9091,7 +9004,9 @@ input[type=file].form-control {
     text-align: end;
     display: block;
 }
-.ui-state-default, .ui-widget-content .ui-state-default{
+
+.ui-state-default,
+.ui-widget-content .ui-state-default {
     color: #454545;
     text-align: center;
     border-radius: 50%;
@@ -9100,52 +9015,56 @@ input[type=file].form-control {
     border: none;
     transition: 0.3s;
 }
-.ui-state-default, .ui-widget-content .ui-state-default:hover{
-    background-color:#eff2f5 ;
+
+.ui-state-default,
+.ui-widget-content .ui-state-default:hover {
+    background-color: #eff2f5;
 }
+
 .ui-widget-header {
     background-color: #e9ecef;
 }
-.ui-datepicker select.ui-datepicker-month, .ui-datepicker select.ui-datepicker-year {
+
+.ui-datepicker select.ui-datepicker-month,
+.ui-datepicker select.ui-datepicker-year {
     width: 40%;
     margin: 0px 8px;
     border: none;
     padding: 2px;
     border-radius: 10px;
 }
+
 .ui-state-hover,
 .ui-widget-content .ui-state-hover,
-.ui-widget-header .ui-state-hover{
-	border:none;
-	background: #ededed;
-	font-weight: normal;
-	color: #2b2b2b;
+.ui-widget-header .ui-state-hover {
+    border: none;
+    background: #ededed;
+    font-weight: normal;
+    color: #2b2b2b;
 }
+
 .load-more {
     margin-top: 2.7rem;
 }
-.job-content.job-widget-inner{
+
+.job-content.job-widget-inner {
     padding: 20px;
     box-shadow: 0px 0px 3px 0px #ccc;
     border-radius: 8px;
 }
+
 .dash-section .dash-info-list .dash-card-container .dash-card-content p {
     font-size: 18px;
     margin-bottom: 0;
 }
-.welcome-img img{
+
+.welcome-img img {
     width: 100px;
 }
+
 .modal.cust-mod {
     top: 2.5rem;
 }
-
-
-
-
-
-
-
 
 @media(max-width:992px) {
     .footer-adm {
@@ -9162,46 +9081,34 @@ input[type=file].form-control {
         -ms-transition: all .4s ease;
         transition: all .4s ease;
         z-index: 1041;
-
     }
-
     .page-wrapper {
         margin: 0;
     }
-
     .slide-nav .sidebar {
         margin-left: 0;
     }
-
     .top-nav-search {
         display: none;
     }
-
     .modal-title {
         margin-bottom: 16px;
     }
-
     .modal-content.heading {
         margin-top: 15px !important;
     }
-
     .modal-header {
         padding-bottom: 0;
     }
-
     .submit-section {
         margin-top: 10px;
     }
-
     .salary {
         text-align: center !important;
     }
-
-
 }
 
 @media(max-width: 767px) {
-
     div.dataTables_wrapper div.dataTables_length,
     div.dataTables_wrapper div.dataTables_filter,
     div.dataTables_wrapper div.dataTables_info,
@@ -9209,57 +9116,41 @@ input[type=file].form-control {
         text-align: center;
         margin-top: 30px;
     }
-
     .page-wrapper .icon-topic {
         display: block !important;
         text-align: end;
     }
-
     .page-wrapper .employ-add-btn {
         margin-top: 20px;
     }
-
     .page-wrapper .employ-add-btn .add-btn {
         min-width: 100px !important;
     }
-
     .search-btn .btn-success {
         padding: 10px 30px !important;
     }
-
 }
-
-
-
-
-
 
 @media(max-width:575px) {
     .page-header .btn.add-btn {
         width: 150px;
         font-size: 13px;
     }
-
     .page-wrapper .content .page-header .page-title {
         font-size: 21px;
     }
-
     .page-wrapper .icon-topic {
         width: 100%;
     }
-
     .page-wrapper .content .page-header {
         margin-top: 30px;
     }
-
     .page-wrapper .content {
         padding: 5px;
     }
-
     .header .mobile-user-menu .dropdown-menu {
         right: 0 !important;
     }
-
     .add-btn {
         margin-right: 0;
     }

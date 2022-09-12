@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\Department;
 use App\Models\Designation;
-use App\Models\User;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class DerpartmentController extends Controller
 {
@@ -30,10 +30,12 @@ class DerpartmentController extends Controller
             $data = new Department();
         }
         $request->validate($rules);
+      
         $data->department_name = $request->department;
         $data->status = ($request->status == '1') ? 1 : 0;
         $data->save();
-        return redirect()->route('admin.departments');
+        
+        return back()->with('success', 'User created successfully.');
     }
     public function departmentsstatus(Request $request){
         $data = Department::find($request->id);

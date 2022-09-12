@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use Carbon\Carbon;
@@ -76,8 +77,7 @@ class EmployeesController extends Controller
     public function employeesdestroy($id)
     {
         $delete = User::find($id);
-        if ($delete->image != '')
-        {
+        if ($delete->image != '') {
             storage::delete('public/uploads/' . $delete->image);
         }
         $delete->delete();
@@ -106,9 +106,8 @@ class EmployeesController extends Controller
     // -----------------------employees form create && edit From  ---------------------
     public function addemployeescreate(Request $request)
     {
-        // dd($request->toArray());
-        if ($request->id != '')
-        {
+        dd($request->toArray());
+        if ($request->id != '') {
             $sess = Session::where('status', 1)->first();
             $salared = SalaryEarenDeduction::with('salarymanag')->where('session_id', $sess->id)
                 ->where('status', 1)
@@ -119,9 +118,7 @@ class EmployeesController extends Controller
             $department = Department::get();
             $count = Countries::all();
             return view('admin.employees.employees-add', compact('department', 'employees', 'count', 'salared', 'salaryedit'));
-        }
-        else
-        {
+        } else {
             $sess = Session::where('status', 1)->first();
             $salared = SalaryEarenDeduction::with('salarymanag')->where('session_id', $sess->id)
                 ->where('status', 1)
@@ -129,13 +126,10 @@ class EmployeesController extends Controller
             $department = Department::get();
             $count = Countries::all();
             $id = User::latest()->first();
-            if ($id == !null)
-            {
+            if ($id == !null) {
                 $emp = explode('-', $id->employeeID);
-                $empid = '00'.(1 + $emp[2]);
-            }
-            else
-            {
+                $empid = '00' . (1 + $emp[2]);
+            } else {
                 $empid = "0001";
             }
 
@@ -147,9 +141,8 @@ class EmployeesController extends Controller
     public function addemployeesstore(Request $request)
     {
         // dd($request->toArray());
-        if ($request->id == "")
-        {
-            $rules = ['first_name' => ['required', 'string', 'max:255'], 'password' => ['required', 'confirmed', Rules\Password::defaults() ], 'joiningDate' => ['string', 'required'], 'department_id' => ['required', 'string', ], 'designation_id' => ['required', 'string', 'numeric', 'max:255'], ];
+        if ($request->id == "") {
+            $rules = ['first_name' => ['required', 'string', 'max:255'], 'password' => ['required', 'confirmed', Rules\Password::defaults()], 'joiningDate' => ['string', 'required'], 'department_id' => ['required', 'string',], 'designation_id' => ['required', 'string', 'numeric', 'max:255'],];
         }
 
         if ($request->pincode != null) {
@@ -157,8 +150,7 @@ class EmployeesController extends Controller
             $request->validate($rules);
         }
 
-        if ($request->id == !null)
-        {
+        if ($request->id == !null) {
             $employees = User::find($request->id);
             $leaveyearr = UserleaveYear::where('user_id', $request->id)
                 ->where('status', 1)
@@ -167,16 +159,14 @@ class EmployeesController extends Controller
             $rules['email'] = ['required', 'string', 'email', 'max:255'];
             if (User::where('email', $request->email)
                 ->where('id', '!', $request->id)
-                ->count() > 0)
-            {
+                ->count() > 0
+            ) {
                 return response()
                     ->back()
                     ->withErrors(['email' => "Email Already Exist"])
                     ->withInput();
             }
-        }
-        else
-        {
+        } else {
             $rules['email'] = ['required', 'string', 'email', 'max:255', 'unique:users'];
             $request->validate($rules);
             $employees = new User();
@@ -187,69 +177,49 @@ class EmployeesController extends Controller
         $employees->gender = $request->gender;
         $dobmax = Carbon::now()->subMonths(216)
             ->toDateString();
-        if ($request->dob <= $dobmax)
-        {
+        if ($request->dob <= $dobmax) {
             $employees->dob = date('Y-m-d', strtotime($request->dob));
-        }
-        else
-        {
+        } else {
             return back()
                 ->withErrors(["dob" => "Min. 18 years be employed or permitted to work"])
                 ->withInput();
         }
         $employees->email = $request->email;
         $id = User::latest()->first();
-        if ($request->id == null)
-        {
-            if ($id != null)
-            {
+        if ($request->id == null) {
+            if ($id != null) {
                 // dd("ddd");
                 $emp = explode('-', $id->employeeID);
                 $empid = 1 + $emp[2];
-                if ($empid < 9)
-                {
+                if ($empid < 9) {
                     $empid = 'SDPL-JAI-000' . $empid;
-                }
-                elseif ($empid < 99)
-                {
+                } elseif ($empid < 99) {
                     $empid = 'SDPL-JAI-00' . $empid;
-                }
-                elseif ($empid < 100)
-                {
+                } elseif ($empid < 100) {
                     $empid = 'SDPL-JAI-0' . $empid;
-                }
-                else
-                {
+                } else {
                     $empid = 'SDPL-JAI-' . $empid;
                 }
-
-            }
-            else
-            {
+            } else {
                 $empid = "SDPL-JAI-0001";
             }
-        }
-        else
-        {
+        } else {
             $empid = "SDPL-JAI-0001";
         }
         $employees->employeeID = $empid;
         $employees->machineID = $request->machineID;
 
-        if ($request->password != '')
-        {
+        if ($request->password != '') {
 
             $employees->password = Hash::make($request->password);
         }
         $companydate = "2019-01-01";
         if ($request->joiningDate >= $companydate && $request->joiningDate <= Carbon::now()
-            ->toDateString())
-        {
+            ->toDateString()
+        ) {
 
             $employees->joiningDate = date('Y-m-d', strtotime($request->joiningDate));
-        }
-        else
-        {
+        } else {
             return back()
                 ->withErrors(["joiningDate" => "as per company rules"])
                 ->withInput();
@@ -264,8 +234,7 @@ class EmployeesController extends Controller
         $employees->pinCode = $request->pincode;
         $employees->status = ($request->status == 1) ? 1 : 0;
         $employees->workplace = $request->workplace;
-        if ($request->hasFile('image') == 1)
-        {
+        if ($request->hasFile('image') == 1) {
             storage::delete('public/uploads/' . $employees->image);
             $file = $request->file('image');
             $ext = $file->getClientOriginalExtension();
@@ -279,15 +248,12 @@ class EmployeesController extends Controller
         // -------------------------yearleave function------------------------
         $sess = Session::where('status', 1)->latest()
             ->first();
-        if ($request->id == null)
-        {
+        if ($request->id == null) {
             $employeesId = User::latest()->first('id');
             $leaveyear = new UserleaveYear();
             $leaveyear->user_id = $employeesId->id;
             $leaveyear->session_id = $sess->id;
-        }
-        else
-        {
+        } else {
             $leaveyear = UserleaveYear::where('user_id', $request->id)
                 ->where('status', 1)
                 ->latest()
@@ -295,31 +261,22 @@ class EmployeesController extends Controller
         }
         $allleave = settingleave::where('status', 1)->get();
         $jd = $request->joiningDate;
-        if ($jd >= $sess->from)
-        {
+        if ($jd >= $sess->from) {
             $jd = $request->joiningDate;
-        }
-        else
-        {
+        } else {
             $jd = $sess->from;
         }
         $diffr = round(Carbon::parse($jd)->floatDiffInMonths($sess->to));
-        foreach ($allleave as $value)
-        {
-            if ($value->type == 'PL')
-            {
+        foreach ($allleave as $value) {
+            if ($value->type == 'PL') {
                 $day = $diffr *= $value->day / 12;
                 $leaveyear->basicAnual = $day;
                 // dd($leaveyear->basicAnual);
 
-            }
-            elseif ($value->type == 'Sick')
-            {
+            } elseif ($value->type == 'Sick') {
                 $day = $diffr *= $value->day / 12;
                 $leaveyear->basicSick = $day;
-            }
-            elseif ($value->type == 'other')
-            {
+            } elseif ($value->type == 'other') {
                 $day = $diffr = $value->day;
                 $leaveyear->other = $day;
             }
@@ -328,18 +285,13 @@ class EmployeesController extends Controller
             $leaveyear->save();
         }
         // ----------------------------monthleave function--------------------
-        if ($request->id == null)
-        {
+        if ($request->id == null) {
             $leaveyear = UserleaveYear::latest()->first();
             $yearleave = settingleave::where('status', 1)->get();
-            foreach ($yearleave as $key => $value)
-            {
-                if ($value->type == "PL")
-                {
+            foreach ($yearleave as $key => $value) {
+                if ($value->type == "PL") {
                     $anual = $value->day / 12;
-                }
-                elseif ($value->type == "Sick")
-                {
+                } elseif ($value->type == "Sick") {
                     $sickl = $value->day / 12;
                 }
             }
@@ -350,22 +302,18 @@ class EmployeesController extends Controller
             $jd = $employeesId->joiningDate;
             $str = date('Y-m', strtotime($jd));
             $strr = $str . "-15";
-            if ($jd >= $sess->from)
-            {
-                if ($jd < $strr)
-                {
+            if ($jd >= $sess->from) {
+                if ($jd < $strr) {
                     $jd = date('Y-m', strtotime($jd));
                     $jd = $jd . "-01";
                     // dd($jd);
 
-                }
-                else
-                {
+                } else {
                     $jd = Carbon::parse($jd)->addMonths();
                     $jd = date('Y-m', strtotime($jd));
                     $jd = $jd . "-01";
                 }
-            }else{
+            } else {
                 $jd = $sess->from;
             }
             $end = now();
@@ -386,17 +334,12 @@ class EmployeesController extends Controller
         }
 
         // -----------------------file save function------------------------
-        if ($request->hasFile('files'))
-        {
+        if ($request->hasFile('files')) {
             $files = $request->file('files');
-            foreach ($files as $file)
-            {
-                if ($request->id == null)
-                {
+            foreach ($files as $file) {
+                if ($request->id == null) {
                     $fileimg = new Attach;
-                }
-                else
-                {
+                } else {
                     $fileimg = Attach::where('user_id', $request->id)
                         ->get();
                 }
@@ -412,12 +355,9 @@ class EmployeesController extends Controller
         }
         // -------------------------earning and deducation code -----------------------
         // dd($request->toArray());
-        if ($request->id != null)
-        {
+        if ($request->id != null) {
             $user = $request->id;
-        }
-        else
-        {
+        } else {
 
             $user = $employeesId->id;
         }
@@ -432,12 +372,9 @@ class EmployeesController extends Controller
     public function status($id)
     {
         $idd = User::find($id);
-        if ($idd->status == 1)
-        {
+        if ($idd->status == 1) {
             $idd->status = 0;
-        }
-        else
-        {
+        } else {
             $idd->status = 1;
         }
         $idd->save();
@@ -454,14 +391,11 @@ class EmployeesController extends Controller
     public function information($id)
     {
         $userin = userinfo::where('user_id', $id)->count();
-        if ($userin != "")
-        {
+        if ($userin != "") {
             $data = userinfo::where('user_id', $id)->first();
             $id = $id;
             return view('admin.employees.information', compact('data', 'id'));
-        }
-        else
-        {
+        } else {
             $id = $id;
             return view('admin.employees.information', compact('id'));
         }
@@ -469,13 +403,10 @@ class EmployeesController extends Controller
 
     public function empinfo(Request $request)
     {
-        $rules = ['nationality' => ['required', 'string', ], 'maritalstatus' => ['required', 'string'], 'children' => ['required', 'string', ], 'bankname' => ['required', 'string', ], 'bankAc' => ['required', 'integer', ], 'ifsc' => ['required', 'string', ], 'pan' => ['required', 'string', ], ];
-        if ($request->id)
-        {
+        $rules = ['nationality' => ['required', 'string',], 'maritalstatus' => ['required', 'string'], 'children' => ['required', 'string',], 'bankname' => ['required', 'string',], 'bankAc' => ['required', 'integer',], 'ifsc' => ['required', 'string',], 'pan' => ['required', 'string',],];
+        if ($request->id) {
             $data = userinfo::find($request->id);
-        }
-        else
-        {
+        } else {
             $data = new userinfo();
             $data->user_id = $request->user_id;
         }
@@ -503,11 +434,9 @@ class EmployeesController extends Controller
 
     public function attachfileStore(Request $request)
     {
-        if ($request->hasFile('files'))
-        {
+        if ($request->hasFile('files')) {
             $files = $request->file('files');
-            foreach ($files as $file)
-            {
+            foreach ($files as $file) {
                 $fileimg = new Attach;
                 $fname = $request->first_name;
                 $newfilename = $fname . '_' . rand(0, 10000) . '.' . $file->getClientoriginalExtension();
@@ -531,5 +460,4 @@ class EmployeesController extends Controller
         return redirect()
             ->back();
     }
-
 }
