@@ -15,9 +15,10 @@
                 </div>
             </div>
         </div>
-        <form action="{{route('admin.attendance.employee')}}" method="GET">
+        <form action="{{route('admin.attendance.employee.search')}}" method="GET">
+            @csrf
             <div class="row filter-row">
-                <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="col-md">
                     <div class="form-group form-focus select-focus">
                         <select class="select floating" name="user_id">
                             <option value="">All</option>
@@ -28,7 +29,7 @@
                         <label class="focus-label">Employee Name</label>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 col-sm-6">
+                <div class="col-md">
                     <div class="form-group form-focus select-focus">
                         <select class="select floating" name="month">
                             <option @if(isset(request()->month) && request()->month == 1)
@@ -71,11 +72,11 @@
                         <label class="focus-label">Select Month</label>
                     </div>
                 </div>
-                @php
-                $years=2019;
-                $curenty= date('Y', strtotime(now()))
-                @endphp
-                <div class="col-lg-4 col-md-6 col-sm-6">
+                    @php
+                    $years=2019;
+                    $curenty= date('Y', strtotime(now()))
+                    @endphp
+                <div class="col-md">
                     <div class="form-group form-focus select-focus">
                         <select class="select floating" name="year">
                             @for($years; $years <=$curenty; $years++) <option @if(isset(request()->year) && request()->year == $years) selected @endif value="{{$years}}">{{$years}}</option>
@@ -84,9 +85,13 @@
                         <label class="focus-label">Select Year</label>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 col-sm-6 form-group">
+                <div class="col-md">
                     <div class="search-btn">
                         <button type="submit" class="btn btn-success"> Search </button>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="search-btn">
                         <a href="{{route('admin.attendance.employee')}}" class="btn btn-success"> Reset </a>
                     </div>
                 </div>
@@ -115,14 +120,14 @@
                                     </h2>
                                 </td>
                                 @php
-                                $month= date('m', strtotime($item->$method->from));
-                                $year= date('Y', strtotime($item->$method->from));
+                                $month= date('m', strtotime($item->monthleave));
+                                $year= date('Y', strtotime($item));
                                 @endphp
-                                <td>{{\Carbon\Carbon::parse($item->$method->from)->format('M').', '.$year}}</td>
-                                <td>@if ($item->$method->apprAnual>0){{$item->$method->apprAnual}}@else 0 @endif</td>
-                                <td>@if ($item->$method->apprSick>0){{$item->$method->apprSick}}@else 0 @endif</td>
-                                <td>@if ($item->$method->other>0){{$item->$method->other}}@else 0 @endif</td>
-                                <td>@if ($item->$method->working_day>0){{$item->$method->working_day}}@else 0 @endif</td>
+                                <td>{{\Carbon\Carbon::parse($item->monthleave->from)->format('M').', '.$year}}</td>
+                                <td>@if ($item->monthleave->apprAnual>0){{$item->monthleave->apprAnual}}@else 0 @endif</td>
+                                <td>@if ($item->monthleave->apprSick>0){{$item->monthleave->apprSick}}@else 0 @endif</td>
+                                <td>@if ($item->monthleave->other>0){{$item->monthleave->other}}@else 0 @endif</td>
+                                <td>@if ($item->monthleave->working_day>0){{$item->monthleave->working_day}}@else 0 @endif</td>
                                 <td><a class="btn add-btn" href="{{route('admin.employee.month',[$item->id,$year,$month])}}">More</a></td>
                             </tr>
                             @endforeach

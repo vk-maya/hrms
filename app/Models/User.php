@@ -49,7 +49,7 @@ class User extends Authenticatable
         return $this->hasMany(Leave::class,);
     }
     public function monthleave(){
-        return $this->hasOne(monthleave::class,'user_id','id')->where('status', 1);
+        return $this->hasOne(monthleave::class);
     }
     public function monthleavesalary(){
         return $this->hasOne(monthleave::class,'user_id','id');
@@ -57,7 +57,7 @@ class User extends Authenticatable
 
     public function monthleavelist(){
 
-        return $this->hasOne(monthleave::class,'user_id','id')->where('status',0);
+        return $this->hasOne(monthleave::class,'user_id','id');
     }
 
     public function leave(){

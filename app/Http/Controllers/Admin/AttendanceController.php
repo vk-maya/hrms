@@ -55,6 +55,7 @@ class AttendanceController extends Controller
     
     }
     public function attendanceEmployee(Request $request){
+        // dd("hello ");
         $attendance = User::query();
             $attendance->where('id',$request->user_id);
         $method = 'monthleave';
@@ -62,34 +63,48 @@ class AttendanceController extends Controller
             $last_date = Carbon::createFromDate()->endOfMonth()->toDateString();
         $attendance = User::with(['attendence' => function($query)use($first_date,$last_date){
             $query->whereBetween('date', [$first_date,$last_date]);
-        },  $method => function($query)use($first_date,$last_date){
+        },  'monthleave' => function($query)use($first_date,$last_date){
             $query->where('from', $first_date)->where('to',$last_date);
         }])->where('status', 1)->orderBy('users.first_name')->get();    
         $allemployees= User::where('status',1)->orderBy('first_name')->get(['first_name','id']);
+        // dd($attendance->toArray());
         return view('admin.attendance.employee',compact('attendance','allemployees','method'));
     }
     //attendance search function
     public function attendanceEmployeeSearch(Request $request){
-        $first_date = Carbon::createFromDate($request->year,$request->month)->startOfMonth()->toDateString();
-        $last_date = Carbon::createFromDate($request->year,$request->month)->endOfMonth()->toDateString();
-        $method = 'monthleavelist';
-        if (!empty($request->user_id)){
-            $attendance = User::with(['attendence' => function($query)use($first_date,$last_date){
-                $query->whereBetween('date', [$first_date,$last_date]);
-            }, $method => function($query)use($first_date,$last_date){
-                $query->where('from', $first_date)->where('to',$last_date);
-            }])->orderBy('users.first_name')->where('id',$request->user_id)->get();
-        }else{
-            $attendance = User::with(['attendence' => function($query)use($first_date,$last_date){
-                $query->whereBetween('date', [$first_date,$last_date]);
-            },$method => function($query)use($first_date,$last_date){
-                $query->where('from', $first_date)->where('to',$last_date);
-            }])->orderBy('users.first_name')->get();
-        }
-        $allemployees= User::orderBy('first_name')->get(['first_name','id']);
-        return view('admin.attendance.employee',compact('attendance','allemployees','method'));
-
+            $first_date = Carbon::createFromDate($request->year,$request->month)->startOfMonth()->toDateString();
+            $last_date = Carbon::createFromDate($request->year,$request->month)->endOfMonth()->toDateString();
+        // $leave= User::whereHas('monthleave')->get();
+        // dd($leave->toArray());
+        dd($first_date,$last_date);
+        $leave= User::has('monthleave',function($query)use($first_date,$last_date){
+            $query->where('from','<=',$first_date)->where('to','>=',$last_date);})->get();
+        dd($leave->toArray());
     }
+
+    // public function attendanceEmployeeSearch(Request $request){
+    //     // dd($request->toArray());
+    //     $first_date = Carbon::createFromDate($request->year,$request->month)->startOfMonth()->toDateString();
+    //     $last_date = Carbon::createFromDate($request->year,$request->month)->endOfMonth()->toDateString();
+    //     // dd($first_date,$last_date);
+    //     if (!empty($request->user_id)){
+    //         $attendance = User::with(['attendence' => function($query)use($first_date,$last_date){
+    //             $query->whereBetween('date', [$first_date,$last_date]);
+    //         }, 'monthleave' => function($query)use($first_date,$last_date){
+    //             $query->where('from', $first_date)->where('to',$last_date);
+    //         }])->orderBy('users.first_name')->where('id',$request->user_id)->get();
+    //     }else{
+    //         $attendance = User::with(['attendence' => function($query)use($first_date,$last_date){
+    //             $query->whereBetween('date', [$first_date,$last_date]);
+    //         },'monthleave' => function($query)use($first_date,$last_date){
+    //             $query->where('from', $first_date)->where('to',$last_date);
+    //         }])->orderBy('users.first_name')->get();
+    //     }
+    //     $allemployees= User::orderBy('first_name')->get(['first_name','id']);
+    //     dd($attendance->toArray());
+    //     return view('admin.attendance.employee',compact('attendance','allemployees'));
+
+    // }
     public function attinfo($id){
         $attendinfo = Attendance::find($id);
         return response()->json(['attend' => $attendinfo]);
