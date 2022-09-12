@@ -34,8 +34,17 @@ class HomeController extends Controller
         $absent = User::where('status','1')->whereHas('attendance',function($query){
             $query->where('attendance','A')->where('date',now()->format('Y-m-d'));
         })->count();
-        // dd($absent );
+        $date=now()->format('Y-m-d');
+        // dd($date);
+        // $leave= User::whereHas('nowleave',function($query){
+        //     $query->where('form','>=',$date);
+        // })->get();
+        // dd($leave->toArray());
+
         return view('admin.dashboard', compact('emp_count', 'project_count','users','absent'));
+    }
+    public function dashboardsearch(){
+
     }
         ///........................settings......................////
 

@@ -1,6 +1,5 @@
 @extends('admin.layouts.app')
 @push('css')
-
 @endpush
 @section('content')
 <div class="page-wrapper">
@@ -79,7 +78,6 @@
                 <div class="col-sm-3 col-md">
                     <div class="form-group form-focus select-focus">
                         <select class="select floating" name="year">
-                            <option>-</option>
                             @for($years; $years <=$curenty; $years++) <option @if(isset(request()->year) && request()->year == $years) selected @endif value="{{$years}}">{{$years}}</option>
                                 @endfor
                         </select>

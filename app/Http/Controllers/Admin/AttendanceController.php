@@ -32,12 +32,13 @@ class AttendanceController extends Controller
     }
     //filter search function
     public function attendanceSearch(Request $request){
+        // dd($request->toArray());
       
         $first_date = Carbon::createFromDate($request->year,$request->month)->startOfMonth()->toDateString();
         $last_date = Carbon::createFromDate($request->year,$request->month)->endOfMonth()->toDateString();
         if(empty($date)){
             $date = $last_date;
-        }   
+        }
         if (!empty($request->user_id)){
             $attendance = User::where('id',$request->user_id)->with(['attendence' => function($query)use($first_date,$last_date){
                 $query->whereBetween('date', [$first_date,$last_date]);

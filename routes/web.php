@@ -102,6 +102,7 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
 Route::redirect('/admin', '/admin/dashboard');
 Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard/search', [HomeController::class, 'dashboardsearch'])->name('dashboard.search');
     // ---------------departments--------------------
     Route::get('departments', [DerpartmentController::class, 'departmentscreate'])->name('departments');
     Route::post('departments', [DerpartmentController::class, 'departmentsstore'])->name('departments');

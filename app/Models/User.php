@@ -9,6 +9,7 @@ use App\Models\Admin\UserEarndeducation;
 use App\Models\Admin\UserSalary;
 use App\Models\Designation;
 use App\Models\Leave\Leave;
+use DateTime;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -44,7 +45,9 @@ class User extends Authenticatable
         'workplace',
         'image',
     ];
-
+    public function nowleave(){
+        return $this->hasMany(Leave::class,);
+    }
     public function monthleave(){
         return $this->hasOne(monthleave::class,'user_id','id')->where('status', 1);
     }
