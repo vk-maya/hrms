@@ -142,12 +142,12 @@ class PayrollController extends Controller
         $employeesalary = SalarySlip::with('user')->find($id);
         return view('admin.payroll.genrate-slip', compact('employeesalary', 'id'));
     }
-    // public function downloadPdf($id){
-    //     $employeesalary = SalarySlip::with('user')->find($id);
-    //     view()->share('admin.payroll.slip-pdf', $employeesalary);
-    //     $pdf = PDF::loadView('admin.payroll.slip-pdf', ['employeesalary' => $employeesalary]);
-    //     // dd($employeesalary->toArray());
-    //     return $pdf->download('slip.pdf');
+    public function downloadPdf($id){
+        $employeesalary = SalarySlip::with('user')->find($id);
+        view()->share('admin.payroll.slip-pdf', $employeesalary);
+        $pdf = PDF::loadView('admin.payroll.slip-pdf', ['employeesalary' => $employeesalary]);
+        return $pdf->download('slip.pdf');
+    }
 
     // --------------------salary management  list show-----------------
     public function salary_settings()
@@ -173,11 +173,12 @@ class PayrollController extends Controller
         $last_date = Carbon::createFromDate()->subMonths()->endOfMonth()->toDateString();
         // dd($first_date,$last_date);
         $monthRecord = User::with(['monthleavesalary' => function ($query) use ($first_date, $last_date) {
-            $query->whereBetween('from',[$first_date,$last_date])->orWhereBetween('to',[$first_date,$last_date]);
+            $query->where(function($q) use ($first_date, $last_date){
+                $q->whereBetween('from',[$first_date,$last_date])->orWhereBetween('to',[$first_date,$last_date]);
+            })->where('status',0);
         }, 'designation'])->orderBy('users.first_name')->where('status', 1)->get();
 
         $users = User::with('usersalaryget')->where('status', 1)->select('id', 'first_name')->get();
-        // dd($monthRecord->toArray());
         return view('admin.report.leavereport', compact('users', 'monthRecord'));
     }
     public function empreportSearch(Request $request)
@@ -188,9 +189,6 @@ class PayrollController extends Controller
             $monthRecord = User::with(['monthleavesalary' => function ($query) use ($first_date, $last_date) {
                 $query->whereBetween('from',[$first_date,$last_date])->orWhereBetween('to',[$first_date,$last_date]);
             }, 'designation'])->orderBy('users.first_name')->where('id',$request->user_id)->get();
-            // $monthRecord = User::with(['monthleavesalary' => function ($query) use ($first_date, $last_date) {
-            //     $query->where('from', '>=', $first_date)->where('to', '<=', $last_date)->where('status', 0);
-            // }])->orderBy('users.first_name')->where('id', $request->user_id)->get();
         } else {
             $monthRecord = User::with(['monthleavesalary' => function ($query) use ($first_date, $last_date) {
                 $query->whereBetween('from',[$first_date,$last_date])->orWhereBetween('to',[$first_date,$last_date]);
@@ -200,71 +198,7 @@ class PayrollController extends Controller
         return view('admin.report.leavereport', compact('users', 'monthRecord'));
     }
 
-    //monthly salary Generate
-    // public function salaryGenerate(Request $request){
-    //     $salary = UserSalary::where('user_id', $request->user_id)->where('status', 1)->first();
-    //     $userearndedu = UserEarndeducation::with('salaryEarningDeduction')->where('user_id', $request->user_id)->get(); 
-    //     $monthLeaveCalculate = monthleave::where('user_id', $request->user_id)->where('status',0)->get();
-    //     foreach ($monthLeaveCalculate as $key => $monthLeaveCal) {
-    //     if ($monthLeaveCal!= null && $salary!= null) {
-    //     $dateFrom = new DateTime($monthLeaveCal->from);
-    //         $dateTo = new DateTime($monthLeaveCal->to);
-    //         $interval = $dateFrom->diff($dateTo);
-    //         $da = $interval->format('%a');
-    //         $days = $da + 1;
-    //         $salarymonthDay = $days;//month day as joning date and accepect date
-    //         if ($request->id > 0) {
-    //             $salarygenerate = UserSlip::find($request->id);
-    //         } else {
-    //                 $salarygenerate = new UserSlip();
-    //         }
-    //                 $salarygenerate->user_id = $request->user_id;
-    //                 $month = $salary->monthly;
-    //                 $inMonthDay = date('d', strtotime($monthLeaveCal->to));
-    //                 $NetDay = $salarymonthDay; //total working day in month
-    //                 $daySalary = $month / $inMonthDay; //pr day salary calculate
-    //             if (isset($monthLeaveCal->other) && $monthLeaveCal->other != null) {
-    //                 $salarymonthDay = $salarymonthDay - $monthLeaveCal->other; //net day working in month
-    //             }
-    //                 $paysalary = $salarymonthDay * $daySalary; //paysalary calculate prday Vs Net working day && pay salary decuction of leave
-    //                 $monthLeaveCal->status = 3;
-    //                 $monthLeaveCal->save();
-    //                 $month = round($paysalary);
-    //                 $salarygenerate->monthly_netsalary = $month; // net monthly salary
-    //                 $salarygenerate->payslip_number = "SDCS-" . $request->user_id . rand(10, 10000);
-    //                 $salarygenerate->net_salary = $salary->net_salary;
-    //                 $salarygenerate->slip_month = $request->month;
-    //                 $salarygenerate->salary_month =  date('Y-m', strtotime($monthLeaveCal->to));
-    //                 $salarygenerate->status = 1;
-    //                 $salarygenerate->user_salaryID = $salary->id;
-    //                 $total_deduct = 0;
-    //                 $total_earn = 0;
-    //             foreach ($userearndedu as $eardedu) {
-    //                 if ($eardedu->salaryEarningDeduction->salarymanagement->type == 'earning') {
-    //                     $deduct = $month * $eardedu->salaryEarningDeduction->value / 100;
-    //                     $total_earn += (int)$deduct;
-    //                 } else {
-    //                     $deduct = $month * $eardedu->salaryEarningDeduction->value / 100;
-    //                     $total_deduct += (int)$deduct;
-    //                 }
-    //                 $salarygenerate[str_replace(' ', '_', strtolower($eardedu->salaryEarningDeduction->salarymanagement->title))] = round($deduct);
-    //             }
-    //                     $salarygenerate->tDeducation = $total_deduct;
-    //                     $salarygenerate->tEarning = $total_earn;
-    //                     $totaled = $month - $total_deduct;
-    //                     $grossMonthSalary = $paysalary - $total_deduct;
-    //             if (isset($monthLeaveCal->other) && $monthLeaveCal->other != null) {
-    //                 $salarygenerate->leave_deduction = round($monthLeaveCal->other * $daySalary);
-    //             } else {
-    //                 $salarygenerate->leave_deduction = 0 * $daySalary;
-    //             }
-    //                     $salarygenerate->paysalary = round($grossMonthSalary);
-    //                     $salarygenerate->basic_salary = $totaled + $salarygenerate->leave_deduction;
-    //                     $salarygenerate->save();
-    //                 }
-    //             }
-    //     return redirect()->route('admin.payroll.list');
-    // }
+
     //month leae record manage function
     public function monthRecordLeaveManage(Request $request){  
         if (!empty($request->id)) {
@@ -432,7 +366,6 @@ class PayrollController extends Controller
     }
     //employees slip generate function
     public function monthslipgenerate(Request $request){
-        // dd($request->toArray());
         if (!empty($request->id)) {
             $monthLeaveCal = monthleave::find($request->monthrecord_id);
             $dateFrom = new DateTime($monthLeaveCal->from);
