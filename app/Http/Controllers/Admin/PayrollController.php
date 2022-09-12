@@ -76,8 +76,7 @@ class PayrollController extends Controller
         return response()->json(compact('company', 'slip'));
     }
     //Earning And Deduction  Value Save in fnction
-    public function salary_store(Request $request)
-    {
+    public function salary_store(Request $request){
         foreach ($request->ids as $key => $title) {
             $sess = Session::where('status', 1)->first();
             $data = new SalaryEarenDeduction();
@@ -90,8 +89,7 @@ class PayrollController extends Controller
         return redirect()->back();
     }
     // -------year salary generate------------
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $request->validate([
             'employee_id' => 'required',
             'net_salary' => 'required',
@@ -140,12 +138,13 @@ class PayrollController extends Controller
     {
         $id = $id;
         $employeesalary = SalarySlip::with('user')->find($id);
-        return view('admin.payroll.genrate-slip', compact('employeesalary', 'id'));
+        // return view('admin.payroll.genrate-slip', compact('employeesalary', 'id'));
     }
     public function downloadPdf($id){
-        $employeesalary = SalarySlip::with('user')->find($id);
-        view()->share('admin.payroll.slip-pdf', $employeesalary);
-        $pdf = PDF::loadView('admin.payroll.slip-pdf', ['employeesalary' => $employeesalary]);
+        $company = CompanyProfile::where('status', 1)->first();
+        $employeesalary = UserSlip::with(['user.userDesignation'])->find($id);      
+        view()->share('admin.payroll.export-pdf.blade', $employeesalary,$company);
+        $pdf = PDF::loadView('admin.payroll.export-pdf', ['employeesalary' => $employeesalary,'company'=>$company]);
         return $pdf->download('slip.pdf');
     }
 

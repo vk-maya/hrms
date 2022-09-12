@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\EmployeesReport;
 use App\Http\Controllers\Employees\EmpAttendanceController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\UserslipController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,6 +88,10 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
     ///Work From Home
     Route::get('work/from/home',[LeaveController::class,'wfhcreate'])->name('wfh.create');
     Route::Post('work/from/home/save',[LeaveController::class,'wfhstore'])->name('store.wfh');
+    //salary slip route
+    Route::get('employees/view/slip/{id}',[UserslipController::class,'slipview'])->name('employees.view.slip');
+
+    Route::get('salary/slip/list',[UserslipController::class,'userSlip'])->name('salary.slip.list');
 
 });
 
@@ -228,7 +233,7 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::get('tsetsing/route/{id}',[PayrollController::class,'testroute'])->name('test.link');
 
     //...................PDF..................//
-    Route::get('export-pdf/{id}', [PayrollController::class, 'downloadPdf'])->name('export-pdf');
+    Route::get('payslip-pdf/{id}', [PayrollController::class, 'downloadPdf'])->name('payslip.download');
 
     // WFH Route
   Route::post('workfrom/home/report',[AdminLeaveController::class,'wfhReport'])->name('wfh.report');

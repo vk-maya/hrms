@@ -21,7 +21,7 @@
                         <li><a class="@if(\Request::route()->getName() == 'employees.leave') active @endif" href="{{route('employees.leave')}}">Leaves</a></li>
 
                     </ul>
-                </li>
+                </li>                
                 <li class="submenu @if(in_array(\Request::route()->getName(), ["employees.daily.task", "employees.show-list"])) active @endif">
                     <a href="#"><i class="la la-rocket"></i> <span> Task</span> <span
                             class="menu-arrow"></span></a>
@@ -37,8 +37,18 @@
                             <li><a disabled>Daily Task</a></li>
                         @endif
                         <li><a class="@if(\Request::route()->getName() == 'employees.show-list') active @endif" href="{{route('employees.show-list')}}">List Task</a></li>
+                    
                     </ul>
                 </li>
+                <li class="submenu @if(in_array(\Request::route()->getName(), ["employees.attendance", "employees.leave"])) active @endif">
+                    <a href="#"><i class="la la-user"></i> <span> Pay Roll</span> <span
+                            class="menu-arrow"></span></a>
+                    <ul style="display: none;">
+                        <li><a class="@if(\Request::route()->getName() == 'employees.salary.slip.list') active @endif" href="{{route('employees.salary.slip.list')}}">Slip List</a></li>
+                        {{-- <li><a class="@if(\Request::route()->getName() == 'employees.leave') active @endif" href="{{route('employees.leave')}}">Leaves</a></li> --}}
+
+                    </ul>
+                </li>    
             </ul>
         </div>
     </div>

@@ -1,8 +1,8 @@
-@extends('admin.layouts.app')
+@extends('layouts.app')
 @push('css')
-    <link rel="stylesheet" href="{{ asset('assets/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/ckeditor.css') }}">
 @endpush
 @section('content')
     <div class="page-wrapper">
@@ -10,57 +10,50 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Employee Salary Slips</h3>
+                        <h3 class="page-title">Slip-List</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active"><a href="{{ route('admin.payroll.list') }}">Salary</a></li>
-                            <li class="breadcrumb-item active">Slips</li>
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                            <li class="breadcrumb-item active"> Salary slip-List</li>
                         </ul>
                     </div>
-                    <div class="col-auto float-end ms-auto">                 
-                    </div>
-                    <div class="col-auto float-end ms-auto">
-                        <a href="{{ route('admin.emp.report.emp',$id) }}" class="btn add-btn"><i class="fa fa-plus-circle"
-                                aria-hidden="true"></i>Generate</a>
-                    </div>
                 </div>
-            </div>          
-            <div class="row">
+            </div>
+            <div class="job-content job-widget">
                 <div class="col-md-12">
                     <div class="table-responsive">
                         <table class="table table-striped custom-table mb-0" id="department">
                             <thead>
                                 <tr>
-                                    <th>Employee</th>
-                                    <th>Employee ID</th>
-                                    <th>Email</th>
-                                    <th>Salary</th>
+                                    <th style="width: 30px;">SR</th>
+                                    <th>Date</th>
                                     <th>Month</th>
-                                    <th>Payslip</th>
+                                    <th>Payslip Number</th>
+                                    <th>Net Salary</th>
+                                    <th>Basic Salary</th>
+                                    <th class="text-end">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($employeeslip as $item)
+                                @foreach ($salipList as $key => $item)
                                     <tr>
-                                        <td>
-                                            <a href="{{route('admin.employees.profile',$item->user->id)}}" class="avatar"> <img
-                                                src="@if($item->user->image != NULL){{ asset('storage/uploads/' . $item->user->image) }}@else{{ asset('assets/img/avtar.jpg')}}@endif" alt="Employees Image"></a>
-                                        <a href="{{route('admin.employees.profile',$item->user->id)}}"><b>{{  $item->user->first_name }}</b></a></td>
-                                        <td>{{ $item->user->employeeID }}</td>
-                                        <td>{{ $item->user->email }}</td>
-                                        <td>{{ $item->basic_salary }}</td>
-                                        <td>{{ Carbon\Carbon::parse($item->salary_month )->format('M-Y')}}</td>
+                                        <td>{{ $key + 1 }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($item->slip_month)->format('m/Y') }} </td>
+                                        <td>{{ \Carbon\Carbon::parse($item->slip_month)->format('M/Y') }} </td>
+                                        <td>{{ $item->payslip_number }}</a>
+                                        <td>{{ $item->net_salary }}</a>
+                                        <td>{{ $item->basic_salary }}</a></td>
                                         <td> <a class="salarySlip btn btn-sm btn-success"data-id="{{ $item->id }}">Slip View</a></td>
+
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
                 </div>
+                
             </div>
         </div>
     </div>
-    {{-- //slip module --}}
     <div id="salarySlip" class="modal custom-modal fade" role="dialog">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
@@ -76,7 +69,7 @@
                             <div class="row align-items-center">
                                 <div class="col-auto float-end ms-auto">
                                     <div class="btn-group btn-group-sm">
-                                        <span class="btn btn-white"><a href="{{route('admin.payslip.download',$item->id)}}">PDF</a></span>
+                                        <span class="btn btn-white"><a href="">PDF</a></span>
                                     </div>
                                 </div>
                             </div>
@@ -237,75 +230,66 @@
         </div>
     </div>
 @endsection
-@push('js')
+@push('plugin-js') 
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
-    <script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-    <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
+    <script src="{{ asset('assets/js/ckeditor.js') }}"></script>
+    <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>   
     <script>
-        $('#department').DataTable({
-            paging: true,
-            searching: true
-        });
+        $(document).ready(function() {
+            $(document).on("click", ".salarySlip", function() {
+                var id = $(this).data('id');
+                let url = "{{route('employees.employees.view.slip',':id')}}";
+                url= url.replace(':id',id);
+                $.ajax({
+                    url: url,
+                    type: "GET",
+                    cache: false,
+                    success: function(res) {
+                        console.log(res);
+                        $("#fname").html(res.company.name);
+                        $("#emailc").html(res.company.email);
+                        $("#Paddress").html(res.company.p_address);
+                        $("#postal").html(res.company.postl);
+                        $("#phone").html(res.company.phone);
+                        $("#web").html(res.company.web);
+                        $("#username").html(res.user.first_name);
+                        const monthNames = ["January", "February", "March", "April", "May", "June",
+                        "July", "August", "September", "October", "November", "December"
+                        ];
+                        var formattedDate = new Date(res.slip.salary_month);
+                        $("#slip").html(monthNames[formattedDate.getMonth()]+" - "+ formattedDate.getFullYear());
+                        $("#empid").html(res.user.employeeID);
+                        $("#jd").html(res.user.joiningDate);
+                        $("#emailu").html(res.user.email);
+                        $("#desigination").html(res.user.designation.designation_name);
+                        $("#bs").html(res.slip.monthly_netsalary);
+                        $("#tds").html(res.slip.tds);
+                        $("#da").html(res.slip.da);
+                        $("#est").html(res.slip.esi);
+                        $("#hra").html(res.slip.hra);
+                        $("#lDeducation").html(res.slip.leave_deduction);
+                        $("#pf").html(res.slip.pf);
+                        $("#conveyance").html(res.slip.conveyance);
+                        $("#Proftax").html(res.slip.prof_tax);
+                        $("#oa").html(res.slip.allowance);
+                        $("#lw").html(res.slip.labour_welfare);
+                        $("#ma").html(res.slip.medical_allowance);
+                        $("#other").html(res.slip.others);
+                        $("#tEarning").html(res.slip.tEarning);
+                        $("#tDeducation").html(res.slip.tDeducation+res.slip.leave_deduction);
+                        $("#netslip").html(res.slip.net_salary);
+                        $("#payslipnumber").html(res.slip.payslip_number);
+                        $("#netsalary").html(res.slip.basic_salary);
+                        $("#paysalary").html(res.slip.paysalary);
+                        $("#basicSalary").html(res.slip.basic_salary);
+                        $("#salarySlip").modal('show');
+                    }
 
-        // -------------------show hidden column-------------
-    </script>
-        <script>
-            $(document).ready(function() {
-                $(document).on("click", ".salarySlip", function() {
-                    var id = $(this).data('id');
-                    let url = "{{route('admin.employees.view.slip',':id')}}";
-                    url= url.replace(':id',id);
-                    $.ajax({
-                        url: url,
-                        type: "GET",
-                        cache: false,
-                        success: function(res) {
-                            console.log(res);
-                            $("#fname").html(res.company.name);
-                            $("#emailc").html(res.company.email);
-                            $("#Paddress").html(res.company.p_address);
-                            $("#postal").html(res.company.postl);
-                            $("#phone").html(res.company.phone);
-                            $("#web").html(res.company.web);
-                            $("#username").html(res.slip.user.first_name);
-                            const monthNames = ["January", "February", "March", "April", "May", "June",
-                            "July", "August", "September", "October", "November", "December"
-                            ];
-                            var formattedDate = new Date(res.slip.salary_month);
-                            $("#slip").html(monthNames[formattedDate.getMonth()]+" - "+ formattedDate.getFullYear());
-                            $("#empid").html(res.slip.user.employeeID);
-                            $("#jd").html(res.slip.user.joiningDate);
-                            $("#emailu").html(res.slip.user.email);
-                            $("#desigination").html(res.slip.user.user_designation.designation_name);
-                            $("#bs").html(res.slip.monthly_netsalary);
-                            $("#tds").html(res.slip.tds);
-                            $("#da").html(res.slip.da);
-                            $("#est").html(res.slip.esi);
-                            $("#hra").html(res.slip.hra);
-                            $("#lDeducation").html(res.slip.leave_deduction);
-                            $("#pf").html(res.slip.pf);
-                            $("#conveyance").html(res.slip.conveyance);
-                            $("#Proftax").html(res.slip.prof_tax);
-                            $("#oa").html(res.slip.allowance);
-                            $("#lw").html(res.slip.labour_welfare);
-                            $("#ma").html(res.slip.medical_allowance);
-                            $("#other").html(res.slip.others);
-                            $("#tEarning").html(res.slip.tEarning);
-                            $("#tDeducation").html(res.slip.tDeducation+res.slip.leave_deduction);
-                            $("#netslip").html(res.slip.net_salary);
-                            $("#payslipnumber").html(res.slip.payslip_number);
-                            $("#netsalary").html(res.slip.basic_salary);
-                            $("#paysalary").html(res.slip.paysalary);
-                            $("#basicSalary").html(res.slip.basic_salary);
-                            $("#salarySlip").modal('show');
-                        }
-    
-                    });
-    
                 });
+
             });
-        </script>
+        });
+    </script> 
 @endpush
