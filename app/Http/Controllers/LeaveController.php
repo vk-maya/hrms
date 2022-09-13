@@ -44,14 +44,12 @@ class LeaveController extends Controller
         foreach ($totalLeave as $key => $days) {
             $allDay = $allDay + $days->day;
         }
-        // dd($data->toArray());
         return view('employees.leave.leave', compact('data', 'month', 'ptotalMonthLeave', 'allDay','wfh'));
     }
     public function wfhcreate(){
         return view('employees.leave.add-wfh');
     }
     public function wfhstore(Request $request){
-        dd($request->toArray());
         $dateFrom = new DateTime($request->form);
         $dateTo = new DateTime($request->to);
         $interval = $dateFrom->diff($dateTo);
