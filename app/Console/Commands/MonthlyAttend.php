@@ -89,9 +89,8 @@ class MonthlyAttend extends Command
                             $attend->in_time = $key->INTime == '--:--' ? '00:00' : $key->INTime;
                             $attend->out_time = $key->OUTTime == '--:--' ? '00:00' : $key->OUTTime;
                             if ($attend->in_time != '00:00' && $attend->out_time != '00:00') {
-                                $out_time = Carbon::parse($attend->out_time)->format('H:i A');
+                                $out_time = Carbon::parse($attend->out_time)->format('H:i');
                                 $work_time = Carbon::parse($attend->in_time)->diff(\Carbon\Carbon::parse($attend->out_time))->format('%H:%I:%S');
-                                $work_time = Carbon::parse($work_time . "- 1 hour")->toTimeString();
                                 $attend->work_time = $work_time;
                             } else {
                                 $attend->work_time = '00:00';
@@ -99,22 +98,29 @@ class MonthlyAttend extends Command
                             $attend->attendance = $key->Status;
                             $attend->status = $key->Status == 'P' ? 1 : 0;
                             $attend->passdate = ($key->Status == 'P') ? date('Y-m-d', strtotime($date)) : null;
-                            $attend->mark = ($key->Status == 'P') ? 'P' : $leaveCount;
-                            $attend->save();
-
-                            $monthLeave= monthleave::where('user_id',$user->id)->where('status',1)->first();
-                            if ($attend->mark =="P"|| $attend->mark =="WFH" ) {
-                                $monthLeave->working_day=$monthLeave->working_day+1;
+                            if ($work_time<="06:00:00" || $work_time>="03:00:00") {
+                                $attend->mark = ($key->Status == 'P') ? 'HDO' : 'HDO';
+                            }elseif($work_time<"03:00:00"){
+                                $attend->mark = ($key->Status == 'P') ? 'A' : 'A';                        
                             }else{
-                                $monthLeave->other=$monthLeave->other+1;
+                                $attend->mark = ($key->Status == 'P') ? 'P' : $leaveCount;
                             }
-                            $monthLeave->save();
+                            $attend->save();
+                        $monthLeave= monthleave::where('user_id',$user->id)->where('status',1)->first();
+                            if ($attend->mark =="P"|| $attend->mark =="WFH" ){
+                                $monthLeave->working_day=$monthLeave->working_day+1;
+                            }elseif($attend->mark =="A"){
+                                $monthLeave->other=$monthLeave->other+1;
+                            }elseif($attend->mark=="HDO"){
+                                $monthLeave->working_day=$monthLeave->working_day+0.5;
+                                $monthLeave->other=$monthLeave->other+0.5;
+                            }
+                        $monthLeave->save();
                         } else {
                             $in_time = $key->INTime == '--:--' ? '00:00' : $key->INTime;
                             $out_time = $key->OUTTime == '--:--' ? '00:00' : $key->OUTTime;
                             if ($in_time != '00:00' && $out_time != '00:00') {
                                 $work_time = Carbon::parse($in_time)->diff(\Carbon\Carbon::parse($out_time))->format('%H:%I:%S');
-                                $work_time = Carbon::parse($work_time . "- 1 hour")->toTimeString();
                             } else {
                                 $work_time = '00:00';
                             }
