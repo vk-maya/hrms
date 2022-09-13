@@ -143,7 +143,7 @@ class PayrollController extends Controller
     public function downloadPdf($id){
         $company = CompanyProfile::where('status', 1)->first();
         $employeesalary = UserSlip::with(['user.userDesignation'])->find($id);      
-        view()->share('admin.payroll.export-pdf.blade', $employeesalary,$company);
+        view()->share('admin.payroll.export-pdf', $employeesalary,$company);
         $pdf = PDF::loadView('admin.payroll.export-pdf', ['employeesalary' => $employeesalary,'company'=>$company]);
         return $pdf->download('slip.pdf');
     }

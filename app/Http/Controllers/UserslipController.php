@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Admin\Session;
@@ -21,5 +22,13 @@ class UserslipController extends Controller
         $user=User::with('designation')->find(Auth::guard('web')->user()->id);
         // dd($user->toArray());
         return response()->json(compact('company', 'slip','user'));
+    }
+    public function downloadPdf($id){
+        $company = CompanyProfile::where('status', 1)->first();
+        $employeesalary = UserSlip::with(['user.userDesignation'])->find($id);      
+        // dd($employeesalary->toArray());
+        view()->share('employees.payroll.export-pdf', $employeesalary,$company);
+        $pdf = PDF::loadView('employees.payroll.export-pdf', ['employeesalary' => $employeesalary,'company'=>$company]);
+        return $pdf->download('slip.pdf');
     }
 }

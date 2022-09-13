@@ -76,7 +76,7 @@
                             <div class="row align-items-center">
                                 <div class="col-auto float-end ms-auto">
                                     <div class="btn-group btn-group-sm">
-                                        <span class="btn btn-white"><a href="{{route('admin.payslip.download',$item->id)}}">PDF</a></span>
+                                        <span class="btn btn-white"><a href="{{route('admin.payslip.download',':id')}}" id="pdf-route">PDF</a></span>
                                     </div>
                                 </div>
                             </div>
@@ -264,6 +264,7 @@
                         cache: false,
                         success: function(res) {
                             console.log(res);
+                            $("#pdf-route").attr('href',$("#pdf-route").attr('href').replace(':id',res.slip.id));
                             $("#fname").html(res.company.name);
                             $("#emailc").html(res.company.email);
                             $("#Paddress").html(res.company.p_address);

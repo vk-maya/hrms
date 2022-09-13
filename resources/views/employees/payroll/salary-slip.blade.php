@@ -30,7 +30,8 @@
                                     <th>Payslip Number</th>
                                     <th>Net Salary</th>
                                     <th>Basic Salary</th>
-                                    <th class="text-end">Action</th>
+                                    <th class="text-center">View</th>
+                                    <th class="text-center">Download</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -39,10 +40,14 @@
                                         <td>{{ $key + 1 }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->slip_month)->format('m/Y') }} </td>
                                         <td>{{ \Carbon\Carbon::parse($item->slip_month)->format('M/Y') }} </td>
-                                        <td>{{ $item->payslip_number }}</a>
-                                        <td>{{ $item->net_salary }}</a>
-                                        <td>{{ $item->basic_salary }}</a></td>
-                                        <td> <a class="salarySlip btn btn-sm btn-success"data-id="{{ $item->id }}">Slip View</a></td>
+                                        <td>{{ $item->payslip_number }}</td>
+                                        <td>{{ $item->net_salary }}</td>
+                                        <td>{{ $item->basic_salary }}</td>
+                                        <td> <a class="salarySlip btn btn-sm "data-id="{{ $item->id }}">Slip View</a>
+                                        </td>
+                                        <td><a href="{{ route('employees.payslip.download', $item->id) }}">Slip
+                                                Download</a>
+                                        </td>
 
                                     </tr>
                                 @endforeach
@@ -50,7 +55,7 @@
                         </table>
                     </div>
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -69,7 +74,9 @@
                             <div class="row align-items-center">
                                 <div class="col-auto float-end ms-auto">
                                     <div class="btn-group btn-group-sm">
-                                        <span class="btn btn-white"><a href="">PDF</a></span>
+                                        <span class="btn btn-white"><a
+                                                href="{{ route('employees.payslip.download', ':id') }}"
+                                                id="pdf-route">PDF</a></span>
                                     </div>
                                 </div>
                             </div>
@@ -79,12 +86,12 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="row">
-                                            <div>    
-                                            <h4 class="payslip-title"><span id="slip"></span> - Pay Slip</h4>
-                                        </div>
-                                        <div>
-                                            <h5 class="payslip-title" >PAY SLIP:#<span id="payslipnumber"></span></h5>
-                                        </div>
+                                            <div>
+                                                <h4 class="payslip-title"><span id="slip"></span> - Pay Slip</h4>
+                                            </div>
+                                            <div>~
+                                                <h5 class="payslip-title">PAY SLIP:#<span id="payslipnumber"></span></h5>
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-lg-6 m-b-20">
@@ -97,16 +104,18 @@
                                                     <li id="phone">Phone:</li>
                                                     <li id="emailc"></li>
                                                     <li id="web"></li>
-                                                   
+
                                                 </ul>
                                             </div>
                                             <div class="col-lg-6 m-b-20">
                                                 <ul class="list-unstyled">
                                                     <li>
                                                         <h4 class="mb-0"><strong id="fname"></strong></h4>
-                                                    </li>                                                   
-                                                    <li><h4><b><span id="username"></span></b></li>
-                                                        <li><span id="desigination"></span></li>
+                                                    </li>
+                                                    <li>
+                                                        <h4><b><span id="username"></span></b>
+                                                    </li>
+                                                    <li><span id="desigination"></span></li>
                                                     <li>Employee ID: <span id="empid"></span></li>
                                                     <li>Joining Date: <span id="jd"></span></li>
                                                     <li><span id="emailu"></span></li>
@@ -116,14 +125,14 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <div>        
-                                                    <h4 class="m-b-10"><strong>Earnings</strong></h4>                                           
+                                                <div>
+                                                    <h4 class="m-b-10"><strong>Earnings</strong></h4>
                                                     <table class="table table-bordered">
                                                         <tbody>
-                                                            <tr>                                                   
-                                                                <td>Basic Salary <span
-                                                                    class="float-end" id="basicSalary">0</span></td>
-                                                            </tr>                                                          
+                                                            <tr>
+                                                                <td>Basic Salary <span class="float-end"
+                                                                        id="basicSalary">0</span></td>
+                                                            </tr>
                                                             <tr>
                                                                 <td><strong>House Rent Allowance (H.R.A.)</strong> <span
                                                                         class="float-end" id="hra">0</span></td>
@@ -189,8 +198,8 @@
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                                <td><strong>Leave Deduction</strong> <span class="float-end"
-                                                                        id="lDeducation">0</span>
+                                                                <td><strong>Leave Deduction</strong> <span
+                                                                        class="float-end" id="lDeducation">0</span>
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -204,17 +213,19 @@
                                                 </div>
                                             </div>
                                             <hr>
-                                            <div class="row">
+                                            <div class="col-md">
                                                 <div class="col-md-6">
                                                     <div class="col-sm-12">
-                                                        <p> <strong>Month Salary</strong> <span class="float-end" id="bs">0</span></p>
+                                                        <p> <strong>Month Salary</strong> <span class="float-end"
+                                                                id="bs">0</span></p>
                                                     </div>
 
                                                 </div>
                                                 <div class="col-md-6">
 
                                                     <div class="col-sm-12">
-                                                        <p><strong>Pay Gross Salary: <span class="float-end" id="paysalary">0</span> </strong></p>
+                                                        <p><strong>Pay Gross Salary: <span class="float-end"
+                                                                    id="paysalary">0</span> </strong></p>
                                                     </div>
                                                 </div>
 
@@ -230,24 +241,25 @@
         </div>
     </div>
 @endsection
-@push('plugin-js') 
+@push('plugin-js')
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script src="{{ asset('assets/js/ckeditor.js') }}"></script>
-    <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>   
+    <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             $(document).on("click", ".salarySlip", function() {
                 var id = $(this).data('id');
-                let url = "{{route('employees.employees.view.slip',':id')}}";
-                url= url.replace(':id',id);
+                let url = "{{ route('employees.employees.view.slip', ':id') }}";
+                url = url.replace(':id', id);
                 $.ajax({
                     url: url,
                     type: "GET",
                     cache: false,
                     success: function(res) {
-                        console.log(res);
+                        $("#pdf-route").attr('href', $("#pdf-route").attr('href').replace(':id',
+                            res.slip.id));
                         $("#fname").html(res.company.name);
                         $("#emailc").html(res.company.email);
                         $("#Paddress").html(res.company.p_address);
@@ -255,11 +267,13 @@
                         $("#phone").html(res.company.phone);
                         $("#web").html(res.company.web);
                         $("#username").html(res.user.first_name);
-                        const monthNames = ["January", "February", "March", "April", "May", "June",
-                        "July", "August", "September", "October", "November", "December"
+                        const monthNames = ["January", "February", "March", "April", "May",
+                            "June",
+                            "July", "August", "September", "October", "November", "December"
                         ];
                         var formattedDate = new Date(res.slip.salary_month);
-                        $("#slip").html(monthNames[formattedDate.getMonth()]+" - "+ formattedDate.getFullYear());
+                        $("#slip").html(monthNames[formattedDate.getMonth()] + " - " +
+                            formattedDate.getFullYear());
                         $("#empid").html(res.user.employeeID);
                         $("#jd").html(res.user.joiningDate);
                         $("#emailu").html(res.user.email);
@@ -278,7 +292,7 @@
                         $("#ma").html(res.slip.medical_allowance);
                         $("#other").html(res.slip.others);
                         $("#tEarning").html(res.slip.tEarning);
-                        $("#tDeducation").html(res.slip.tDeducation+res.slip.leave_deduction);
+                        $("#tDeducation").html(res.slip.tDeducation + res.slip.leave_deduction);
                         $("#netslip").html(res.slip.net_salary);
                         $("#payslipnumber").html(res.slip.payslip_number);
                         $("#netsalary").html(res.slip.basic_salary);
@@ -291,5 +305,5 @@
 
             });
         });
-    </script> 
+    </script>
 @endpush
