@@ -122,9 +122,9 @@
                                     <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
                                         aria-expanded="false"><i class="far fa-ellipsis-v"></i></a>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="{{ route('admin.edit-employee', $item->id) }}"><i class="far fa-pencil me-2"></i> Edit</a>
+                                        <a class="dropdown-item" href="{{ route('admin.edit-employee', $item->id) }}"><i class="fa fa-pencil-square-o me-2"></i> Edit</a>
                                         <button class="dropdown-item delete" data-id="{{ $item->id }}"><i class="fas fa-trash-alt me-2"></i> Delete</button>
-                                        <a class="dropdown-item more-add" href="{{route('admin.employees.information',$item->id)}}"><i class="far fa-plus me-2"></i>Add More</a>
+                                        <a class="dropdown-item more-add" href="{{route('admin.employees.information',$item->id)}}"><i class="fa fa-plus-square me-2" aria-hidden="true" ></i> More Info</a>
                                         <a class="dropdown-item status" href="{{route('admin.employees.status',$item->id)}}">
                                             @if ($item->status == 1)
                                             <i class="fal fa-times-circle me-2"></i>

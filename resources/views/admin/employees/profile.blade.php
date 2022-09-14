@@ -16,8 +16,9 @@
                     </ul>
                 </div>
                 <div class="col-auto ms-auto">
+                    <a href="{{ route('admin.employees.edit', $employees->id) }}" class="btn add-btn"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></i>Edit User</a>
+                    <a href="{{ route('admin.employees.information', $employees->id) }}" class="btn add-btn"><i class="fa fa-plus-square" aria-hidden="true"></i> Add More Info</a>
                     <a href="{{ route('admin.employees.attach', $employees->id) }}" class="btn add-btn"><i class="fa fa-paperclip" aria-hidden="true"></i>Attach Document</a>
-                    <a href="{{ route('admin.employees.edit', $employees->id) }}" class="btn add-btn"><i class="fa fa-plus"></i>Edit User</a>
                 </div>
             </div>
         </div>

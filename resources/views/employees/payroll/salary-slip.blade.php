@@ -89,7 +89,7 @@
                                             <div>
                                                 <h4 class="payslip-title"><span id="slip"></span> - Pay Slip</h4>
                                             </div>
-                                            <div>~
+                                            <div>
                                                 <h5 class="payslip-title">PAY SLIP:#<span id="payslipnumber"></span></h5>
                                             </div>
                                         </div>

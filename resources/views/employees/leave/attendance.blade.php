@@ -121,10 +121,8 @@
                                         <td class="text-center">
                                         @if($item->mark == "HDO")
                                             <a class="btn btn-white btn-sm btn-rounded dropdown-toggl disabled" href="#"  data-bs-toggle="dropdown" aria-expanded="false"> <i class="fa fa-check  text-info"></i> H-Half-Day </a>
-                                           
-
                                         @else                 
-                                                @if ($item->attendance == 'P')
+                                                @if ($item->attendance == 'P' || $item->attendance == 'WO')
                                                     <div class="dropdown action-label">
                                                         <a class="btn btn-white btn-sm btn-rounded  disabled" href="#"
                                                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -180,9 +178,15 @@
                         @csrf
                         <input type="hidden" name="id" id="id">
                         <div class="form-group">
+                            <label>Day Type Select<span class="text-danger">*</span></label>
+                            <select class="select" name="dayType" required>
+                                    <option value="1">Full Day</option>
+                                    <option value="0">Half Day</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label>Leave Type <span class="text-danger">*</span></label>
                             <select class="select" name="leaveType">
-                                <option value="">Select Leave Type</option>
                                 @foreach ($leaveType as $item)
                                     <option value="{{$item->id}}">{{ $item->type }}</option>
                                 @endforeach

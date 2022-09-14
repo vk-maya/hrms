@@ -63,12 +63,12 @@
                 <span> {{ Auth::guard('web')->user()->name }}</span>
             </a>
             <div class="dropdown-menu">
-                <a class="dropdown-item" href="{{route('employees.profile')}}">Password</a>
-                <a class="dropdown-item" href="{{route('employees.add.moreinfo')}}">My Profile</a>
+                <a class="dropdown-item" href="{{route('employees.add.moreinfo')}}"><i class="fa fa-user me-3" aria-hidden="true"></i> My Profile</a>
+                <a class="dropdown-item" href="{{route('employees.profile')}}"><i class="fa fa-key me-3" aria-hidden="true"></i> Password</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button class=" dropdown-item" type="submit">
-                        Log Out
+                    <button class="btn dropdown-item" type="submit">
+                        <i class="fas fa-sign-out me-3"></i> Log Out
                     </button>
                 </form>
             </div>

@@ -165,7 +165,7 @@ class AdminLeaveController extends Controller
         $dateTo = new DateTime($userLeave->to);
         $interval = $dateFrom->diff($dateTo);
         $da = $interval->format('%a');
-        $days = $da + 1;
+        $days = $da + 1;      
         $firstMonthofDay =  Carbon::now()->startOfMonth()->toDateString(); //Current month Range
         $lastMonthofDay = Carbon::now()->endOfMonth()->toDateString();
         $nextMonthFirstfDay =  Carbon::now()->startOfMonth()->addMonthsNoOverflow(1)->toDateString(); //second month Range
@@ -433,7 +433,13 @@ class AdminLeaveController extends Controller
                             $leaveRecord->save();
                         }
                     }
+                    if ($userLeave->daytype == 0){
+                        $totaldayUpdateday=Leaverecord::where('leave_id',$userLeave->id)->where('from',">=",$firstMonthofDay)->where('to',"<=",$lastMonthofDay)->first();
+                        $totaldayUpdateday->day=$totaldayUpdateday->day-0.5;
+                        $totaldayUpdateday->save();
+                    }
                 $totaldayUpdate=Leaverecord::where('leave_id',$userLeave->id)->where('from',">=",$firstMonthofDay)->where('to',"<=",$lastMonthofDay)->get();
+                // dd($totaldayUpdate->toarray(),$totaldayUpdateday->toarray());
                 $totaldayUpdatecount=Leaverecord::where('leave_id',$userLeave->id)->where('from',">=",$firstMonthofDay)->where('to',"<=",$lastMonthofDay)->count();
                     if (!empty($totaldayUpdatecount)) {
                         $totalLeaveDay=0;
@@ -472,6 +478,9 @@ class AdminLeaveController extends Controller
                         $monthLeaveRecord->save();
                     }else{
                         $userLeave->status=$request->status;
+                            if ($userLeave->daytype == 0) {
+                                $userLeave->day= $userLeave->day-0.5;
+                            }
                         $leaveRecord->admin_id =Auth::guard('admin')->user()->id;
                         $userLeave->save();
                     }
@@ -574,8 +583,8 @@ class AdminLeaveController extends Controller
                 }                            
         return redirect()->back();
     }
+    //work from home function 
     public function wfhReport(Request $request){
-// dd($request->toArray());
         $data = WorkFromHome::where('user_id',$request->user_id)->where('id',$request->id)->first();
             $datawf = WorkFromHome::where('user_id',$request->user_id)->where('id',$request->id)->first();
             $datacount = WorkFromHome::where('user_id',$request->user_id)->where('id',$request->id)->count();

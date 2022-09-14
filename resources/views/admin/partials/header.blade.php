@@ -59,12 +59,11 @@
             </a>
             <div class="dropdown-menu">
                 <div class="admin-heading text-center">
-                    <h4>Admin</h4>
-                    <p>user</p>
+                    <h4> <span class="user-img me-3"><img src="{{ asset('assets/img/avtar.jpg') }}" alt="">
+                    </span> {{ Auth::guard('admin')->user()->name }}</h4>                  
                 </div>
-                <a class="dropdown-item" href="profile.html"><i class="fas fa-user me-3"></i>My Profile</a>
-                <a class="dropdown-item" href="{{route('admin.settings')}}"><i class="fas fa-cog me-3"></i>Settings</a>
                 <a class="dropdown-item" href="{{route('admin.salary.settings')}}"><i class="fas fa-money-check-alt me-3"></i>Salary Settings</a>
+                <a class="dropdown-item" href="{{route('admin.settings')}}"><i class="fas fa-cog me-3"></i>Settings</a>
                 <a class="dropdown-item" href="{{ route('admin.logout') }}" onclick="event.preventDefault();
                 document.getElementById('logout-form').submit();"><i class="fas fa-sign-out me-3"></i>
                     Log Out

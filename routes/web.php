@@ -90,7 +90,7 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
     Route::Post('work/from/home/save',[LeaveController::class,'wfhstore'])->name('store.wfh');
     //salary slip route
     Route::get('employees/view/slip/{id}',[UserslipController::class,'slipview'])->name('employees.view.slip');
-//salary slip route
+//salary slip route 
     Route::get('salary/slip/list',[UserslipController::class,'userSlip'])->name('salary.slip.list');
     Route::get('payslip-pdf/{id}', [UserslipController::class, 'downloadPdf'])->name('payslip.download');
 
