@@ -93,6 +93,7 @@ class MonthlyAttend extends Command
                                 $work_time = Carbon::parse($attend->in_time)->diff(\Carbon\Carbon::parse($attend->out_time))->format('%H:%I:%S');
                                 $attend->work_time = $work_time;
                             } else {
+                                $work_time = null;
                                 $attend->work_time = '00:00';
                             }
                             $attend->attendance = $key->Status;

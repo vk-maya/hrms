@@ -84,15 +84,16 @@ class Attendence extends Command
                         $work_time = Carbon::parse($attend->in_time)->diff(\Carbon\Carbon::parse($attend->out_time))->format('%H:%I:%S');
                         $attend->work_time = $work_time;
                     } else {
+                        $work_time = null;
                         $attend->work_time = '00:00';
                     }
                     $attend->attendance = $key->Status;
                     $attend->status = ($key->Status == 'P') ? 1 : 0;
                     $attend->passdate = ($key->Status == 'P') ? date('Y-m-d', strtotime($date)) : null;
-                    if ($work_time<="06:00:00" || $work_time>="03:00:00") {
+                    if ($work_time < Carbon::parse("06:00:00")->format('H:i:s') && $work_time >= Carbon::parse("03:00:00")->format('H:i:s')) {
                         $attend->mark = ($key->Status == 'P') ? 'HDO' : 'HDO';
-                    }elseif($work_time<"03:00:00"){
-                        $attend->mark = ($key->Status == 'P') ? 'A' : 'A';                        
+                    }elseif($work_time < Carbon::parse("03:00:00")->format('H:i:s')){
+                        $attend->mark = ($key->Status == 'P') ? 'A' : 'A';
                     }else{
                         $attend->mark = ($key->Status == 'P') ? 'P' : $leaveCount;
                     }
