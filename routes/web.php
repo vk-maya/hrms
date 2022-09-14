@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\EmployeesReport;
 use App\Http\Controllers\Employees\EmpAttendanceController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\UserslipController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,6 +88,12 @@ Route::prefix('employees/')->name('employees.')->middleware(['auth','checkdata']
     ///Work From Home
     Route::get('work/from/home',[LeaveController::class,'wfhcreate'])->name('wfh.create');
     Route::Post('work/from/home/save',[LeaveController::class,'wfhstore'])->name('store.wfh');
+    //salary slip route
+    Route::get('employees/view/slip/{id}',[UserslipController::class,'slipview'])->name('employees.view.slip');
+//salary slip route
+    Route::get('salary/slip/list',[UserslipController::class,'userSlip'])->name('salary.slip.list');
+    Route::get('payslip-pdf/{id}', [UserslipController::class, 'downloadPdf'])->name('payslip.download');
+
 
 });
 
@@ -127,9 +134,11 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     // -----------------------------------attendance route-----------------------------------------
 
     Route::any('attendance',[AttendanceController::class,'attendance'])->name('attendance');
+    Route::any('attendance/search',[AttendanceController::class,'attendanceSearch'])->name('attendance.search');
     Route::any('attendance/employee',[AttendanceController::class,'attendanceEmployee'])->name('attendance.employee');
+    Route::any('attendance/employee/search',[AttendanceController::class,'attendanceEmployeeSearch'])->name('attendance.employee.search');
     Route::get('attendance/info/{id}',[AttendanceController::class,'attinfo'])->name('attendance.info');
-    Route::get('attendance/employees/month/{id}/{year}/{month}',[AttendanceController::class,'attendanceMonthRecord'])->name('employee.month');
+    Route::get('attendance/employees/month',[AttendanceController::class,'attendanceMonthRecord'])->name('employee.month');
     Route::post('attendance/employees/record',[AttendanceController::class,'recordReport'])->name('employee.month.record.report');
     Route::get('attendance-report',[AttendanceController::class,'attendanceReport'])->name('attendance-report');
 
@@ -154,7 +163,10 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::get('leave/view/{id}',[AdminLeaveController::class,'moreleave'])->name('leave.view');
     // ---------------------employees salary generate---------------------------------
     Route::post('salary/report',[AdminLeaveController::class,'leavereport'])->name('leave.report');
-
+  // report Route 
+    Route::any('month/leave/record/manage',[PayrollController::class,'monthRecordLeaveManage'])->name('month.leave.record.manage');
+    Route::any('month/leave/record/manage/all',[PayrollController::class,'monthRecordLeaveManage'])->name('month.leave.record.manage.all');
+    Route::any('month/leave/record/salip/generate',[PayrollController::class,'monthslipgenerate'])->name('emp.slip.generate');
     // ---------------------client route-----------------------
     Route::get('client', [ClientController::class, 'index'])->name('client');
     Route::get('client/create', [ClientController::class, 'create'])->name('client.create');
@@ -193,8 +205,8 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     // salary generate route
     Route::get('employees/salary/generate/{id}',[PayrollController::class,'empreport'])->name('emp.report.emp');
     Route::get('employees/salary/generate',[PayrollController::class,'empreport'])->name('emp.report');
+    Route::any('employees/salary/generate/search',[PayrollController::class,'empreportSearch'])->name('emp.report.search');
     Route::post('employees/salary/generate',[PayrollController::class,'salaryGenerate'])->name('employees.salary.generate');
-
      ///employee increment
     Route::post('employee-increment',[PayrollController::class,'increment'])->name('employee.increment');
 
@@ -223,7 +235,7 @@ Route::prefix('/admin')->name('admin.')->middleware(['admin'])->group(function (
     Route::get('tsetsing/route/{id}',[PayrollController::class,'testroute'])->name('test.link');
 
     //...................PDF..................//
-    Route::get('export-pdf/{id}', [PayrollController::class, 'downloadPdf'])->name('export-pdf');
+    Route::get('payslip-pdf/{id}', [PayrollController::class, 'downloadPdf'])->name('payslip.download');
 
     // WFH Route
   Route::post('workfrom/home/report',[AdminLeaveController::class,'wfhReport'])->name('wfh.report');

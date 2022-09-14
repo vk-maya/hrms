@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddMultiToMonthleavesTable extends Migration
+class AddMonthleaveIdToUserSlipsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class AddMultiToMonthleavesTable extends Migration
      */
     public function up()
     {
-        Schema::table('monthleaves', function (Blueprint $table) {
+        Schema::table('user_slips', function (Blueprint $table) {
             //
-            $table->float('working_day')->after('other')->default(0);
-            $table->float('carry_pl_leave')->after('anualLeave')->default(0);
-            $table->float('carry_sick_leave')->after('sickLeave')->default(0);
+            $table->integer('monthleave_id')->after('user_salaryID')->default(0);
         });
     }
 
@@ -28,7 +26,7 @@ class AddMultiToMonthleavesTable extends Migration
      */
     public function down()
     {
-        Schema::table('monthleaves', function (Blueprint $table) {
+        Schema::table('user_slips', function (Blueprint $table) {
             //
         });
     }

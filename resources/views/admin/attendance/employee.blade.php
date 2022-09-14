@@ -20,7 +20,7 @@
                 <div class="col-lg-4 col-md-6 col-sm-6">
                     <div class="form-group form-focus select-focus">
                         <select class="select floating" name="user_id">
-                            <option value=""></option>
+                            <option value="">All</option>
                             @foreach ($allemployees as $employee)
                             <option @if(isset(request()->user_id) && request()->user_id == $employee->id) selected @endif value="{{$employee->id}}">{{$employee->first_name}}</option>
                             @endforeach
@@ -78,9 +78,9 @@
                 <div class="col-lg-4 col-md-6 col-sm-6">
                     <div class="form-group form-focus select-focus">
                         <select class="select floating" name="year">
-                            <option>-</option>
-                            @for($years; $years <=$curenty; $years++) <option @if(isset(request()->year) && request()->year == $years) selected @endif value="{{$years}}">{{$years}}</option>
-                                @endfor
+                            @for($years; $years <=$curenty; $years++)
+                                <option @if(isset(request()->year) && request()->year == $years) selected @endif value="{{$years}}">{{$years}}</option>
+                            @endfor
                         </select>
                         <label class="focus-label">Select Year</label>
                     </div>
@@ -133,7 +133,43 @@
             </div>
         </div>
     </div>
-</div>
+    <div class="modal custom-modal fade" id="attendance_info" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Attendance Info</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                            <div class="card punch-status">
+                                <div class="card-body">
+                                    <h5 class="card-title">Timesheet <small class="text-muted" id="clickdate">
+                                            {{ \Carbon\Carbon::now()->format('d-m-Y') }}</small></h5>
+                                    <div class="punch-det">
+                                        <h6>Punch In at</h6>
+                                        <p id="intime"></p>
+                                    </div>
+                                    <div class="punch-info">
+                                        <div class="punch-hours">
+                                            <span id="totalhour"></span>
+                                        </div>
+                                    </div>
+                                    <div class="punch-det">
+                                        <h6>Punch Out at</h6>
+                                        <p id="outtime"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @push('plugin-js')
 

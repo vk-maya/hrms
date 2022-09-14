@@ -48,9 +48,13 @@ class User extends Authenticatable
     public function monthleave(){
         return $this->hasOne(monthleave::class,'user_id','id')->where('status', 1);
     }
+    public function monthleavesalary(){
+        return $this->hasOne(monthleave::class,'user_id','id');
+    }
 
     public function monthleavelist(){
-        return $this->hasOne(monthleave::class,'user_id','id');
+
+        return $this->hasOne(monthleave::class,'user_id','id')->where('status',0);
     }
 
     public function leave(){

@@ -57,7 +57,7 @@
                                     </span>
                                 </div>
                                 <div class="submit-section">
-                                    <button id="submit" type="submit" class="btn btn-primary submit-btn">Submit</button>
+                                    <button type="submit" class="btn btn-primary submit-btn">Submit</button>
                                 </div>
                             </div>
                         </form>
@@ -74,11 +74,10 @@
     <script src="{{ asset('assets/js/ckeditor.js') }}"></script>
     <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
     <script>
-        $("form").submit( function(e) {
+        $("#form").submit( function(e) {
             var totalcontentlength = $('#editor').html();
             if( totalcontentlength =='' || totalcontentlength.length < 10) {
                 document.getElementById("demo").innerHTML ="<p style='color:red;'>Please enter Your a Any Description</p>";
-
                 e.preventDefault();
             }
         });

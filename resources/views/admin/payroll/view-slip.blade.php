@@ -1,104 +1,83 @@
 @extends('admin.layouts.app')
 @push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
 @endpush
 @section('content')
-<style>
-    .error {
-        color: rgb(229, 33, 33);
-    }
-</style>
-<div class="page-wrapper">
-
-    <div class="content container-fluid">
-
-        <div class="page-header">
-            <div class="row align-items-center">
-                <div class="col">
-                    <h3 class="page-title">Employee Salary Slips</h3>
-                    <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active"><a href="{{ route('admin.payroll.list') }}">Salary</a></li>
-                        <li class="breadcrumb-item active">Slips</li>
-                    </ul>
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+            <div class="page-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h3 class="page-title">Employee Salary Slips</h3>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                            <li class="breadcrumb-item active"><a href="{{ route('admin.payroll.list') }}">Salary</a></li>
+                            <li class="breadcrumb-item active">Slips</li>
+                        </ul>
+                    </div>
+                    <div class="col-auto float-end ms-auto">                 
+                    </div>
+                    <div class="col-auto float-end ms-auto">
+                        <a href="{{ route('admin.emp.report.emp',$id) }}" class="btn add-btn"><i class="fa fa-plus-circle"
+                                aria-hidden="true"></i>Generate</a>
+                    </div>
                 </div>
-                <div class="col-auto float-end ms-auto">
-                    {{-- <a class="btn add-btn"
-                            href="{{ route('admin.employee.slip', $slipgenerate[0]->employee_id) }}">Generate
-                    Slip
-                    </a> --}}
-                </div>
-                <div class="col-auto float-end ms-auto">
-                    <a href="{{ route('admin.emp.report.emp',$id) }}" class="btn add-btn"><i class="fa fa-plus-circle" aria-hidden="true"></i>Generate</a>
-                </div>
-            </div>
-        </div>
-        @if ($message = Session::get('error'))
-        <div class="alert alert-danger alert-block">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-        </div>
-        @endif
-        @if ($message = Session::get('success'))
-        <div class="alert alert-success alert-block">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <strong>{{ $message }}</strong>
-        </div>
-        @endif
-        <div class="row">
-            <div class="col-md-12">
-                <div class="table-responsive">
-                    <table class="table table-striped custom-table mb-0 data-table-theme">
-                        <thead>
-                            <tr>
-                                <th>Employee</th>
-                                <th>Employee ID</th>
-                                <th>Email</th>
-                                <th>Salary</th>
-                                <th>Month</th>
-                                <th>Payslip</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($employeeslip as $item)
-                            <tr>
-                                <td>
-                                    <a href="{{route('admin.employees.profile',$item->user->id)}}" class="avatar"> <img src="@if($item->user->image != NULL){{ asset('storage/uploads/' . $item->user->image) }}@else{{ asset('assets/img/avtar.jpg')}}@endif" alt="Employees Image"></a>
-                                    <a href="{{route('admin.employees.profile',$item->user->id)}}"><b>{{ $item->user->first_name }}</b></a>
-                                </td>
-                                <td>{{ $item->user->employeeID }}</td>
-                                <td>{{ $item->user->email }}</td>
-                                <td>{{ $item->basic_salary }}</td>
-                                <td>{{ Carbon\Carbon::parse($item->salary_month )->format('M-Y')}}</td>
-                                <td> <a class="salarySlip btn btn-sm btn-success" data-id="{{ $item->id }}">Slip View</a></td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+            </div>          
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped custom-table mb-0" id="department">
+                            <thead>
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Employee ID</th>
+                                    <th>Email</th>
+                                    <th>Salary</th>
+                                    <th>Month</th>
+                                    <th>Payslip</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($employeeslip as $item)
+                                    <tr>
+                                        <td>
+                                            <a href="{{route('admin.employees.profile',$item->user->id)}}" class="avatar"> <img
+                                                src="@if($item->user->image != NULL){{ asset('storage/uploads/' . $item->user->image) }}@else{{ asset('assets/img/avtar.jpg')}}@endif" alt="Employees Image"></a>
+                                        <a href="{{route('admin.employees.profile',$item->user->id)}}"><b>{{  $item->user->first_name }}</b></a></td>
+                                        <td>{{ $item->user->employeeID }}</td>
+                                        <td>{{ $item->user->email }}</td>
+                                        <td>{{ $item->basic_salary }}</td>
+                                        <td>{{ Carbon\Carbon::parse($item->salary_month )->format('M-Y')}}</td>
+                                        <td> <a class="salarySlip btn btn-sm btn-success"data-id="{{ $item->id }}">Slip View</a></td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-{{-- --------------------slip-view----------------------------- --}}
-<div id="salarySlip" class="modal custom-modal fade" role="dialog">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Pay Slip</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="content container-fluid">
-                    <div class="page-header">
-                        <div class="row align-items-center">
-                            <div class="col-auto float-end ms-auto">
-                                <div class="btn-group btn-group-sm">
-                                    <button class="btn btn-white">CSV</button>
-                                    <button class="btn btn-white">PDF</button>
-                                    <button class="btn btn-white"><i class="fa fa-print fa-lg"></i> Print</button>
+    {{-- //slip module --}}
+    <div id="salarySlip" class="modal custom-modal fade" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Pay Slip</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="content container-fluid">
+                        <div class="page-header">
+                            <div class="row align-items-center">
+                                <div class="col-auto float-end ms-auto">
+                                    <div class="btn-group btn-group-sm">
+                                        <span class="btn btn-white"><a href="{{route('admin.payslip.download',':id')}}" id="pdf-route">PDF</a></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -294,6 +273,66 @@
                     $("#salarySlip").modal('show');
                 }
 
+<<<<<<< HEAD
+=======
+        // -------------------show hidden column-------------
+    </script>
+        <script>
+            $(document).ready(function() {
+                $(document).on("click", ".salarySlip", function() {
+                    var id = $(this).data('id');
+                    let url = "{{route('admin.employees.view.slip',':id')}}";
+                    url= url.replace(':id',id);
+                    $.ajax({
+                        url: url,
+                        type: "GET",
+                        cache: false,
+                        success: function(res) {
+                            console.log(res);
+                            $("#pdf-route").attr('href',$("#pdf-route").attr('href').replace(':id',res.slip.id));
+                            $("#fname").html(res.company.name);
+                            $("#emailc").html(res.company.email);
+                            $("#Paddress").html(res.company.p_address);
+                            $("#postal").html(res.company.postl);
+                            $("#phone").html(res.company.phone);
+                            $("#web").html(res.company.web);
+                            $("#username").html(res.slip.user.first_name);
+                            const monthNames = ["January", "February", "March", "April", "May", "June",
+                            "July", "August", "September", "October", "November", "December"
+                            ];
+                            var formattedDate = new Date(res.slip.salary_month);
+                            $("#slip").html(monthNames[formattedDate.getMonth()]+" - "+ formattedDate.getFullYear());
+                            $("#empid").html(res.slip.user.employeeID);
+                            $("#jd").html(res.slip.user.joiningDate);
+                            $("#emailu").html(res.slip.user.email);
+                            $("#desigination").html(res.slip.user.user_designation.designation_name);
+                            $("#bs").html(res.slip.monthly_netsalary);
+                            $("#tds").html(res.slip.tds);
+                            $("#da").html(res.slip.da);
+                            $("#est").html(res.slip.esi);
+                            $("#hra").html(res.slip.hra);
+                            $("#lDeducation").html(res.slip.leave_deduction);
+                            $("#pf").html(res.slip.pf);
+                            $("#conveyance").html(res.slip.conveyance);
+                            $("#Proftax").html(res.slip.prof_tax);
+                            $("#oa").html(res.slip.allowance);
+                            $("#lw").html(res.slip.labour_welfare);
+                            $("#ma").html(res.slip.medical_allowance);
+                            $("#other").html(res.slip.others);
+                            $("#tEarning").html(res.slip.tEarning);
+                            $("#tDeducation").html(res.slip.tDeducation+res.slip.leave_deduction);
+                            $("#netslip").html(res.slip.net_salary);
+                            $("#payslipnumber").html(res.slip.payslip_number);
+                            $("#netsalary").html(res.slip.basic_salary);
+                            $("#paysalary").html(res.slip.paysalary);
+                            $("#basicSalary").html(res.slip.basic_salary);
+                            $("#salarySlip").modal('show');
+                        }
+    
+                    });
+    
+                });
+>>>>>>> master
             });
 
         });
