@@ -191,6 +191,13 @@
     </div>
 @endsection
 @push('plugin-js')
+<<<<<<< HEAD
+<script>
+    if (isset($dataedit)) {
+        $("#add_salary").modal('show');
+    }
+</script>
+=======
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
@@ -201,4 +208,5 @@
             $("#add_salary").modal('show');
         }
     </script>
+>>>>>>> master
 @endpush

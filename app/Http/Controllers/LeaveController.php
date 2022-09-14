@@ -49,6 +49,7 @@ class LeaveController extends Controller
     public function wfhcreate(){
         return view('employees.leave.add-wfh');
     }
+    //work from home function
     public function wfhstore(Request $request){
         $dateFrom = new DateTime($request->form);
         $dateTo = new DateTime($request->to);
@@ -69,7 +70,7 @@ class LeaveController extends Controller
         $data = settingleave::all();
         return view('employees.leave.add-leave', compact('data'));
     }
-    //leave store Function 
+    //leave store Function  leave request blade
     public function storeleave(Request $request)
     {
         $first_date = date('Y-m-d', strtotime('first day of this month'));
@@ -77,6 +78,7 @@ class LeaveController extends Controller
         $rules = [
             'type_id' => ['required', 'integer'],
             'from' => ['required', 'date'],
+            'dayType' => ['required', 'integer'],
             'to' => ['required', 'date'],
             'reason' => ['required', 'string'],
         ];
@@ -120,11 +122,16 @@ class LeaveController extends Controller
         $interval = $dateFrom->diff($dateTo);
         $da = $interval->format('%a');
         $days = $da + 1;
-        $data->day = $days;
+        if ($request->dayType==1) {
+            $data->day = $days;
+        }else{
+            $data->day = $days-0.5;
+        }
         $leavemonth = Leave::where('leaves_id', $request->type_id)->where('user_id', Auth::guard('web')->user()->id)->whereMonth('form', date('m'))->whereYear('form', date('Y'))->get();
         $start = date('Y-m-d', strtotime(Auth::guard('web')->user()->joiningDate));
         $end = date('Y-m-d');
         $interval = Carbon::parse($start)->DiffInMonths($end);
+        $data->daytype =$request->dayType;
         $data->status = 2;
         $data->save();
         return redirect()->route('employees.leave');
@@ -146,11 +153,12 @@ class LeaveController extends Controller
             return back()->with(["success" => "Success Delete This Record"])->withInput();
         }
     }
-    //leave fnction Store
-    public function attendance(Request $request){  
+    //leave fnction Store in attendance blade
+    public function attendance(Request $request){
         $rules = [
             'id' => ['required', 'integer'],
             'day' => ['required', 'integer'],
+            'dayType' => ['required', 'integer'],
             'leaveType' => ['required', 'integer'],
             'reson' => ['required', 'max:250'],
             'from' => ['required', 'date'],
@@ -168,7 +176,12 @@ class LeaveController extends Controller
             $data->form = $attendance->date;
             $data->to = $attendance->date;
             $data->reason = $request->reson;
-            $data->day = 1;
+            if ($request->dayType ==1) {
+                $data->day = 1;
+            }else{
+                $data->day = 0.5;
+            }
+            $data->daytype =$request->dayType;
             $data->status = 2;
             $data->save();          
         }
@@ -201,10 +214,8 @@ class LeaveController extends Controller
             $attendance = Attendance::where('date',$request->wdate)->where('user_id', Auth::guard('web')->user()->id)->first();
             $attendance->action = 3;
             $attendance->save();
-        }
-       
+        }       
         return redirect()->back();
-
     }
     public function attendanceLeave($id)
     {

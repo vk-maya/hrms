@@ -27,10 +27,23 @@
                         <div class="card-body">
                             <form action="{{ route('employees.store.leave') }}" method="POST">
                                 @csrf
-                                <div class="form-group">
-                                    <label>Leave Type <span class="text-danger">*</span></label>
+                                <div class="row">
+
+                                <div class="col-md-6">
+                                    <label>Day Type Select<span class="text-danger">*</span></label>
+                                    <select class="select" name="dayType" required>
+                                            <option value="1">Full Day</option>
+                                            <option value="0">Half Day</option>
+                                    </select>
+                                    @error('dayType')
+                                        <span class="text-danger">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Leave Type Select<span class="text-danger">*</span></label>
                                     <select class="select" name="type_id" required>
-                                        <option value=""> Select Leave Type</option>
                                             @foreach ($data as $item)
                                             <option value="{{ $item->id }}" @if (old('type_id') ==  $item->id)selected @endif>{{  $item->type }}</option>
                                             @endforeach
@@ -41,6 +54,8 @@
                                         </span>
                                     @enderror
                                 </div>
+                            </div>
+
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -104,7 +119,6 @@
                 date.setDate(date.getDate() + days);
                 return date;
             }
-
             $('#fromdate').change(function() {
                 var myInput = document.getElementById('todate');
                 var mindate = document.getElementById('fromdate').value;
@@ -112,14 +126,6 @@
                 var myFutureDate = new Date(mindate);
                 console.log(myFutureDate.getDate());
                 myInput.setAttribute('max', myFutureDate.addDays(30).toISOString().split('T')[0]);
-                // var sDate = $(this).datepicker("getDate");
-                // var minDate = $(this).datepicker("getDate");
-                // sDate.setDate(sDate.getDate()+7);
-                // $('#todate').datepicker({
-                //     dateFormat: 'mm-dd-yy',
-                //     maxDate : sDate,
-                //     minDate : minDate,
-                // });
             })
         });
     </script>

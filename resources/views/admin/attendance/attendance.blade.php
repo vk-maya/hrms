@@ -1,11 +1,5 @@
 @extends('admin.layouts.app')
 @push('css')
-<link rel="stylesheet" href="{{ asset('assets/css/dataTables.bootstrap4.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css') }}">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 
 @endpush
 @section('content')
@@ -106,52 +100,58 @@
                 </div>
             </form>
             <div class="row">
-                <div class="col-lg-12">
-                    <div class="table-responsive">
-                        <table class="table table-striped custom-table table-nowrap">
-                            <thead>
-                                <tr>
-                                    <th>Employee</th>
-                                    @for ($i = 1; $i <= $month; $i++) <th>{{ $i }}</th>
-                                        @endfor
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($attendance as $item)
-                                        <tr>
-                                            <td>
-                                                <h2 class="table-avatar">
-                                                    <a class="avatar avatar-xs"
-                                                        href="{{ route('admin.employees.profile', $item->id) }}"><img alt=""
-                                                            src="@if ($item->image != null) {{ asset('storage/uploads/' . $item->image) }}@else{{ asset('assets/img/avtar.jpg') }} @endif""></a>
-                                                    <a href="{{ route('admin.employees.profile', $item->id) }}">{{ $item->first_name }}</a>
-                                                </h2>
-                                            </td>
-                                            @php
-                                                $count = 0;
-                                            @endphp
-                                            @for ($i = 1; $i <= $month; $i++)
-                                                @if (in_array(date("Y-m-d",strtotime($monthYears.'-'.$i)),$item->attendence->pluck('date')->toArray()))
-                                                    @if ($item->attendence[$count]->attendance == 'P')
-                                                        <td>
-                                                            <i class="fa fa-check text-success attend-info-show" data-id="{{ $item->attendence[$count]->id }}"></i>
-                                                        </td>
-                                                    @else
-                                                        <td><i class="fa fa-close text-danger"></i> </td>
-                                                    @endif
-                                                    @php
-                                                        $count++;
-                                                    @endphp
-                                                @else
-                                                    <td>-</td>
-                                                @endif
-                                            @endfor
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <div class="col-sm-12">
+                    <h3 class="page-title">Attendance</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Attendance</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+     
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive">
+                    <table class="table cus-table-striped custom-table mb-0 data-table-theme ">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                @for ($i = 1; $i <= $month; $i++) <th>{{ $i }}</th>
+                                    @endfor
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($attendance as $item)
+                            <tr>
+                                <td>
+                                    <h2 class="table-avatar">
+                                        <a class="avatar avatar-xs" href="{{ route('admin.employees.profile', $item->id) }}"><img alt="" src="@if ($item->image != null) {{ asset('storage/uploads/' . $item->image) }}@else{{ asset('assets/img/avtar.jpg') }} @endif""></a>
+                                                <a href=" {{ route('admin.employees.profile', $item->id) }}">{{ $item->first_name }}</a>
+                                    </h2>
+                                </td>
+                                @php
+                                $count = 0;
+                                @endphp
+                                @for ($i = 1; $i <= $month; $i++) @if (in_array(date("Y-m-d",strtotime(now()->format("Y-m-").$i)),$item->attendence->pluck('date')->toArray()))
+                                    @if ($item->attendence[$count]->attendance == 'P')
+                                    <td>
+                                        <i class="fa fa-check text-success attend-info-show" data-id="{{ $item->attendence[$count]->id }}"></i>
+                                    </td>
+                                    @else
+                                    <td><i class="fa fa-close text-danger"></i> </td>
+                                    @endif
+                                    @php
+                                    $count++;
+                                    @endphp
+                                    @else
+                                    <td>-</td>
+                                    @endif
+                                    @endfor
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -212,14 +212,6 @@
 </div>
 @endsection
 @push('js')
-<script src="{{ asset('assets/js/select2.min.js') }}"></script>
-<script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('assets/js/dataTables.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('assets/js/moment.min.js') }}"></script>
-<script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-{{-- <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script> --}}
-<script src="{{ asset('assets/js/multiselect.min.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 <script>
     $(document).ready(function() {
         $(document).on("click", ".attend-info-show", function() {

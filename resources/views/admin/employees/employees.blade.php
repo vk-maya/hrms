@@ -7,24 +7,22 @@
         <div class="content container-fluid">
             <div class="page-header">
                 <div class="row align-items-center">
-                    <div class="col">
+                    <div class="col-lg-6 col-md-6 col-sm-5 ">
                         <h3 class="page-title">Employee</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Employee</li>
                         </ul>
                     </div>
-                    <div class="col-auto icon-topic d-flex">
+                    <div class="col-lg-6 col-md-6 col-sm-7 text-end">
                     <div class="view-icons">
                             <a href="{{ route('admin.employees') }}" class="grid-view btn btn-link active"><i
                                     class="fa fa-th"></i></a>
                             <a href="{{ route('admin.employees.list') }}" class="list-view btn btn-link emplist"
                                 id="employeeslist"><i class="fa fa-bars"></i></a>
-                        </div>
-                        <div class="employ-add-btn">
-                        <a href="{{ route('admin.add-employee') }}" class="btn add-btn"><i class="fa fa-plus"></i>
+                        <a class="btn add-btn" href="{{ route('admin.add-employee') }}" class="btn add-btn"><i class="fa fa-plus"></i>
                             Add Employee</a>
-                        </div>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -124,9 +122,9 @@
                                     <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown"
                                         aria-expanded="false"><i class="far fa-ellipsis-v"></i></a>
                                     <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="{{ route('admin.edit-employee', $item->id) }}"><i class="far fa-pencil me-2"></i> Edit</a>
+                                        <a class="dropdown-item" href="{{ route('admin.edit-employee', $item->id) }}"><i class="fa fa-pencil-square-o me-2"></i> Edit</a>
                                         <button class="dropdown-item delete" data-id="{{ $item->id }}"><i class="fas fa-trash-alt me-2"></i> Delete</button>
-                                        <a class="dropdown-item more-add" href="{{route('admin.employees.information',$item->id)}}"><i class="far fa-plus me-2"></i>Add More</a>
+                                        <a class="dropdown-item more-add" href="{{route('admin.employees.information',$item->id)}}"><i class="fa fa-plus-square me-2" aria-hidden="true" ></i> More Info</a>
                                         <a class="dropdown-item status" href="{{route('admin.employees.status',$item->id)}}">
                                             @if ($item->status == 1)
                                             <i class="fal fa-times-circle me-2"></i>

@@ -1,10 +1,6 @@
 @extends('admin.layouts.app')
 @push('css')
-<link rel="stylesheet" href="{{ asset('assets/css/dataTables.bootstrap4.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css') }}">
+
 @endpush
 @section('content')
 @php
@@ -30,7 +26,7 @@ $year = date('Y', strtotime('-1 year')).' - '.date('Y');
                         <li class="breadcrumb-item active">Holidays</li>
                     </ul>
                 </div>
-                <div class="col-auto float-end ms-auto">
+                <div class="col-auto ms-auto">
                     <a href="#" class="btn add-btn" data-bs-toggle="modal" data-bs-target="#add_holiday"><i class="fa fa-plus"></i> Add Holiday</a>
                 </div>
             </div>
@@ -38,7 +34,7 @@ $year = date('Y', strtotime('-1 year')).' - '.date('Y');
         <div class="row">
             <div class="col-md-12">
                 <div class="table-responsive">
-                    <table class="table cus-table-striped custom-table mb-0">
+                    <table class="table cus-table-striped custom-table mb-0 data-table-theme" id="holiday-table">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -50,13 +46,12 @@ $year = date('Y', strtotime('-1 year')).' - '.date('Y');
                         </thead>
                         <tbody>
                             @foreach ($data as $key=> $item)
-                            <tr class="holiday-completed">
                             <tr class="holiday-upcoming">
                                 <td>{{$key+1}}</td>
                                 <td>{{$item->holidayName}}</td>
                                 <td>{{\Carbon\Carbon::parse($item->date)->format('d M Y') }}</td>
                                 <td>{{date("l",strtotime($item->date))}}</td>
-                                <td class="text-end">
+                                <td class="text-center">
                                     <div class="dropdown dropdown-action">
                                         <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
@@ -66,9 +61,7 @@ $year = date('Y', strtotime('-1 year')).' - '.date('Y');
                                     </div>
                                 </td>
                             </tr>
-                            </tr>
                             @endforeach
-
                         </tbody>
                     </table>
                 </div>
@@ -106,23 +99,15 @@ $year = date('Y', strtotime('-1 year')).' - '.date('Y');
                         </div>
                     </div>
                     <div class="modal-footer submit-section">
-                        <button type="submit" class="btn submit-btn">Submit</button>
+                        <button type="submit" class="btn add-btn">Submit</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
 @endsection
 @push('js')
-<script src="{{ asset('assets/js/select2.min.js') }}"></script>
-<script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('assets/js/dataTables.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('assets/js/moment.min.js') }}"></script>
-<script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-<script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
-<script src="{{ asset('assets/js/multiselect.min.js') }}"></script>
 <script>
     $(document).ready(function() {
         @isset($holi)

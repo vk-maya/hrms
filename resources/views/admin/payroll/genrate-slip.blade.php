@@ -33,7 +33,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="payslip-title">Payslip for the month of Feb 2019</h4>
+                            <h4 class="payslip-title">Payslip for the mo nth of Feb 2019    mmmmm</h4>
                             <div class="row">
                                 <div class="col-sm-6 m-b-20">
                                     <img src="assets/img/logo2.png" class="inv-logo" alt="">

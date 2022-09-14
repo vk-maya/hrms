@@ -1,42 +1,31 @@
 @extends('admin.layouts.app')
 @push('css')
-<style>
-</style>
-
-<link rel="stylesheet" href="{{ asset('assets/css/dataTables.bootstrap4.min.css') }}">
-
-<link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
-
-<link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
-
-<!-- Sweetalert 2 CSS -->
-<link rel="stylesheet" href="assets/plugins/sweetalert2/sweetalert2.min.css">
 @endpush
 @section('content')
 <div class="page-wrapper inner">
     <div class="content container-fluid">
         <div class="page-header">
             <div class="row align-items-center">
-                <div class="col">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-6">
                     <h3 class="page-title">Department</h3>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
                         <li class="breadcrumb-item active">Department</li>
                     </ul>
                 </div>
-                <div class="col-auto ">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-6 text-end">
                     <a href="#" class="btn add-btn show" data-bs-toggle="modal" data-bs-target="#add_department"><i class="fa fa-plus"></i> Add Department</a>
                 </div>
             </div>
         </div>
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table cus-table-striped custom-table mb-0" id="department">
+                <table class="table cus-table-striped custom-table mb-0 data-table-theme">
                     <thead>
                         <tr>
                             <th style="width: 30px;">SR</th>
-                            <th class="text-center">Department Name</th>
-                            <th class="text-center">Status</th>
+                            <th>Department Name</th>
+                            <th>Status</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
@@ -44,8 +33,8 @@
                         @foreach ($department as $key => $item)
                         <tr>
                             <td>{{ $key + 1 }}</td>
-                            <td class="text-center">{{ $item->department_name }}</td>
-                            <td class="text-center">
+                            <td>{{ $item->department_name }}</td>
+                            <td>
                                 <div class="action-label">
                                     <a class="btn btn-white btn-sm btn-rounded status" data-id="{{ $item->id }}" href="javascript:void(0);">
                                         @if ($item->status == 1)
@@ -99,7 +88,7 @@
                         </div>
                     </div>
                     <div class="modal-footer text-center submit-section">
-                        <button type="submit" class="btn submit-btn" id="submit">
+                        <button type="submit" class="btn add-btn" id="submit">
                             Submit
                         </button>
                     </div>
@@ -110,22 +99,7 @@
 </div>
 @endsection
 @push('js')
-<script src="{{ asset('assets/js/select2.min.js') }}"></script>
-<script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('assets/js/dataTables.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('assets/js/moment.min.js') }}"></script>
-<script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-<script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
-{{-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> --}}
-
-
 <script>
-    // ------------shoe data table---------------
-    $('#department').DataTable({
-        paging: true,
-        searching: true
-    });
-
     // -------------------show hidden column-------------
     $(document).ready(function() {
         $(document).on("click", '.edit', (function() {

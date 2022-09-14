@@ -1,16 +1,7 @@
 @extends('admin.layouts.app')
 @push('css')
-<link rel="stylesheet" href="{{ asset('assets/css/dataTables.bootstrap4.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
-{{-- <link rel="stylesheet" href="assets/plugins/sweetalert2/sweetalert2.min.css"> --}}
 @endpush
 @section('content')
-<style>
-    .error {
-        color: rgb(229, 33, 33);
-    }
-</style>
 <div class="page-wrapper">
     <div class="content container-fluid">
         <div class="page-header">
@@ -29,26 +20,26 @@
             </div>
         </div>
         <div class="row filter-row">
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+            <div class=" col-lg-4 col-md-6 col-sm-6">
                 <div class="form-group form-focus">
                     <input type="text" class="form-control floating">
                     <label class="focus-label">Employee Name</label>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+            <div class=" col-lg-4 col-md-6 col-sm-6">
                 <div class="form-group form-focus select-focus">
                     <select class="select floating">
-                        <option value=""> -- Select -- </option>
+                        <option value="">Select-option</option>
                         <option value="">Employee</option>
                         <option value="1">Manager</option>
                     </select>
                     <label class="focus-label">Role</label>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+            <div class=" col-lg-4 col-md-6 col-sm-6">
                 <div class="form-group form-focus select-focus">
                     <select class="select floating">
-                        <option> -- Select -- </option>
+                        <option>Select-option</option>
                         <option> Pending </option>
                         <option> Approved </option>
                         <option> Rejected </option>
@@ -56,23 +47,23 @@
                     <label class="focus-label">Leave Status</label>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+            <div class="col-lg-4 col-md-6 col-sm-6">
                 <div class="form-group form-focus">
                     <div class="cal-icon">
-                        <input class="form-control floating datetimepicker" type="text">
+                        <input class="form-control floating datetimepicker date-input" type="text">
                     </div>
                     <label class="focus-label">From</label>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+            <div class="col-lg-4 col-md-6 col-sm-6">
                 <div class="form-group form-focus">
                     <div class="cal-icon">
-                        <input class="form-control floating datetimepicker" type="text">
+                        <input class="form-control floating datetimepicker date-input" type="text">
                     </div>
                     <label class="focus-label">To</label>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+            <div class="col-lg-4 col-md-6 col-sm-6">
                 <a href="#" class="btn btn-success"> Search </a>
             </div>
         </div>
@@ -80,7 +71,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="table-responsive">
-                    <table class="table cus-table-striped custom-table datatable">
+                    <table class="table cus-table-striped custom-table mb-0 data-table-theme">
                         <thead>
                             <tr>
                                 <th>Employee</th>
@@ -120,13 +111,13 @@
                                 </td>
                                 <td><a class="salaryinfo btn add-btn" href="{{ route('admin.employee.view_slip', $item->id) }}">View Slip</a>
                                 </td>
-                                <td class="text-end">
+                                <td class="text-center">
                                     <div class="dropdown dropdown-action">
-                                        <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                                        <a href="#" class="action-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-ellipsis-h"></i></a>
                                         <div class="dropdown-menu dropdown-menu-right">
-                                            <a class="dropdown-item edit" href="#" data-id="{{ $item->id }}"><i class="fa fa-pencil m-r-5"></i>
+                                            <a class="dropdown-item edit" href="#" data-id="{{ $item->id }}"><i class="fa fa-pencil me-2"></i>
                                                 Edit</a>
-                                            <a class="dropdown-item increment" href="#" data-id="{{ $item->id }}"><i class="fa fa-plus" aria-hidden="true"></i>
+                                            <a class="dropdown-item increment" href="#" data-id="{{ $item->id }}"><i class="fa fa-plus me-2"></i>
                                                 Increment</a>
                                         </div>
                                     </div>
@@ -140,7 +131,7 @@
         </div>
     </div>
     <div id="add_salary" class="modal custom-modal fade" role="dialog">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg-add" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Add Employee Salary</h5>
@@ -170,10 +161,10 @@
                         @error('net_salary')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
-                        </div>
-                        <div class="modal-footer submit-section">
-                            <button type="submit" class="btn submit-btn">Submit</button>
-                        </div>
+                </div>
+                <div class="modal-footer submit-section">
+                    <button type="submit" class="btn add-btn">Submit</button>
+                </div>
                 </form>
             </div>
         </div>
@@ -363,27 +354,21 @@
             </div>
             <div class="modal-body">
                 <div class="content container-fluid">
-                    <div class="page-header">
-                        <div class="row align-items-center">
-                            <div class="col-auto float-end ms-auto">
-                                <div class="btn-group btn-group-sm">
-                                    <button class="btn btn-white">CSV</button>
-                                    <button class="btn btn-white">PDF</button>
-                                    <button class="btn btn-white"><i class="fa fa-print fa-lg"></i> Print</button>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="btn-group-sm text-end">
+                        <button class="btn add-btn">CSV</button>
+                        <button class="btn add-btn">PDF</button>
+                        <button class="btn add-btn"><i class="fa fa-print fa-lg"></i> Print</button>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="payslip-title">Salary information </h4>
+                                    <h4 class="payslip-title">Salary information</h4>
                                     <div class="row">
                                         <div class="col-lg-12 m-b-20">
                                             <ul class="list-unstyled">
                                                 <li>
-                                                    <h3 class="mb-0"> Name <strong id="fname"></strong></h3>
+                                                    <h3 class="mb-0"> Name : <strong id="fname"></strong></h3>
                                                 </li>
                                                 {{-- <li ><span id="role"></span></li> --}}
                                                 <li>Employee ID: <span id="empid"></span></li>
@@ -395,7 +380,7 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div>
-                                                <h4 class="m-b-10"><strong>Earnings</strong></h4>
+                                                <h4 class="mb-2"><strong>Earnings</strong></h4>
                                                 <table class="table table-bordered">
                                                     <tbody>
                                                         <tr>
@@ -425,7 +410,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div>
-                                                <h4 class="m-b-10"><strong>Deductions</strong></h4>
+                                                <h4 class="mb-2"><strong>Deductions</strong></h4>
                                                 <table class="table table-bordered">
                                                     <tbody>
                                                         <tr>
@@ -458,8 +443,8 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        <div class="col-sm-12">
-                                            <p><strong>Net Salary: <span id="netsalary">0</span> </strong></p>
+                                        <div class="col-sm-12 text-end">
+                                            <p class="mb-0"><strong>Net Salary: <span id="netsalary">0</span> </strong></p>
                                         </div>
                                     </div>
                                 </div>
@@ -473,21 +458,7 @@
 </div>
 @endsection
 @push('js')
-<script src="{{ asset('assets/js/select2.min.js') }}"></script>
-<script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('assets/js/dataTables.bootstrap4.min.js') }}"></script>
-<script src="{{ asset('assets/js/moment.min.js') }}"></script>
-<script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-<script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
-    // ------------shoe data table---------------
-    $('#department').DataTable({
-        paging: true,
-        searching: true
-    });
-
     function multiply() {
         a = Number(document.getElementById('basic_incre').value);
         b = Number(document.getElementById('amount').value);
