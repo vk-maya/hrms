@@ -20,7 +20,13 @@
         <h3>Session - {{date('Y', strtotime($session->from)).'-'.date('Y', strtotime($session->to))}}</h3>
     </div>
 
-    <a id="mobile_btn" class="mobile_btn" href="#sidebar"><i class="fa fa-bars"></i></a>
+    <a id="mobile_btn" class="mobile_btn" href="#sidebar">
+        <span class="bar-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </span>
+    </a>
 
     <ul class="nav user-menu">
 
@@ -47,8 +53,7 @@
         </li> -->
         <li class="nav-item dropdown has-arrow main-drop">
             <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
-                <span class="user-img"><img
-                    src="{{ asset('assets/img/avtar.jpg') }}" alt="">
+                <span class="user-img"><img src="{{ asset('assets/img/avtar.jpg') }}" alt="">
                 </span>
                 <span> {{ Auth::guard('admin')->user()->name }}</span>
             </a>
@@ -62,15 +67,15 @@
                 <a class="dropdown-item" href="{{route('admin.salary.settings')}}"><i class="fas fa-money-check-alt me-3"></i>Salary Settings</a>
                 <a class="dropdown-item" href="{{ route('admin.logout') }}" onclick="event.preventDefault();
                 document.getElementById('logout-form').submit();"><i class="fas fa-sign-out me-3"></i>
-                Log Out
-            </a>
-            <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
-                @csrf
-            </form>
-        </div>
-    </li>
-</ul>
-<!-- <div class="dropdown mobile-user-menu">
+                    Log Out
+                </a>
+                <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+            </div>
+        </li>
+    </ul>
+    <!-- <div class="dropdown mobile-user-menu">
     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="fa fa-ellipsis-v"></i>
     </a>

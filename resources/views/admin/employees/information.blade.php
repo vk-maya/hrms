@@ -122,7 +122,7 @@
                                 </div>
                             </div>
                             <div class="submit-section">
-                                <button class="btn btn-primary submit-btn">Submit</button>
+                                <button class="btn btn-success">Submit</button>
                             </div>
                         </form>
                     </div>

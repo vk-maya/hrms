@@ -25,7 +25,7 @@
             <div class="col-sm-6 col-md-3">
                 <div class="form-group form-focus select-focus">
                     <select class="select floating">
-                        <option>-</option>
+                        <option>Select-Month</option>
                         <option>Jan</option>
                         <option>Feb</option>
                         <option>Mar</option>
@@ -45,7 +45,7 @@
             <div class="col-sm-6 col-md-3">
                 <div class="form-group form-focus select-focus">
                     <select class="select floating">
-                        <option>-</option>
+                        <option>Select-Year</option>
                         <option>2019</option>
                         <option>2018</option>
                         <option>2017</option>

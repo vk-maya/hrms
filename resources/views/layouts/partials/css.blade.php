@@ -18,7 +18,6 @@
     <link rel="stylesheet" href="{{ asset('assets/css/fontawsome.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/css/line-awesome.min.css') }}">
-
     <link rel="stylesheet" href="{{ asset('assets/plugins/morris/morris.css') }}">
 
     @stack('css')

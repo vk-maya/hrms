@@ -88,7 +88,7 @@
                         </div>
                     </div>
                     <div class="modal-footer text-center submit-section">
-                        <button type="submit" class="btn btn-success" id="submit">
+                        <button type="submit" class="btn add-btn" id="submit">
                             Submit
                         </button>
                     </div>

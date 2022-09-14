@@ -2473,6 +2473,7 @@ button.bg-danger:hover {
         display: flex
     }
 }
+
 .page-wrapper {
     left: 0;
     position: relative;
@@ -2484,14 +2485,9 @@ button.bg-danger:hover {
     min-height: calc(100vh - 158px) !important;
 }
 
-@media(max-width:575px) {
-    .page-wrapper .content {
-        padding: 15px
-    }
-}
-
 .page-wrapper .content .page-header {
-    margin-bottom: 1.875rem
+    margin-bottom: 1.875rem;
+    margin-top: 15px;
 }
 
 @media(max-width:575px) {
@@ -2909,34 +2905,36 @@ button.bg-danger:hover {
         width: 100%
     }
 }
+.header #toggle_btn {
+    color: #999;
+    float: left;
+    font-size: 26px;
+    line-height: 70px;
+    padding: 0 10px
+}
 
-@media(min-width:991px) {
-    .header #toggle_btn {
-        color: #999;
-        float: left;
-        font-size: 26px;
-        line-height: 70px;
-        padding: 0 10px
-    }
+.header .bar-icon {
+    display: inline-block;
+    width: 21px
+}
 
-    .header #toggle_btn .bar-icon {
-        display: inline-block;
-        width: 21px
-    }
+.header .bar-icon span {
+    background-color: #fff;
+    display: block;
+    float: left;
+    height: 2px;
+    width: 21px;
+    margin: 0 0 5px;
+    border-radius: 50px;
+    transition: all 0.2s cubic-bezier(0.98, 0.57, 1, 1) 0s;
+}
 
-    .header #toggle_btn .bar-icon span {
-        background-color: #fff;
-        display: block;
-        float: left;
-        height: 2px;
-        width: 21px;
-        margin: 0 0 5px;
-        border-radius: 50px
-    }
+.header .bar-icon span:nth-child(2) {
+    width: 15px
+}
 
-    .header #toggle_btn .bar-icon span:nth-child(2) {
-        width: 15px
-    }
+#mobile_btn {
+    display: none;
 }
 
 .header .page-title-box {
@@ -2951,6 +2949,30 @@ button.bg-danger:hover {
     .header .page-title-box {
         display: none
     }
+
+    .header #toggle_btn {
+        display: none;
+    }
+
+    #mobile_btn {
+        display: block;
+    }
+
+    .main-wrapper.slide-nav .header .bar-icon span:nth-child(1) {
+        transform: rotate(45deg);
+        position: relative;
+        top: 9px;
+    }
+
+    .main-wrapper.slide-nav .header .bar-icon span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .main-wrapper.slide-nav .header .bar-icon span:nth-child(3) {
+        transform: rotate(-45deg);
+        position: relative;
+        top: -5px;
+    }
 }
 
 .header .page-title-box h3 {
@@ -2958,11 +2980,6 @@ button.bg-danger:hover {
     font-size: 20px;
     font-weight: 400;
     margin: 0
-}
-
-.header .mobile_btn {
-    display: none;
-    float: left
 }
 
 @media(max-width:991px) {
@@ -3853,11 +3870,6 @@ button.bg-danger:hover {
     float: left
 }
 
-/* .custom-modal .modal-content .modal-body .form-group{
-    margin-bottom:1rem;
-    float:left;
-    width:100%
-} */
 .custom-modal .modal-content .modal-body .form-group.col-sm-4 {
     width: 33.3%
 }
@@ -4171,7 +4183,8 @@ button.bg-danger:hover {
     width: 25px;
     height: 25px;
 }
-.action-icon.dropdown-toggle i:hover{ 
+
+.action-icon.dropdown-toggle i:hover {
     background: rgb(204 211 221 / 60%);
 }
 
@@ -6601,7 +6614,8 @@ textarea.form-control {
     transition: 0.5s;
     display: inline-block;
 }
-.btn-group-sm .add-btn{
+
+.btn-group-sm .add-btn {
     margin: 0;
 }
 
@@ -8802,8 +8816,8 @@ button.close {
 }
 
 .page-wrapper .label-switch::before {
-    width: 75px;
-    height: 25px;
+    width: 50px;
+    height: 20px;
     border: 1px solid #cfcfcf;
     background: #cfcfcf;
     border-radius: 4em;
@@ -8814,8 +8828,8 @@ button.close {
     position: absolute;
     top: 2px;
     left: 3px;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     background: #fafafa;
     border-radius: 50%;
     transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1), background 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
@@ -8854,8 +8868,8 @@ button.close {
 
 .page-wrapper input[type='checkbox'] {
     accent-color: #00c4fa;
-    width: 18px;
-    height: 18px;
+    width: 15px;
+    height: 15px;
 }
 
 .select2-container .select2-selection--single {
@@ -8939,9 +8953,11 @@ input[type=file].form-control {
     color: #444;
     background-color: rgb(0 15 73 / 5%) !important;
 }
+
 .mini-sidebar .page-wrapper {
     margin-left: 85px;
 }
+
 .submit-section .submit-btn:hover {
     background: #fff;
     color: #00c3fa !important;
@@ -9006,8 +9022,8 @@ input[type=file].form-control {
 }
 
 #add_department .label-switch::before {
-    width: 75px;
-    height: 25px;
+    width: 50px;
+    height: 20px;
     border: 1px solid #cfcfcf;
     background: #cfcfcf;
 }
@@ -9015,14 +9031,14 @@ input[type=file].form-control {
 #add_department .label-switch::after {
     left: 3px;
     top: 2px;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     border: none;
     background: #ffffff;
 }
 
 #add_department .input-switch:checked~.label-switch::after {
-    left: 52px;
+    left: 32px;
 }
 
 #add_department .input-switch:checked~.label-switch::before {
@@ -9033,9 +9049,11 @@ input[type=file].form-control {
 #add_department .info-text {
     margin-left: 10px;
 }
+
 .page-wrapper .content {
     padding: 30px
 }
+
 .page-wrapper.inner .input-switch {
     display: none;
 }
@@ -9136,6 +9154,7 @@ input[type=file].form-control {
         z-index: 1041;
 
     }
+
     .page-wrapper {
         margin: 0;
     }
@@ -9143,6 +9162,7 @@ input[type=file].form-control {
     .slide-nav .sidebar {
         margin-left: 0;
     }
+
     .top-nav-search {
         display: none;
     }
@@ -9162,8 +9182,9 @@ input[type=file].form-control {
     .submit-section {
         margin-top: 10px;
     }
+
     .salary {
-       text-align: center!important;
+        text-align: center !important;
     }
 
 
@@ -9191,8 +9212,9 @@ input[type=file].form-control {
     .page-wrapper .employ-add-btn .add-btn {
         min-width: 100px !important;
     }
-    .search-btn .btn-success{
-        padding: 10px 30px!important;
+
+    .search-btn .btn-success {
+        padding: 10px 30px !important;
     }
 
 }
@@ -9215,12 +9237,21 @@ input[type=file].form-control {
     .page-wrapper .icon-topic {
         width: 100%;
     }
-    .page-wrapper .content .page-header{
-        margin: 20px;
-        margin-bottom: 5px;
+
+    .page-wrapper .content .page-header {
+        margin-top: 30px;
     }
+
+    .page-wrapper .content {
+        padding: 5px;
+    }
+
     .header .mobile-user-menu .dropdown-menu {
         right: 0 !important;
+    }
+
+    .add-btn {
+        margin-right: 0;
     }
 }
 

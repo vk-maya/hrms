@@ -52,7 +52,7 @@
                             </div>
 
                             <div class="submit-section">
-                                <button id="submit" type="submit" class="btn btn-primary submit-btn">Submit</button>
+                                <button id="submit" type="submit" class="btn btn-success">Submit</button>
                             </div>
                         </div>
                     </form>

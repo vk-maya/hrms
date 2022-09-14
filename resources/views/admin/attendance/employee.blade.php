@@ -7,7 +7,7 @@
         <div class="page-header">
             <div class="row">
                 <div class="col-sm-12">
-                    <h3 class="page-title">Attendancesss</h3>
+                    <h3 class="page-title">Attendance</h3>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                         <li class="breadcrumb-item active">Attendance</li>
@@ -85,10 +85,10 @@
                         <label class="focus-label">Select Year</label>
                     </div>
                 </div>
-                <div class="col-lg-8 col-md-6 col-sm-6">
+                <div class="col-lg-4 col-md-6 col-sm-6 form-group">
                     <div class="search-btn">
-                        <button type="submit" class="btn add-btn"> Search </button>
-                        <a href="{{route('admin.attendance.employee')}}" class="btn add-btn"> Reset </a>
+                        <button type="submit" class="btn btn-success"> Search </button>
+                        <a href="{{route('admin.attendance.employee')}}" class="btn btn-success"> Reset </a>
                     </div>
                 </div>
             </div>

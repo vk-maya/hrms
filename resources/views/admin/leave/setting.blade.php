@@ -6,14 +6,14 @@
     <div class="content container-fluid">
         <div class="page-header">
             <div class="row align-items-center">
-                <div class="col">
+                <div class="col-6">
                     <h3 class="page-title">Leave Settings</h3>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('admin.dashboard')}}">Dashboard</a></li>
                         <li class="breadcrumb-item active">Leave Settings</li>
                     </ul>
                 </div>
-                <div class="col-auto float-end ms-auto">
+                <div class="col-6 text-end">
                     <a href="{{route('admin.add-leave-type')}}" class="btn add-btn"><i class="fa fa-plus"></i>
                         Add Leave Type</a>
                 </div>

@@ -20,26 +20,26 @@
             </div>
         </div>
         <div class="row filter-row">
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+            <div class=" col-lg-4 col-md-6 col-sm-6">
                 <div class="form-group form-focus">
                     <input type="text" class="form-control floating">
                     <label class="focus-label">Employee Name</label>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+            <div class=" col-lg-4 col-md-6 col-sm-6">
                 <div class="form-group form-focus select-focus">
                     <select class="select floating">
-                        <option value=""> -- Select -- </option>
+                        <option value="">Select-option</option>
                         <option value="">Employee</option>
                         <option value="1">Manager</option>
                     </select>
                     <label class="focus-label">Role</label>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+            <div class=" col-lg-4 col-md-6 col-sm-6">
                 <div class="form-group form-focus select-focus">
                     <select class="select floating">
-                        <option> -- Select -- </option>
+                        <option>Select-option</option>
                         <option> Pending </option>
                         <option> Approved </option>
                         <option> Rejected </option>
@@ -47,23 +47,23 @@
                     <label class="focus-label">Leave Status</label>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+            <div class="col-lg-4 col-md-6 col-sm-6">
                 <div class="form-group form-focus">
                     <div class="cal-icon">
-                        <input class="form-control floating datetimepicker" type="text">
+                        <input class="form-control floating datetimepicker date-input" type="text">
                     </div>
                     <label class="focus-label">From</label>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+            <div class="col-lg-4 col-md-6 col-sm-6">
                 <div class="form-group form-focus">
                     <div class="cal-icon">
-                        <input class="form-control floating datetimepicker" type="text">
+                        <input class="form-control floating datetimepicker date-input" type="text">
                     </div>
                     <label class="focus-label">To</label>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+            <div class="col-lg-4 col-md-6 col-sm-6">
                 <a href="#" class="btn btn-success"> Search </a>
             </div>
         </div>
