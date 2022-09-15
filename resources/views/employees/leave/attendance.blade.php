@@ -18,60 +18,37 @@
                     </div>
                 </div>
             </div>
-            <form action="{{route('employees.search.month.attendance')}}" method="GET">
+            <form action="{{ route('employees.search.month.attendance') }}" method="GET">
                 <div class="row filter-row">
                     <div class="col">
                         <div class="form-group form-focus select-focus">
                             <select class="select floating" name="month">
-                                <option @if(isset(request()->month) && request()->month == 1)
-                                    selected
-                                @endif value="1">Jan</option>
-                                <option @if(isset(request()->month) && request()->month == 2)
-                                    selected
-                                @endif value="2">Feb</option>
-                                <option @if(isset(request()->month) && request()->month == 3)
-                                    selected
-                                @endif value="3">Mar</option>
-                                <option @if(isset(request()->month) && request()->month == 4)
-                                    selected
-                                @endif value="4">Apr</option>
-                                <option @if(isset(request()->month) && request()->month == 5)
-                                    selected
-                                @endif value="5">May</option>
-                                <option @if(isset(request()->month) && request()->month == 6)
-                                    selected
-                                @endif value="6">Jun</option>
-                                <option @if(isset(request()->month) && request()->month == 7)
-                                    selected
-                                @endif value="7">Jul</option>
-                                <option @if(isset(request()->month) && request()->month == 8)
-                                    selected
-                                @endif value="8">Aug</option>
-                                <option @if(isset(request()->month) && request()->month == 9)
-                                    selected
-                                @endif value="9">Sep</option>
-                                <option @if(isset(request()->month) && request()->month == 10)
-                                    selected
-                                @endif value="10">Oct</option>
-                                <option @if(isset(request()->month) && request()->month == 11)
-                                    selected
-                                @endif value="11">Nov</option>
-                                <option @if(isset(request()->month) && request()->month == 12)
-                                    selected
-                                @endif value="12">Dec</option>
+                                <option @if (isset(request()->month) && request()->month == 1) selected @endif value="1">Jan</option>
+                                <option @if (isset(request()->month) && request()->month == 2) selected @endif value="2">Feb</option>
+                                <option @if (isset(request()->month) && request()->month == 3) selected @endif value="3">Mar</option>
+                                <option @if (isset(request()->month) && request()->month == 4) selected @endif value="4">Apr</option>
+                                <option @if (isset(request()->month) && request()->month == 5) selected @endif value="5">May</option>
+                                <option @if (isset(request()->month) && request()->month == 6) selected @endif value="6">Jun</option>
+                                <option @if (isset(request()->month) && request()->month == 7) selected @endif value="7">Jul</option>
+                                <option @if (isset(request()->month) && request()->month == 8) selected @endif value="8">Aug</option>
+                                <option @if (isset(request()->month) && request()->month == 9) selected @endif value="9">Sep</option>
+                                <option @if (isset(request()->month) && request()->month == 10) selected @endif value="10">Oct</option>
+                                <option @if (isset(request()->month) && request()->month == 11) selected @endif value="11">Nov</option>
+                                <option @if (isset(request()->month) && request()->month == 12) selected @endif value="12">Dec</option>
                             </select>
                             <label class="focus-label">Select Month</label>
                         </div>
                     </div>
                     @php
-                    $years=2019;
-                    $curenty= date('Y', strtotime(now()))
+                        $years = 2019;
+                        $curenty = date('Y', strtotime(now()));
                     @endphp
                     <div class="col">
                         <div class="form-group form-focus select-focus">
                             <select class="select floating" name="year">
-                                @for($years; $years <=$curenty; $years++)
-                                    <option @if(isset(request()->year) && request()->year == $years) selected @endif value="{{$years}}">{{$years}}</option>
+                                @for ($years; $years <= $curenty; $years++)
+                                    <option @if (isset(request()->year) && request()->year == $years) selected  @endif value="{{ $years }}">
+                                        {{ $years }}</option>
                                 @endfor
                             </select>
                             <label class="focus-label">Select Year</label>
@@ -84,12 +61,24 @@
                     </div>
                     <div class="col">
                         <div class="search-btn">
-                            <a href="{{route('employees.attendance')}}" class="btn btn-success"> Reset </a>
+                            <a href="{{ route('employees.attendance') }}" class="btn btn-success"> Reset </a>
                         </div>
                     </div>
                 </div>
             </form>
-
+            @isset($messege)
+                @if ($messege == 0)
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>Attendance! </strong>record Not Available!.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @else
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Attendance! </strong>record Available!.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+            @endisset
             <div class="row">
                 <div class="col-lg-12">
                     <div class="table-responsive">
@@ -102,7 +91,6 @@
                                     <th>Punch Out</th>
                                     <th>Work Hour</th>
                                     <th>Action</th>
-
                                 </tr>
                             </thead>
                             <tbody>
@@ -114,46 +102,63 @@
                                         <td>{{ $item->out_time }}</td>
                                         <td>{{ $item->work_time }}</td>
                                         @php
-                                            $todayDate= now()->subDay(2);
-                                            $todayDate=\Carbon\Carbon::parse($todayDate)->format('d-m-Y');
-                                            $attendanceDate=\Carbon\Carbon::parse($item->date)->format('d-m-Y');
+                                            $todayDate = now()->subDay(2);
+                                            $todayDate = \Carbon\Carbon::parse($todayDate)->format('d-m-Y');
+                                            $attendanceDate = \Carbon\Carbon::parse($item->date)->format('d-m-Y');
                                         @endphp
                                         <td class="text-center">
-                                        @if($item->mark == "HDO")
-                                            <a class="btn btn-white btn-sm btn-rounded dropdown-toggl disabled" href="#"  data-bs-toggle="dropdown" aria-expanded="false"> <i class="fa fa-check  text-info"></i> H-Half-Day </a>
-                                        @else                 
+                                            @if ($item->mark == 'HDO')
+                                                <a class="btn btn-white btn-sm btn-rounded dropdown-toggl disabled"
+                                                    href="#" data-bs-toggle="dropdown" aria-expanded="false"> <i
+                                                        class="fa fa-check  text-info"></i> H-Half-Day </a>
+                                            @else
                                                 @if ($item->attendance == 'P' || $item->attendance == 'WO')
                                                     <div class="dropdown action-label">
                                                         <a class="btn btn-white btn-sm btn-rounded  disabled" href="#"
-                                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                                        <i class="fa fa-check text-success"></i> P - Present
+                                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <i class="fa fa-check text-success"></i> P - Present
                                                         </a>
                                                     </div>
-                                                @elseif($item->action ==3)
-                                                    <a class="dropdown-item disabled" > <i class="fa fa-hourglass-start text-info"></i></a>
-                                                @elseif($item->action ==1)
+                                                @elseif($item->action == 3)
+                                                    <a class="dropdown-item disabled"> <i
+                                                            class="fa fa-hourglass-start text-info"></i></a>
+                                                @elseif($item->action == 1)
                                                     <a class="btn btn-white btn-sm btn-rounded  disabled" href="#"
                                                         data-bs-toggle="dropdown" aria-expanded="false">
                                                         <i class="fa fa-check text-success"></i> A - accept
-                                                        </a>
-                                                @elseif($item->action ==0)
-                                                    <a class="dropdown-item disabled" href="#" aria-expanded="false"> <i class="fa fa-close text-danger"></i> A - Absent</a>
+                                                    </a>
+                                                @elseif($item->action == 0)
+                                                    <a class="dropdown-item disabled" href="#" aria-expanded="false">
+                                                        <i class="fa fa-close text-danger"></i> A - Absent</a>
                                                 @else
-                                                            <a class="btn btn-white btn-sm btn-rounded dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-close text-danger"></i> A - Absent</a>
-                                                            <div class="dropdown-menu dropdown-menu-right">
-                                                    @if ($item->mark == "L")
-                                                            <a class="dropdown-item attend-leave-show disabled" data-id="{{ $item->id}}"> <i class="fa fa-dot-circle-o text-danger"></i> Leave</a>                                                    
-                                                            <a class="dropdown-item wfh" data-id="{{ $item->id}}"><i class="fa fa-dot-circle-o text-info"></i>WFH</a>
-                                                    @elseif($item->mark == "WFH")
-                                                            <a class="dropdown-item attend-leave-show" data-id="{{ $item->id}}"> <i class="fa fa-dot-circle-o text-danger"></i> Leave</a>                                                    
-                                                            <a class="dropdown-item wfh disabled" data-id="{{ $item->id}}"><i class="fa fa-dot-circle-o text-info"></i> WFH</a>
-                                                    @else
-                                                            <a class="dropdown-item attend-leave-show" data-id="{{ $item->id}}"> <i class="fa fa-dot-circle-o text-danger"></i> Leave</a>                                                    
-                                                            <a class="dropdown-item wfh " data-id="{{ $item->id}}"><i class="fa fa-dot-circle-o text-info"></i> WFH</a>
-                                                    @endif
-                                                </div>
+                                                    <a class="btn btn-white btn-sm btn-rounded dropdown-toggle"
+                                                        href="#" data-bs-toggle="dropdown" aria-expanded="false"><i
+                                                            class="fa fa-close text-danger"></i> A - Absent</a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        @if ($item->mark == 'L')
+                                                            <a class="dropdown-item attend-leave-show disabled"
+                                                                data-id="{{ $item->id }}"> <i
+                                                                    class="fa fa-dot-circle-o text-danger"></i> Leave</a>
+                                                            <a class="dropdown-item wfh" data-id="{{ $item->id }}"><i
+                                                                    class="fa fa-dot-circle-o text-info"></i>WFH</a>
+                                                        @elseif($item->mark == 'WFH')
+                                                            <a class="dropdown-item attend-leave-show"
+                                                                data-id="{{ $item->id }}"> <i
+                                                                    class="fa fa-dot-circle-o text-danger"></i> Leave</a>
+                                                            <a class="dropdown-item wfh disabled"
+                                                                data-id="{{ $item->id }}"><i
+                                                                    class="fa fa-dot-circle-o text-info"></i> WFH</a>
+                                                        @else
+                                                            <a class="dropdown-item attend-leave-show"
+                                                                data-id="{{ $item->id }}"> <i
+                                                                    class="fa fa-dot-circle-o text-danger"></i> Leave</a>
+                                                            <a class="dropdown-item wfh "
+                                                                data-id="{{ $item->id }}"><i
+                                                                    class="fa fa-dot-circle-o text-info"></i> WFH</a>
+                                                        @endif
+                                                    </div>
                                                 @endif
-                                        @endif
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
@@ -180,15 +185,15 @@
                         <div class="form-group">
                             <label>Day Type Select<span class="text-danger">*</span></label>
                             <select class="select" name="dayType" required>
-                                    <option value="1">Full Day</option>
-                                    <option value="0">Half Day</option>
+                                <option value="1">Full Day</option>
+                                <option value="0">Half Day</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Leave Type <span class="text-danger">*</span></label>
                             <select class="select" name="leaveType">
                                 @foreach ($leaveType as $item)
-                                    <option value="{{$item->id}}">{{ $item->type }}</option>
+                                    <option value="{{ $item->id }}">{{ $item->type }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -232,7 +237,7 @@
                 <div class="modal-body">
                     <form action="{{ route('employees.attendance.wfh') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="id" id="wid">                     
+                        <input type="hidden" name="id" id="wid">
                         <div class="form-group">
                             <label>Date <span class="text-danger">*</span></label>
                             <div class="cal-icon">
@@ -254,7 +259,7 @@
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
 @endsection
 @push('plugin-js')
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>

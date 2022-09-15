@@ -32,7 +32,9 @@ class UserController extends Controller
     {
         $moreinfo = userinfo::where('user_id', Auth::guard('web')->user()->id)->count();
         $employees = User::with('moreinfo')->find(Auth::guard('web')->user()->id);
-        return view('employees.profile.profile', compact('employees', 'moreinfo'));
+        $files = Attach::where('user_id', Auth::guard('web')->user()->id)->get();
+
+        return view('employees.profile.profile', compact('employees', 'moreinfo','files'));
     }
     public function profilemoreinfo()
     {
@@ -152,7 +154,8 @@ class UserController extends Controller
 
     public function getdocument($id)
     {
-        $files = Attach::where('user_id', $id)->get();
+        $files = Attach::where('user_id',Auth::guard('web')->user()->id)->get();
+        // dd($files->toArray());
         return view('employees.Attach.attach-file', compact('files'));
     }
 

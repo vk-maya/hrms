@@ -27,6 +27,7 @@
                 </div>
             </div>
             <div class="row">
+                @if(count($files)>0)
                 @foreach ($files as $file)
                     <div class="col-md-3">
                         <div class="dropdown-file">
@@ -48,6 +49,9 @@
                         </div>
                     </div>
                 @endforeach
+                @else
+                <h4>Document Not Upload</h4>
+                @endif   
             </div>
         </div>
     </div>
