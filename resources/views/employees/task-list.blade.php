@@ -1,9 +1,5 @@
 @extends('layouts.app')
 @push('css')
-    <link rel="stylesheet" href="{{ asset('assets/css/dataTables.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
-    <link rel="stylesheet" href="assets/plugins/sweetalert2/sweetalert2.min.css">
 @endpush
 @section('content')
     <div class="page-wrapper">
@@ -21,13 +17,13 @@
             </div>
             <div class="col-md-12">
                 <div class="table-responsive">
-                    <table class="table table-striped custom-table mb-0" id="department">
+                    <table class="table table-striped custom-table mb-0 data-table-theme">
                         <thead>
                             <tr>
                                 <th style="width: 30px;">SR</th>
                                 <th>Title</th>
                                 <th>Date</th>
-                                <th class="text-end">Action</th>
+                                <th class="text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -37,7 +33,7 @@
                                     <td><a href="{{ route('employees.show-taskk', $item->id) }}">{{ $item->title }}</a>
                                     </td>
                                     <td>{{ \Carbon\Carbon::parse($item->post_date)->format('d/m/Y') }} </td>
-                                    <td class="text-end"><a href="{{ route('employees.show-taskk', $item->id) }}">
+                                    <td class="text-center"><a class="btn add-btn" href="{{ route('employees.show-taskk', $item->id) }}">
                                             View</a></td>
                                 </tr>
                             @endforeach
@@ -49,17 +45,4 @@
     </div>
 @endsection
 @push('js')
-    <script src="{{ asset('assets/js/select2.min.js') }}"></script>
-    <script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('assets/js/dataTables.bootstrap4.min.js') }}"></script>
-    <script src="{{ asset('assets/js/moment.min.js') }}"></script>
-    <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-    <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
-    <script>
-        // ------------shoe data table---------------
-        $('#department').DataTable({
-            paging: true,
-            searching: true
-        });
-    </script>
 @endpush

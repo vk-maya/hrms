@@ -2,7 +2,11 @@
 <html lang="en">
 
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link type="text/css"  rel="stylesheet" href="assets/css/bootstrap.min.css">
+<style>
 
+</style>
 </head>
 
 <body>
@@ -18,13 +22,11 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <div class="row">
-                                                    <div>
-                                                        <h4 class="payslip-title"><span id="slip"></span> - Pay
-                                                            Slip
-                                                        </h4>
+                                                    <div class="text-center">
+                                                        <h2 class="payslip-title"><span id="slip"></span>Pay Slip</h2>
                                                     </div>
                                                     <div>
-                                                        <h5 class="payslip-title">PAY SLIP:#
+                                                        <h5 class="payslip-title">PAY:#
                                                             {{ $employeesalary->payslip_number }}<span
                                                                 id="payslipnumber"></span></h5>
                                                     </div>
@@ -134,16 +136,14 @@
                                                                             @endif
                                                                         </td>
                                                                     </tr>
+                                                                    @if (isset($employeesalary->conveyance))
                                                                     <tr>
                                                                         <td><strong>Conveyance</strong>
-                                                                            @if (isset($employeesalary->conveyance))
                                                                                 {{ $employeesalary->conveyance }}
-                                                                            @else
-                                                                                0
-                                                                            @endif
                                                                         </td>
                                                                     </tr>
-                                                                    <tr>
+                                                                    @endif
+                                                                        <tr>
                                                                         <td><strong>Allowance</strong>
                                                                             @if (isset($employeesalary->allowance))
                                                                                 {{ $employeesalary->allowance }}
@@ -162,20 +162,19 @@
                                                                                 @endif
                                                                             </strong></td>
                                                                     </tr>
+                                                                    @if (isset($employeesalary->medical_allowance))
                                                                     <tr>
                                                                         <td><strong>Medical Allowance</strong> <strong
                                                                                 id="ma">
-                                                                                @if (isset($employeesalary->medical_allowance))
                                                                                     {{ $employeesalary->medical_allowance }}
-                                                                                @else
-                                                                                    0
-                                                                                @endif
-                                                                            </strong>
-                                                                        </td>
-                                                                    </tr>
+                                                                           
+                                                                                </strong>
+                                                                            </td>
+                                                                        </tr>
+                                                                        @endif
                                                                     <tr>
-                                                                        <td><strong>Total Earnings</strong>
-                                                                            class="float-end"><strong>
+                                                                        <td><strong class="float-end">Total Earnings</strong>
+                                                                            <strong>
                                                                                 @if (isset($employeesalary->tEarning))
                                                                                     {{ $employeesalary->tEarning }}
                                                                                 @else

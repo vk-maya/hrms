@@ -1,8 +1,5 @@
 @extends('layouts.app')
 @push('css')
-    <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/ckeditor.css') }}">
 @endpush
 @section('content')
     <div class="page-wrapper">
@@ -21,7 +18,7 @@
             <div class="job-content job-widget">
                 <div class="col-md-12">
                     <div class="table-responsive">
-                        <table class="table table-striped custom-table mb-0" id="department">
+                        <table class="table table-striped custom-table mb-0 data-table-theme">
                             <thead>
                                 <tr>
                                     <th style="width: 30px;">SR</th>
@@ -30,7 +27,7 @@
                                     <th>Payslip Number</th>
                                     <th>Net Salary</th>
                                     <th>Basic Salary</th>
-                                    <th class="text-center">View</th>
+                                    <th>View</th>
                                     <th class="text-center">Download</th>
                                 </tr>
                             </thead>
@@ -43,19 +40,17 @@
                                         <td>{{ $item->payslip_number }}</td>
                                         <td>{{ $item->net_salary }}</td>
                                         <td>{{ $item->basic_salary }}</td>
-                                        <td> <a class="salarySlip btn btn-sm "data-id="{{ $item->id }}">Slip View</a>
+                                        <td> <a class="btn add-btn salarySlip"data-id="{{ $item->id }}">View</a>
                                         </td>
-                                        <td><a href="{{ route('employees.payslip.download', $item->id) }}">Slip
+                                        <td class="text-center"><a class="btn add-btn" href="{{ route('employees.payslip.download', $item->id) }}">
                                                 Download</a>
                                         </td>
-
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -242,11 +237,6 @@
     </div>
 @endsection
 @push('plugin-js')
-    <script src="{{ asset('assets/js/select2.min.js') }}"></script>
-    <script src="{{ asset('assets/js/moment.min.js') }}"></script>
-    <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-    <script src="{{ asset('assets/js/ckeditor.js') }}"></script>
-    <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             $(document).on("click", ".salarySlip", function() {

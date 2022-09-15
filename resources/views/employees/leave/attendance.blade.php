@@ -1,8 +1,5 @@
 @extends('layouts.app')
 @push('css')
-    <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/ckeditor.css') }}">
 @endpush
 @section('content')
     <div class="page-wrapper">
@@ -56,12 +53,8 @@
                     </div>
                     <div class="col">
                         <div class="search-btn">
-                            <button type="submit" class="btn btn-success"> Search </button>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="search-btn">
-                            <a href="{{ route('employees.attendance') }}" class="btn btn-success"> Reset </a>
+                            <button type="search" class="btn btn-success"> Search </button>
+                            <a href="{{route('employees.attendance')}}" class="btn btn-success"> Reset </a>
                         </div>
                     </div>
                 </div>
@@ -82,7 +75,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="table-responsive">
-                        <table class="table cus-table-striped custom-table mb-0">
+                        <table class="table cus-table-striped custom-table mb-0 data-table-theme">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -90,7 +83,8 @@
                                     <th>Punch In</th>
                                     <th>Punch Out</th>
                                     <th>Work Hour</th>
-                                    <th>Action</th>
+                                    <th class="text-center">Action</th>
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -115,8 +109,8 @@
                                                 @if ($item->attendance == 'P' || $item->attendance == 'WO')
                                                     <div class="dropdown action-label">
                                                         <a class="btn btn-white btn-sm btn-rounded  disabled" href="#"
-                                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                                            <i class="fa fa-check text-success"></i> P - Present
+                                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="fa fa-check text-success me-2"></i> Present
                                                         </a>
                                                     </div>
                                                 @elseif($item->action == 3)
@@ -262,11 +256,6 @@
     </div>
 @endsection
 @push('plugin-js')
-    <script src="{{ asset('assets/js/select2.min.js') }}"></script>
-    <script src="{{ asset('assets/js/moment.min.js') }}"></script>
-    <script src="{{ asset('assets/js/bootstrap-datetimepicker.min.js') }}"></script>
-    <script src="{{ asset('assets/js/ckeditor.js') }}"></script>
-    <script src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             $(document).on("click", ".attend-leave-show", function() {
