@@ -1865,7 +1865,7 @@ button.bg-danger:hover {
     background-color: #00c5fb;
     border: 1px solid #00c5fb;
     transition: 0.5s;
-    padding: 12px 50px !important;
+    padding: 12px 40px !important;
     display: inline-block;
     min-height: 50px;
     text-transform: uppercase;
@@ -4073,7 +4073,7 @@ button.bg-danger:hover {
     white-space: nowrap;
     border-top: 1px solid #e2e5e8;
     padding: 0.75rem 0.75rem;
-    background-color: #ebebeb;
+    /* background-color: #ebebeb; */
     color: #5a5a5a;
 }
 
@@ -5851,11 +5851,6 @@ textarea.form-control {
     font-size: 18px;
     margin-bottom: 0
 }
-
-.dash-section {
-    margin-bottom: 30px
-}
-
 .dash-section .dash-sec-title {
     font-size: 18px;
     font-weight: 700;
@@ -5881,7 +5876,7 @@ textarea.form-control {
 .dash-section .dash-info-list .dash-card-container .dash-card-icon {
     flex-direction: row;
     font-size: 26px;
-    padding-right: 15px
+    padding-right: 7px
 }
 
 .dash-section .dash-info-list .dash-card-container .dash-card-icon i {
@@ -5892,10 +5887,6 @@ textarea.form-control {
     flex-direction: row
 }
 
-.dash-section .dash-info-list .dash-card-container .dash-card-content p {
-    font-size: 22px;
-    margin-bottom: 0
-}
 
 @media(max-width:768px) {
     .dash-section .dash-info-list .dash-card-container .dash-card-content p {
@@ -6610,7 +6601,7 @@ textarea.form-control {
     color: #fff !important;
     font-weight: 500;
     border-radius: 4px;
-    margin-right: 10px;
+    padding: 9px 20 px;
     transition: 0.5s;
     display: inline-block;
 }
@@ -8031,15 +8022,6 @@ button.close {
     margin: 0 !important
 }
 
-.job-widget {
-    background-color: #fff;
-    border: 1px solid #efefef;
-    float: left;
-    position: relative;
-    width: 100%;
-    margin: 0 0 30px;
-    padding: 30px
-}
 
 .job-widget h4 {
     color: #585858;
@@ -8936,12 +8918,6 @@ input[type=file].form-control {
     line-height: 36px;
     height: 50px;
 }
-
-/* .salaryinfo.btn.add-btn {
-    padding: 8px 0 !important;
-    min-width: 100px;
-} */
-
 .dropdown.dropdown-action .dropdown-item {
     background-color: #fff !important;
     border-radius: 0px;
@@ -8965,12 +8941,8 @@ input[type=file].form-control {
 
 .table-responsive .table.dataTable .odd {
     transition: 0.3s;
+    background-color: #f9f9f9;
 }
-
-.table-responsive .table.dataTable .odd:hover {
-    background-color: #fff;
-}
-
 .header .has-arrow .dropdown-toggle:after {
     display: none;
 }
@@ -8986,7 +8958,6 @@ input[type=file].form-control {
 }
 
 .footer-adm {
-    /* margin-left: 14.4rem; */
     background-color: #FFF;
     padding-left: 2rem;
     padding-top: 10px;
@@ -9101,7 +9072,6 @@ input[type=file].form-control {
     right: 0;
     background: #00ce00;
     border-color: #009a00;
-    /* margin-top: 4px; */
 }
 
 .page-wrapper.inner .info-text {
@@ -9121,13 +9091,50 @@ input[type=file].form-control {
     text-align: end;
     display: block;
 }
-
-.table-responsive .table.dataTable.cus-table-striped .even {
-    background-color: #f5f7fb !important;
+.ui-state-default, .ui-widget-content .ui-state-default{
+    color: #454545;
+    text-align: center;
+    border-radius: 50%;
+    margin: 4px;
+    background-color: #fff;
+    border: none;
+    transition: 0.3s;
 }
-
+.ui-state-default, .ui-widget-content .ui-state-default:hover{
+    background-color:#eff2f5 ;
+}
+.ui-widget-header {
+    background-color: #e9ecef;
+}
+.ui-datepicker select.ui-datepicker-month, .ui-datepicker select.ui-datepicker-year {
+    width: 40%;
+    margin: 0px 8px;
+    border: none;
+    padding: 2px;
+    border-radius: 10px;
+}
+.ui-state-hover,
+.ui-widget-content .ui-state-hover,
+.ui-widget-header .ui-state-hover{
+	border:none;
+	background: #ededed;
+	font-weight: normal;
+	color: #2b2b2b;
+}
 .load-more {
     margin-top: 2.7rem;
+}
+.job-content.job-widget-inner{
+    padding: 20px;
+    box-shadow: 0px 0px 3px 0px #ccc;
+    border-radius: 8px;
+}
+.dash-section .dash-info-list .dash-card-container .dash-card-content p {
+    font-size: 18px;
+    margin-bottom: 0;
+}
+.welcome-img img{
+    width: 100px;
 }
 
 

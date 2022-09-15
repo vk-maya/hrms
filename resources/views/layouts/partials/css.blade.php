@@ -3,22 +3,23 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <meta name="description" content="Smarthr - Bootstrap Admin Template">
-    <meta name="keywords"
-        content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern, accounts, invoice, html5, responsive, CRM, Projects">
-    <meta name="author" content="Dreamguys - Bootstrap Admin Template">
     <meta name="robots" content="noindex, nofollow">
     <title>Scrum Digital Employees Management</title>
-
     <link rel="shortcut icon" type="image/x-icon" href="{{asset('assets/img/favicon.png')}}">
-
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
-
     <link rel="stylesheet" href="{{ asset('assets/css/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/fontawsome.min.css') }}">
-
     <link rel="stylesheet" href="{{ asset('assets/css/line-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/plugins/morris/morris.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/ckeditor.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/nice-select.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/sweetalert2.min.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.css">
+    <link rel="stylesheet" href="{{ asset('assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css') }}">
 
     @stack('css')
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">

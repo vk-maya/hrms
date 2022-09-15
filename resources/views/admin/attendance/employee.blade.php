@@ -78,9 +78,8 @@
                 <div class="col-lg-4 col-md-6 col-sm-6">
                     <div class="form-group form-focus select-focus">
                         <select class="select floating" name="year">
-                            @for($years; $years <=$curenty; $years++)
-                                <option @if(isset(request()->year) && request()->year == $years) selected @endif value="{{$years}}">{{$years}}</option>
-                            @endfor
+                            @for($years; $years <=$curenty; $years++) <option @if(isset(request()->year) && request()->year == $years) selected @endif value="{{$years}}">{{$years}}</option>
+                                @endfor
                         </select>
                         <label class="focus-label">Select Year</label>
                     </div>
@@ -96,18 +95,18 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="table-responsive">
-                <table class="table cus-table-striped custom-table mb-0 data-table-theme">
-                    <thead>
-                        <th>Employees Name</th>
-                        <th>Month</th>
-                        <th>PL Leave</th>
-                        <th>Sick Leave</th>
-                        <th>Other Leave</th>
-                        <th>Total Working Day</th>
-                        <th>More Action</th>
-                    </thead>
-                    <tbody>
-                        @foreach ($attendance as $item)
+                    <table class="table cus-table-striped custom-table mb-0 data-table-theme">
+                        <thead>
+                            <th>Employees Name</th>
+                            <th>Month</th>
+                            <th>PL Leave</th>
+                            <th>Sick Leave</th>
+                            <th>Other Leave</th>
+                            <th>Total Working Day</th>
+                            <th>More Action</th>
+                        </thead>
+                        <tbody>
+                            @foreach ($attendance as $item)
                             <tr>
                                 <td>
                                     <h2 class="table-avatar">
@@ -170,6 +169,7 @@
             </div>
         </div>
     </div>
+</div>
 @endsection
 @push('plugin-js')
 
