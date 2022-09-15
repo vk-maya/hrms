@@ -28,7 +28,13 @@ class EmpAttendanceController extends Controller
     $attendance= Attendance::with('wfh','leavestatus')->where('user_id',Auth::guard('web')->user()->id)->where(function($query)use($first_date,$last_date){
         $query->whereBetween('date',[$first_date,$last_date]);
     })->orderBy('created_at', 'DESC')->get();
+    if (count($attendance)>0) {
+        $messege=1;
+    }else{
+        $messege=0;
+    }
     $leaveType= settingleave::where('status',1)->get();
-    return view('employees.leave.attendance',compact('attendance','leaveType'));
+        return view('employees.leave.attendance',compact('attendance','leaveType','messege'));
+   
     }
 }

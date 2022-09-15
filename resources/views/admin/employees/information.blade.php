@@ -14,7 +14,6 @@
                         <li class="breadcrumb-item active">More Information</li>
                     </ul>
                 </div>
-                {{-- {{$data}} --}}
                 <div class="modal-content heading mt-5">
                     <div class="modal-header">
                         <h4 class="modal-title">Personal Information</h4>
@@ -58,14 +57,27 @@
                                             @enderror
                                         </span>
                                     </div>
-                                </div>
+                                </div>                            
                                 <div class="col-lg-4 col-md-6 col-sm-6">
                                     <div class="form-group">
-                                        <label>No. of children</label>
-                                        <input class="form-control" name="children" min="0"type="number" value="@isset($data){{ $data->noOfChildren}}@else{{old('children')}}@endisset" required>
+                                        <label>No. of children Select<span class="text-danger">*</span></label>
+                                        <select class="select form-control" name="children">
+                                            <option @if (isset($data) && $data->noOfChildren == 1) selected @endif
+                                                value="1">1</option>
+                                            <option @if (isset($data) && $data->noOfChildren == 2) selected @endif
+                                                value="2">2</option>
+                                            <option @if (isset($data) && $data->noOfChildren == 3) selected @endif
+                                                value="3">3</option>
+                                            <option @if (isset($data) && $data->noOfChildren == 4) selected @endif
+                                                value="4">4</option>
+                                            <option @if (isset($data) && $data->noOfChildren == 5) selected @endif
+                                                value="5">5</option>
+                                            <option @if (isset($data) && $data->noOfChildren =="5+") selected @endif
+                                                value="5+">5+</option>
+                                        </select>
                                         <span class="text-danger">
-                                            @error('children')
-                                            <p>children field is required.</p>
+                                            @error('maritalstatus')
+                                            <p>Marital status field is required.</p>
                                             @enderror
                                         </span>
                                     </div>

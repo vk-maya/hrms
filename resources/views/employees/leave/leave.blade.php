@@ -26,19 +26,6 @@
                     </div>
                 </div>
             </div>
-
-            @if ($message = Session::get('success'))
-                <div class="alert alert-success alert-block">
-                    <button type="button" class="close" data-dismiss="alert">×</button>
-                    <strong>{{ $message }}</strong>
-                </div>
-            @endif
-            @if ($message = Session::get('unsuccess'))
-                <div class="alert alert-warning alert-block">
-                    <button type="button" class="close" data-dismiss="alert">×</button>
-                    <strong>{{ $message }}</strong>
-                </div>
-            @endif
             <div class="card tab-box">
                 <div class="row user-tabs">
                     <div class="col-lg-12 col-md-12 col-sm-12 line-tabs">
@@ -232,6 +219,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @if (count($data)>0)
                                         @foreach ($data as $item)
                                             <tr>
                                                 @php
@@ -283,6 +271,12 @@
                                                 @endif
                                             </tr>
                                         @endforeach
+                                        @else
+                                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                            <strong>Leave! </strong>Leave Record Not Available!.
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                          </div>   
+                                        @endif
                                     </tbody>
                                 </table>
                             </div>
@@ -305,6 +299,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @if (count($wfh)>0)                                           
                                         @foreach ($wfh as $item)
                                             <tr>
                                                 @php $start = new DateTime($item->from);
@@ -353,6 +348,12 @@
                                                 @endif
                                             </tr>
                                         @endforeach
+                                        @else
+                                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                            <strong>WFH! </strong>Work From Home Not Available!.
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                          </div>                                 
+                                    @endif
                                     </tbody>
                                 </table>
                             </div>
