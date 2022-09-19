@@ -1,21 +1,21 @@
 @extends('layouts.app')
 @section('content')
 <div class="page-wrapper">
-    <div class="container">
-                <div class="welcome-img text-center">
+    <div class="container-fluid">
+                <div class="welcome-img">
                     <a href="{{ route('employees.add.moreinfo') }}">
                         <img alt="" src="@if (Auth::guard('web')->user()->image != null) {{ asset('storage/uploads/' . Auth::guard('web')->user()->image) }}@else{{ asset('assets/img/avtar.jpg') }} @endif">
                     </a>
-                    <p class="mt-2">{{Auth::guard('web')->user()->first_name.' '.Auth::guard('web')->user()->last_name}}</p>
+                    {{Auth::guard('web')->user()->first_name.' '.Auth::guard('web')->user()->last_name}}
                 </div>
         <div class="row justify-content-center">
-            <div class="col-md-4">
+            <div class="col-md-3                                                ">
                 <div class="stats-box text-center">
                     <p>Today Date</p>
                     {{ \Carbon\Carbon::now()->format('d-m-Y (l)') }}
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 @if (isset($attendance) && $attendance->out_time != "00:00:00")
                 @php
                 $tt = \Carbon\Carbon::create($attendance->in_time)->diff($attendance->out_time);

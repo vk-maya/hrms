@@ -9136,6 +9136,9 @@ input[type=file].form-control {
 .welcome-img img{
     width: 100px;
 }
+.modal.cust-mod {
+    top: 2.5rem;
+}
 
 
 

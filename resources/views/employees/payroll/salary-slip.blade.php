@@ -54,7 +54,7 @@
             </div>
         </div>
     </div>
-    <div id="salarySlip" class="modal custom-modal fade" role="dialog">
+    <div id="salarySlip" class="modal cust-mod custom-modal fade" role="dialog">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -67,11 +67,11 @@
                     <div class="content container-fluid">
                         <div class="page-header">
                             <div class="row align-items-center">
-                                <div class="col-auto float-end ms-auto">
+                                <div class="col-auto ms-auto">
                                     <div class="btn-group btn-group-sm">
-                                        <span class="btn btn-white"><a
+                                        <span class="btn"><a class="btn add-btn"
                                                 href="{{ route('employees.payslip.download', ':id') }}"
-                                                id="pdf-route">PDF</a></span>
+                                                id="pdf-route">download PDF</a></span>
                                     </div>
                                 </div>
                             </div>

@@ -31,6 +31,7 @@ class UserslipController extends Controller
         // dd($employeesalary->toArray());
         // view()->share('employees.payroll.export-pdf', $employeesalary,$company);
         $pdf = PDF::loadView('employees.payroll.export-pdf', ['employeesalary' => $employeesalary,'company'=>$company]);
+        // return view('employees.payroll.export-pdf', ['employeesalary' => $employeesalary,'company'=>$company]);
         return $pdf->download('slip.pdf');
     }
 }

@@ -50,11 +50,11 @@
         </li>
 
 
-        <li class="nav-item flag-nav">
+        <!-- <li class="nav-item flag-nav">
             <a class="nav-link disabled">
                 <img src="{{ asset('assets/img/flags/us.png') }}" alt="" height="20"> <span>India</span>
             </a>
-        </li>
+        </li> -->
         {{-- @if($employees->image != NULL){{ asset('storage/uploads/' . $employees->image) }}@else{{ asset('assets/img/avtar.jpg')}}@endif" </li> --}}
         <li class="nav-item dropdown has-arrow main-drop">
             <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
