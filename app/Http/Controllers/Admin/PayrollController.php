@@ -365,17 +365,18 @@ class PayrollController extends Controller
     }
     //employees slip generate function
     public function monthslipgenerate(Request $request){
+        dd($request->toArray());
         if (!empty($request->id)) {
-            $monthLeaveCal = monthleave::find($request->monthrecord_id);
+            $monthLeaveCal = monthleave::find($request->monthleavesalary);
+            dd($monthLeaveCal);
             $dateFrom = new DateTime($monthLeaveCal->from);
             $dateTo = new DateTime($monthLeaveCal->to);
             $interval = $dateFrom->diff($dateTo);
             $da = $interval->format('%a');
             $days = $da + 1;
-            $salary = "";
             $salary = UserSalary::where('user_id', $request->id)->where('status', 1)->first();
             $salaryCount = UserSalary::where('user_id', $request->id)->where('status', 1)->count();
-            $userearndedu = UserEarndeducation::with('salaryEarningDeduction')->where('user_id', $request->user_id)->where('status', 1)->get();
+            $userearndedu = UserEarndeducation::with('salaryEarningDeduction')->where('user_id', $request->id)->where('status', 1)->get();
             $monthLeaveCalculate = monthleave::find($request->monthrecord_id);
             if (!empty($monthLeaveCalculate) && !empty($salaryCount)) {
                 $dateFrom = new DateTime($monthLeaveCal->from);
@@ -383,7 +384,7 @@ class PayrollController extends Controller
                 $interval = $dateFrom->diff($dateTo);
                 $da = $interval->format('%a');
                 $days = $da + 1;
-                $salarymonthDay = $days; //month day as joning date and accepect date
+                $monthDay = $days; //month day as joning date and accepect date
                 $salarygenerateCount = UserSlip::where('monthleave_id', $request->monthrecord_id)->count();
                 if ($salarygenerateCount > 0) {
                     $salarygenerate = UserSlip::where('monthleave_id', $request->monthrecord_id)->first();
@@ -394,13 +395,13 @@ class PayrollController extends Controller
                 $salarygenerate->monthleave_id = $request->monthrecord_id;
                 $month = $salary->monthly;
                 $inMonthDay = date('d', strtotime($monthLeaveCal->to));
-                $NetDay = $salarymonthDay; //total working day in month
+                $NetDay = $monthDay; //total working day in month
                 $daySalary = $month / $inMonthDay; //pr day salary calculate
                 if (isset($monthLeaveCal->other) && $monthLeaveCal->other != null) {
-                    $salarymonthDay = $salarymonthDay - $monthLeaveCal->other; //net day working in month
+                    $monthDay = $monthDay - $monthLeaveCal->other; //net day working in month
                 }
-                $paysalary = $salarymonthDay * $daySalary; //paysalary calculate prday Vs Net working day && pay salary decuction of leave
-                $monthLeaveCal->status = 3;
+                $paysalary = $monthDay * $daySalary; //paysalary calculate prday Vs Net working day && pay salary decuction of leave
+                $monthLeaveCal->status =3;
                 $monthLeaveCal->save();
                 $month = round($paysalary);
                 $salarygenerate->monthly_netsalary = $month; // net monthly salary
@@ -408,76 +409,72 @@ class PayrollController extends Controller
                 $salarygenerate->net_salary = $salary->net_salary;
                 $salarygenerate->slip_month =  date('Y-m', strtotime($monthLeaveCal->from));
                 $salarygenerate->salary_month =  date('Y-m', strtotime($monthLeaveCal->to));
-                $salarygenerate->status = 1;
+                $salarygenerate->status =1;
                 $salarygenerate->user_salaryID = $salary->id;
                 $total_deduct = 0;
                 $total_earn = 0;
                 foreach ($userearndedu as $eardedu) {
                     if ($eardedu->salaryEarningDeduction->salarymanagement->type == 'earning') {
                         $deduct = $month * $eardedu->salaryEarningDeduction->value / 100;
-                        $total_earn += (int)$deduct;
+                        $total_earn +=$deduct;
                     } else {
                         $deduct = $month * $eardedu->salaryEarningDeduction->value / 100;
-                        $total_deduct += (int)$deduct;
+                        $total_deduct += $deduct;
                     }
                     $salarygenerate[str_replace(' ', '_', strtolower($eardedu->salaryEarningDeduction->salarymanagement->title))] = round($deduct);
                 }
-                $salarygenerate->tDeducation = $total_deduct;
-                $salarygenerate->tEarning = $total_earn;
-                $totaled = $month - $total_deduct;
-                $grossMonthSalary = $paysalary - $total_deduct;
+                $salarygenerate->tDeducation =round($total_deduct);
+                $salarygenerate->tEarning = round($total_earn);
+                $totaled = $month - $salarygenerate->tEarning;
+                $grossMonthSalary = $month - $salarygenerate->tDeducation; //net pay 
                 if (isset($monthLeaveCal->other) && $monthLeaveCal->other != null) {
                     $salarygenerate->leave_deduction = round($monthLeaveCal->other * $daySalary);
                 } else {
                     $salarygenerate->leave_deduction = 0 * $daySalary;
                 }
-                $salarygenerate->paysalary = round($grossMonthSalary);
-                $salarygenerate->basic_salary = $totaled + $salarygenerate->leave_deduction;
+                $salarygenerate->paysalary = $grossMonthSalary+$salarygenerate->leave_deduction;//
+                $salarygenerate->netPaySalary = $grossMonthSalary;//
+                $salarygenerate->basic_salary = $totaled;
                 $salarygenerate->save();
-                $monthLeaveCal->status = 2;
+                $monthLeaveCal->status =2;
                 $monthLeaveCal->save();
-                dd($monthLeaveCal);
             }
-        } else {
-            $all = json_decode($request->all);
-            foreach ($all as $employees) {
-                if (!empty($employees->monthleavesalary)) {
-                    $monthLeaveCal = monthleave::find($employees->monthleavesalary->id);
-                    $dateFrom = new DateTime($monthLeaveCal->from);
-                    $dateTo = new DateTime($monthLeaveCal->to);
-                    $interval = $dateFrom->diff($dateTo);
-                    $da = $interval->format('%a');
-                    $days = $da + 1;
-                    $salary = "";
-                    $salary = UserSalary::where('user_id', $employees->id)->where('status', 1)->first();
-                    $salaryCount = UserSalary::where('user_id', $employees->id)->where('status', 1)->count();
-                    $userearndedu = UserEarndeducation::with('salaryEarningDeduction')->where('user_id', $employees->id)->where('status', 1)->get();
-                    $monthLeaveCalculate = monthleave::find($employees->monthleavesalary->id);
-                    if (!empty($monthLeaveCalculate) && !empty($salaryCount)) {
-                        $dateFrom = new DateTime($employees->monthleavesalary->from);
-                        $dateTo = new DateTime($employees->monthleavesalary->to);
-                        $interval = $dateFrom->diff($dateTo);
-                        $da = $interval->format('%a');
-                        $days = $da + 1;
-                        $salarymonthDay = $days; //month day as joning date and accepect date
-                        $salarygenerateCount = UserSlip::where('monthleave_id', $employees->monthleavesalary->id)->count();
 
-                        if ($salarygenerateCount > 0) {
-                            $salarygenerate = UserSlip::where('monthleave_id', $employees->monthleavesalary->id)->first();
-                        } else {
-                            $salarygenerate = new UserSlip();
-                        }
-
-                        $salarygenerate->user_id = $employees->id;
-                        $salarygenerate->monthleave_id = $employees->monthleavesalary->id;
+        /*if (!empty($request->id)) {
+            $monthLeaveCal = monthleave::find($request->monthrecord_id);
+            $dateFrom = new DateTime($monthLeaveCal->from);
+            $dateTo = new DateTime($monthLeaveCal->to);
+            $interval = $dateFrom->diff($dateTo);
+            $da = $interval->format('%a');
+            $days = $da + 1;
+            $salary = UserSalary::where('user_id', $request->id)->where('status', 1)->first();
+            $salaryCount = UserSalary::where('user_id', $request->id)->where('status', 1)->count();
+            $userearndedu = UserEarndeducation::with('salaryEarningDeduction')->where('user_id', $request->user_id)->where('status', 1)->get();
+            $monthLeaveCalculate = monthleave::find($request->monthrecord_id);
+            dd($monthLeaveCalculate->toarray());
+            if (!empty($monthLeaveCalculate) && !empty($salaryCount)) {
+                $dateFrom = new DateTime($monthLeaveCal->from);
+                $dateTo = new DateTime($monthLeaveCal->to);
+                $interval = $dateFrom->diff($dateTo);
+                $da = $interval->format('%a');
+                $days = $da + 1;                
+                $monthDay = $days; //month day as joning date and accepect date
+                $salarygenerateCount = UserSlip::where('monthleave_id', $request->monthrecord_id)->count();
+                if ($salarygenerateCount > 0) {
+                    $salarygenerate = UserSlip::where('monthleave_id', $request->monthrecord_id)->first();
+                } else {
+                    $salarygenerate = new UserSlip();
+                }
+                        $salarygenerate->user_id = $request->id;
+                        $salarygenerate->monthleave_id = $request->monthrecord_id;
                         $month = $salary->monthly;
                         $inMonthDay = date('d', strtotime($monthLeaveCal->to));
-                        $NetDay = $salarymonthDay; //total working day in month
+                        $NetDay = $monthDay; //total working day in month
                         $daySalary = $month / $inMonthDay; //pr day salary calculate
                         if (isset($monthLeaveCal->other) && $monthLeaveCal->other != null) {
-                            $salarymonthDay = $salarymonthDay - $monthLeaveCal->other; //net day working in month
+                            $monthDay = $monthDay - $monthLeaveCal->other; //net day working in month
                         }
-                        $paysalary = $salarymonthDay * $daySalary; //paysalary calculate prday Vs Net working day && pay salary decuction of leave
+                        $paysalary = $monthDay * $daySalary; //paysalary calculate prday Vs Net working day && pay salary decuction of leave
                         $monthLeaveCal->status =3;
                         $monthLeaveCal->save();
                         $month = round($paysalary);
@@ -493,26 +490,102 @@ class PayrollController extends Controller
                         foreach ($userearndedu as $eardedu) {
                             if ($eardedu->salaryEarningDeduction->salarymanagement->type == 'earning') {
                                 $deduct = $month * $eardedu->salaryEarningDeduction->value / 100;
-                                $total_earn += (int)$deduct;
+                                $total_earn +=$deduct;
                             } else {
                                 $deduct = $month * $eardedu->salaryEarningDeduction->value / 100;
-                                $total_deduct += (int)$deduct;
+                                $total_deduct += $deduct;
                             }
                             $salarygenerate[str_replace(' ', '_', strtolower($eardedu->salaryEarningDeduction->salarymanagement->title))] = round($deduct);
                         }
-                        $salarygenerate->tDeducation = $total_deduct;
-                        $salarygenerate->tEarning = $total_earn;
-                        $totaled = $month - $total_deduct;
-                        $grossMonthSalary = $paysalary - $total_deduct;
+                        $salarygenerate->tDeducation =round($total_deduct);
+                        $salarygenerate->tEarning = round($total_earn);
+                        $totaled = $month - $salarygenerate->tEarning;
+                        $grossMonthSalary = $month - $salarygenerate->tDeducation; //net pay 
                         if (isset($monthLeaveCal->other) && $monthLeaveCal->other != null) {
                             $salarygenerate->leave_deduction = round($monthLeaveCal->other * $daySalary);
                         } else {
                             $salarygenerate->leave_deduction = 0 * $daySalary;
                         }
-                        $salarygenerate->paysalary = round($grossMonthSalary);
-                        $salarygenerate->basic_salary = $totaled + $salarygenerate->leave_deduction;
+                        $salarygenerate->paysalary = $grossMonthSalary+$salarygenerate->leave_deduction;//
+                        $salarygenerate->netPaySalary = $grossMonthSalary;//
+                        $salarygenerate->basic_salary = $totaled;
                         $salarygenerate->save();
-
+                        $monthLeaveCal->status =2;
+                        $monthLeaveCal->save();
+            }
+            */
+        } else {
+            $all = json_decode($request->all);
+            foreach ($all as $employees) {
+                if (!empty($employees->monthleavesalary)) {
+                    $monthLeaveCal = monthleave::find($employees->monthleavesalary->id);
+                    $dateFrom = new DateTime($monthLeaveCal->from);
+                    $dateTo = new DateTime($monthLeaveCal->to);
+                    $interval = $dateFrom->diff($dateTo);
+                    $da = $interval->format('%a');
+                    $days = $da + 1;
+                    $salary = UserSalary::where('user_id', $employees->id)->where('status', 1)->first();
+                    $salaryCount = UserSalary::where('user_id', $employees->id)->where('status', 1)->count();
+                    $userearndedu = UserEarndeducation::with('salaryEarningDeduction')->where('user_id', $employees->id)->where('status', 1)->get();
+                    $monthLeaveCalculate = monthleave::find($employees->monthleavesalary->id);
+                    if (!empty($monthLeaveCalculate) && !empty($salaryCount)) {
+                        $dateFrom = new DateTime($employees->monthleavesalary->from);
+                        $dateTo = new DateTime($employees->monthleavesalary->to);
+                        $interval = $dateFrom->diff($dateTo);
+                        $da = $interval->format('%a');
+                        $days = $da + 1;
+                        $monthDay = $days; //month day as joning date and accepect date
+                        $salarygenerateCount = UserSlip::where('monthleave_id', $employees->monthleavesalary->id)->count();
+                        if ($salarygenerateCount > 0) {
+                            $salarygenerate = UserSlip::where('monthleave_id', $employees->monthleavesalary->id)->first();
+                        } else {
+                            $salarygenerate = new UserSlip();
+                        }
+                        $salarygenerate->user_id = $employees->id;
+                        $salarygenerate->monthleave_id = $employees->monthleavesalary->id;
+                        $month = $salary->monthly;
+                        $inMonthDay = date('d', strtotime($monthLeaveCal->to));
+                        $NetDay = $monthDay; //total working day in month
+                        $daySalary = $month / $inMonthDay; //pr day salary calculate
+                        if (isset($monthLeaveCal->other) && $monthLeaveCal->other != null) {
+                            $monthDay = $monthDay - $monthLeaveCal->other; //net day working in month
+                        }
+                        $paysalary = $monthDay * $daySalary; //paysalary calculate prday Vs Net working day && pay salary decuction of leave
+                        $monthLeaveCal->status =3;
+                        $monthLeaveCal->save();
+                        $month = round($paysalary);
+                        $salarygenerate->monthly_netsalary = $month; // net monthly salary
+                        $salarygenerate->payslip_number = "SDCS-" . $request->id . rand(10, 10000);
+                        $salarygenerate->net_salary = $salary->net_salary;
+                        $salarygenerate->slip_month =  date('Y-m', strtotime($monthLeaveCal->from));
+                        $salarygenerate->salary_month =  date('Y-m', strtotime($monthLeaveCal->to));
+                        $salarygenerate->status =1;
+                        $salarygenerate->user_salaryID = $salary->id;
+                        $total_deduct = 0;
+                        $total_earn = 0;
+                        foreach ($userearndedu as $eardedu) {
+                            if ($eardedu->salaryEarningDeduction->salarymanagement->type == 'earning') {
+                                $deduct = $month * $eardedu->salaryEarningDeduction->value / 100;
+                                $total_earn +=$deduct;
+                            } else {
+                                $deduct = $month * $eardedu->salaryEarningDeduction->value / 100;
+                                $total_deduct += $deduct;
+                            }
+                            $salarygenerate[str_replace(' ', '_', strtolower($eardedu->salaryEarningDeduction->salarymanagement->title))] = round($deduct);
+                        }
+                        $salarygenerate->tDeducation =round($total_deduct);
+                        $salarygenerate->tEarning = round($total_earn);
+                        $totaled = $month - $salarygenerate->tEarning;
+                        $grossMonthSalary = $month - $salarygenerate->tDeducation; //net pay 
+                        if (isset($monthLeaveCal->other) && $monthLeaveCal->other != null) {
+                            $salarygenerate->leave_deduction = round($monthLeaveCal->other * $daySalary);
+                        } else {
+                            $salarygenerate->leave_deduction = 0 * $daySalary;
+                        }
+                        $salarygenerate->paysalary = $grossMonthSalary+$salarygenerate->leave_deduction;//
+                        $salarygenerate->netPaySalary = $grossMonthSalary;//
+                        $salarygenerate->basic_salary = $totaled;
+                        $salarygenerate->save();
                         $monthLeaveCal->status =2;
                         $monthLeaveCal->save();
                     }

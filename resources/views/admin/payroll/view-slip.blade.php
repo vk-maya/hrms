@@ -141,7 +141,7 @@
                                                                     id="basicSalary">0</span></td>
                                                         </tr>
                                                         <tr>
-                                                            <td><strong>House Rent Allowance (H.R.A.)</strong> <span
+                                                            <td><strong>House Rent Allowance(HRA)</strong> <span
                                                                     class="float-end" id="hra">0</span></td>
                                                         </tr>
                                                         <tr>
@@ -177,7 +177,7 @@
                                                 <table class="table table-bordered">
                                                     <tbody>
                                                         <tr>
-                                                            <td><strong>Tax Deducted at Source (T.D.S.)</strong> <span
+                                                            <td><strong>Tax Deducted at Source(TDS)</strong> <span
                                                                     class="float-end" id="tds">0</span></td>
                                                         </tr>
                                                         <tr>
@@ -226,16 +226,22 @@
                                                     <p> <strong>Month Salary</strong> <span class="float-end"
                                                             id="bs">0</span></p>
                                                 </div>
-
                                             </div>
                                             <div class="col-md-6">
-
                                                 <div class="col-sm-12">
                                                     <p><strong>Pay Gross Salary: <span class="float-end"
                                                                 id="paysalary">0</span> </strong></p>
                                                 </div>
                                             </div>
-
+                                            <hr>
+                                            <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <p><strong>Net Pay Salary: <span class="float-end" id="netpaysalary"></span> </strong></p>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <p><strong>Salary Status<span class="float-end" id="netpaysalary">Success!</span> </strong></p>
+                                                    </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -249,62 +255,6 @@
     </div>
 @endsection
 @push('js')
-    <script>
-        $(document).ready(function() {
-                    $(document).on("click", ".salarySlip", function() {
-                                var id = $(this).data('id');
-                                let url = "{{ route('admin.employees.view.slip', ':id') }}";
-                                url = url.replace(':id', id);
-                                $.ajax({
-                                            url: url,
-                                            type: "GET",
-                                            cache: false,
-                                            success: function(res) {
-                                                console.log(res);
-                                                $("#fname").html(res.company.name);
-                                                $("#emailc").html(res.company.email);
-                                                $("#Paddress").html(res.company.p_address);
-                                                $("#postal").html(res.company.postl);
-                                                $("#phone").html(res.company.phone);
-                                                $("#web").html(res.company.web);
-                                                $("#username").html(res.slip.user.first_name);
-                                                const monthNames = ["January", "February", "March", "April", "May",
-                                                    "June",
-                                                    "July", "August", "September", "October", "November", "December"
-                                                ];
-                                                var formattedDate = new Date(res.slip.salary_month);
-                                                $("#slip").html(monthNames[formattedDate.getMonth()] + " - " +
-                                                    formattedDate.getFullYear());
-                                                $("#empid").html(res.slip.user.employeeID);
-                                                $("#jd").html(res.slip.user.joiningDate);
-                                                $("#emailu").html(res.slip.user.email);
-                                                $("#desigination").html(res.slip.user.user_designation
-                                                    .designation_name);
-                                                $("#bs").html(res.slip.monthly_netsalary);
-                                                $("#tds").html(res.slip.tds);
-                                                $("#da").html(res.slip.da);
-                                                $("#est").html(res.slip.esi);
-                                                $("#hra").html(res.slip.hra);
-                                                $("#lDeducation").html(res.slip.leave_deduction);
-                                                $("#pf").html(res.slip.pf);
-                                                $("#conveyance").html(res.slip.conveyance);
-                                                $("#Proftax").html(res.slip.prof_tax);
-                                                $("#oa").html(res.slip.allowance);
-                                                $("#lw").html(res.slip.labour_welfare);
-                                                $("#ma").html(res.slip.medical_allowance);
-                                                $("#other").html(res.slip.others);
-                                                $("#tEarning").html(res.slip.tEarning);
-                                                $("#tDeducation").html(res.slip.tDeducation + res.slip.leave_deduction);
-                                                $("#netslip").html(res.slip.net_salary);
-                                                $("#payslipnumber").html(res.slip.payslip_number);
-                                                $("#netsalary").html(res.slip.basic_salary);
-                                                $("#paysalary").html(res.slip.paysalary);
-                                                $("#basicSalary").html(res.slip.basic_salary);
-                                                $("#salarySlip").modal('show');
-                                            }
-
-                                            // -------------------show hidden column-------------
-    </script>
     <script>
         $(document).ready(function() {
             $(document).on("click", ".salarySlip", function() {
@@ -336,28 +286,28 @@
                         $("#empid").html(res.slip.user.employeeID);
                         $("#jd").html(res.slip.user.joiningDate);
                         $("#emailu").html(res.slip.user.email);
-                        $("#desigination").html(res.slip.user.user_designation
-                            .designation_name);
+                        $("#desigination").html(res.slip.user.user_designation.designation_name);
                         $("#bs").html(res.slip.monthly_netsalary);
                         $("#tds").html(res.slip.tds);
-                        $("#da").html(res.slip.da);
-                        $("#est").html(res.slip.esi);
-                        $("#hra").html(res.slip.hra);
-                        $("#lDeducation").html(res.slip.leave_deduction);
-                        $("#pf").html(res.slip.pf);
-                        $("#conveyance").html(res.slip.conveyance);
-                        $("#Proftax").html(res.slip.prof_tax);
-                        $("#oa").html(res.slip.allowance);
-                        $("#lw").html(res.slip.labour_welfare);
-                        $("#ma").html(res.slip.medical_allowance);
-                        $("#other").html(res.slip.others);
-                        $("#tEarning").html(res.slip.tEarning);
-                        $("#tDeducation").html(res.slip.tDeducation + res.slip.leave_deduction);
-                        $("#netslip").html(res.slip.net_salary);
-                        $("#payslipnumber").html(res.slip.payslip_number);
-                        $("#netsalary").html(res.slip.basic_salary);
-                        $("#paysalary").html(res.slip.paysalary);
-                        $("#basicSalary").html(res.slip.basic_salary);
+                        if (res.slip.da!= null) {$("#da").html(res.slip.da);}else{$("#da").html(0);}
+                        if (res.slip.esi!= null) {$("#est").html(res.slip.esi);}else{$("#est").html(0);}
+                        if (res.slip.hra!= null) {$("#hra").html(res.slip.hra);}else{$("#hra").html(0);}
+                        res.slip.leave_deduction?$("#lDeducation").html(res.slip.leave_deduction) :$("#lDeducation").html(0);
+                        res.slip.pf?$("#pf").html(res.slip.pf) :$("#pf").html(0);
+                        res.slip.conveyance?$("#conveyance").html(res.slip.conveyance) :$("#conveyance").html(0);
+                        res.slip.prof_tax?$("#Proftax").html(res.slip.prof_tax) :$("#Proftax").html(0);
+                        res.slip.allowance?$("#oa").html(res.slip.allowance) :$("#oa").html(0);
+                        res.slip.labour_welfare?$("#lw").html(res.slip.labour_welfare) :$("#lw").html(0);
+                        res.slip.medical_allowance?$("#ma").html(res.slip.medical_allowance) :$("#ma").html(0);
+                        res.slip.others?$("#other").html(res.slip.others) :$("#other").html(0);
+                        res.slip.tEarning?$("#tEarning").html(res.slip.tEarning) :$("#tEarning").html(0);
+                        res.slip.tDeducation?$("#tDeducation").html(res.slip.tDeducation+res.slip.leave_deduction) :$("#tDeducation").html(0);
+                        res.slip.net_salary?$("#netslip").html(res.slip.net_salary) :$("#netslip").html(0);
+                        res.slip.payslip_number?$("#payslipnumber").html(res.slip.payslip_number) :$("#payslipnumber").html(0);
+                        res.slip.basic_salary?$("#basicSalary").html(res.slip.basic_salary) :$("#basicSalary").html(0);
+                        res.slip.paysalary?$("#paysalary").html(res.slip.paysalary) :$("#paysalary").html(0);
+                        res.slip.netPaySalary?$("#netpaysalary").html(res.slip.netPaySalary) :$("#netpaysalary").html(0);
+                        console.log(res.slip.netPaySalary);
                         $("#salarySlip").modal('show');
                     }
 
