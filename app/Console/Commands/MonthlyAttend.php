@@ -65,22 +65,24 @@ class MonthlyAttend extends Command
 
                 foreach ($response->data as $key) {
                     $user = User::where('employeeID', $key->Empcode)->first();
-                    $leaveCount = Leave::where('user_id', $user->id)->where('status',1)->where(function ($query) use ($date) {
-                        $query->where("form", ">=", $date)->where('to','<=', $date);
-                    })->count();
-                    $wfhCount = WorkFromHome::where('user_id', $user->id)->where('status',1)->where(function ($query) use ($date) {
-                        $query->where("from", ">=", $date)->where('to','<=', $date);
-                    })->count();
-
-                    if ($leaveCount>0) {
-                        $leaveCount="L";
-                    }elseif($wfhCount>0){
-                        $leaveCount="WFH";
-                    }else{
-                        $leaveCount="A";
-                    }
-
                     if (!empty($user)) {
+                        $leaveCount = '';
+                        if ($key->Status != 'P') {
+                            $leaveCount = Leave::where('user_id', $user->id)->where('status',1)->where(function ($query) use ($date) {
+                                $query->where("form", ">=", $date)->where('to','<=', $date);
+                            })->count();
+                            $wfhCount = WorkFromHome::where('user_id', $user->id)->where('status',1)->where(function ($query) use ($date) {
+                                $query->where("from", ">=", $date)->where('to','<=', $date);
+                            })->count();
+        
+                            if ($leaveCount>0) {
+                                $leaveCount="L";
+                            }elseif($wfhCount>0){
+                                $leaveCount="WFH";
+                            }else{
+                                $leaveCount="A";
+                            }
+                        }
                         $attend = Attendance::where('user_id', $user->id)->where('date', $date)->first();
                         if (!empty($attend)) {
                             $attend->in_time = $key->INTime == '--:--' ? '00:00' : $key->INTime;
