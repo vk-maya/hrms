@@ -244,9 +244,8 @@ class PayrollController extends Controller
     }
     public function testroute($id)
     {
-        // dd("hello");
+  
         $user = User::where(['status'=> 1,'id'=>$id])->first();
-        // $user=$id;
         // foreach ($user_data as $user) {
             $today = \Carbon\Carbon::now();
             $fristMonthofDay = Carbon::now()->startOfMonth()->subMonthsNoOverflow()->toDateString();
@@ -254,44 +253,56 @@ class PayrollController extends Controller
             $leaves = Leaverecord::where('user_id', $user->id)->where(function ($query) use ($fristMonthofDay, $lastMonthofDay) {
                 $query->whereBetween('from', [$fristMonthofDay, $lastMonthofDay]);
             })->get();
-            $leavesGet = Leaverecord::where('user_id', $user->id)->where(function ($query) use ($fristMonthofDay, $lastMonthofDay) {
-                $query->whereBetween('from', [$fristMonthofDay, $lastMonthofDay]);
-            })->count();
+            // $leavesGet = Leaverecord::where('user_id', $user->id)->where(function ($query) use ($fristMonthofDay, $lastMonthofDay) {
+            //     $query->whereBetween('from', [$fristMonthofDay, $lastMonthofDay]);
+            // })->count();
             $leavet = settingleave::where('status', 1)->get();
-/*
+            $totalWorkingDay= Attendance::where('user_id',$user->id)->get('mark');
+            // dd($totalWorkingDay->toArray());
+            $days=0;
+            foreach ($totalWorkingDay as  $day) {
+                // dd("llll");
+                if ($day->mark=="P" || $day->mark == "WFH") {
+                    // dd("llllkkkk");
+                   $days=$days+1;
+                }
+            }
+            dd($days);
+
             // // -------------------------------total Leave count----------------------------------
 
-            // if ($leavesGet > 0) {
-            //     foreach ($leaves as $leave) {
-            //         $leavetype = settingleave::find($leave->type_id);
-            //         $monthleave = monthleave::where('user_id', $leave->user_id)->where('status', 1)->where('to', $lastMonthofDay)->first();
-            //         if ($leavetype->type == "PL") {
-            //             if ($monthleave != null) {
-            //                 $monthleave->apprAnual = $monthleave->apprAnual + $leave->day;
-            //             } else {
-            //                 $monthleave->apprAnual = $leave->day;
-            //             }
-            //         } elseif ($leavetype->type == "Sick") {
-            //             if ($monthleave != null) {
-            //                 $monthleave->apprSick = $monthleave->apprSick + $leave->day;
-            //             } else {
-            //                 $monthleave->apprSick = $leave->day;
-            //             }
-            //         } else {
-            //             if ($monthleave != null) {
-            //                 $monthleave->other = $monthleave->other + $leave->day;
-            //             } else {
-            //                 $monthleave->other = $leave->day;
-            //             }
-            //         }
-            //         $monthleave->status = 1;
-            //         $monthleave->save();
-            //     }
-            // } else {
-            //     $monthleave = monthleave::where('user_id', $user->id)->where('status', 1)->first();
-            //     $monthleave->status = 0;
-            //     $monthleave->save();
-            // }
+            if ($leaves!= null) {
+                foreach ($leaves as $leave) {
+                    $leavetype = settingleave::find($leave->type_id);
+                    $monthleave = monthleave::where('user_id', $leave->user_id)->where('status', 1)->where('to', $lastMonthofDay)->first();
+                    if ($leavetype->type == "PL") {
+                        if ($monthleave != null) {
+                            $monthleave->apprAnual = $monthleave->apprAnual + $leave->day;
+                        } else {
+                            $monthleave->apprAnual = $leave->day;
+                        }
+                    } elseif ($leavetype->type == "Sick") {
+                        if ($monthleave != null) {
+                            $monthleave->apprSick = $monthleave->apprSick + $leave->day;
+                        } else {
+                            $monthleave->apprSick = $leave->day;
+                        }
+                    } else {
+                        if ($monthleave != null) {
+                            $monthleave->other = $monthleave->other + $leave->day;
+                        } else {
+                            $monthleave->other = $leave->day;
+                        }
+                    }
+                    $monthleave->status = 1;
+                    $monthleave->save();
+                }
+            } else {
+                $monthleave = monthleave::where('user_id', $user->id)->where('status', 1)->first();
+                $monthleave->status = 0;
+                $monthleave->save();
+            }
+            /*
 
             // --------------------------------------------------Attendance function --------------  //Attendance Vs Month Leave Table----
 
